@@ -1,18 +1,15 @@
-console.log("Hello world!")
-
 const express = require("express");
+const session = require("express-session");
 const server = express();
 
 server.use(express.json());    // tell server to use parse incoming requests as json (using the json() middleware)
 server.use(express.urlencoded({extended:true}));
+// TODO: Add private file
+// server.use(session({secret:private.session.secret}));
 
 const port = 3000 // Port to listen on
 
-app.post('/login', (req, res) => {
-    let username = req.body.username;
-    let password = req.body.password;
-    
-    res.send(`Username: ${username} Password: ${password}`);
-});
+const router = require("./routes/router.js")
+server.use('/api', router);
 
-app.listen(port, () => console.log(`gophermatch is listening on port ${port}`));
+server.listen(port, () => console.log(`gophermatch is listening on port ${port}`));

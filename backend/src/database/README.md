@@ -1,0 +1,1 @@
+Where all the data base logic and schema (sketch/record of SQL queries) are stored
