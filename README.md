@@ -4,5 +4,6 @@
 
 ### Links
 - https://expressjs.com/
-- https://react.dev/reference/react
 - https://github.com/mysqljs/mysql
+- https://expressjs.com/en/resources/middleware/session.html
+- https://react.dev/reference/react
