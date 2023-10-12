@@ -1,9 +1,13 @@
-### For people starting: 
-1. Run `npm install` in the root directory
+### Installation: 
+1. Run `npm run install` in the root directory (Don't forget the `run`)
 2. Try running both frontend and backend with `npm run dev`
 
 ### Links
-- https://expressjs.com/
-- https://github.com/mysqljs/mysql
-- https://expressjs.com/en/resources/middleware/session.html
-- https://react.dev/reference/react
+- Libraries
+  - Node: https://nodejs.org/en 
+  - Express: https://expressjs.com/
+    - MySQL: https://github.com/mysqljs/mysql
+    - Express Session: https://expressjs.com/en/resources/middleware/session.html
+  - React: https://react.dev/reference/react
+- Tools
+  - Postman (Backend): https://www.postman.com/
