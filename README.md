@@ -1,6 +1,7 @@
 ### Installation: 
-1. Run `npm run install` in the root directory (Don't forget the `run`)
-2. Try running both frontend and backend with `npm run dev`
+1. Run `npm install` in the root directory
+2. Run `npm run install` in the root directory (Don't forget the `run`)
+3. Try running both frontend and backend with `npm run dev` in the root directory
 
 ### Links
 - Libraries
