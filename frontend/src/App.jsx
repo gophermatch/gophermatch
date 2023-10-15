@@ -10,6 +10,7 @@ import Profile from "./components/pages/Profile.jsx"
 import Settings from "./components/pages/Settings.jsx"
 import Login from "./components/pages/Login.jsx"
 import ErrorPage from "./components/pages/ErrorPage.jsx"
+import './assets/css/index.css'
 
 const router = createBrowserRouter([{
         path: "/",
