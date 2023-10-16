@@ -1,10 +1,11 @@
 {
   "name": "gophermatch-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
-  "main": "src/server.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon esm src/server.js"
   },
   "author": "",
   "license": "ISC",

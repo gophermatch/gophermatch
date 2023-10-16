@@ -1,6 +1,6 @@
-const loginSQL = require('../database/login.js')
-const express = require('express')
-const router = express.Router()
+import '../database/login.js';
+import { Router } from 'express';
+const router = Router()
 
 // Login
 router.post('/', async (req, res) => {
@@ -22,4 +22,4 @@ router.delete('/', async (req, res) => {
     console.warn("Logout: Not yet implemented!");
 })
 
-module.exports = router
+export default router

@@ -1,19 +1,22 @@
-const express = require("express")
-const session = require("express-session")
-const env = require('./env.js')
-const db = require('./database/db.js')
+import { port, session as envSession } from './env.js'
+import express, { json, urlencoded } from "express"
+import session from "express-session"
+import db from './database/db.js'
 
 const server = express()
 
-server.use(express.json())    // tell server to use parse incoming requests as json (using the json() middleware)
-server.use(express.urlencoded({extended:true}))
-// TODO: Add private file
-// server.use(session({secret:env.session.secret}));
+server.use(json())    // tell server to use parse incoming requests as json (using the json() middleware)
+server.use(urlencoded({extended:true}))
+server.use(session({
+    secret: envSession.secret,
+    resave: true, // ??
+    saveUninitialized: false // ??
+}));
 
-const router = require("./routes/router.js")
+import router from "./routes/router.js"
 server.use('/api', router)
 
-const httpServer = server.listen(env.port, () => console.log(`gophermatch is listening on port ${env.port}`))
+const httpServer = server.listen(port, () => console.log(`gophermatch is listening on port ${port}`))
 
 // Handle server shutdown
 let handleShutdown = () => {

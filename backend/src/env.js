@@ -1,17 +1,16 @@
-require('dotenv').config();  // load .env file into to the object process.env
+import 'dotenv/config.js'       // load .env file into to the object process.env
 
 // export all the env variables used in the backend
-module.exports = {
-    port: process.env.PORT,
+export const port = process.env.PORT
 
-    db: {
-        name: process.env.DB_NAME,
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD
-    },
+export const db = {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    name: process.env.DB_NAME,
+}
 
-    sessoon: {
-        secret: process.env.SESSION_SECRET
-    }
+export const session = {
+    secret: process.env.SESSION_SECRET
 }
