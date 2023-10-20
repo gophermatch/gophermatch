@@ -3,3 +3,4 @@
 **/.settings
 **/npm-debug.log
 **/.vscode
+**.env

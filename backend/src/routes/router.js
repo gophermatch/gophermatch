@@ -1,7 +1,8 @@
-const express = require('express')
+import { Router } from 'express'
+import LoginRouter from './login.js'
 
-const router = express.Router()
+const router = Router()
 
-router.use('/login', require('./login.js'));
+router.use('/login', LoginRouter);
 
-module.exports = router
+export default router

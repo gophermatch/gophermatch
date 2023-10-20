@@ -1,23 +1,12 @@
-const db = require("mysql");
-const mysql = require("mysql");
-// const server = mysql.createPool({
-//     host: private.database.host,
-//     database: private.database.database,
-//     user: private.database.user,
-//     password: private.database.password,
-//     connectionLimit: 100
-// });
-exports.server = server;
+import { createPool } from "mysql"
+import { db as _db } from "../env.js"
+const db = createPool({
+    host: _db.host,
+    port: _db.port,
+    user: _db.user,
+    password: _db.password,
+    database: _db.name,
+    connectionLimit: 100
+})
 
-async function login(username, hashedPassword) {
-    // TODO: implement this
-    // return new Promise((resolve, reject) => {
-    // });
-}
-
-// this should be called only when the user is logged in
-async function logout(username) {
-    // TODO: implement this
-    // return new Promise((resolve, reject) => {
-    // });
-}
+export default db
