@@ -2,7 +2,7 @@
 create table user_locations (
     user_id int,
     location_id int,  -- nullable
-    primary key (user_id),
+    primary key (user_id, location_id),
     foreign key (user_id) references users(id)
         on delete casade
         on update casade
