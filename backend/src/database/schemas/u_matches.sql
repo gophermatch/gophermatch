@@ -1,6 +1,6 @@
 -- Junction table to link users to their matches and unmatches (what do you call that?)
 -- match attribute refers to whether this user matched with this person (true) or unmatched with this person (false)
-create table user_matches (
+create table u_matches (
     user_id int,
     match_user_id int,
     match boolean not null default true,

@@ -1,5 +1,5 @@
 -- Junction table for linking user's location preferences to their users
-create table user_locations (
+create table u_locations (
     user_id int,
     location_id int,  -- nullable
     primary key (user_id, location_id),

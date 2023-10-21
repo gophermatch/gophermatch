@@ -5,7 +5,7 @@
     -- locations and user locations
 
 -- TODO: Add more preferences
-create table user_preferences (
+create table u_preferences (
     user_id int,
     gender enum('man', 'woman', 'nonbinary', 'other'),
     numer_of_roomates int,

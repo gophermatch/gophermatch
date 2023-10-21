@@ -1,5 +1,5 @@
 -- Junction table to link user rows to their profile questions and anwsers
-create table profile_qnas (
+create table u_qnas (
     user_id int,
     question_id int,
     answer varchar(100),

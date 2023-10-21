@@ -1,5 +1,5 @@
 -- Junction table to link user rows to their profile pictures (as file paths)
-create table profile_pictures (
+create table u_pictures (
     user_id int,
     picture_id int auto_increment,
     picture_path varchar(100),

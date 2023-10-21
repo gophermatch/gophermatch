@@ -1,7 +1,5 @@
-import db from './db.js';
+import { db, tableNames } from './db.js';
 import { buildKeyValSep, processErrorObj } from './dbutils.js'
-
-const tableName = "user_preferences"
 
 // Expects a string username
 // Returns a js object with user_id and preferences, with error = false
@@ -22,7 +20,7 @@ export async function getUserPrefs(user_id) {
 }
 /*
 The SQL selector for ^ looks like
-`SELECT * FROM ${tableName} WHERE user_id = ?`
+`SELECT * FROM ${tableNames.u_prefs} WHERE user_id = ?`
 (you can paste that in)
 `` is a format string kinda like f'' in python. you put variables you insert inside ${}
 For the above, you need to use user_id as [user_id] in the second argument to db.query,
@@ -40,7 +38,7 @@ export async function createUserPrefs(user_id, preferences) {
         // build some string like "user_id = ? , x_pref = ? , y_pref = ? "
         let colsAndVals = buildKeyValSep(preferences, "=", ",")
 
-        db.query(`UPDATE ${tableName} SET ${colsAndVals.keyString} WHERE user_id = ?`, 
+        db.query(`UPDATE ${tableNames.u_prefs} SET ${colsAndVals.keyString} WHERE user_id = ?`, 
             [...colsAndVals.vals, user_id], // creates an array w all elements in colsAndVals.vals and user_id
             (err, rows) => {
         // First argument is the query string
