@@ -1,10 +1,19 @@
-// Process an error js object returned by MySQL DB, to 
+// Process an error js object returned by MySQL DB to 
 // return a js object with error = true and other properties set
 export function processErrorObj(error) {
     return {
         error_message: error.message,
         error_type: error.code
     }
+}
+
+// MySQL's query function returns an array of RowDataPackets
+// This function convert them into an ordinary js array with js objects
+export function queryRowsToArray(rows) {
+    // shallow copy the object (is this ok? do we need to structured clone?)
+    const objectifyRawPacket = row => ({...row});
+    // iterate over all items and convert the raw data packet row -> js object
+    return rows.map(objectifyRawPacket);
 }
 
 /* Returns a string of keys that corresponds to values which have ? as placeholder. For example,
@@ -59,16 +68,11 @@ export function buildKeyValSep(object, relation, separator) {
 // The "?" is used for the mysql library to add the values to the query string for us
 export function buildQueryString(selector, tableName, conds) {
     if (conds == null) conds = {}
-    let keys = []
-    let vals = []
-    let cond = ""
-    for (let key in conds) {
-        keys.push(key)
-        vals.push(conds[key]);
-    }
-    if (keys.length != 0) cond += " WHERE " + buildStringKeyValSep(keys, "=", "AND") + ";";
+    const res = buildKeyValSep(conds, "=", "AND")
+    let cond = "";
+    if (res !== "") cond += " WHERE " + res.keyString + ";"
     return {
         queryString: `SELECT ${selector} FROM ${tableName}${cond}`,
-        values: vals
+        values: res.vals
     };
 }

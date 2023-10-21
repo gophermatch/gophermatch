@@ -1,7 +1,7 @@
 import { port, session as envSession } from './env.js'
 import express, { json, urlencoded } from "express"
 import session from "express-session"
-import db from './database/db.js'
+import { db } from './database/db.js'
 
 const server = express()
 

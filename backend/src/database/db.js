@@ -7,7 +7,10 @@ export const db = createPool({
     user: _db.user,
     password: _db.password,
     database: _db.name,
-    connectionLimit: 100
+    connectionLimit: 100,
+    ssl: {
+        rejectUnauthorized: false
+    }
 })
 
 export const tableNames = {
