@@ -1,10 +1,8 @@
+// import bcrypt from 'bcrypt'
 import { db, tableNames } from './db.js'
 import { queryRowsToArray, buildQueryString, processErrorObj, buildKeyValSep } from './dbutils.js'
 
-// import bcrypt from 'bcrypt'
-
 // Returns a promise that is a user object from the users database, or {} if no user is found
-// 
 export async function getUser(username) {
     return new Promise((resolve, reject) => {
         const qr = buildQueryString("*", tableNames.users, {"username": username})
@@ -28,11 +26,4 @@ export async function getUser(username) {
             }
         })
     })
-}
-
-// this should be called only when the user is logged in
-export async function logout(username) {
-    // TODO: implement this
-    // return new Promise((resolve, reject) => {
-    // })
 }

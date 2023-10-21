@@ -1,4 +1,4 @@
-import { getUser } from '../database/login.js';
+import { getUser } from '../database/account.js';
 import { Router } from 'express';
 
 const router = Router()
