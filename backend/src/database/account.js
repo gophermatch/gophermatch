@@ -1,6 +1,6 @@
 // import bcrypt from 'bcrypt'
 import { db, tableNames } from './db.js'
-import { queryRowsToArray, buildQueryString, processErrorObj, buildKeyValSep } from './dbutils.js'
+import { queryRowsToArray, buildQueryString } from './dbutils.js'
 
 // Returns a promise that is a user object from the users database, or {} if no user is found
 export async function getUser(username) {
@@ -9,7 +9,7 @@ export async function getUser(username) {
 
         db.query(qr.queryString, qr.values, (err, rows) => {
             if (err) {
-                reject(processErrorObj(err))
+                reject(err)
                 return
             }
 
@@ -18,9 +18,10 @@ export async function getUser(username) {
                 resolve(res[0])
             } else if (res.length == 0) {
                 // user not found
-                resolve({})
+                reject("User not found")
                 return
             } else if (res.length != 1) {
+                // impossible
                 reject()
                 return
             }

@@ -1,12 +1,3 @@
-// Process an error js object returned by MySQL DB to 
-// return a js object with error = true and other properties set
-export function processErrorObj(error) {
-    return {
-        error_message: error.message,
-        error_type: error.code
-    }
-}
-
 // MySQL's query function returns an array of RowDataPackets
 // This function convert them into an ordinary js array with js objects
 export function queryRowsToArray(rows) {

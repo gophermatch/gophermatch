@@ -6,6 +6,6 @@ import { AuthStatusChecker } from '../auth.js'
 const router = Router()
 
 router.use('/login', LoginRouter)
-router.use('/preferences', PreferenceRouter)
+router.use('/preferences', AuthStatusChecker, PreferenceRouter)
 
 export default router

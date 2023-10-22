@@ -5,7 +5,8 @@ export function AuthStatusChecker(req, res, next) {
     // If user is logged in
     if (req.session.user) { // note: if cookie expires, user is "logged out" and session is deleted
         next()
+    } else {
+        res.status(401).json({error_message: "You need to be logged in to access this."})
+        // Don't call next so the chain of execution is severed
     }
-    res.status(401).json({error_message: "You need to be logged in to access this."})
-    // Don't call next so the chain of execution is severed
 }

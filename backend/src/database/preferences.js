@@ -1,5 +1,5 @@
 import { db, tableNames } from './db.js';
-import { buildKeyValSep, processErrorObj } from './dbutils.js'
+import { buildKeyValSep } from './dbutils.js'
 
 // Expects a string username
 // Returns a js object with user_id and preferences, with error = false
@@ -7,7 +7,7 @@ import { buildKeyValSep, processErrorObj } from './dbutils.js'
 export async function getUserPrefs(user_id) {
     // For testing without connecting to the database
     // See below for how to actually write this function, and createUserPrefs
-    if (user_id !== 3) throw {error_message: "Username not found!"};
+    if (user_id != 3) throw "Username not found!";
     return {
         user_id: 3,
         user_name: "testuser@umn.edu",
@@ -44,7 +44,7 @@ export async function createUserPrefs(user_id, preferences) {
         // First argument is the query string
         // Second argument is array of values to be inserted to ?s. Use this so the MySQL library checks for "dangerous" strings (to prevent cyberattacks)
         // Third argument is a callback function to deal with the returned values. err is error object, rows is rows updated
-                if (err) reject(processErrorObj(err))
+                if (err) reject(err)
                 else {
                     const [row] = rows
                     resolve(row)

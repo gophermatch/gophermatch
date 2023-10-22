@@ -1,5 +1,6 @@
 import { getUser } from '../database/account.js';
 import { Router } from 'express';
+import { createErrorObj } from './routeutil.js'
 
 const router = Router()
 
@@ -13,7 +14,7 @@ router.post('/', async (req, res) => {
 
     // Check if request includes username and password
     if (!username || !password) {
-        res.status(400).json({error_message: "Must submit username and password to login!"})
+        res.status(400).json(createErrorObj("Must submit username and password to login!"))
         return
     }
 
@@ -25,15 +26,15 @@ router.post('/', async (req, res) => {
         // if user could be empty; in that case user was not found
         // TODO: use bycrypt
         if (user.hashpass !== password) {
-            res.status(400).json({error_message: "Username or password is incorrect"})
+            res.status(400).json(createErrorObj("Username or password is incorrect"))
             return
         }
         // Put user into session
         req.session.user = user
-        res.status(200).json({message: "User has successfully logged in!"})
+        res.status(200).json({user_id: user.id})
     } catch(e) {
         console.error(e)
-        res.status(400).send({error_message: "Something went horribly wrong!"})
+        res.status(400).json(createErrorObj(e))
     }
 })
 
@@ -44,7 +45,7 @@ router.post('/', async (req, res) => {
 router.delete('/', async (req, res) => {
     console.log(req.session)
     if (!req.session.user) {
-        res.status(400).json({error_message: "No user logged in"})
+        res.status(400).json(createErrorObj("No user logged in"))
         return
     }
 
