@@ -1,11 +1,11 @@
 // import bcrypt from 'bcrypt'
 import { db, tableNames } from './db.js'
-import { queryRowsToArray, buildQueryString } from './dbutils.js'
+import { queryRowsToArray, buildSelectString } from './dbutils.js'
 
 // Returns a promise that is a user object from the users database, or {} if no user is found
 export async function getUser(username) {
     return new Promise((resolve, reject) => {
-        const qr = buildQueryString("*", tableNames.users, {"username": username})
+        const qr = buildSelectString("*", tableNames.users, {"username": username})
 
         db.query(qr.queryString, qr.values, (err, rows) => {
             if (err) {

@@ -5,9 +5,9 @@ create table u_qnas (
     answer varchar(100),
     primary key (user_id, question_id),
     foreign key (user_id) references users(id)
-        on delete casade
-        on update casade
+        on delete cascade
+        on update cascade
     foreign key (question_id) references questions(id)
-        on delete casade
-        on update casade
+        on delete cascade
+        on update cascade
 );

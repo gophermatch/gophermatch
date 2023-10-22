@@ -6,9 +6,9 @@ create table u_matches (
     match boolean not null default true,
     primary key (user_id, match_user_id),
     foreign key (user_id) references users(id)
-        on delete casade
-        on update casade
+        on delete cascade
+        on update cascade
     foreign key (match_user_id) references users(id)
-        on delete casade
-        on update casade
+        on delete cascade
+        on update cascade
 );

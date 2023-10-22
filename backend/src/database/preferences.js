@@ -1,5 +1,5 @@
 import { db, tableNames } from './db.js';
-import { buildKeyValSep } from './dbutils.js'
+import { buildInsertString, queryRowsToArray } from './dbutils.js'
 
 // Expects a string username
 // Returns a js object with user_id and preferences, with error = false
@@ -27,7 +27,7 @@ For the above, you need to use user_id as [user_id] in the second argument to db
 and deal with resolve and reject functions
 */
 
-// Expects a string username and optionally a js object of preferences
+// Expects an int user_id and optionally a js object of preferences
 // Returns the user preference object updated (as a Promise), or throw an error
 export async function createUserPrefs(user_id, preferences) {
     // Here we are return a Promise, which is how you make functions asynchronous
@@ -35,19 +35,19 @@ export async function createUserPrefs(user_id, preferences) {
     // reject is a function that takes an error value 
     // User supplies these functions when dealing with the returned value of createUserPrefs
     return new Promise((resolve, reject) => {
-        // build some string like "user_id = ? , x_pref = ? , y_pref = ? "
-        let colsAndVals = buildKeyValSep(preferences, "=", ",")
+        let query = buildInsertString(tableNames.u_prefs, {user_id, ...preferences})
 
-        db.query(`UPDATE ${tableNames.u_prefs} SET ${colsAndVals.keyString} WHERE user_id = ?`, 
-            [...colsAndVals.vals, user_id], // creates an array w all elements in colsAndVals.vals and user_id
-            (err, rows) => {
+        db.query(query.queryString, query.values,
+            (err, res) => {
         // First argument is the query string
         // Second argument is array of values to be inserted to ?s. Use this so the MySQL library checks for "dangerous" strings (to prevent cyberattacks)
-        // Third argument is a callback function to deal with the returned values. err is error object, rows is rows updated
+        // Third argument is a callback function to deal with the returned values. 
+        // err is error object, res is the result object
+        // With a SELECT query, res is an object with rows selected. Use queryRowsToArray() to convert it to array
+        // Here we are using INSERT INTO query, so res is a result object with affectRows property
                 if (err) reject(err)
                 else {
-                    const [row] = rows
-                    resolve(row)
+                    resolve(res)
                 }
         })
     });

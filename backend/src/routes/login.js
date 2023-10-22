@@ -8,7 +8,7 @@ const router = Router()
 // Requires the request body to contain username and password (json)
 // Responds with status 400 if login failed (along an error message), otherwise status 200
 // On successful login, sets a session corresponding with the user
-router.post('/', async (req, res) => {
+router.put('/', async (req, res) => {
     let username = req.body.username
     let password = req.body.password
 

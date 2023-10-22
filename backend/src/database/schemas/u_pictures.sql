@@ -5,6 +5,6 @@ create table u_pictures (
     picture_path varchar(100),
     primary key (user_id, picture_id),
     foreign key (user_id) references users(id)
-        on delete casade
-        on update casade
+        on delete cascade
+        on update cascade
 );

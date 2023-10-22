@@ -3,6 +3,6 @@ create table profiles (
     bio varchar(200),
     primary key (user_id),
     foreign key (user_id) references users(id)
-        on delete casade
-        on update casade
+        on delete cascade
+        on update cascade
 );

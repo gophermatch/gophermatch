@@ -46,24 +46,48 @@ export function buildKeyValSep(object, relation, separator) {
     }
 }
 
-// Builds a simple query string with conditions that are all equality checks
+// Builds a simple select query string with conditions that are all equality checks
 // selector: expression for selecting in SQL
 // table: table name for querying
 // conds: js object with keys (column names) and values (what the corresponding value should equal to)
 // Return the SQL expression
-// I.e. buildQueryString("*", "users", {
+// I.e. buildSelectString("*", "users", {
 //      id: "3", password: "abc"
 // })
 // Returns an incomplete query string "SELECT * FROM users WHERE id = ? AND password = ?"
 // and an array of values in the right order that corresponds to the column names
 // The "?" is used for the mysql library to add the values to the query string for us
-export function buildQueryString(selector, tableName, conds) {
+export function buildSelectString(selector, tableName, conds) {
     if (conds == null) conds = {}
     const res = buildKeyValSep(conds, "=", "AND")
     let cond = "";
-    if (res !== "") cond += " WHERE " + res.keyString + ";"
+    if (res !== "") cond += " WHERE " + res.keyString
     return {
-        queryString: `SELECT ${selector} FROM ${tableName}${cond}`,
+        queryString: `SELECT ${selector} FROM ${tableName}${cond};`,
         values: res.vals
     };
+}
+
+// Builds a simple insert query string with column names and their values
+// object's members should be the row's columns. Must contain a member for each  primary key and not null columns
+export function buildInsertString(tableName, object) {
+    let colList = "", valList = "", vals = []
+    const keyVals = Object.entries(object)
+    for(let i = 0; i < keyVals.length; i++) {
+        let [key, val] = keyVals[i]
+        colList += key
+        valList += "?"
+        vals.push(val)
+        if (i != keyVals.length-1) {
+            colList += ","
+            valList += ","
+        }
+    }
+    colList = "(" + colList + ")"
+    valList = "(" + valList + ")"
+
+    return {
+        queryString: `INSERT INTO ${tableName} ${colList} VALUES ${valList};`,
+        values: vals
+    }
 }
