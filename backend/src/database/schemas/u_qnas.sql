@@ -4,10 +4,10 @@ create table u_qnas (
     question_id int,
     answer varchar(100),
     primary key (user_id, question_id),
-    foreign key (user_id) references users(id)
+    foreign key (user_id) references users(user_id)
         on delete cascade
         on update cascade
-    foreign key (question_id) references questions(id)
+    foreign key (question_id) references questions(question_id)
         on delete cascade
         on update cascade
 );

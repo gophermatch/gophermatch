@@ -4,7 +4,7 @@
 -- Frontend: Should cache this.
 
 create table locations (
-    id int not null auto_increment,
+    location_id int not null auto_increment,
     display_name varchar(50) not null unique,
-    primary key (id)
+    primary key (location_id)
 );

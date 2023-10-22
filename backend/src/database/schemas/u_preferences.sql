@@ -10,7 +10,7 @@ create table u_preferences (
     gender enum('man', 'woman', 'nonbinary', 'other'),
     numer_of_roomates int,
     primary key (user_id),
-    foreign key (user_id) references users(id)
+    foreign key (user_id) references users(user_id)
         on delete cascade
         on update cascade
 );

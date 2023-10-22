@@ -52,9 +52,9 @@ export function buildKeyValSep(object, relation, separator) {
 // conds: js object with keys (column names) and values (what the corresponding value should equal to)
 // Return the SQL expression
 // I.e. buildSelectString("*", "users", {
-//      id: "3", password: "abc"
+//      user_id: "3", password: "abc"
 // })
-// Returns an incomplete query string "SELECT * FROM users WHERE id = ? AND password = ?"
+// Returns an incomplete query string "SELECT * FROM users WHERE user_id = ? AND password = ?"
 // and an array of values in the right order that corresponds to the column names
 // The "?" is used for the mysql library to add the values to the query string for us
 export function buildSelectString(selector, tableName, conds) {
@@ -69,7 +69,7 @@ export function buildSelectString(selector, tableName, conds) {
 }
 
 // Builds a simple insert query string with column names and their values
-// object's members should be the row's columns. Must contain a member for each  primary key and not null columns
+// object's members should be the row's columns. Must contain a member for each not null columns with no default values
 export function buildInsertString(tableName, object) {
     let colList = "", valList = "", vals = []
     const keyVals = Object.entries(object)

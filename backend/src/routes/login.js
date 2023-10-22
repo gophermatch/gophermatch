@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt'
 import { getUser } from '../database/account.js';
 import { Router } from 'express';
 import { createErrorObj } from './routeutil.js'
@@ -5,33 +6,33 @@ import { createErrorObj } from './routeutil.js'
 const router = Router()
 
 // Login
-// Requires the request body to contain username and password (json)
+// Requires the request body to contain email and password (json)
 // Responds with status 400 if login failed (along an error message), otherwise status 200
 // On successful login, sets a session corresponding with the user
 router.put('/', async (req, res) => {
-    let username = req.body.username
+    let email = req.body.email
     let password = req.body.password
 
-    // Check if request includes username and password
-    if (!username || !password) {
-        res.status(400).json(createErrorObj("Must submit username and password to login!"))
+    // Check if request includes email and password
+    if (!email || !password) {
+        res.status(400).json(createErrorObj("Email or password field missing from request body"))
         return
     }
 
     // If user is already signed in, we update their session object in case their password has changed
     try {
-        const user = await getUser(username)
+        const user = await getUser(email)
 
-        // Check if password matches
-        // if user could be empty; in that case user was not found
-        // TODO: use bycrypt
-        if (user.hashpass !== password) {
-            res.status(400).json(createErrorObj("Username or password is incorrect"))
+        // Check if password matches with the hashed password
+        const match = await bcrypt.compare(password, user.hashpass);
+        if (!match) {
+            res.status(400).json(createErrorObj("Email or password is incorrect"))
             return
         }
-        // Put user into session
+
+        // "login" the user by storing their user info in session
         req.session.user = user
-        res.status(200).json({user_id: user.id})
+        res.status(200).json({user_id: user.user_id})
     } catch(e) {
         console.error(e)
         res.status(400).json(createErrorObj(e))
@@ -49,6 +50,7 @@ router.delete('/', async (req, res) => {
         return
     }
 
+    // Destroy the session and clear the cookie to "logout"
     req.session.destroy()
     res.clearCookie('connect.sid')
     res.status(200).json({message: "User has successfully logged out!"})

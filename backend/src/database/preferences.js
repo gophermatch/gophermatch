@@ -1,16 +1,15 @@
 import { db, tableNames } from './db.js';
 import { buildInsertString, queryRowsToArray } from './dbutils.js'
 
-// Expects a string username
+// Expects an user_id
 // Returns a js object with user_id and preferences, with error = false
 // If an error occurs, return a js object with error = true
 export async function getUserPrefs(user_id) {
     // For testing without connecting to the database
     // See below for how to actually write this function, and createUserPrefs
-    if (user_id != 3) throw "Username not found!";
+    if (user_id != 3) throw "User ID not found!";
     return {
         user_id: 3,
-        user_name: "testuser@umn.edu",
         gender: "man",
         loud_environment: true,
         extroverted: true,
