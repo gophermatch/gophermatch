@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import { getUser } from '../database/account.js';
 import { Router } from 'express';
+import { loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
 
 const router = Router()
@@ -30,9 +31,8 @@ router.put('/', async (req, res) => {
             return
         }
 
-        // "login" the user by storing their user info in session
-        req.session.user = user
-        res.status(200).json({user_id: user.user_id})
+        const userWithoutPass = loginUser(req, user)
+        res.status(200).json(userWithoutPass)
     } catch(e) {
         console.error(e)
         res.status(400).json(createErrorObj(e))
@@ -50,10 +50,13 @@ router.delete('/', async (req, res) => {
         return
     }
 
-    // Destroy the session and clear the cookie to "logout"
-    req.session.destroy()
-    res.clearCookie('connect.sid')
-    res.status(200).json({message: "User has successfully logged out!"})
+    logoutUser(req, res, (err) => {
+        if (err) {
+            res.status(500).json(createErrorObj(err, "Failed to log out user"))
+            return
+        }
+        res.status(200).json({message: "User has successfully logged out!"})
+    })
 })
 
 export default router

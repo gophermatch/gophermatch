@@ -10,3 +10,18 @@ export function AuthStatusChecker(req, res, next) {
         // Don't call next so the chain of execution is severed
     }
 }
+
+// "Log in" the user by storing its data in session
+// Return user object without the password
+export function loginUser(req, userObj) {
+    req.session.user = userObj
+    const {hashpass: _, ...rest} = userObj  // clone userObj but without the hashed password
+    return rest
+}
+
+// "Log out" the user by destroying the session associated with the user
+// Then calls the callback function
+export function logoutUser(req, res, callback) {
+    req.session.destroy(callback)
+    res.clearCookie('connect.sid')
+}

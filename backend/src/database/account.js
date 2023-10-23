@@ -49,3 +49,20 @@ export async function createUser(email, hashpass) {
         })
     })
 }
+
+export async function deleteUser(user_id) {
+    return new Promise((resolve, reject) => {
+        db.query(`DELETE FROM ${tableNames.users} WHERE user_id = ?`, user_id,
+        (err, res) => {
+            if (err) {
+                reject(err)
+                return
+            }
+            if (res.affectedRows == 0) {
+                reject(`Something went wrong when deleting user. Perhaps the user with user_id ${user_id} is not found`)
+            } else if (res.affectedRows == 1) {
+                resolve(res)
+            } else reject({})
+        })
+    })
+}

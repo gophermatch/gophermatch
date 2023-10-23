@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import { Router } from 'express';
-import { createUser } from '../database/account.js'
+import { createUser, deleteUser } from '../database/account.js'
+import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
 
 const router = Router()
@@ -12,11 +13,11 @@ router.post('/', async (req, res) => {
     let password = req.body.password
 
     if (!email || !password) {
-        res.status(400).send(createErrorObj("Email or password field missing from request body"))
+        res.status(400).json(createErrorObj("Email or password field missing from request body"))
         return
     }
     if (!email.endsWith('@umn.edu')) {
-        res.status(400).send(createErrorObj("Email must be an umn email (ending with @umn.edu)"))
+        res.status(400).json(createErrorObj("Email must be an umn email (ending with @umn.edu)"))
         return
     }
 
@@ -25,12 +26,37 @@ router.post('/', async (req, res) => {
         const hashpass = await bcrypt.hash(password, saltRounds)
         const user = await createUser(email, hashpass)
 
-        // "login" the user by storing their user info in session
-        req.session.user = user
-        res.status(200).json({user_id: user.user_id})
+        const userWithoutPass = loginUser(req, user)
+        res.status(201).json(userWithoutPass)
     } catch (e) {
         console.error(e)
-        res.status(400).send(createErrorObj(e))
+        res.status(400).json(createErrorObj(e))
+    }
+})
+
+// Delete account
+router.delete('/', AuthStatusChecker, async (req, res) => {
+    const user_id = req.body.user_id    // returns string, so don't use strict equal below
+    if (req.session.user.user_id != user_id) {
+        console.log(user_id)
+        res.status(403)
+            .json(createErrorObj("Cannot delete another use's account"))
+        return
+    }
+
+    try {
+        await deleteUser(user_id)
+
+        logoutUser(req, res, (err) => {
+            if (err) {
+                res.status(500).json(createErrorObj(err, "Failed to log out deleted user"))
+                return
+            }
+            res.status(200).json({message: "User has successfully been deleted and logged out!"})
+        })
+    } catch (e) {
+        console.error(e)
+        res.status(400).json(createErrorObj(e))
     }
 })
 
