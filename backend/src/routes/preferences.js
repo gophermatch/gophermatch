@@ -10,16 +10,23 @@ const router = Router() // this router is being exported and used in router.js t
 // To test this: On PostMan, add a body field with key being "user_id" and value being "3"
 router.get('/', async (req, res) => {   // GET is the HTTP request method we're expecting. If the method is different this function is not triggered
     // Data in the request body can be found in req.body
-    let user_id = req.body.user_id
+    // But for get requests, always use query parameters (req.query)
+    let user_id = req.query.user_id
     if (!user_id) {
         res.status(400).json(createErrorObj("Must submit user_id to get a user's preferences"))
         return
     }
 
-    let prefs = null
+    user_id = parseInt(user_id, 10)
+
+    // user_id is not an int
+    if (Number.isNaN(user_id)) {
+        res.status(400).json(createErrorObj("user_id must be in integer"))
+        return
+    }
 
     try {
-        prefs = await getUserPrefs(user_id)  // check out database/preferences.js
+        const prefs = await getUserPrefs(user_id)  // check out database/preferences.js
         // since the function is "async", we use "await" to wait for the function's return
         // in the meantime js can execute something else before going further
         // remember to always use await, unless you want to use callback functions (ew!) with the Promises API
