@@ -1,9 +1,13 @@
-import { port, session as envSession } from './env.js'
 import express, { json, urlencoded } from "express"
 import session from "express-session"
+import cors from "cors"
+import { port, session as envSession } from './env.js'
 import { db } from './database/db.js'
 
 const server = express()
+
+// Use Node's queryString as query parser
+server.set('query parser', 'simple')
 
 // Request body middleware
 server.use(json())    // tell server to use parse incoming requests as json (using the json() middleware)
@@ -19,6 +23,12 @@ server.use(session({
         maxAge: cookieAge
     }
 }));
+
+server.use(cors({
+    origin: "http://localhost:8080",    // do not end the url with a slash / !!
+    credentials: true
+}))  // allow cross origin requests. 
+// TODO: add whitelisted origins checker (different origins for DEV and PROD)
 
 import router from "./routes/router.js"
 server.use('/api', router)
