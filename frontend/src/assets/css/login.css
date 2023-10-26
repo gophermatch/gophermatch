@@ -58,3 +58,10 @@
     font-size: 12px;
     text-decoration: underline;
 }
+
+.signup-link-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
