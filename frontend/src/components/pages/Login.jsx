@@ -28,6 +28,9 @@ export default function Login() {
                     <input type="password" value={password} onChange={() => setPassword(event.target.value)}/>
                     <div className="login-failure">{loginErr}</div>
                     <button onClick={onLoginAttempt}>Login</button>
+                    <div className='signup-link-container'>
+                        <a className='signup-link' href=''>Sign up</a>
+                    </div>
                 </div>
             </div>
         </div>
