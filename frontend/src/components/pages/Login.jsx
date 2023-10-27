@@ -1,4 +1,4 @@
-import '../../assets/css/login.css'
+import styles from '../../assets/css/login.module.css'
 import React from 'react'
 
 export default function Login() {
@@ -18,17 +18,17 @@ export default function Login() {
     }
 
     return (
-        <div className="login-page">
-            <div className="login-container">
+        <div className={styles.login_page}>
+            <div className={styles.login_container}>
                 <h1>Gopher Match</h1>
-                <div className="login-form">
+                <div className={styles.login_form}>
                     <p>Email</p>
                     <input type="text" value={username} onChange={() => setUsername(event.target.value)}/>
                     <p>Password</p>
                     <input type="password" value={password} onChange={() => setPassword(event.target.value)}/>
-                    <div className="login-failure">{loginErr}</div>
+                    <div className={styles.login_failure}>{loginErr}</div>
                     <button onClick={onLoginAttempt}>Login</button>
-                    <div className='signup-link-container'>
+                    <div className={styles.signup_link_container}>
                         <a className='signup-link' href=''>Sign up</a>
                     </div>
                 </div>
