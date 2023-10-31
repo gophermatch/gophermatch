@@ -5,7 +5,7 @@ import {
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Root from "./components/Root.jsx"
-import Main from "./components/pages/Main.jsx"
+import Match from "./components/pages/Match.jsx"
 import Profile from "./components/pages/Profile.jsx"
 import Settings from "./components/pages/Settings.jsx"
 import Login from "./components/pages/Login.jsx"
@@ -18,16 +18,18 @@ const router = createBrowserRouter([{
         errorElement: <ErrorPage />,
         children: [{
             index: true,
-            element: <Main />
+            path: "",
+            element: <Login />
+        },
+        {
+            path: "match",
+            element: <Match />
         },{
             path: "profile",
             element: <Profile />
         },{
             path: "settings",
             element: <Settings />
-        }, {
-            path: "login",
-            element: <Login />
         }]
 }])
 

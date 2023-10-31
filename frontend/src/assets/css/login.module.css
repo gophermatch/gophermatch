@@ -1,0 +1,78 @@
+.login_page {
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    display:flex;
+    left: 30vh;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.login_container {
+    color: rgb(67, 67, 67);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 220px;
+    position: relative;
+    margin: auto;
+    padding: 14px;
+    border-radius: 10px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
+}
+
+.login_container h1 {
+    text-decoration: none;
+    color: black;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.login_form p {
+    margin: 0;
+    margin-top: 10px
+}
+
+.login_form input {
+    display: block;
+    border: 1px solid gray;
+    line-height: 28px;
+    overflow: scroll;
+}
+
+.login_container button {
+    cursor: pointer;
+    background: rgb(183, 6, 0);
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 40px;
+    padding-top: 6px;
+    padding-bottom: 10px;
+    margin-top: 14px;
+    width: 100%;
+}
+.login_container button:hover {
+    background: rgb(140, 6, 0)
+}
+.login_container button:active {
+    background: rgb(183, 6, 0);
+    opacity: 80%;
+}
+
+.login_failure {
+    color: red;
+    font-size: 12px;
+    text-decoration: underline;
+}
+
+.signup_link_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}

@@ -1,0 +1,74 @@
+:root {
+    --maroon-color: #6f131e;
+    --gold-color: #f7cf56;
+    --gray-color: #bababa;
+    --white-color: #ffffff;
+  }
+
+.settingsCenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#settingsItems {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+    align-content: flex-end;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+#settingsCategories {
+    display: flex;
+    gap: 2rem;
+}
+
+.settingWithButton {
+    display: flex;
+    flex-direction:row;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1rem;
+}
+
+#categoryButton {
+    background-color: var(--white-color);
+    color: var(--maroon-color);
+    border: 0.2rem solid var(--maroon-color);
+    padding: 0.75rem 1.75rem;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    font-size: 1rem;
+    border-radius: 0.2rem;
+    transition-duration: 0.4s;
+}
+
+#categoryButton:hover {
+    background-color: var(--maroon-color);
+    color: var(--white-color);
+    box-shadow: 0 0 1rem var(--gray-color);
+}
+
+#categoryButton:active {
+    background-color: var(--white-color);
+    color: var(--maroon-color);
+}
+
+h1 {
+    font-size: 5rem;
+    color: var(--maroon-color);
+    text-shadow: 0 0 1rem var(--gold-color);
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+#setting {
+    color: var(--maroon-color);
+    font-size: 1.5rem;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+#setting:hover {
+    color: var(--gold-color);
+}
