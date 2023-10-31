@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import styles from '../../assets/css/login.module.css'
 import React from 'react'
+import backend from "../../backend.js"
 import currentUser from "../../currentUser.js"
 
 export default function Login() {
-    const [username, setUsername] = React.useState('')
+    const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [loginErr, setLoginErr] = React.useState('')
 
@@ -13,17 +14,51 @@ export default function Login() {
     const from = params.get("from") || "/";
     const navigate = useNavigate()  // used to navigate away to another page
 
-    function onLoginAttempt() {
-        let result = Math.random()
-        if (result < 0.2) {
-            // switch to match page?
-        } else if (result < 0.6) {
-            setLoginErr("Incorrect email or password")
-        } else {
-            setLoginErr("Server error please try again later")
+    async function onLoginAttempt() {
+        if (!email) {
+            setLoginErr("Email missing")
+            return
+        } else if (!email.endsWith("@umn.edu")) {
+            setLoginErr("Email must be an umn email")
+            return
         }
-        // currentUser.login(1, "")
-        // navigate(from)
+
+        if (!password) {
+            setLoginErr("Password missing")
+            return
+        }
+
+        try {
+            const res = await backend.put("/login", {
+                email: email,
+                password: password
+            })
+
+            // data is the request body, put it INSIDE the config object in the second argument
+            // For Get requests:
+            // use routing parameters at the end of url (i.e. ?key1=val1&key2=val2) for get requests
+            // put the routing parameters as an object inside the second argument, the config obj goes in the third argument
+            // dont send data on get requests (it won't be sent)
+            const user_id = res.data.user_id
+            currentUser.login(user_id, email)   // no need to store password
+            navigate(from)      // redirect to where we redirected from
+        } catch(err) {
+            console.error(err)
+
+            if (err.serverResponds) {
+                // if server responds with error (http status code not in 200 range)
+                // have access to err.request and err.response
+                setLoginErr(err.response.data.error_message)
+            } else if (err.requestSent) {
+                // if server never responded (timeout?)
+                // have access to err.request
+                setLoginErr("Server timed out...")
+            } else {
+                // if no request sent, must mean request was malformed (fault in our code, not user's fault)
+                // all hell breaks lose
+                setLoginErr("shit... our fault")
+            }
+        }
     }
 
     return (
@@ -32,7 +67,7 @@ export default function Login() {
                 <h1>Gopher Match</h1>
                 <div className={styles.login_form}>
                     <p>Email</p>
-                    <input type="text" value={username} onChange={(event) => setUsername(event.target.value)}/>
+                    <input type="text" value={email} onChange={(event) => setEmail(event.target.value)}/>
                     <p>Password</p>
                     <input type="password" value={password} onChange={(event) => setPassword(event.target.value)}/>
                     <div className={styles.login_failure}>{loginErr}</div>
