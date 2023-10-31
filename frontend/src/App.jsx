@@ -18,6 +18,11 @@ const router = createBrowserRouter([{
         errorElement: <ErrorPage />,
         children: [{
             index: true,
+            path: "",
+            element: <Login />
+        },
+        {
+            path: "match",
             element: <Match />
         },{
             path: "profile",
@@ -25,9 +30,6 @@ const router = createBrowserRouter([{
         },{
             path: "settings",
             element: <Settings />
-        }, {
-            path: "login",
-            element: <Login />
         }]
 }])
 

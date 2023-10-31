@@ -6,11 +6,11 @@ export default function Root() {
         <>
         <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'></link>
         <nav id={Styles.nav}>
-            <Link to="/" id={Styles.icon}>
+            <Link to="/match" id={Styles.icon}>
                 <img src="../assets/images/logo.png" id={Styles.logo}></img>
             </Link>
             <div id={Styles.content}>
-                <p><Link to="/login">🔑 Login</Link></p>
+                <p><Link to="/">🔑 Login</Link></p>
                 <p><Link to="/profile">👤 Profile</Link></p>
                 <p><Link to="/settings">⚙️ Settings</Link></p>
             </div>

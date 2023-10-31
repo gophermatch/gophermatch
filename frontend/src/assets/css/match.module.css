@@ -64,19 +64,23 @@
 
 .PositiveTraits {
     text-align: left;
+    list-style-type: none;
     position: absolute;
     left: 25%;
     bottom: 27%;
     width: 17%;
+    max-width: 17%;
+    max-height: 20%;
     box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
-    font-family: 'Comfortaa';
-    font-size: 20px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.2vw;
     line-height: 30px;
     background: rgb(191, 255, 179);
     padding-left: 50px;
     padding-right: 50px;
     padding-top: 25px;
     padding-bottom: 25px;
+    overflow: hidden;
     border-radius: 10px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     color: black;
@@ -84,21 +88,24 @@
 }
 
 .LookingForTraits {
+    list-style-type: none;
     text-align: left;
     position: absolute;
     right: 25%;
     width: 17%;
     box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
     bottom: 27%;
-    font-family: 'Comfortaa';
-    font-size: 20px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.2vw;
     line-height: 30px;
+    max-height: 20%;
     background: rgb(255, 255, 197);
     padding-left: 50px;
     padding-right: 50px;
     padding-top: 25px;
     padding-bottom: 25px;
     border-radius: 10px;
+    overflow: hidden;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     color: black;
     transition: 0.5s;
@@ -132,7 +139,7 @@
     justify-content: center;
     vertical-align: bottom;
     align-items: center;
-    z-index: 3;
+    z-index: 2;
 }
 
 .ImageDiv:hover {
@@ -140,13 +147,13 @@
 }
 
 .NameLabel {
-    font-family: 'Comfortaa';
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 25px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     color: black;
     z-index: 2;
     position: absolute;
-    left: 32%;
+    left: 34%;
     top: 18%;
     margin-left: 8%;
     margin-bottom: 8%;
@@ -155,19 +162,19 @@
 
 .BioParagraph{
     position: absolute;
-    left:40%;
+    left:42%;
     width:28%;
     height: 8%;
     top:22.5%;
     box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 25px;
+    padding-left: 25px;
+    padding-right: 40px;
+    padding-top: 20px;
     padding-bottom: 25px;
     background: rgb(244, 244, 244);
     border-radius: 10px;
-    font-family: 'Comfortaa';
-    font-size: 18px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.1vw;
     text-align: left;
     transition: 0.5s;
 }
@@ -176,9 +183,10 @@
     text-align: center;
     position: absolute;
     margin-top: 1.5%;
-    top: 0;
-    width: 98%;
-    height: 94.5%;
+    left: 30vh;
+    z-index: -1;
+    width: 83%;
+    height: 93%;
     background-color: #fff7f2;
     margin-left: 1%;
     border-radius: 20px;

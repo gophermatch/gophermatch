@@ -78,8 +78,8 @@ export default function Match() {
                     </ul>
                 </div>
                 <br></br>
-                <button className={styles.MatchButton} id="YesButton"><img className={styles.ButtonIcon} src="../../assets/images/check.png" onClick={handleYesButtonClick}></img></button>
-                <button className={styles.MatchButton} id="NoButton"><img className={styles.ButtonIcon} src="../../assets/images/x.png" onClick={handleNoButtonClick}></img></button>
+                <button className={styles.MatchButton} id={styles.YesButton}><img className={styles.ButtonIcon} src="../../assets/images/check.png" onClick={handleYesButtonClick}></img></button>
+                <button className={styles.MatchButton} id={styles.NoButton}><img className={styles.ButtonIcon} src="../../assets/images/x.png" onClick={handleNoButtonClick}></img></button>
             </div>
         </div>
     )
