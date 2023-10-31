@@ -1,5 +1,6 @@
 import { 
     createBrowserRouter, 
+    redirect, 
     RouterProvider
 } from 'react-router-dom'
 import React from 'react'
@@ -10,7 +11,37 @@ import Profile from "./components/pages/Profile.jsx"
 import Settings from "./components/pages/Settings.jsx"
 import Login from "./components/pages/Login.jsx"
 import ErrorPage from "./components/pages/ErrorPage.jsx"
+import currentUser from "./currentUser.js"
 import './assets/css/index.css'
+
+// Redirects the main page "/" to login page if user is not logged in, 
+// or to match page if user is logged in
+async function mainPageRedirect({request}) {
+    if (!currentUser.logged_in) {
+        let params = new URLSearchParams()
+        params.set("from", new URL(request.url).pathname)
+        return redirect("/login?" + params.toString())
+    }
+    return redirect("/match")
+}
+
+// Redirects the login page to main page if user is logged in
+async function loginPageRedirect() {
+    if (currentUser.logged_in) {
+        return redirect("/")
+    }
+    return null
+}
+
+// Redirects a protected page to login page if user is not logged in
+async function unauthPageRedirect({request}) {
+    if (!currentUser.logged_in) {
+        let params = new URLSearchParams()
+        params.set("from", new URL(request.url).pathname)
+        return redirect("/login?" + params.toString())
+      }
+      return null;
+}
 
 const router = createBrowserRouter([{
         path: "/",
@@ -19,17 +50,23 @@ const router = createBrowserRouter([{
         children: [{
             index: true,
             path: "",
-            element: <Login />
-        },
-        {
+            loader: mainPageRedirect
+        },{
+            path: "login",
+            element: <Login />,
+            loader: loginPageRedirect,
+        },{
             path: "match",
-            element: <Match />
+            element: <Match />,
+            loader: unauthPageRedirect
         },{
             path: "profile",
-            element: <Profile />
+            element: <Profile />,
+            loader: unauthPageRedirect
         },{
             path: "settings",
-            element: <Settings />
+            element: <Settings />,
+            loader: unauthPageRedirect
         }]
 }])
 
