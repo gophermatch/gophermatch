@@ -5,10 +5,8 @@ import "../assets/css/sidebar.module.css"
 export default function Root() {
     return (
         <>
-        <body>
         <Sidebar />
         <Outlet />
-        </body>
         </>
     )
 }
