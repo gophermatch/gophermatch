@@ -1,3 +1,13 @@
+#MatchPage {
+    position: absolute; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
 .MatchButton {
     display: inline-block;
     width: 70px;
@@ -14,6 +24,7 @@
     cursor: pointer;
     transition: 0.15s;
     margin: 10px 35px;
+    z-index: 5; /* Make this clickable!! */
 }
 
 .ProfileDiv {
@@ -182,20 +193,19 @@
 .MatchDiv {
     text-align: center;
     position: absolute;
-    margin-top: 1.5%;
-    left: 30vh;
+    /* margin-top: 1.5%; */
+    /* left: 30vh; */
     z-index: -1;
     width: 83%;
     height: 93%;
     background-color: #fff7f2;
-    margin-left: 1%;
+    /* margin-left: 1%; */
     border-radius: 20px;
     box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
     overflow: hidden;
 }
 
 .ButtonIcon {
-    z-index: 1;
     width: 40px;
     height: 40px;
 }

@@ -53,7 +53,7 @@ export default function Match() {
     }
 
     return (
-        <div>
+        <div id={styles.MatchPage}>
             <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'></link>
             <div ref={ref} className={styles.MatchDiv}>
                 <div className={styles.ProfileDiv}>
