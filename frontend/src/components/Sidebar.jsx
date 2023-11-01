@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import Styles from "../assets/css/sidebar.module.css"
 import Logout from "./Logout"
 
-export default function Root() {
+export default function Sidebar() {
     return(
         <>
         <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'></link>

@@ -14,6 +14,11 @@ export default function Login() {
     const from = params.get("from") || "/";
     const navigate = useNavigate()  // used to navigate away to another page
 
+    async function enterKeyPress(event) {
+        if (event.key !== `Enter` && event.keyCode  !== 13) return
+        if (email && password) onLoginAttempt()
+    }
+
     async function onLoginAttempt() {
         if (!email) {
             setLoginErr("Email missing")
@@ -67,13 +72,13 @@ export default function Login() {
                 <h1>Gopher Match</h1>
                 <div className={styles.login_form}>
                     <p>Email</p>
-                    <input type="text" value={email} onChange={(event) => setEmail(event.target.value)}/>
+                    <input type="text" value={email} onChange={(event) => setEmail(event.target.value)} autoFocus onKeyUp={enterKeyPress}/>
                     <p>Password</p>
-                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)}/>
+                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} onKeyUp={enterKeyPress}/>
                     <div className={styles.login_failure}>{loginErr}</div>
                     <button onClick={onLoginAttempt}>Login</button>
                     <div className={styles.signup_link_container}>
-                        <Link to="/signup">Sign up</Link>{/*<a className='signup-link' href=''>Sign up</a>*/}
+                        <Link to="/signup">Sign up</Link>
                     </div>
                 </div>
             </div>

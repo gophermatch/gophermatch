@@ -11,6 +11,11 @@ export default function Signup() {
     const [signupErr, setSignupErr] = React.useState('')
     const navigate = useNavigate()
 
+    async function enterKeyPress(event) {
+        if (event.key !== `Enter` && event.keyCode  !== 13) return
+        if (email && password && password2) onSignupAttempt()
+    }
+
     async function onSignupAttempt() {
         if (!email) {
             setSignupErr("Email missing")
@@ -60,11 +65,11 @@ export default function Signup() {
                 <h1>Gopher Match</h1>
                 <div className={styles.login_form}>
                     <p>Email</p>
-                    <input type="text" value={email} onChange={(event) => setEmail(event.target.value)}/>
+                    <input type="text" value={email} onChange={(event) => setEmail(event.target.value)} autoFocus onKeyUp={enterKeyPress}/>
                     <p>Password</p>
-                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)}/>
+                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} onKeyUp={enterKeyPress}/>
                     <p>Re-enter Password</p>
-                    <input type="password" value={password2} onChange={(event) => setPassword2(event.target.value)}/>
+                    <input type="password" value={password2} onChange={(event) => setPassword2(event.target.value)} onKeyUp={enterKeyPress}/>
                     <div className={styles.login_failure}>{signupErr}</div>
                     <button onClick={onSignupAttempt}>Sign up</button>
                     <div className={styles.signup_link_container}>
