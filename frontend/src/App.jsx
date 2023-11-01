@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Root from "./components/Layout.jsx"
+import Layout from "./components/Layout.jsx"
 import Match from "./components/pages/Match.jsx"
 import Profile from "./components/pages/Profile.jsx"
 import Settings from "./components/pages/Settings.jsx"
@@ -46,7 +46,6 @@ async function unauthPageRedirect({request}) {
 
 const router = createBrowserRouter([{
         path: "/",
-        element: <Root />,
         errorElement: <ErrorPage />,
         children: [{
             index: true,
@@ -61,17 +60,23 @@ const router = createBrowserRouter([{
             element: <Signup />,
             loader: loginPageRedirect,
         },{
-            path: "match",
-            element: <Match />,
-            loader: unauthPageRedirect
-        },{
-            path: "profile",
-            element: <Profile />,
-            loader: unauthPageRedirect
-        },{
-            path: "settings",
-            element: <Settings />,
-            loader: unauthPageRedirect
+            // wrapper for pages that need sidebar
+            path: "",
+            element: <Layout />,
+            errorElement: <ErrorPage />,
+            children: [{
+                path: "match",
+                element: <Match />,
+                loader: unauthPageRedirect
+            },{
+                path: "profile",
+                element: <Profile />,
+                loader: unauthPageRedirect
+            },{
+                path: "settings",
+                element: <Settings />,
+                loader: unauthPageRedirect
+            }]
         }]
 }])
 
