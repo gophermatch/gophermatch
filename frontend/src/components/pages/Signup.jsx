@@ -7,13 +7,9 @@ import currentUser from "../../currentUser";
 export default function Signup() {
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
+    const [password2, setPassword2] = React.useState('')
     const [signupErr, setSignupErr] = React.useState('')
-
-    const navigate = useNavigate();
-
-    if (currentUser.logged_in) {
-        navigate("/") // make sure you aren't already logged in
-    }
+    const navigate = useNavigate()
 
     async function onSignupAttempt() {
         if (!email) {
@@ -27,16 +23,23 @@ export default function Signup() {
         if (!password) {
             setSignupErr("Password missing")
             return
+        } else if (!password2) {
+            setSignupErr("Please re-enter password")
+            return
+        } else if (password !== password2) {
+            setSignupErr("Re-entered password does not match your password")
+            return
         }
 
         try {
-            await backend.put("/signup", {
+            const res = await backend.post("/account", {
                 email,
                 password
             })
             // any result from backend means success
-
-            navigate("/login")
+            const user_id = res.data.user_id
+            currentUser.login(user_id, email)   // no need to store password
+            navigate("/")
 
         } catch(err) {
             console.error(err)
@@ -66,7 +69,9 @@ export default function Signup() {
                     <input type="text" value={email} onChange={(event) => setEmail(event.target.value)}/>
                     <p>Password</p>
                     <input type="password" value={password} onChange={(event) => setPassword(event.target.value)}/>
-                    <div className={styles.login_failure}>{loginErr}</div>
+                    <p>Re-enter Password</p>
+                    <input type="password" value={password2} onChange={(event) => setPassword2(event.target.value)}/>
+                    <div className={styles.login_failure}>{signupErr}</div>
                     <button onClick={onSignupAttempt}>Sign up</button>
                     <div className={styles.signup_link_container}>
                         <Link to="/login">Already have an account? Log in</Link>

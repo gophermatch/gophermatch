@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from '../../assets/css/login.module.css'
 import React from 'react'
 import backend from "../../backend.js"
@@ -30,8 +30,8 @@ export default function Login() {
 
         try {
             const res = await backend.put("/login", {
-                email: email,
-                password: password
+                email,
+                password
             })
 
             // data is the request body, put it INSIDE the config object in the second argument
@@ -73,7 +73,7 @@ export default function Login() {
                     <div className={styles.login_failure}>{loginErr}</div>
                     <button onClick={onLoginAttempt}>Login</button>
                     <div className={styles.signup_link_container}>
-                        <a className='signup-link' href=''>Sign up</a>
+                        <Link to="/signup">Sign up</Link>{/*<a className='signup-link' href=''>Sign up</a>*/}
                     </div>
                 </div>
             </div>

@@ -13,6 +13,7 @@ import Login from "./components/pages/Login.jsx"
 import ErrorPage from "./components/pages/ErrorPage.jsx"
 import currentUser from "./currentUser.js"
 import './assets/css/index.css'
+import Signup from './components/pages/Signup.jsx'
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
@@ -25,10 +26,10 @@ async function mainPageRedirect({request}) {
     return redirect("/match")
 }
 
-// Redirects the login page to main page if user is logged in
+// Redirects the login page to match page if user is logged in
 async function loginPageRedirect() {
     if (currentUser.logged_in) {
-        return redirect("/")
+        return redirect("/match")
     }
     return null
 }
@@ -54,6 +55,10 @@ const router = createBrowserRouter([{
         },{
             path: "login",
             element: <Login />,
+            loader: loginPageRedirect,
+        },{
+            path: "signup",
+            element: <Signup />,
             loader: loginPageRedirect,
         },{
             path: "match",
