@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Root from "./components/Root.jsx"
+import Root from "./components/Layout.jsx"
 import Match from "./components/pages/Match.jsx"
 import Profile from "./components/pages/Profile.jsx"
 import Settings from "./components/pages/Settings.jsx"

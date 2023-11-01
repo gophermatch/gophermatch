@@ -1,4 +1,4 @@
-#nav{
+#nav {
     display: flex;
     position: fixed;
     flex-direction: column;
@@ -11,7 +11,7 @@
     box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
 }
 
-#content{
+#content {
     max-height: 100%;
     flex-grow: 10;
     display: flex;
@@ -26,17 +26,18 @@
     transition: 0.5s;
 }
 
-#content p:hover{
+#content .item:hover{
     transform: scale(1.1);
 }
 
-#content p:active{
+#content .item:active{
     transform: scale(1);
 }
 
-#nav a {
+#nav .item {
     color: white;
     text-decoration: none;
+    cursor: pointer;
 }
 
 #icon {

@@ -45,16 +45,10 @@ export default function Signup() {
             console.error(err)
 
             if (err.serverResponds) {
-                // if server responds with error (http status code not in 200 range)
-                // have access to err.request and err.response
                 setSignupErr(err.response.data.error_message)
             } else if (err.requestSent) {
-                // if server never responded (timeout?)
-                // have access to err.request
                 setSignupErr("Server timed out...")
             } else {
-                // if no request sent, must mean request was malformed (fault in our code, not user's fault)
-                // all hell breaks lose
                 setSignupErr("shit... our fault")
             }
         }
