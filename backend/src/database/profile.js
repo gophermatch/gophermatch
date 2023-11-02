@@ -82,7 +82,7 @@ export async function getQnAs(user_id) {
         */
         const queryString = `SELECT user_id, questions.question_id, text, answer FROM 
         questions INNER JOIN u_qnas ON questions.question_id = u_qnas.question_id
-        WHERE user_id = ?`
+        WHERE user_id = ?;`
 
         db.query(queryString, [user_id], (err, rows) => {
             if (err) {
@@ -123,10 +123,40 @@ export async function createQnA(user_id, question_id, answer) {
 // Update an answer to an exisitng question
 // The question with question_id must exist
 export async function updateQnA(user_id, question_id, answer) {
+    return new Promise((resolve, reject) => {
+        const qr = buildUpdateString(tableNames.u_qnas, {user_id, question_id}, {answer})
 
+        db.query(qr.queryString, qr.values, (err, res) => {
+            if (err) {
+                reject(err)
+                return
+            }
+            if (res.affectedRows == 0) {
+                reject("No question found!")
+            } else if (res.affectedRows > 1)  {
+                reject("Multiple questions and answers updated!?")
+            } else {
+                // res.insertId exists iff exactly one row is inserted
+                resolve()
+            }
+        })
+    })
 }
 
 // Deletes a user's existing answer to an exisitng question
 export async function deleteQnA(user_id, question_id) {
-
+    return new Promise((resolve, reject) => {
+        db.query(`DELETE FROM ${tableNames.u_qnas} WHERE user_id = ? AND question_id = ?;`, [user_id, question_id],
+        (err, res) => {
+            if (err) {
+                reject(err)
+                return
+            }
+            if (res.affectedRows == 0) {
+                reject(`Question not found!`)
+            } else if (res.affectedRows == 1) {
+                resolve(res)
+            } else reject({})
+        })
+    })
 }

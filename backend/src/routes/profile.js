@@ -8,9 +8,15 @@ import {
     updateQnA,
     deleteQnA
 } from '../database/profile.js'
+import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
 const router = Router()
 
 export default router
+
+// Check and parse question_id appearing in body or query param to a positive integer
+router.use((req, res, next) => {
+    parseValue([SearchLocation.Body, SearchLocation.Query], 'question_id', parseToPosInt, 'positive integer', req, res, next)
+})
 
 // GET api/profile/
 router.get('/', async (req, res) => {
@@ -91,7 +97,7 @@ router.post('/qna/', async (req, res) => {
     const answer = req.body.answer
 
     if (!user_id || !question_id || !answer) {
-        res.status(400).json(createErrorObj("Must include an user_id, question_id, and answer in the query parameter!"))
+        res.status(400).json(createErrorObj("Must include an user_id, question_id, and answer in the body!"))
         return
     }
 
@@ -118,10 +124,11 @@ router.put('/qna/', async (req, res) => {
     const answer = req.body.answer
 
     if (!user_id || !question_id || !answer) {
-        res.status(400).json(createErrorObj("Must include an user_id, question_id, and answer in the query parameter!"))
+        res.status(400).json(createErrorObj("Must include an user_id, question_id, and answer in the body!"))
         return
     }
 
+    // TODO: Make this extensible to other forms of logins/api auth by using middleware
     // If the user is trying to update a QnA for another uesr
     if (user_id !== req.session.user.user_id) {
         res.status(400).json(createErrorObj("Can only update your own answer!"))
@@ -139,6 +146,26 @@ router.put('/qna/', async (req, res) => {
 
 // Delete Answer to Question
 // DELETE api/profile/qna/
-router.put('/qna/', async (req, res) => {
-    
+router.delete('/qna/', async (req, res) => {
+    const user_id = req.body.user_id
+    const question_id = req.body.question_id
+
+    if (!user_id || !question_id) {
+        res.status(400).json(createErrorObj("Must include an user_id and question_id in the query parameter!"))
+        return
+    }
+
+    // If the user is trying to delete a QnA for another uesr
+    if (user_id !== req.session.user.user_id) {
+        res.status(400).json(createErrorObj("Can only delete your own answer!"))
+        return
+    }
+
+    try {
+        await deleteQnA(user_id, question_id)
+        res.status(200).json({message: "Answer deleted!"})
+    } catch(e) {
+        console.error(e)
+        res.status(400).json(createErrorObj(e))
+    }
 })

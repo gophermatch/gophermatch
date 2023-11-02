@@ -52,7 +52,7 @@ export async function createUser(email, hashpass) {
 
 export async function deleteUser(user_id) {
     return new Promise((resolve, reject) => {
-        db.query(`DELETE FROM ${tableNames.users} WHERE user_id = ?`, user_id,
+        db.query(`DELETE FROM ${tableNames.users} WHERE user_id = ?;`, user_id,
         (err, res) => {
             if (err) {
                 reject(err)
