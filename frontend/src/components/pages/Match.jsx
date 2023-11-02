@@ -57,29 +57,37 @@ export default function Match() {
             <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'></link>
             <div ref={ref} className={styles.MatchDiv}>
                 <div className={styles.ProfileDiv}>
-                    <div className={styles.ImageDiv}>
-                        <img src="../../assets/images/testprofile.png" className={styles.ProfileImage}></img>
-                        <div className={styles.ProfileBanner}></div>
+                    <div className={styles.TopHalf}>
+                        <div className={styles.ImageDiv}>
+                            <img src="../../assets/images/testprofile.png" className={styles.ProfileImage}></img>
+                            <div className={styles.ProfileBanner}></div>
+                        </div>
+                        <div className={styles.BioWrapper}>
+                            <b className={styles.NameLabel}>Test Person</b>
+                            <p className={styles.BioParagraph}>Hello! I'm Test Person, Class of 2027. This is my bio, I'm super cool. Be my roommate. aaaaaaaaaaaaaaaaaaaaa</p>
+                        </div>
                     </div>
-
-                    <b className={styles.NameLabel}>Test Person</b>
-                    <p className={styles.BioParagraph}>Hello! I'm Test Person, Class of 2027. This is my bio, I'm super cool. Be my roommate. aaaaaaaaaaaaaaaaaaaaa</p>
-                    <ul className={styles.PositiveTraits}>
-                        <b>About me</b>
-                        <li>Midnight bed time</li>
-                        <li>Computer science major</li>
-                        <li>Okay with sharing stuff</li>
-                    </ul>
-                    <ul className={styles.LookingForTraits}>
-                        <b>My preferences</b>
-                        <li>No smoking</li>
-                        <li>Wants to be friends</li>
-                        <li>Likes to workout</li>
-                    </ul>
+                    <div className={styles.BottomHalf}>
+                        <ul className={styles.PositiveTraits}>
+                            <b>About me</b>
+                            <li>Midnight bed time</li>
+                            <li>Computer science major</li>
+                            <li>Okay with sharing stuff</li>
+                        </ul>
+                        <ul className={styles.LookingForTraits}>
+                            <b>My preferences</b>
+                            <li>No smoking</li>
+                            <li>Wants to be friends</li>
+                            <li>Likes to workout</li>
+                        </ul>
+                    </div>
                 </div>
                 <br></br>
-                <button className={styles.MatchButton} id={styles.YesButton}><img className={styles.ButtonIcon} src="../../assets/images/check.png" onClick={handleYesButtonClick}></img></button>
-                <button className={styles.MatchButton} id={styles.NoButton}><img className={styles.ButtonIcon} src="../../assets/images/x.png" onClick={handleNoButtonClick}></img></button>
+                <div className={styles.ButtonWrapper}>
+                    <button className={styles.MatchButton} id={styles.YesButton}><img className={styles.ButtonIcon} src="../../assets/images/check.png" onClick={handleYesButtonClick}></img></button>
+                    <button className={styles.MatchButton} id={styles.NoButton}><img className={styles.ButtonIcon} src="../../assets/images/x.png" onClick={handleNoButtonClick}></img></button>
+                </div>
+                
             </div>
         </div>
     )
