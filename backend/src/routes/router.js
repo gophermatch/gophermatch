@@ -10,6 +10,6 @@ const router = Router()
 router.use('/login', LoginRouter)
 router.use('/account', AccountRouter)
 router.use('/preferences', PreferenceRouter)    // TODO: prepend AuthStatusChecker
-router.use('/profile', ProfileRouter)
+router.use('/profile', AuthStatusChecker, ProfileRouter)
 
 export default router

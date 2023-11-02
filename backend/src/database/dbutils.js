@@ -8,7 +8,7 @@ export function queryRowsToArray(rows) {
 }
 
 /* Returns a string of keys that corresponds to values which have ? as placeholder. For example,
-    1. user_id = ? AND hashpass = ? AND age > 2 ...
+    1. user_id = ? AND hashpass = ? AND age > ? ...
     2. use_id = ? , hashpass = ? , ...
     Also returns an array of values
 
@@ -42,7 +42,7 @@ export function buildKeyValSep(object, relation, separator) {
     }
     return {
         keyString: res,
-        vals: vals
+        values: vals
     }
 }
 
@@ -64,7 +64,7 @@ export function buildSelectString(selector, tableName, conds) {
     if (res !== "") cond += " WHERE " + res.keyString
     return {
         queryString: `SELECT ${selector} FROM ${tableName}${cond};`,
-        values: res.vals
+        values: res.values
     };
 }
 
@@ -88,6 +88,21 @@ export function buildInsertString(tableName, object) {
 
     return {
         queryString: `INSERT INTO ${tableName} ${colList} VALUES ${valList};`,
+        values: vals
+    }
+}
+
+// primary_key is an object specifying the record with the primary key. cannot be null
+// newVals is an object with the column name and their new values
+// newVals can contain a subset of the columns, but cannot be an empty object
+// To discard a column's value, you can set newVals = { x : null }
+export function buildUpdateString(tableName, primary_key, newVals) {
+    const nvs = buildKeyValSep(newVals, "=", ",")
+    const pk = buildKeyValSep(primary_key, "=", "AND")
+
+    const vals = nvs.values.concat(pk.values)
+    return {
+        queryString: `UPDATE ${tableName} SET ${nvs.keyString} WHERE ${pk.keyString};`,
         values: vals
     }
 }

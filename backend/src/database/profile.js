@@ -1,5 +1,5 @@
 import { db, tableNames } from './db.js'
-import { queryRowsToArray, buildSelectString, buildInsertString } from './dbutils.js'
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
 
 // Returns profile object (with profile_name and bio)
 export async function getProfile(user_id) {
@@ -54,7 +54,22 @@ export async function createProfile(user_id, profile) {
 
 // updates the stored profile
 export async function updateProfile(user_id, profile) {
+    return new Promise((resolve, reject) => {
+        const qr = buildUpdateString(tableNames.u_profiles, {user_id}, {...profile})
 
+        db.query(qr.queryString, qr.values, (err, res) => {
+            if (err) {
+                reject(err)
+                return
+            }
+            if (res.affectedRows != 1) {
+                reject("Multiple or no profiles updated!")
+            } else {
+                // res.insertId exists iff exactly one row is inserted
+                resolve()
+            }
+        })
+    })
 }
 
 // Returns an array of "Questions and Answers" object

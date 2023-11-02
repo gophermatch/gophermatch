@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { createErrorObj } from './routeutil.js'
-import { getProfile } from '../database/profile.js'
+import { getProfile, updateProfile } from '../database/profile.js'
 const router = Router()
 
 export default router
@@ -23,18 +23,38 @@ router.get('/', async (req, res) => {
     }
 })
 
-// Create profile
-// POST api/profile/
-router.post('/', async (req, res) => {
-    const user_id = req.body.user_id
-    const profile = req.body.profile
-})
-
 // Update profile
 // PUT api/profile/
+// REQUIRES the request's Content-Type to be "application/json"
 router.put('/', async (req, res) => {
     const user_id = req.body.user_id
     const profile = req.body.profile
+    delete profile.user_id // prevent user from chaning the user_id of their profile record
+
+    if (!user_id || !profile) {
+        res.status(400).json(createErrorObj("Must specify the user_id and profile object to update the profile!"))
+        return
+    }
+
+    // If the user is updating a profile that's not their own
+    if (user_id !== req.session.user.user_id) {
+        res.status(400).json(createErrorObj("Cannot update someone else's profile!"))
+        return
+    }
+
+    // Check if profile object is empty
+    if (Object.keys(profile).length == 0) {
+        res.status(400).json(createErrorObj("Must provide some new values to update! (To delete a value, use the value null)"))
+        return
+    }
+
+    try {
+        await updateProfile(user_id, profile)
+        res.status(200).json({message: "Profile updated!"})
+    } catch(e) {
+        console.error(e)
+        res.status(400).json(createErrorObj(e))
+    }
 })
 
 // Get Question and Answers
