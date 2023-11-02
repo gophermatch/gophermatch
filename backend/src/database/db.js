@@ -12,7 +12,7 @@ export const db = createPool({
 
 export const tableNames = {
     users: "users",
-    u_profiles: "profiles",
+    u_profiles: "u_profiles",
         u_matches: "u_matches", // junction table
         u_qnas: "u_qnas",
         u_pictures: "u_pictures",

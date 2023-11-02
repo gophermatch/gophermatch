@@ -1,6 +1,13 @@
 import { Router } from 'express'
 import { createErrorObj } from './routeutil.js'
-import { getProfile, updateProfile } from '../database/profile.js'
+import { 
+    getProfile,
+    updateProfile,
+    getQnAs,
+    createQnA,
+    updateQnA,
+    deleteQnA
+} from '../database/profile.js'
 const router = Router()
 
 export default router
@@ -88,9 +95,15 @@ router.post('/qna/', async (req, res) => {
         return
     }
 
+    // If the user is trying to create a QnA for another uesr
+    if (user_id !== req.session.user.user_id) {
+        res.status(400).json(createErrorObj("Can only create your own answer!"))
+        return
+    }
+
     try {
         await createQnA(user_id, question_id, answer)
-        res.status(200).json({message: "Question created!"})
+        res.status(200).json({message: "Answer created!"})
     } catch(e) {
         console.error(e)
         res.status(400).json(createErrorObj(e))
@@ -109,11 +122,23 @@ router.put('/qna/', async (req, res) => {
         return
     }
 
+    // If the user is trying to update a QnA for another uesr
+    if (user_id !== req.session.user.user_id) {
+        res.status(400).json(createErrorObj("Can only update your own answer!"))
+        return
+    }
+
     try {
         await updateQnA(user_id, question_id, answer)
-        res.status(200).json({message: "Question updated!"})
+        res.status(200).json({message: "Answer updated!"})
     } catch(e) {
         console.error(e)
         res.status(400).json(createErrorObj(e))
     }
+})
+
+// Delete Answer to Question
+// DELETE api/profile/qna/
+router.put('/qna/', async (req, res) => {
+    
 })

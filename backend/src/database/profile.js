@@ -74,20 +74,59 @@ export async function updateProfile(user_id, profile) {
 
 // Returns an array of "Questions and Answers" object
 // Could be an empty list if the user has no QnAs
-// Or throws an error if the user's profile hasn't been created
 export async function getQnAs(user_id) {
+    return new Promise((resolve, reject) => {
+        /* TODO: Write util function for joins
+        SELECT user_id, questions.question_id, text, answer FROM 
+            questions INNER JOIN u_qnas ON questions.question_id = u_qnas.question_id
+        */
+        const queryString = `SELECT user_id, questions.question_id, text, answer FROM 
+        questions INNER JOIN u_qnas ON questions.question_id = u_qnas.question_id
+        WHERE user_id = ?`
 
+        db.query(queryString, [user_id], (err, rows) => {
+            if (err) {
+                reject(err)
+                return
+            }
+
+            // return result no matter if any are found
+            const res = queryRowsToArray(rows)
+            resolve(res)
+        })
+    })
 }
 
-// Create an answer to a exisitng question
+// Create an answer to an exisitng question
 // The question with question_id must exist
 // The user must have answered the question before
 export async function createQnA(user_id, question_id, answer) {
+    return new Promise((resolve, reject) => {
+        const qr = buildInsertString(tableNames.u_qnas, {user_id, question_id, answer})
+
+        db.query(qr.queryString, qr.values, (err, res) => {
+            if (err) {
+                if (err.code === "ER_DUP_ENTRY") reject("Answer already exists for this question")
+                else reject(err)
+                return
+            }
+            if (res.affectedRows != 1) {
+                reject({})
+            } else {
+                // res.insertId exists iff exactly one row is inserted
+                resolve()
+            }
+        })
+    })
+}
+
+// Update an answer to an exisitng question
+// The question with question_id must exist
+export async function updateQnA(user_id, question_id, answer) {
 
 }
 
-// Update an answer to a exisitng question
-// The question with question_id must exist
-export async function updateQnA(user_id, question_id, answer) {
+// Deletes a user's existing answer to an exisitng question
+export async function deleteQnA(user_id, question_id) {
 
 }

@@ -7,7 +7,7 @@ create table u_matches (
     primary key (user_id, match_user_id),
     foreign key (user_id) references users(user_id)
         on delete cascade
-        on update cascade
+        on update cascade,
     foreign key (match_user_id) references users(user_id)
         on delete cascade
         on update cascade
