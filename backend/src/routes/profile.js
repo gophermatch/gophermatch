@@ -61,6 +61,19 @@ router.put('/', async (req, res) => {
 // GET api/profile/qna/
 router.get('/qna/', async (req, res) => {
     const user_id = req.query.user_id
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include an user_id in the query parameter!"))
+        return
+    }
+
+    try {
+        const qnas = await getQnAs(user_id)
+        res.status(200).json(qnas)
+    } catch(e) {
+        console.error(e)
+        res.status(400).json(createErrorObj(e))
+    }
 })
 
 // Create Answer to Question
@@ -69,6 +82,19 @@ router.post('/qna/', async (req, res) => {
     const user_id = req.body.user_id
     const question_id = req.body.question_id
     const answer = req.body.answer
+
+    if (!user_id || !question_id || !answer) {
+        res.status(400).json(createErrorObj("Must include an user_id, question_id, and answer in the query parameter!"))
+        return
+    }
+
+    try {
+        await createQnA(user_id, question_id, answer)
+        res.status(200).json({message: "Question created!"})
+    } catch(e) {
+        console.error(e)
+        res.status(400).json(createErrorObj(e))
+    }
 })
 
 // Update Answer to Question
@@ -77,4 +103,17 @@ router.put('/qna/', async (req, res) => {
     const user_id = req.body.user_id
     const question_id = req.body.question_id
     const answer = req.body.answer
+
+    if (!user_id || !question_id || !answer) {
+        res.status(400).json(createErrorObj("Must include an user_id, question_id, and answer in the query parameter!"))
+        return
+    }
+
+    try {
+        await updateQnA(user_id, question_id, answer)
+        res.status(200).json({message: "Question updated!"})
+    } catch(e) {
+        console.error(e)
+        res.status(400).json(createErrorObj(e))
+    }
 })
