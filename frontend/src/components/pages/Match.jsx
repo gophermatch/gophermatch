@@ -26,7 +26,7 @@ export default function Match() {
         console.log("ref")
         console.log(ref)
 
-        document.querySelector(`.${styles.ProfileDiv}`).style.height = '0%';
+        document.querySelector(`.${styles.ProfileDiv}`).style.transform = 'scaleY(0)';
         
         document.querySelector(`.${styles.LookingForTraits}`).style.transform = 'scale(0) translateY(-1000%)';
         document.querySelector(`.${styles.PositiveTraits}`).style.transform = 'scale(0) translateY(-1000%)';
@@ -41,7 +41,7 @@ export default function Match() {
 
         await delay(500);
         
-        document.querySelector(`.${styles.ProfileDiv}`).style.height = '70%';
+        document.querySelector(`.${styles.ProfileDiv}`).style.transform = 'scaleY(1)';
 
         document.querySelector(`.${styles.LookingForTraits}`).style.transform = 'scale(1) translateY(0%)';
         document.querySelector(`.${styles.PositiveTraits}`).style.transform = 'scale(1) translateY(0%)';

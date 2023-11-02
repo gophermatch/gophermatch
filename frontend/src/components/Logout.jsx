@@ -30,6 +30,6 @@ export default function Logout({id, className}) {
     }
 
     return (
-        <div id={id} className={className} onClick={logout}>Logout</div>
+        <div id={id} className={className} onClick={logout}>⬅️ Logout</div>
     )
 }
