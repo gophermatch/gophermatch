@@ -1,19 +1,212 @@
+
+#MatchPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.MatchDiv {
+    padding: 20px;
+    background-color: #fff7f2;
+    width: 80%;
+    height: 80vh;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ProfileDiv {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 5px 5px rgba(101, 101, 101, 0.5);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 100vh;
+}
+
+.TopHalf {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    max-height: 25vh;
+    gap: 12px;
+}
+
+.ImageDiv {
+    aspect-ratio: 1/1;
+    box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
+    transition: 0.6s ease;
+    border-radius: 20px;
+    margin: 0;
+    height: 25vh;
+    display: flex;
+    position: relative;
+}
+.ProfileBanner {
+    position: absolute;
+    border-radius: 0px 0px 20px 20px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0));
+    border-radius: 0px 0px 20px 20px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30%;
+    color: #fff;
+    display: flex;
+}
+.ProfileImage {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+.BioWrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.NameLabel {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 25px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    color: black;
+}
+.BioParagraph {
+    box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
+    padding: 16px;
+    background: rgb(244, 244, 244);
+    border-radius: 10px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin: 0;
+    margin-top: 12px;
+    flex: 1;
+    overflow:hidden;
+}
+
+
+
+.BottomHalf {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    max-height: 30vh;
+}
+
+.PositiveTraits {
+    list-style-type: none;
+    text-align: left;
+    box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background: rgb(191, 255, 179);
+    padding: 16px;
+    border-radius: 10px;
+    line-height: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    transition: 0.5s;
+    overflow: hidden;
+    margin: 0;
+    flex: 1;
+}
+
+.LookingForTraits {
+    box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background: rgb(255, 255, 197);
+    list-style-type: none;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: 0.5s;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    line-height: 1.5rem;
+    text-align: left;
+    padding: 16px;
+    margin: 0;
+    flex: 1;
+}
+
+
+.ButtonWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100px + 10%);
+}
+.ButtonWrapper button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.15s;
+    box-shadow: 0px 5px 5px rgba(101, 101, 101, 0.5);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+}
+.ButtonWrapper img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    margin: 0;
+}
+#YesButton {
+    background: #d4ffbc;
+}
+#YesButton:hover {
+    transform: translateY(-1px);
+    background: #dddddd
+}
+#YesButton:active {
+    transform: translateY(1px);
+    background: #FFF
+}
+
+#NoButton {
+    background: #ffbcbc;
+}
+#NoButton:hover {
+    transform: translateY(-1px);
+    background: #dddddd
+}
+#NoButton:active {
+    transform: translateY(1px);
+    background: #FFF
+}
+
+
+/* OLD
+#MatchPage {
+    position: absolute; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
 .MatchButton {
     display: inline-block;
     width: 70px;
-    /* Adjust the size as needed */
     height: 70px;
-    /* Same value for a perfect circle */
     border-radius: 50%;
-    /* Makes the button round */
     border: none;
     box-shadow: 0px 5px 5px rgba(101, 101, 101, 0.5);
     text-align: center;
     line-height: 100px;
-    /* Center text vertically */
     cursor: pointer;
     transition: 0.15s;
     margin: 10px 35px;
+    z-index: 5;
 }
 
 .ProfileDiv {
@@ -22,9 +215,10 @@
     background: white;
     box-shadow: 0px 5px 5px rgba(101, 101, 101, 0.5);
     border-radius: 20px;
-    width: 60%;
+    aspect-ratio: 4/3;
     height: 70%;
     transition: 0.5s;
+    display: flex;
 }
 
 #YesButton:hover {
@@ -113,15 +307,14 @@
 
 .ImageDiv {
     height: 25%;
+    margin: 0;
     width: auto;
     box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
     display: flex;
     transition: 0.6s ease;
     border-radius: 20px;
-    position: absolute;
-    left: 25%;
-    top: 16%;
     display: inline-block;
+    position: relative;
 }
 
 .ProfileBanner {
@@ -132,9 +325,7 @@
     width: 100%;
     bottom: 0;
     height: 30%;
-    /* Adjust the background color and opacity */
     color: #fff;
-    /* Text color for overlay content */
     display: flex;
     justify-content: center;
     vertical-align: bottom;
@@ -182,20 +373,25 @@
 .MatchDiv {
     text-align: center;
     position: absolute;
-    margin-top: 1.5%;
-    left: 30vh;
     z-index: -1;
     width: 83%;
     height: 93%;
     background-color: #fff7f2;
-    margin-left: 1%;
     border-radius: 20px;
     box-shadow: 0px 2px 5px rgba(101, 101, 101, 0.5);
     overflow: hidden;
 }
 
 .ButtonIcon {
-    z-index: 1;
     width: 40px;
     height: 40px;
 }
+
+
+.TopHalf {
+    display: flex;
+    border: 40px solid blue;
+    background-color: red;
+}
+
+*/

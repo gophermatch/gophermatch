@@ -1,0 +1,13 @@
+#sidebar {
+    position: fixed;
+    width: 15vw;
+    height: 98vh;
+}
+
+#page {
+    width: 84vw;
+    height: 98vh;
+    left: 15vw;
+    position: relative;
+    z-index: 0;
+}

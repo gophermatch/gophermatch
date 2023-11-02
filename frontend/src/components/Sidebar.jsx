@@ -1,18 +1,19 @@
 import { Link } from "react-router-dom"
 import Styles from "../assets/css/sidebar.module.css"
+import Logout from "./Logout"
 
-export default function Root() {
+export default function Sidebar() {
     return(
         <>
         <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'></link>
         <nav id={Styles.nav}>
-            <Link to="/match" id={Styles.icon}>
+            <Link to="/" id={Styles.icon}>
                 <img src="../assets/images/logo.png" id={Styles.logo}></img>
             </Link>
             <div id={Styles.content}>
-                <p><Link to="/">🔑 Login</Link></p>
-                <p><Link to="/profile">👤 Profile</Link></p>
-                <p><Link to="/settings">⚙️ Settings</Link></p>
+                <Link to="/profile" className={Styles.item}>👤 Profile</Link>
+                <Link to="/settings" className={Styles.item}>⚙️ Settings</Link>
+                <Logout className={Styles.item} />
             </div>
         </nav>
         </>

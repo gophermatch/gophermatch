@@ -56,7 +56,7 @@ backend.interceptors.response.use((res) => { return res },
         console.error(restErr)
     }
 
-    return Promise.resolve(restErr)
+    return Promise.reject(restErr)
 })
 
 export default backend;

@@ -1,5 +1,6 @@
 import { useRouteError } from "react-router-dom";
 
+// TODO: ability to go back without reloading the page
 export default function ErrorPage() {
     const error = useRouteError();
     console.error(error);
