@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { createUser, deleteUser } from '../database/account.js'
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
+import { createProfile } from '../database/profile.js';
 
 const router = Router()
 const saltRounds = 10;
@@ -24,7 +25,11 @@ router.post('/', async (req, res) => {
     try {
         // hash the password
         const hashpass = await bcrypt.hash(password, saltRounds)
+        // create the user
         const user = await createUser(email, hashpass)
+
+        // create the user's profile
+        const profile = await createProfile(user.user_id)
 
         const userWithoutPass = loginUser(req, user)
         res.status(201).json(userWithoutPass)

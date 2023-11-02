@@ -1,14 +1,26 @@
 import { Router } from 'express'
 import { createErrorObj } from './routeutil.js'
+import { getProfile } from '../database/profile.js'
 const router = Router()
 
 export default router
 
-// Don't worry about completing all this. Prioritize create and get routes
-
 // GET api/profile/
 router.get('/', async (req, res) => {
     const user_id = req.query.user_id
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include an user_id in the query parameter!"))
+        return
+    }
+
+    try {
+        const profile = await getProfile(user_id)
+        res.status(200).json(profile)
+    } catch(e) {
+        console.error(e)
+        res.status(400).json(createErrorObj(e))
+    }
 })
 
 // Create profile
