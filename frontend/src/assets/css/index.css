@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+}
+
+:root {
+    --umn-maroon: #790019;
+    --umn-yellow: #fed100;
+
+    --secondary-text: #383d41;
+    --secondary-border: #545b62;
+    --secondary-hover-light: #c8cbcf;
+    --secondary-bg-light: #d6d8db;
+
+    --success-text: #155724;
+    --success-border: #1e7e34;
+
+    --danger-alert-link: #491217;
+    --danger-text: #721c24;
+    --danger-border: #bd2130;
+    --danger-hover-dark: #c82333;
+    --danger: #d50510;
+
+    --bs-input-valid: #34ce57;
+    --bs-input-valid-light: #71dd8a;
+    --bs-input-invalid: #e4606d;
+    --bs-input-invalid-light: #efa2a9;
+}
