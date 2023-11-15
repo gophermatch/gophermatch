@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import Profile from '../ui-components/Profile';
 import styles from '../../assets/css/match.module.css'
 
 export default function Match() {
@@ -53,6 +54,11 @@ export default function Match() {
     }
 
     return (
+        <Profile data={null}/> //todo get a profile data from backend
+    )
+}
+
+/*
         <div id={styles.MatchPage}>
             <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'></link>
             <div ref={ref} className={styles.MatchDiv}>
@@ -90,5 +96,4 @@ export default function Match() {
                 
             </div>
         </div>
-    )
-}
+        */
