@@ -1,16 +1,10 @@
-.container {
-}
 
-.imageWrapper {
-    border: 2px solid blue;
-}
 
 .imageWrapper img {
     max-width: 100%;
 }
 
 .dotSection {
-    border: 2px solid purple;
     display: flex;
     height: 20px;
 }
