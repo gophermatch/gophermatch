@@ -1,12 +1,24 @@
+import React from 'react'
+import backend from '../../backend'
 import Carousel from './Carousel'
 import styles from '../../assets/css/profile.module.css'
 import kanye from '../../assets/images/kanye.png'
 import other from '../../assets/images/testprofile.png'
 
-export default function Profile() {
-
+export default function Profile(props) {
+    const [profileData, setProfileData] = React.useState(null)
     let pictures = [kanye, other, kanye];
 
+    React.useEffect(() => {
+        // backend.get(`profile_${props.userId}`).then((res) => {
+        //     setProfileData(res) // probably need some checks?
+        // })
+        setProfileData({value: "idk"}) // delete this line
+    }, [])
+
+    if (!profileData) {
+        return <p>Profile Loading</p>
+    }
 
     return (
         <div className={styles.profile}>
