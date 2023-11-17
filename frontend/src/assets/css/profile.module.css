@@ -1,4 +1,22 @@
-.test {
-    font-size: 5em;
-    color: red;
+.profile {
+    display: flex;
+}
+
+.leftSide {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-width: 40vh;
+    padding: 2vh;
+}
+
+.imageWrapper {
+    width: 100%;
+
+}
+
+.rightSide {
+    display: flex;
+    flex-direction: column;
+    flex: 1.5;
 }

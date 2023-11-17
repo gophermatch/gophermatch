@@ -1,58 +1,78 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import Profile from '../ui-components/Profile';
 import styles from '../../assets/css/match.module.css'
 
+import currentUser from '../../currentUser';
+
 export default function Match() {
-    const ref = useRef(null)
+    const [profileIds, updateProfileIds] = useState([]);
 
-    const handleYesButtonClick = () => {
-        console.log('Yes button clicked');
-        document.querySelector(`.${styles.ImageDiv}`).style.transform = 'translateX(1000%) translateY(-100%) rotate(-180deg)';
-        newCard();
-    };
+    useEffect(() => {
+        // get some ids from backend
+        updateProfileIds([currentUser.user_id]) // delete this line
+    }, [])
 
-    const handleNoButtonClick = () => {
-        console.log('No button clicked');
-        document.querySelector(`.${styles.ImageDiv}`).style.transform = 'translateX(-1000%) translateY(-100%) rotate(180deg)';
-        newCard();
-    };
 
-    function delay(ms) {
-        return new Promise(resolve => {
-            setTimeout(resolve, ms);
-        });
-    }
+    // const ref = useRef(null)
 
-    async function newCard() {
-        console.log("ref")
-        console.log(ref)
+    // const handleYesButtonClick = () => {
+    //     console.log('Yes button clicked');
+    //     document.querySelector(`.${styles.ImageDiv}`).style.transform = 'translateX(1000%) translateY(-100%) rotate(-180deg)';
+    //     newCard();
+    // };
 
-        document.querySelector(`.${styles.ProfileDiv}`).style.transform = 'scaleY(0)';
+    // const handleNoButtonClick = () => {
+    //     console.log('No button clicked');
+    //     document.querySelector(`.${styles.ImageDiv}`).style.transform = 'translateX(-1000%) translateY(-100%) rotate(180deg)';
+    //     newCard();
+    // };
+
+    // function delay(ms) {
+    //     return new Promise(resolve => {
+    //         setTimeout(resolve, ms);
+    //     });
+    // }
+
+    // async function newCard() {
+    //     console.log("ref")
+    //     console.log(ref)
+
+    //     document.querySelector(`.${styles.ProfileDiv}`).style.transform = 'scaleY(0)';
         
-        document.querySelector(`.${styles.LookingForTraits}`).style.transform = 'scale(0) translateY(-1000%)';
-        document.querySelector(`.${styles.PositiveTraits}`).style.transform = 'scale(0) translateY(-1000%)';
-        document.querySelector(`.${styles.BioParagraph}`).style.transform = 'scale(0) translateY(-1000%)';
-        document.querySelector(`.${styles.NameLabel}`).style.transform = 'scale(0) translateY(-1000%)';
+    //     document.querySelector(`.${styles.LookingForTraits}`).style.transform = 'scale(0) translateY(-1000%)';
+    //     document.querySelector(`.${styles.PositiveTraits}`).style.transform = 'scale(0) translateY(-1000%)';
+    //     document.querySelector(`.${styles.BioParagraph}`).style.transform = 'scale(0) translateY(-1000%)';
+    //     document.querySelector(`.${styles.NameLabel}`).style.transform = 'scale(0) translateY(-1000%)';
 
-        //TODO: update profile to new one right here
+    //     //TODO: update profile to new one right here
 
-        await delay(500)
+    //     await delay(500)
 
-        document.querySelector(`.${styles.ImageDiv}`).style.transform = 'translateX(0%) translateY(-200%) rotate(0deg)';
+    //     document.querySelector(`.${styles.ImageDiv}`).style.transform = 'translateX(0%) translateY(-200%) rotate(0deg)';
 
-        await delay(500);
+    //     await delay(500);
         
-        document.querySelector(`.${styles.ProfileDiv}`).style.transform = 'scaleY(1)';
+    //     document.querySelector(`.${styles.ProfileDiv}`).style.transform = 'scaleY(1)';
 
-        document.querySelector(`.${styles.LookingForTraits}`).style.transform = 'scale(1) translateY(0%)';
-        document.querySelector(`.${styles.PositiveTraits}`).style.transform = 'scale(1) translateY(0%)';
-        document.querySelector(`.${styles.BioParagraph}`).style.transform = 'scale(1) translateY(0%)';
-        document.querySelector(`.${styles.NameLabel}`).style.transform = 'scale(1) translateY(0%)';
+    //     document.querySelector(`.${styles.LookingForTraits}`).style.transform = 'scale(1) translateY(0%)';
+    //     document.querySelector(`.${styles.PositiveTraits}`).style.transform = 'scale(1) translateY(0%)';
+    //     document.querySelector(`.${styles.BioParagraph}`).style.transform = 'scale(1) translateY(0%)';
+    //     document.querySelector(`.${styles.NameLabel}`).style.transform = 'scale(1) translateY(0%)';
 
-        document.querySelector(`.${styles.ImageDiv}`).style.transform = 'translateX(0%) translateY(0%) rotate(0deg)';
+    //     document.querySelector(`.${styles.ImageDiv}`).style.transform = 'translateX(0%) translateY(0%) rotate(0deg)';
 
+    // }
+
+    if (profileIds.length == 0) {
+        return <p>Loading profiles</p>
     }
 
     return (
+        <Profile userId={profileIds[0]} editable={false} />
+    )
+}
+
+/*
         <div id={styles.MatchPage}>
             <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'></link>
             <div ref={ref} className={styles.MatchDiv}>
@@ -90,5 +110,4 @@ export default function Match() {
                 
             </div>
         </div>
-    )
-}
+        */
