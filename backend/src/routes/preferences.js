@@ -17,6 +17,14 @@ router.get('/', async (req, res) => {   // GET is the HTTP request method we're 
         return
     }
 
+    user_id = parseInt(user_id, 10)
+
+    // user_id is not an int
+    if (Number.isNaN(user_id)) {
+        res.status(400).json(createErrorObj("user_id must be in integer"))
+        return
+    }
+
     try {
         const prefs = await getUserPrefs(user_id)  // check out database/preferences.js
         // since the function is "async", we use "await" to wait for the function's return

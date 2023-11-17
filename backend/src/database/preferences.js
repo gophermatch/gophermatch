@@ -1,21 +1,34 @@
 import { db, tableNames } from './db.js';
-import { buildInsertString, queryRowsToArray } from './dbutils.js'
+import { buildInsertString, buildSelectString, queryRowsToArray } from './dbutils.js'
 
 // Expects an user_id
 // Returns a js object with user_id and preferences, with error = false
 // If an error occurs, return a js object with error = true
 export async function getUserPrefs(user_id) {
-    // For testing without connecting to the database
-    // See below for how to actually write this function, and createUserPrefs
-    if (user_id != 3) throw "User ID not found!";
-    return {
-        user_id: 3,
-        gender: "man",
-        loud_environment: true,
-        extroverted: true,
-        sleep_past_12: true,
-        locations: ["Pioneer", "Territorial"] // DB: you'll have to query this from joining locations and user_locations tables
-    };
+    return new Promise((resolve, reject) => {
+        let query = buildSelectString("*", tableNames.u_prefs, {user_id})
+
+        db.query(query.queryString, query.values,
+            (err, rows) => {
+            if (err) {
+                reject(err)
+                return
+            }
+
+            const res = queryRowsToArray(rows)
+            if (res.length == 1) {
+                resolve(res[0])
+            } else if (res.length == 0) {
+                // user not found
+                reject("User preference not found")
+                return
+            } else if (res.length != 1) {
+                // impossible to have more than one user with the same email
+                reject({})
+                return
+            }
+        })
+    })
 }
 /*
 The SQL selector for ^ looks like
@@ -50,4 +63,12 @@ export async function createUserPrefs(user_id, preferences) {
                 }
         })
     });
+}
+
+// Returns a list of preferences and their value type
+export async function getPrefs() {
+    // return new Promise((resolve, reject) => {
+    //     db.query(`SHOW COLUMNS FROM ${tableNames.u_prefs}`,
+    //         ())
+    // })
 }
