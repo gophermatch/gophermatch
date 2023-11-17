@@ -20,6 +20,13 @@ router.put('/', async (req, res) => {
         return
     }
 
+    // User already logged in
+    // Prevent user from loggin in again (perhaps with a different account) at the same time
+    if (req.session.user) {
+        res.status(400).json(createErrorObj("Already logged in!"))
+        return
+    }
+
     // If user is already signed in, we update their session object in case their password has changed
     try {
         const user = await getUser(email)
