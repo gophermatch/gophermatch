@@ -1,0 +1,13 @@
+{
+    "name": "Kanye East",
+    "bio": "Hi, this is my bio. I'm just a lyrical genuis looking for some guys who can match my flow putting out beats in the dorms. My favorite show is stranger things, and I like to just chill on a friday night with a boba tea and some pop tarts. Really living the life out here. You should match me if you're another cool gemini with a fire pair of Yeezys and a touch of swag. This year is gonna be lit, Ye out.",
+    "user_id": 2022,
+    "grad_year": "2024",
+    "college_id": 1,
+    "gender": "male",
+    "is_dorm": true,
+    "sleep_low_range": 21,
+    "sleep_high_range": 22,
+    "drugs": true,
+    "cleanliness": "spotless"
+}
