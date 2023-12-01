@@ -1,24 +1,43 @@
 import React from 'react'
 import backend from '../../backend'
+import ProfileSplitter from '../../ProfileSplitter'
+
 import Carousel from './Carousel'
 import styles from '../../assets/css/profile.module.css'
+
+import templateProfile from '../../TemplateProfile.json'
 import kanye from '../../assets/images/kanye.png'
 import other from '../../assets/images/testprofile.png'
+
 
 export default function Profile(props) {
     const [profileData, setProfileData] = React.useState(null)
     let pictures = [kanye, other, kanye];
 
     React.useEffect(() => {
-        // backend.get(`profile_${props.userId}`).then((res) => {
-        //     setProfileData(res) // probably need some checks?
+        //todo swap out the routes and uncomment all this code once backend good
+        // let generalPromise = backend.get(`profile_${props.user_Id}`);
+        // let preferencePromise = backend.get(`preferences_${props.userId}`);
+        // let final = {}
+        // Promise.all([generalPromise, preferencePromise]).then(tables => {
+        //     values.forEach(value => {
+        //         final = {...final, ...value}
+        //     })
+        //     setProfileData(final);
         // })
-        setProfileData({value: "idk"}) // delete this line
+
+
+        setProfileData(templateProfile) // delete this line
     }, [])
 
     if (!profileData) {
         return <p>Profile Loading</p>
     }
+
+    const splitter = new ProfileSplitter(profileData);
+    const preferences = splitter.mapPreferences((value, key) => {
+        return <p key={key} enabled={props.enabled}>{key}: {value}</p> //todo use an actual component
+    })
 
     return (
         <div className={styles.profile}>
@@ -27,30 +46,16 @@ export default function Profile(props) {
                     <Carousel pictures={pictures} />
                 </div>
                 <div className={styles.profileOptions}>
-                    <p>profile item one</p>
-                    <p>profile item two</p>
-                    <p>profile item three</p>
-                    <p>profile item four</p>
-                    <p>profile item five</p>
-                    <p>profile item six</p>
+                    {preferences}
                 </div>
             </div>
             <div className={styles.rightSide}>
                 <div className={styles.bioContainer}>
                     <p className={styles.name}>
-                        Kanye East
+                        {splitter.general.name}
                     </p>
                     <p className={styles.bioText}>
-                        Hi, this is my bio. I'm just a lyrical
-                        genuis looking for some  guys who
-                        can match my flow putting out beats in
-                        the dorms. My favorite show is stranger
-                        things, and I like to just chill on a friday
-                        night with a boba tea and some pop tarts.
-                        Really living the life out here. You should
-                        match me if you're another cool gemini with
-                        a fire pair of Yeezys and a touch of swag.
-                        This year is gonna be lit, Ye out.
+                        {splitter.general.bio}
                     </p>
                 </div>
             </div>
