@@ -1,5 +1,6 @@
 body{
     overflow: hidden;
+    background-color: rgb(251, 242, 242);
 }
 
 
@@ -145,8 +146,7 @@ body{
 .ButtonWrapper button {
     width: 60px;
     height: 60px;
-    border-radius: 50%;
-    border: none;
+    border-radius: 0%;
     cursor: pointer;
     text-align: center;
     transition: 0.15s;
@@ -155,7 +155,8 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 8px;
+    padding: 0px;
+    border: none;
 }
 .ButtonWrapper img {
     height: 100%;

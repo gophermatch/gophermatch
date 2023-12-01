@@ -27,12 +27,13 @@ export default function Profile(props) {
                     <Carousel pictures={pictures} />
                 </div>
                 <div className={styles.profileOptions}>
-                    <p>profile item one</p>
-                    <p>profile item two</p>
-                    <p>profile item three</p>
-                    <p>profile item four</p>
-                    <p>profile item five</p>
-                    <p>profile item six</p>
+                    {/* Make these colored based on preference compatibility eventually */}
+                    <p className={styles.profileItem}>profile item one</p>
+                    <p className={styles.profileItem}>profile item two</p>
+                    <p className={styles.profileItem}>profile item three</p>
+                    <p className={styles.profileItem}>profile item four</p>
+                    <p className={styles.profileItem}>profile item five</p>
+                    <p className={styles.profileItem}>profile item six</p>
                 </div>
             </div>
             <div className={styles.rightSide}>

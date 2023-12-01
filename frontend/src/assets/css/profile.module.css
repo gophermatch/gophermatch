@@ -10,13 +10,40 @@
     padding: 2vh;
 }
 
+.bioContainer {
+    background-color: white;
+    border-radius: 5px;
+    margin-top: 2.1vh;
+    min-height: 45%;
+    padding: 2%;
+    box-shadow: 0px 0px 5px #888888;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    font-size: 16px;
+}
+
+.profileOptions{
+    
+}
+
+.profileItem{
+    background-color: white;
+    border-radius: 5px;
+    padding: 2%;
+    box-shadow: 0px 0px 5px #888888;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    font-size: 16px;
+}
+
 .imageWrapper {
     width: 100%;
-
 }
 
 .rightSide {
     display: flex;
     flex-direction: column;
     flex: 1.5;
+}
+
+.name {
+    font-size: 24px;
 }
