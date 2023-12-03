@@ -46,7 +46,14 @@ export default function Profile(props) {
                     <Carousel pictures={pictures} />
                 </div>
                 <div className={styles.profileOptions}>
-                    {preferences}
+                    {/* Make these colored based on preference compatibility eventually */}
+                    <p className={styles.profileItem}>profile item one</p>
+                    <p className={styles.profileItem}>profile item two</p>
+                    <p className={styles.profileItem}>profile item three</p>
+                    <p className={styles.profileItem}>profile item four</p>
+                    <p className={styles.profileItem}>profile item five</p>
+                    <p className={styles.profileItem}>profile item six</p>
+                      {/*Put preferences array here*/}
                 </div>
             </div>
             <div className={styles.rightSide}>

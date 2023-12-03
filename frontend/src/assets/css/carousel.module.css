@@ -2,19 +2,38 @@
 
 .imageWrapper img {
     max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px #888888;
 }
 
 .dotSection {
     display: flex;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
     height: 20px;
 }
 
 .progressButton {
-    flex: 1;
-    font-size: 20px;
+    font-size: 12px;
     line-height: 20px;
-    margin: 0;
+    flex: none;
     padding: 0;
+    border: none;
+    background-color: white;
+    box-shadow: 0px 0px 5px #888888;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    overflow: none;
+    transition: 0.2s;
+}
+
+.progressButton:hover {
+    background-color: rgb(148, 148, 148)
+}
+
+.progressButton:active {
+    background-color: white
 }
 
 .dots {
@@ -22,6 +41,7 @@
     align-items: center;
     justify-content: space-around;
     flex: 5;
+    margin-top: 11px;
 }
 
 .dotSolid, .dotEmpty {
