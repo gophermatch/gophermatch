@@ -1,16 +1,40 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Profile from '../ui-components/Profile';
 import styles from '../../assets/css/match.module.css'
 
 import currentUser from '../../currentUser';
+import backend from '../../backend';
 
-export default function Match() {
+export default function Match() { // this can probably get refactored to not need 3 states if used react better
     const [profileIds, updateProfileIds] = useState([]);
+    const [cachedProfiles, updateCachedProfiles] = useState([]);
+    const [currentQueueIndex, updateQueueIndex] = useState(0)
 
     useEffect(() => {
-        // get some ids from backend
-        updateProfileIds([currentUser.user_id]) // delete this line
-    }, [])
+        console.log("New profile ids loaded:")
+        console.log(profileIds)
+        function goNextProfile(didMatch) {
+            updateQueueIndex(current => {console.log("Progressing id: " + current); return current + 1})
+        }
+
+        const newProfiles = profileIds.map(id => {
+            return <Profile key={id} userId={id} editable={false} goNextProfile={goNextProfile} />
+        })
+
+        updateCachedProfiles(newProfiles)
+    }, [profileIds])
+
+
+    if (currentQueueIndex === profileIds.length) {
+        // backend.get(stuff).then(res => {
+        //     updateProfileIds([...profileIds, ...res.data])
+        // })
+        console.log("Requesting new profiles");
+        updateProfileIds([Math.ceil(Math.random() * 99), Math.ceil(Math.random() * 99), Math.ceil(Math.random() * 99)]) // delete this line
+        updateQueueIndex(0)
+        return <p>Loading profiles</p>
+    }
+
 
 
     // const ref = useRef(null)
@@ -67,9 +91,7 @@ export default function Match() {
         return <p>Loading profiles</p>
     }
 
-    return (
-        <Profile userId={profileIds[0]} editable={false} />
-    )
+    return cachedProfiles[currentQueueIndex]
 }
 
 /*

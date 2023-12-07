@@ -26,7 +26,7 @@ export default function Profile(props) {
         //     setProfileData(final);
         // })
 
-
+        console.log("Rendering profile for user: " + props.userId)
         setProfileData(templateProfile) // delete this line
     }, [])
 
@@ -59,11 +59,12 @@ export default function Profile(props) {
             <div className={styles.rightSide}>
                 <div className={styles.bioContainer}>
                     <p className={styles.name}>
-                        {splitter.general.name}
+                        {splitter.general.name + props.userId}
                     </p>
                     <p className={styles.bioText}>
                         {splitter.general.bio}
                     </p>
+                    <button onClick={() => props.goNextProfile(true)}></button>
                 </div>
             </div>
         </div>
