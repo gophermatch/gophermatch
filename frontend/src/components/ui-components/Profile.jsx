@@ -11,24 +11,9 @@ import other from '../../assets/images/testprofile.png'
 
 
 export default function Profile(props) {
-    const [profileData, setProfileData] = React.useState(null)
+    const profileData = props.data
+    //const [profileData, setProfileData] = React.useState(props.data)
     let pictures = [kanye, other, kanye];
-
-    React.useEffect(() => {
-        //todo swap out the routes and uncomment all this code once backend good
-        // let generalPromise = backend.get(`profile_${props.user_Id}`);
-        // let preferencePromise = backend.get(`preferences_${props.userId}`);
-        // let final = {}
-        // Promise.all([generalPromise, preferencePromise]).then(tables => {
-        //     values.forEach(value => {
-        //         final = {...final, ...value}
-        //     })
-        //     setProfileData(final);
-        // })
-
-
-        setProfileData(templateProfile) // delete this line
-    }, [])
 
     if (!profileData) {
         return <p>Profile Loading</p>
@@ -64,6 +49,7 @@ export default function Profile(props) {
                     <p className={styles.bioText}>
                         {splitter.general.bio}
                     </p>
+                    <button onClick={props.goToNext}></button>
                 </div>
             </div>
         </div>

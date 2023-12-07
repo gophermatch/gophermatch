@@ -1,17 +1,23 @@
 import { useRef, useState, useEffect } from 'react';
 import Profile from '../ui-components/Profile';
 import styles from '../../assets/css/match.module.css'
+import TemplateProfile from '../../TemplateProfile.json'
+import TemplateProfile2 from '../../TemplateProfile2.json'
 
 import currentUser from '../../currentUser';
 
+const deepClone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
+
 export default function Match() {
-    const [profileIds, updateProfileIds] = useState([]);
+    const [profileDataQueue, updateProfileDataQueue] = useState([]);
 
-    useEffect(() => {
-        // get some ids from backend
-        updateProfileIds([currentUser.user_id]) // delete this line
-    }, [])
-
+    function goToNext() {
+        updateProfileDataQueue(q => {
+            const copy = deepClone(q)
+            copy.shift();
+            return copy
+        })
+    }
 
     // const ref = useRef(null)
 
@@ -63,12 +69,25 @@ export default function Match() {
 
     // }
 
-    if (profileIds.length == 0) {
+    if (profileDataQueue.length == 0) {
+                // get some ids from backend
+                //todo swap out the routes and uncomment all this code once backend good
+        // let generalPromise = backend.get(`profile_${props.user_Id}`);
+        // let preferencePromise = backend.get(`preferences_${props.userId}`);
+        // let final = {}
+        // Promise.all([generalPromise, preferencePromise]).then(tables => {
+        //     values.forEach(value => {
+        //         final = {...final, ...value}
+        //     })
+        //     setProfileData(final);
+        // })
+        const fetchedDataList = [TemplateProfile, TemplateProfile2] // backend request
+        updateProfileDataQueue(q => [...deepClone(q), ...fetchedDataList])
         return <p>Loading profiles</p>
     }
 
     return (
-        <Profile userId={profileIds[0]} editable={false} />
+        <Profile data={profileDataQueue[0]} editable={false} goToNext={goToNext} />
     )
 }
 
