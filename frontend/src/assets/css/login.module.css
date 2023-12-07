@@ -30,6 +30,7 @@
     color: #790019;
     margin-bottom: 10px;
     margin-top: 10px;
+    text-shadow: none;
 }
 .login_form p {
     margin: 0;
