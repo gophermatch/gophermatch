@@ -9,7 +9,8 @@
 }
 
 .login_container {
-    color: rgb(67, 67, 67);
+    background: #790019;
+    color: #ffd204;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -27,9 +28,10 @@
 .login_container h1 {
     text-align: center;
     text-decoration: none;
-    color: black;
+    color: #ffd204;
     margin-bottom: 10px;
     margin-top: 10px;
+    text-shadow: none;
 }
 .login_form p {
     margin: 0;
@@ -45,15 +47,16 @@
 
 .login_container button {
     cursor: pointer;
-    background: rgb(183, 6, 0);
-    color: white;
+    background: white;
+    color: #790019;
     border: none;
-    font-size: 1.1em;
+    font-size: 1.5em;
     border-radius: 40px;
     padding-top: 6px;
     padding-bottom: 10px;
     margin-top: 14px;
     width: 100%;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 .login_container button:hover {
     background: rgb(140, 6, 0)
