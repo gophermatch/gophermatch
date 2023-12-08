@@ -47,3 +47,16 @@
 .name {
     font-size: 24px;
 }
+
+.editableBio {
+    width: 100%; /* Make it full width of the container */
+    height: 95%;
+    padding: 8px;
+    border: none; /* Style the border as needed */
+    border-radius: 4px;
+    background-color: white;
+    resize: vertical; /* Allow vertical resizing, or 'none' to disable */
+    /* Add more styles as needed */
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    font-size: 16px;
+}

@@ -12,6 +12,7 @@ export default function Sidebar() {
             </Link>
             <div id={Styles.content}>
                 <Link to="/profile" className={Styles.item}>👤 Profile</Link>
+                <Link to="/match" className={Styles.item}>🔗 Match</Link>
                 <Link to="/settings" className={Styles.item}>⚙️ Settings</Link>
                 <Logout className={Styles.item} />
             </div>
