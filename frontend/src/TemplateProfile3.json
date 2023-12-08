@@ -1,0 +1,16 @@
+{
+    "name": "Christi Ronaldo",
+    "bio": "Sewey",
+    "user_id": 2012,
+    "grad_year": "2050",
+    "college_id": 1,
+    "gender": "male",
+    "is_dorm": true,
+    "sleep_low_range": 21,
+    "sleep_high_range": 22,
+    "drugs": true,
+    "cleanliness": "spotless",
+    "pictures": [
+        "../../assets/images/kanye.png"
+    ]
+}
