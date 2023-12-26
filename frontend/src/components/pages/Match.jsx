@@ -87,8 +87,13 @@ export default function Match() {
     }
 
     return (
-        <Profile data={profileDataQueue[0]} editable={false} goToNext={goToNext} />
-    )
+        <div>
+            <Profile data={profileDataQueue[0]} editable={false} />
+            {/* Replace this button where you want it in your UI */}
+            <button onClick={goToNext}>Next Profile</button>
+        </div>
+    );
+    
 }
 
 /*

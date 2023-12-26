@@ -49,7 +49,6 @@ export default function Profile(props) {
                     <p className={styles.bioText}>
                         {splitter.general.bio}
                     </p>
-                    <button onClick={props.goToNext}></button>
                 </div>
             </div>
         </div>
