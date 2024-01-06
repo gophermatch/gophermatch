@@ -86,7 +86,11 @@ export async function updateProfile(user_id, profile) {
       const { qnaAnswers, ...profileData } = profile;
   
       try {
-        await db.query(buildUpdateString(tableNames.u_profiles, { user_id }, profileData));
+         if (Object.keys(profileData).length > 0) {
+        const updateQuery = buildUpdateString(tableNames.u_profiles, { user_id }, profileData);
+        console.log(updateQuery);
+        await db.query(updateQuery.queryString, updateQuery.values);
+      }
   
         for (const { question_id, option_id } of qnaAnswers) {
           // Fetch the existing answer
