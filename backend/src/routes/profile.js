@@ -36,7 +36,6 @@ router.get('/', async (req, res) => {
 // PUT api/profile/
 // REQUIRES the request's Content-Type to be "application/json"
 router.put('/', async (req, res) => {
-    console.log(req.body);
     const user_id = req.body.user_id
     const profile = req.body.profile
     delete profile.user_id // prevent user from chaning the user_id of their profile record

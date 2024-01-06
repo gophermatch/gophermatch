@@ -3,51 +3,51 @@ import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateStri
 
 // Returns profile object (with profile_name and bio)
 export async function getProfile(user_id) {
-    return new Promise((resolve, reject) => {
-        // Fetching the user's profile
-        const profilePromise = new Promise((resolveProfile, rejectProfile) => {
-            const qr = buildSelectString("*", tableNames.u_profiles, { user_id });
+  return new Promise((resolve, reject) => {
+      // Fetching the user's profile
+      const profilePromise = new Promise((resolveProfile) => {
+          const qr = buildSelectString("*", tableNames.u_profiles, { user_id });
 
-            db.query(qr.queryString, qr.values, (err, rows) => {
-                if (err) {
-                    rejectProfile(err);
-                    return;
-                }
+          db.query(qr.queryString, qr.values, (err, rows) => {
+              if (err) {
+                  resolveProfile({ bio: '', otherProfileFields: null }); // Default empty profile
+                  return;
+              }
 
-                const profile = queryRowsToArray(rows);
-                if (profile.length === 1) {
-                    resolveProfile(profile[0]);
-                } else if (profile.length === 0) {
-                    rejectProfile("Profile not found");
-                } else {
-                    rejectProfile("Multiple profiles found");
-                }
-            });
-        });
+              const profile = queryRowsToArray(rows);
+              if (profile.length === 1) {
+                  resolveProfile(profile[0]);
+              } else {
+                  // No profile found or multiple profiles found, return a default empty profile
+                  resolveProfile({ bio: '', otherProfileFields: null });
+              }
+          });
+      });
 
-        // Fetching the user's QnA answers
-        const qnaPromise = new Promise((resolveQnA, rejectQnA) => {
-            const qnaQr = buildSelectString("*", tableNames.u_qna, { user_id });
+      // Fetching the user's QnA answers
+      const qnaPromise = new Promise((resolveQnA) => {
+          const qnaQr = buildSelectString("*", tableNames.u_qna, { user_id });
 
-            db.query(qnaQr.queryString, qnaQr.values, (err, rows) => {
-                if (err) {
-                    rejectQnA(err);
-                    return;
-                }
+          db.query(qnaQr.queryString, qnaQr.values, (err, rows) => {
+              if (err) {
+                  resolveQnA([]); // Default empty QnA answers
+                  return;
+              }
 
-                const qnaAnswers = rows.map(row => ({ question_id: row.question_id, option_id: row.option_id }));
-                resolveQnA(qnaAnswers);
-            });
-        });
+              const qnaAnswers = rows.map(row => ({ question_id: row.question_id, option_id: row.option_id }));
+              resolveQnA(qnaAnswers);
+          });
+      });
 
-        // Combining profile data and QnA answers
-        Promise.all([profilePromise, qnaPromise])
-            .then(([profile, qnaAnswers]) => {
-                resolve({ ...profile, qnaAnswers });
-            })
-            .catch(error => reject(error));
-    });
+      // Combining profile data and QnA answers
+      Promise.all([profilePromise, qnaPromise])
+          .then(([profile, qnaAnswers]) => {
+              resolve({ ...profile, qnaAnswers });
+          })
+          .catch(error => reject(error));
+  });
 }
+
 
 
 
