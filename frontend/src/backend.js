@@ -7,7 +7,7 @@ const backend = axios.create({
     // tells browser to send cookie-id recieved by the server from the same origin
     // we don't actually have access to the httpOnly cookies here so we can only set this to true
     headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
         // content type of request body we send with all requests
     }
 })

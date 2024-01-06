@@ -1,9 +1,9 @@
-create table profiles (
-    user_id int,
-    profile_name varchar(20),
-    bio varchar(200),
-    primary key (user_id),
-    foreign key (user_id) references users(user_id)
-        on delete cascade
-        on update cascade
+CREATE TABLE u_profiles (
+    user_id INT,
+    profile_name VARCHAR(20),
+    bio VARCHAR(200),
+    PRIMARY KEY (user_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
