@@ -3,43 +3,40 @@ import { createErrorObj } from './routeutil.js'
 import { 
     getProfile,
     updateProfile,
-    getQnAs,
-    createQnA,
-    updateQnA,
-    deleteQnA
 } from '../database/profile.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
 const router = Router()
 
 export default router
 
-// Check and parse question_id appearing in body or query param to a positive integer
-router.use((req, res, next) => {
-    parseValue([SearchLocation.Body, SearchLocation.Query], 'question_id', parseToPosInt, 'positive integer', req, res, next)
-})
-
 // GET api/profile/
 router.get('/', async (req, res) => {
-    const user_id = req.query.user_id
+    const user_id = req.query.user_id;
 
     if (!user_id) {
-        res.status(400).json(createErrorObj("Must include an user_id in the query parameter!"))
-        return
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
     }
 
+    // Validate user_id if needed
+
     try {
-        const profile = await getProfile(user_id)
-        res.status(200).json(profile)
-    } catch(e) {
-        console.error(e)
-        res.status(400).json(createErrorObj(e))
+        const profile = await getProfile(user_id);
+        res.status(200).json(profile);
+    } catch (error) {
+        console.error("Error fetching profile:", error);
+        res.status(500).json(createErrorObj("Failed to fetch profile. Please try again later."));
+        // Log the detailed error for backend debugging:
+        // Log error using your preferred logging mechanism (console.log, Winston, etc.)
     }
-})
+});
+
 
 // Update profile
 // PUT api/profile/
 // REQUIRES the request's Content-Type to be "application/json"
 router.put('/', async (req, res) => {
+    console.log(req.body);
     const user_id = req.body.user_id
     const profile = req.body.profile
     delete profile.user_id // prevent user from chaning the user_id of their profile record
@@ -70,102 +67,39 @@ router.put('/', async (req, res) => {
     }
 })
 
-// Get Question and Answers
-// GET api/profile/qna/
-router.get('/qna/', async (req, res) => {
-    const user_id = req.query.user_id
+// Get QnA for a user
+// router.get('/qna', async (req, res) => {
+//     const user_id = req.query.user_id;
 
-    if (!user_id) {
-        res.status(400).json(createErrorObj("Must include an user_id in the query parameter!"))
-        return
-    }
+//     if (!user_id) {
+//         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+//         return;
+//     }
 
-    try {
-        const qnas = await getQnAs(user_id)
-        res.status(200).json(qnas)
-    } catch(e) {
-        console.error(e)
-        res.status(400).json(createErrorObj(e))
-    }
-})
+//     try {
+//         const qna = await getQnA(user_id);
+//         res.status(200).json(qna);
+//     } catch (e) {
+//         console.error(e);
+//         res.status(400).json(createErrorObj(e));
+//     }
+// });
 
-// Create Answer to Question
-// POST api/profile/qna/
-router.post('/qna/', async (req, res) => {
-    const user_id = req.body.user_id
-    const question_id = req.body.question_id
-    const answer = req.body.answer
+// // Save/update QnA for a user
+// router.put('/qna', async (req, res) => {
+//     const user_id = req.body.user_id;
+//     const qna = req.body.qna;
 
-    if (!user_id || !question_id || !answer) {
-        res.status(400).json(createErrorObj("Must include an user_id, question_id, and answer in the body!"))
-        return
-    }
+//     if (!user_id || !qna) {
+//         res.status(400).json(createErrorObj("Must specify user_id and qna to update QnA!"));
+//         return;
+//     }
 
-    // If the user is trying to create a QnA for another uesr
-    if (user_id !== req.session.user.user_id) {
-        res.status(400).json(createErrorObj("Can only create your own answer!"))
-        return
-    }
-
-    try {
-        await createQnA(user_id, question_id, answer)
-        res.status(200).json({message: "Answer created!"})
-    } catch(e) {
-        console.error(e)
-        res.status(400).json(createErrorObj(e))
-    }
-})
-
-// Update Answer to Question
-// POST api/profile/qna/
-router.put('/qna/', async (req, res) => {
-    const user_id = req.body.user_id
-    const question_id = req.body.question_id
-    const answer = req.body.answer
-
-    if (!user_id || !question_id || !answer) {
-        res.status(400).json(createErrorObj("Must include an user_id, question_id, and answer in the body!"))
-        return
-    }
-
-    // TODO: Make this extensible to other forms of logins/api auth by using middleware
-    // If the user is trying to update a QnA for another uesr
-    if (user_id !== req.session.user.user_id) {
-        res.status(400).json(createErrorObj("Can only update your own answer!"))
-        return
-    }
-
-    try {
-        await updateQnA(user_id, question_id, answer)
-        res.status(200).json({message: "Answer updated!"})
-    } catch(e) {
-        console.error(e)
-        res.status(400).json(createErrorObj(e))
-    }
-})
-
-// Delete Answer to Question
-// DELETE api/profile/qna/
-router.delete('/qna/', async (req, res) => {
-    const user_id = req.body.user_id
-    const question_id = req.body.question_id
-
-    if (!user_id || !question_id) {
-        res.status(400).json(createErrorObj("Must include an user_id and question_id in the query parameter!"))
-        return
-    }
-
-    // If the user is trying to delete a QnA for another uesr
-    if (user_id !== req.session.user.user_id) {
-        res.status(400).json(createErrorObj("Can only delete your own answer!"))
-        return
-    }
-
-    try {
-        await deleteQnA(user_id, question_id)
-        res.status(200).json({message: "Answer deleted!"})
-    } catch(e) {
-        console.error(e)
-        res.status(400).json(createErrorObj(e))
-    }
-})
+//     try {
+//         await saveQnA(user_id, qna);
+//         res.status(200).json({ message: "QnA updated!" });
+//     } catch (e) {
+//         console.error(e);
+//         res.status(400).json(createErrorObj(e));
+//     }
+// });
