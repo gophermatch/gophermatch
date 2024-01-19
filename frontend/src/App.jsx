@@ -14,6 +14,7 @@ import ErrorPage from "./components/pages/ErrorPage.jsx"
 import currentUser from "./currentUser.js"
 import './assets/css/index.css'
 import Signup from './components/pages/Signup.jsx'
+import Landing from './components/pages/LandingPage.jsx'
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
@@ -21,7 +22,7 @@ async function mainPageRedirect({request}) {
     if (!currentUser.logged_in) {
         let params = new URLSearchParams()
         params.set("from", new URL(request.url).pathname)
-        return redirect("/login?" + params.toString())
+        return redirect("/landing?" + params.toString())
     }
     return redirect("/match")
 }
@@ -58,6 +59,10 @@ const router = createBrowserRouter([{
         },{
             path: "signup",
             element: <Signup />,
+            loader: loginPageRedirect,
+        },{
+            path: "landing",
+            element: <Landing />,
             loader: loginPageRedirect,
         },{
             // wrapper for pages that need sidebar
