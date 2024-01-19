@@ -9,6 +9,7 @@ import Layout from "./components/Layout.jsx"
 import Match from "./components/pages/Match.jsx"
 import Profile from "./components/pages/Profile.jsx"
 import Settings from "./components/pages/Settings.jsx"
+import Inbox from "./components/pages/Inbox.jsx";
 import Login from "./components/pages/Login.jsx"
 import ErrorPage from "./components/pages/ErrorPage.jsx"
 import currentUser from "./currentUser.js"
@@ -75,6 +76,10 @@ const router = createBrowserRouter([{
             },{
                 path: "settings",
                 element: <Settings />,
+                loader: unauthPageRedirect
+            },{
+                path: "inbox",
+                element: <Inbox />,
                 loader: unauthPageRedirect
             }]
         }]

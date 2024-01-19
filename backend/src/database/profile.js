@@ -3,54 +3,51 @@ import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateStri
 
 // Returns profile object (with profile_name and bio)
 export async function getProfile(user_id) {
+  return new Promise((resolve, reject) => {
+      // Fetching the user's profile
+      const profilePromise = new Promise((resolveProfile) => {
+          const qr = buildSelectString("*", tableNames.u_profiles, { user_id });
 
-    console.log("getProfile");
+          db.query(qr.queryString, qr.values, (err, rows) => {
+              if (err) {
+                  resolveProfile({ bio: '', otherProfileFields: null }); // Default empty profile
+                  return;
+              }
 
-    return new Promise((resolve, reject) => {
-        // Fetching the user's profile
-        const profilePromise = new Promise((resolveProfile, rejectProfile) => {
-            const qr = buildSelectString("*", tableNames.u_profiles, { user_id });
+              const profile = queryRowsToArray(rows);
+              if (profile.length === 1) {
+                  resolveProfile(profile[0]);
+              } else {
+                  // No profile found or multiple profiles found, return a default empty profile
+                  resolveProfile({ bio: '', otherProfileFields: null });
+              }
+          });
+      });
 
-            db.query(qr.queryString, qr.values, (err, rows) => {
-                if (err) {
-                    rejectProfile(err);
-                    return;
-                }
+      // Fetching the user's QnA answers
+      const qnaPromise = new Promise((resolveQnA) => {
+          const qnaQr = buildSelectString("*", tableNames.u_qna, { user_id });
 
-                const profile = queryRowsToArray(rows);
-                if (profile.length === 1) {
-                    resolveProfile(profile[0]);
-                } else if (profile.length === 0) {
-                    rejectProfile("Profile not found");
-                } else {
-                    rejectProfile("Multiple profiles found");
-                }
-            });
-        });
+          db.query(qnaQr.queryString, qnaQr.values, (err, rows) => {
+              if (err) {
+                  resolveQnA([]); // Default empty QnA answers
+                  return;
+              }
 
-        // Fetching the user's QnA answers
-        const qnaPromise = new Promise((resolveQnA, rejectQnA) => {
-            const qnaQr = buildSelectString("*", tableNames.u_qna, { user_id });
+              const qnaAnswers = rows.map(row => ({ question_id: row.question_id, option_id: row.option_id }));
+              resolveQnA(qnaAnswers);
+          });
+      });
 
-            db.query(qnaQr.queryString, qnaQr.values, (err, rows) => {
-                if (err) {
-                    rejectQnA(err);
-                    return;
-                }
-
-                const qnaAnswers = rows.map(row => ({ question_id: row.question_id, option_id: row.option_id }));
-                resolveQnA(qnaAnswers);
-            });
-        });
-
-        // Combining profile data and QnA answers
-        Promise.all([profilePromise, qnaPromise])
-            .then(([profile, qnaAnswers]) => {
-                resolve({ ...profile, qnaAnswers });
-            })
-            .catch(error => reject(error));
-    });
+      // Combining profile data and QnA answers
+      Promise.all([profilePromise, qnaPromise])
+          .then(([profile, qnaAnswers]) => {
+              resolve({ ...profile, qnaAnswers });
+          })
+          .catch(error => reject(error));
+  });
 }
+
 
 
 
@@ -89,7 +86,11 @@ export async function updateProfile(user_id, profile) {
       const { qnaAnswers, ...profileData } = profile;
   
       try {
-        await db.query(buildUpdateString(tableNames.u_profiles, { user_id }, profileData));
+         if (Object.keys(profileData).length > 0) {
+        const updateQuery = buildUpdateString(tableNames.u_profiles, { user_id }, profileData);
+        console.log(updateQuery);
+        await db.query(updateQuery.queryString, updateQuery.values);
+      }
   
         for (const { question_id, option_id } of qnaAnswers) {
           // Fetch the existing answer
