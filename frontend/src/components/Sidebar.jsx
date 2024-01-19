@@ -14,6 +14,8 @@ export default function Sidebar() {
                 <Link to="/profile" className={Styles.item}>👤 Profile</Link>
                 <Link to="/settings" className={Styles.item}>⚙️ Settings</Link>
                 <Link to="/match" className={Styles.item}>🔗 Match</Link>
+                <Link to="/inbox" className={Styles.item}>✉️ Inbox</Link>
+                
                 <Logout className={Styles.item} />
             </div>
         </nav>
