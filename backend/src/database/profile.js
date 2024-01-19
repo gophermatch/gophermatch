@@ -3,6 +3,9 @@ import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateStri
 
 // Returns profile object (with profile_name and bio)
 export async function getProfile(user_id) {
+
+    console.log("getProfile");
+
     return new Promise((resolve, reject) => {
         // Fetching the user's profile
         const profilePromise = new Promise((resolveProfile, rejectProfile) => {

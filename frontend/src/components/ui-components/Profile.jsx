@@ -108,12 +108,10 @@ export default function Profile(props) {
 
   return (
     <div className={styles.profile}>
+      <div className={styles.upperSide}>
       <div className={styles.leftSide}>
         <div className={styles.imageWrapper}>
           <Carousel pictures={pictures} />
-        </div>
-        <div className={styles.profileOptions}>
-          {qnaItems}
         </div>
       </div>
       <div className={styles.rightSide}>
@@ -129,6 +127,12 @@ export default function Profile(props) {
             <p className={styles.bioText}>{props.editedBio}</p>
           )}
 
+        </div>
+      </div>
+      </div>
+      <div className={styles.bottomSide}>
+        <div className={styles.profileOptions}>
+          {qnaItems}
         </div>
       </div>
     </div>
