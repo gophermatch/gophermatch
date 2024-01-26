@@ -4,13 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\" ",
+    "dev": "npx tailwindcss build frontend/src/input.css -o frontend/src/output.css && concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\" ",
     "install": "concurrently \"cd backend && npm install\" \"cd frontend && npm install\" "
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.1",
-    "tailwindcss": "^3.4.1"
+    "concurrently": "^8.2.1"
   }
 }
