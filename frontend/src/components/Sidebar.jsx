@@ -1,24 +1,29 @@
 import { Link } from "react-router-dom"
-import Styles from "../assets/css/sidebar.module.css"
 import Logout from "./Logout"
+import "../assets/css/sidebar.module.css"
+import "../output.css"
 
 export default function Sidebar() {
-    return(
+    return (
         <>
-        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'></link>
-        <nav id={Styles.nav}>
-            <Link to="/" id={Styles.icon}>
-                <img src="../assets/images/logo.png" id={Styles.logo}></img>
-            </Link>
-            <div id={Styles.content}>
-                <Link to="/profile" className={Styles.item}>👤 Profile</Link>
-                <Link to="/settings" className={Styles.item}>⚙️ Settings</Link>
-                <Link to="/match" className={Styles.item}>🔗 Match</Link>
-                <Link to="/inbox" className={Styles.item}>✉️ Inbox</Link>
-                
-                <Logout className={Styles.item} />
-            </div>
-        </nav>
+            <nav className="flex flex-col items-center p-16 w-full h-screen bg-maroon rounded-none shadow-md" id="nav">
+                <Link to="/" className="transform scale-100 transition-transform duration-200 hover:scale-110 active:scale-90">
+                    <img src="../assets/images/logo.png" className="sidebarLogo"></img>
+                </Link>
+                <br></br>
+                <div className="">
+                    {[
+                        ['Profile', '/profile'],
+                        ['Settings', '/settings'],
+                        ['Match', '/match'],
+                        ['Inbox', '/inbox'],
+                    ].map(([label, destination]) => (
+                        <Link to={destination} className="max-h-full text-white text-center flex-grow-10 flex justify-between flex-col mb-20 font-sans font-bold drop-shadow-lg transform scale-100 transition-transform duration-200 hover:scale-110 active:scale-90">{label}</Link>
+                    ))}
+
+                    <Logout className="text-white font-bold transition-transform duration-200 hover:scale-110 cursor-pointer" />
+                </div>
+            </nav>
         </>
     )
 }
