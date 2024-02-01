@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom"
 import Logout from "./Logout"
-import "../assets/css/sidebar.module.css"
-import "../output.css"
 
 export default function Sidebar() {
     return (
