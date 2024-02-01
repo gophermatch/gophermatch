@@ -1,27 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import '../../output.css';
 
-export default function LandingPage() {
-    const [sections, updateSections] = useState([
-        { id: 1, title: 'Welcome', content: 'Welcome to our landing page!' },
-        { id: 2, title: 'Features', content: 'Explore our amazing features.' },
-        { id: 3, title: 'Contact', content: 'Get in touch with us.' }
-    ]);
+const LandingPage = () => {
+  return (
+    <div className="bg-gradient-to-r from-red-200 via-red-100 to-green-100 min-h-screen flex flex-col items-center size-full">
+      <header className="text-maroon mb-12 text-4x1 font-bold">
+        GopherMatch
+      </header>
 
-    function goToNextSection() {
-        updateSections(q => {
-            const copy = deepClone(q);
-            copy.shift();
-            return copy;
-        });
-    }
+      <div className="flex justify-end m-4 space-x-4 absolute top-0 right-0">
+        <Link to="/landing/go-to-login" className="text-black">
+          Login
+        </Link>
+        <Link to="/landing/go-to-signup" className="text-black">
+          Signup
+        </Link>
+      </div>
+    </div>
+  );
+};
 
-    return (
-        <div>
-            <header>
-                <h1>{sections[0].title}</h1>
-                <p>{sections[0].content}</p>
-            </header>
-            <button onClick={goToNextSection}>Next Section</button>
-        </div>
-    );
-}
+
+
+export default LandingPage;

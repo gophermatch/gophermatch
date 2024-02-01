@@ -46,27 +46,51 @@ async function unauthPageRedirect({request}) {
       return null;
 }
 
-const router = createBrowserRouter([{
-        path: "/",
-        errorElement: <ErrorPage />,
-        children: [{
-            index: true,
-            path: "",
-            loader: mainPageRedirect
-        },{
-            path: "login",
-            element: <Login />,
-            loader: loginPageRedirect,
-        },{
-            path: "signup",
-            element: <Signup />,
-            loader: loginPageRedirect,
-        },{
-            path: "landing",
-            element: <Landing />,
-            loader: loginPageRedirect,
-        },{
-            // wrapper for pages that need sidebar
+// ... (your existing imports)
+
+const router = createBrowserRouter([
+    {
+      path: "/",
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: "",
+          loader: mainPageRedirect,
+        },
+        {
+          path: "login",
+          element: <Login />,
+          loader: loginPageRedirect,
+        },
+        {
+          path: "signup",
+          element: <Signup />,
+          loader: loginPageRedirect,
+        },
+        {
+          path: "landing",
+          element: <Landing />,
+          loader: loginPageRedirect,
+          children: [
+            // Add a route to navigate from landing to login
+            {
+              path: "go-to-login",
+              loader: async () => {
+                // Redirect to the login page
+                return redirect("/login");
+              },
+            },
+            {
+              path: 'go-to-signup',
+              loader: async () => {
+                // Redirect to the signup page
+                return redirect("/signup")
+              },
+            },
+          ],
+        },
+        {
             path: "",
             element: <Layout />,
             errorElement: <ErrorPage />,
