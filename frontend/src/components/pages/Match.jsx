@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import Profile from '../ui-components/Profile';
 import styles from '../../assets/css/match.module.css'
-import '../../output.css'
 import TemplateProfile from '../../TemplateProfile.json'
 import TemplateProfile2 from '../../TemplateProfile2.json'
 

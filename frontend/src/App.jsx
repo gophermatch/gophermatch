@@ -15,6 +15,7 @@ import ErrorPage from "./components/pages/ErrorPage.jsx"
 import currentUser from "./currentUser.js"
 import './assets/css/index.css'
 import Signup from './components/pages/Signup.jsx'
+import './index.css';
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
