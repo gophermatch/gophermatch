@@ -132,6 +132,23 @@ export async function updateProfile(user_id, profile) {
     });
   }
   
+  // Needs to be tested
+  export async function getAvailableProfiles(criteria) {
+    return new Promise((resolve, reject) => {
+        const qr = buildSelectString("*", db.u_profiles, criteria);
+
+        db.query(qr.queryString, qr.values, (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            const profiles = queryRowsToArray(rows);
+            resolve(profiles);
+        });
+    });
+}
+
   
 
 // // Returns an array of "Questions and Answers" object
@@ -222,3 +239,4 @@ export async function updateProfile(user_id, profile) {
 //         })
 //     })
 // }
+
