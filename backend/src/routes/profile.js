@@ -1,10 +1,17 @@
+import multer from 'multer';
 import { Router } from 'express'
 import { createErrorObj } from './routeutil.js'
+import { uploadFileToBlobStorage } from '../blobService.js';
 import { 
     getProfile,
     updateProfile,
+    savePictureUrl
 } from '../database/profile.js'
+import fs from 'fs';
+
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
+
+const upload = multer({ dest: 'uploads/' }); // Temporarily stores files in 'uploads/' directory
 const router = Router()
 
 export default router
@@ -30,6 +37,25 @@ router.get('/', async (req, res) => {
         // Log error using your preferred logging mechanism (console.log, Winston, etc.)
     }
 });
+
+//new route to get 10 profiles from an array of 10 user_ids.
+//GET api/profile/bulk-profiles
+router.post('/bulk-profiles', async (req, res) => {
+    const userIds = req.body.user_ids;
+
+    if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
+        return res.status(400).json({ error: "Must include a non-empty array of user_ids in the request body." });
+    }
+
+    try {
+        const profiles = await Promise.all(userIds.map(userId => getProfile(userId)));
+        res.status(200).json(profiles);
+    } catch (error) {
+        console.error("Error fetching profiles:", error);
+        res.status(500).json({ error: "Failed to fetch profiles. Please try again later." });
+    }
+});
+
 
 
 // Update profile
@@ -66,39 +92,31 @@ router.put('/', async (req, res) => {
     }
 })
 
-// Get QnA for a user
-// router.get('/qna', async (req, res) => {
-//     const user_id = req.query.user_id;
+router.post('/upload-picture', upload.single('file'), async (req, res) => {
+    try {
+        const { user_id, pic_number } = req.body; // Extracting pic_number along with user_id
 
-//     if (!user_id) {
-//         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
-//         return;
-//     }
+        const file = req.file;
+        if (!file) {
+            return res.status(400).json({ message: "No file uploaded." });
+        }
 
-//     try {
-//         const qna = await getQnA(user_id);
-//         res.status(200).json(qna);
-//     } catch (e) {
-//         console.error(e);
-//         res.status(400).json(createErrorObj(e));
-//     }
-// });
+        // Construct a unique blob name possibly using pic_number if needed
+        const blobName = `${user_id}-${pic_number}-${Date.now()}-${file.originalname}`;
 
-// // Save/update QnA for a user
-// router.put('/qna', async (req, res) => {
-//     const user_id = req.body.user_id;
-//     const qna = req.body.qna;
+        const fileStream = fs.createReadStream(file.path);
+        const streamLength = file.size;
 
-//     if (!user_id || !qna) {
-//         res.status(400).json(createErrorObj("Must specify user_id and qna to update QnA!"));
-//         return;
-//     }
+        const pictureUrl = await uploadFileToBlobStorage(blobName, fileStream, streamLength);
 
-//     try {
-//         await saveQnA(user_id, qna);
-//         res.status(200).json({ message: "QnA updated!" });
-//     } catch (e) {
-//         console.error(e);
-//         res.status(400).json(createErrorObj(e));
-//     }
-// });
+        // Assuming savePictureUrl now also takes pic_number as a parameter
+        await savePictureUrl(user_id, pictureUrl,pic_number);
+
+        res.status(200).json({ message: "File uploaded successfully", url: pictureUrl });
+    } catch (error) {
+        console.error("Error uploading picture:", error);
+        res.status(500).json({ message: "Failed to upload picture. Please try again later." });
+    }
+});
+
+
