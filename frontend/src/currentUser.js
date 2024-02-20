@@ -1,9 +1,12 @@
 // Global state of current user's information, including login state, user id, etc.
 // Singleton
 
+import backend from "./backend.js";
+
 class User {
     #user_id;  // private member
-    #email
+    #email;
+    #account_created;
 
     constructor() {
         this.#setDefaults()
@@ -19,12 +22,8 @@ class User {
         return this.#user_id !== -1
     }
 
-    get account_created(){
-        return false; //TODO implement this
-    }
-
     // Stores login information
-    login(user_id, email) {
+    async login(user_id, email) {
         if (typeof user_id !== "number") 
             throw "user_id must be a number"
         if (typeof email !== "string")
@@ -33,6 +32,17 @@ class User {
         console.log(`user logged in as ${user_id}`)
         this.#user_id = user_id
         this.#email = email
+
+        // Check if the user has submitted the account creation page yet by checking their first name
+        const response = await backend.get('/profile', {
+            params: { user_id: currentUser.user_id },
+            withCredentials: true,
+        });
+        const profileData = response.data;
+
+        this.#account_created = profileData.first_name !== null && profileData.first_name !== '' && profileData.first_name !== undefined;
+
+        console.log("Account created: " + this.#account_created + " First name: " + profileData.first_name);
     }
 
     // Delete login information
@@ -46,6 +56,10 @@ class User {
 
     get email() {
         return this.#email
+    }
+
+    get account_created(){
+        return this.#account_created
     }
 }
 

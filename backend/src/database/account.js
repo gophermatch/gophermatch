@@ -66,3 +66,31 @@ export async function deleteUser(user_id) {
         })
     })
 }
+
+export async function updateAccountInfo(user_id, userdata){
+
+    return new Promise((resolve, reject) => {
+        db.query(`UPDATE ${tableNames.u_userdata}
+SET first_name = "${userdata.first_name}",
+    last_name = "${userdata.last_name}",
+    date_of_birth = "${userdata.date_of_birth}",
+    hear_about_us = "${userdata.hear_about_us}",
+    hometown = "${userdata.hometown}",
+    housing_preference = "${userdata.housing_preference}",
+    college = "${userdata.college}",
+    major = "${userdata.major}",
+    gender = "${userdata.gender}"
+WHERE user_id = ${user_id};`,
+          (err, res) => {
+              if (err) {
+                  reject(err)
+                  return
+              }
+              if (res.affectedRows == 0) {
+                  reject(`Something went wrong when updating account. Perhaps the user with user_id ${user_id} is not found`)
+              } else if (res.affectedRows == 1) {
+                  resolve(res)
+              } else reject({})
+          })
+    })
+}

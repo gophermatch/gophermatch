@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
+import { Link, useNavigate } from 'react-router-dom';
+import AccountTextField from "../ui-components/AccountTextField.jsx";
 
 export default function AccountCreation() {
 
@@ -19,6 +21,9 @@ export default function AccountCreation() {
     const [hometown, setHometown] = React.useState('')
 
     const [referral, setReferral] = React.useState('')
+    const [housingPreference, setHousingPreference] = React.useState('')
+
+    const navigate = useNavigate()
 
 
     const handleCollegeChange = (event) => {
@@ -31,6 +36,10 @@ export default function AccountCreation() {
 
     const handleReferralChange = (event) => {
         setReferral(event.target.value);
+    };
+
+    const handleHousingChange = (event) => {
+        setHousingPreference(event.target.value);
     };
 
     const goToNextPage = () => {
@@ -53,19 +62,21 @@ export default function AccountCreation() {
 
     async function submit(){
         try {
-            const res = await backend.post("/account", {
-                firstName,
-                lastName,
-                dob,
-                gender,
-                college,
-                major,
-                hometown,
-                referral
+            const res = await backend.put("/account/creation", {
+                user_id: currentUser.user_id,
+                userdata: {
+                    first_name: firstName,
+                    last_name: lastName,
+                    date_of_birth: dob,
+                    gender: gender,
+                    college: college,
+                    major: major,
+                    hometown: hometown,
+                    hear_about_us: referral,
+                    housing_preference: housingPreference
+                }
             })
-            // any result from backend means success
-            const user_id = res.data.user_id
-            currentUser.login(user_id, email)   // no need to store password
+
             navigate("/")
 
         } catch(err) {
@@ -101,22 +112,21 @@ export default function AccountCreation() {
                   </p>
                   <div
                     className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition duration-1000 ${pageNum === 1 ? '' : 'translate-x-[-160%] pointer-events-none'}`}>
-                      <input onKeyUp={enterKeyPress} type="text" value={firstName} placeholder="First Name"
-                             onChange={(event) => setFirstName(event.target.value)} autoFocus
-                             className="text-maroon_new w-90 rounded-md mt-12 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black"
-                             tabIndex={pageNum ===  1 ? 1 : -1}/>
-                      <input onKeyUp={enterKeyPress} type="text" value={lastName} placeholder="Last Name"
-                             onChange={(event) => setLastName(event.target.value)}
-                             className="text-maroon_new w-90 rounded-md mt-6 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black"
-                             tabIndex={pageNum ===  1 ? 2 : -1}/>
+                      <AccountTextField maxLength={255} topMargin="12" visPageNum={1} curPageNum={pageNum} enterKeyPress={enterKeyPress}
+                                        fieldValue={firstName} valueSetter={setFirstName}
+                                        placeholder="First Name"></AccountTextField>
+                      <AccountTextField maxLength={255} topMargin="6" visPageNum={1} curPageNum={pageNum} enterKeyPress={enterKeyPress}
+                                        fieldValue={lastName} valueSetter={setLastName}
+                                        placeholder="Last Name"></AccountTextField>
                   </div>
 
                   <div
                     className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition duration-1000 ${pageNum === 2 ? '' : (pageNum < 2 ? 'translate-x-[160%]' : 'translate-x-[-160%]')}`}>
-                      <input tabIndex={pageNum ===  2 ? 1 : -1} onKeyUp={enterKeyPress} type="text" value={dob} placeholder="MM/DD/YY"
-                             onChange={(event) => setDOB(event.target.value)}
-                             className="text-maroon_new w-90 rounded-md mt-12 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black" />
-                      <select tabIndex={pageNum ===  2 ? 2 : -1} onKeyUp={enterKeyPress} value={gender} onChange={handleGenderChange}
+                      <AccountTextField isDate={true} maxLength={8} topMargin="12" visPageNum={2} curPageNum={pageNum} enterKeyPress={enterKeyPress}
+                                        fieldValue={dob} valueSetter={setDOB}
+                                        placeholder="MM/DD/YY"></AccountTextField>
+                      <select tabIndex={pageNum === 2 ? 2 : -1} onKeyUp={enterKeyPress} value={gender}
+                              onChange={handleGenderChange}
                               className="text-maroon_new w-90 rounded-md mt-6 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
                           <option value="">Select your gender</option>
                           <option value="male">Male</option>
@@ -126,74 +136,86 @@ export default function AccountCreation() {
                   </div>
 
                   <div
-                    className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 3 ? 'translate-x-0' : (pageNum < 3 ? 'translate-x-[160%] pointer-events-none' : '-translate-x-[160%] pointer-events-none')}`}>
-                      <input onKeyUp={enterKeyPress} tabIndex={pageNum ===  3 ? 1 : -1} type="text" value={hometown} placeholder="Hometown"
-                             onChange={(event) => setHometown(event.target.value)}
-                             className="text-maroon_new w-90 rounded-md mt-[5rem] p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black" />
+                    className={`absolute left-0 right-0 mt-[5rem] flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 3 ? 'translate-x-0' : (pageNum < 3 ? 'translate-x-[160%] pointer-events-none' : '-translate-x-[160%] pointer-events-none')}`}>
+                      <AccountTextField maxLength={255} visPageNum={3} curPageNum={pageNum} enterKeyPress={enterKeyPress}
+                                        fieldValue={hometown} valueSetter={setHometown}
+                                        placeholder="Hometown"></AccountTextField>
                   </div>
 
-                  <div
-                    className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 4 ? 'translate-x-0' : (pageNum < 4 ? 'translate-x-[160%] pointer-events-none' : '-translate-x-[160%] pointer-events-none')}`}>
-                      <select tabIndex={pageNum ===  4 ? 1 : -1} onKeyUp={enterKeyPress} value={college} onChange={handleCollegeChange}
-                              className="text-maroon_new w-90 rounded-md mt-12 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
-                          <option value="">Select your college</option>
-                          <option value="cse">CSE</option>
-                          <option value="cbs">CBS</option>
-                          <option value="carlson">Carlson</option>
-                          <option value="design">Design</option>
-                          <option value="cehd">CEHD</option>
-                          <option value="cfans">CFANS</option>
-                          <option value="nursing">Nursing</option>
-                          <option value="other">Other</option>
-                      </select>
-                      <input tabIndex={pageNum ===  4 ? 2 : -1} onKeyUp={enterKeyPress} type="text" value={major} placeholder="Major"
-                             onChange={(event) => setMajor(event.target.value)}
-                             className="text-maroon_new w-90 rounded-md mt-6 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black" />
-                  </div>
+                      <div
+                        className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 4 ? "translate-x-0" : (pageNum < 4 ? "translate-x-[160%] pointer-events-none" : "-translate-x-[160%] pointer-events-none")}`}>
+                          <select tabIndex={pageNum === 4 ? 1 : -1} onKeyUp={enterKeyPress} value={college}
+                                  onChange={handleCollegeChange}
+                                  className="text-maroon_new w-90 rounded-md mt-12 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
+                              <option value="">Select your college</option>
+                              <option value="cse">CSE</option>
+                              <option value="cbs">CBS</option>
+                              <option value="carlson">Carlson</option>
+                              <option value="design">Design</option>
+                              <option value="cehd">CEHD</option>
+                              <option value="cfans">CFANS</option>
+                              <option value="nursing">Nursing</option>
+                              <option value="other">Other</option>
+                          </select>
 
-                  <div
-                    className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition duration-1000 ${pageNum === 5 ? "translate-x-0 pointer-events-none" : "translate-x-[160%] pointer-events-none"}`}>
-                      <select tabIndex={pageNum ===  5 ? 1 : -1} onKeyUp={enterKeyPress} value={referral} onChange={handleReferralChange}
-                              className="text-maroon_new w-90 rounded-md mt-[5rem] p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
-                          <option value="">How did you hear about us?</option>
-                          <option value="word-of-mouth">Word of mouth</option>
-                          <option value="email">E-mail promotion</option>
-                          <option value="social-media">Social media</option>
-                          <option value="search-engine">Web search</option>
-                          <option value="campus">Ads around campus</option>
-                          <option value="other">Other</option>
-                      </select>
-                  </div>
+                          <AccountTextField topMargin="6" visPageNum={4} curPageNum={pageNum} enterKeyPress={enterKeyPress}
+                                            fieldValue={major} valueSetter={setMajor}
+                                            placeholder="Major"></AccountTextField>
+                      </div>
 
-                  <div
-                    className="absolute bottom-16 left-0 right-0 m-auto w-1/3 pb-5 items-center flex flex-row justify-between">
-                      <button tabIndex={pageNum ===  1 ? -1 : 0} onClick={goToPreviousPage}
-                              className={`transition duration-500 ${pageNum === 1 ? "opacity-0 pointer-events-none" : ""}`}>
-                          <img src="../../assets/images/ArrowLeft.png" alt="Button"
-                               className="w-5 h-5 hover:drop-shadow-md" />
+                      <div
+                        className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition duration-1000 ${pageNum === 5 ? "translate-x-0" : "translate-x-[160%]"}`}>
+                          <select tabIndex={pageNum === 5 ? 1 : -1} onKeyUp={enterKeyPress} value={housingPreference}
+                                  onChange={handleHousingChange}
+                                  className="text-maroon_new w-90 rounded-md mt-12 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
+                              <option value="">What housing are you searching for?</option>
+                              <option value="apartments">Apartments</option>
+                              <option value="dorms">Dorms</option>
+                              <option value="both">Both</option>
+                          </select>
+
+                          <select tabIndex={pageNum === 5 ? 1 : -1} onKeyUp={enterKeyPress} value={referral}
+                                  onChange={handleReferralChange}
+                                  className="text-maroon_new w-90 rounded-md mt-6 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
+                              <option value="">How did you hear about us?</option>
+                              <option value="word-of-mouth">Word of mouth</option>
+                              <option value="email">E-mail promotion</option>
+                              <option value="social-media">Social media</option>
+                              <option value="search-engine">Web search</option>
+                              <option value="campus">Ads around campus</option>
+                              <option value="other">Other</option>
+                          </select>
+                      </div>
+
+                      <div
+                        className="absolute bottom-16 left-0 right-0 m-auto w-1/3 pb-5 items-center flex flex-row justify-between">
+                          <button tabIndex={pageNum === 1 ? -1 : 0} onClick={goToPreviousPage}
+                                  className={`transition duration-500 ${pageNum === 1 ? "opacity-0 pointer-events-none" : ""}`}>
+                              <img src="../../assets/images/ArrowLeft.png" alt="Button"
+                                   className="w-5 h-5 hover:drop-shadow-md" />
+                          </button>
+                          <div
+                            className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 1 ? "bg-maroon_new scale-110" : "bg-inactive_gray"}`}></div>
+                          <div
+                            className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 2 ? "bg-maroon_new scale-110" : "bg-inactive_gray"}`}></div>
+                          <div
+                            className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 3 ? 'bg-maroon_new scale-110' : 'bg-inactive_gray'}`}></div>
+                          <div
+                            className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 4 ? 'bg-maroon_new scale-110' : 'bg-inactive_gray'}`}></div>
+                          <div
+                            className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 5 ? 'bg-maroon_new scale-110' : 'bg-inactive_gray'}`}></div>
+                          <button tabIndex={pageNum === 5 ? -1 : 0} onClick={goToNextPage}
+                                  className={`transition duration-500 ${pageNum === 5 ? 'opacity-0 pointer-events-none' : ''}`}>
+                              <img src="../../assets/images/ArrowRight.png" alt="Button"
+                                   className="w-5 h-5 hover:drop-shadow-md" />
+                          </button>
+                      </div>
+
+                      <button tabIndex={pageNum === 5 ? 0 : -1} onClick={submit}
+                              className={`rounded-lg p-2 text-white font-inter absolute bottom-0 left-0 right-0 m-auto w-1/5 transition duration-500 ${pageNum === 5 ? (validateFields() ? 'bg-maroon_new opacity-100' : 'bg-inactive_gray pointer-events-none opacity-80') : 'opacity-0'}`}>Submit
                       </button>
-                      <div
-                        className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 1 ? "bg-maroon_new scale-110" : "bg-inactive_gray"}`}></div>
-                      <div
-                        className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 2 ? "bg-maroon_new scale-110" : "bg-inactive_gray"}`}></div>
-                      <div
-                        className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 3 ? 'bg-maroon_new scale-110' : 'bg-inactive_gray'}`}></div>
-                      <div
-                        className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 4 ? 'bg-maroon_new scale-110' : 'bg-inactive_gray'}`}></div>
-                      <div
-                        className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 5 ? 'bg-maroon_new scale-110' : 'bg-inactive_gray'}`}></div>
-                      <button tabIndex={pageNum ===  5 ? -1 : 0} onClick={goToNextPage}
-                              className={`transition duration-500 ${pageNum === 5 ? 'opacity-0 pointer-events-none' : ''}`}>
-                          <img src="../../assets/images/ArrowRight.png" alt="Button"
-                               className="w-5 h-5 hover:drop-shadow-md" />
-                      </button>
                   </div>
-
-                  <button tabIndex={pageNum ===  5 ? 0 : -1} onClick={submit}
-                          className={`rounded-lg p-2 text-white font-inter absolute bottom-0 left-0 right-0 m-auto w-1/5 transition duration-500 ${pageNum === 5 ? (validateFields() ? 'bg-maroon_new opacity-100' : 'bg-inactive_gray pointer-events-none opacity-80') : 'opacity-0'}`}>Submit
-                  </button>
-              </div>
           </nav>
       </>
-    )
+)
 }

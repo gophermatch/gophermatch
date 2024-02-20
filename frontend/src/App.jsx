@@ -33,6 +33,7 @@ async function mainPageRedirect({request}) {
 
 // Redirects the login page to match page if user is logged in
 async function loginPageRedirect() {
+    console.log("User attempting to visit login page, is logged in: " + currentUser.logged_in);
     if (currentUser.logged_in) {
         if(currentUser.account_created) {
             return redirect("/match")
