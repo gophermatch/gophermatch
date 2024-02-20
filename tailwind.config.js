@@ -14,4 +14,12 @@ module.exports = {
       }
     },
   },
+  variants: {
+    extend: {
+      outline: ['focus'],
+      boxShadow: {
+        'none': 'none',
+      }
+    },
+  },
 }

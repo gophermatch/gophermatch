@@ -5,12 +5,12 @@ import '../../output.css';
 const LandingPage = () => {
   return (
     <>
-      <div className="bg-maroon h-[3.25rem] justify-end space-x-4 mt-auto">
+      <div className="bg-maroon h-[3.75rem] justify-end space-x-4 mt-auto">
         <div className="flex justify-end space-x-6 mr-4">
-          <Link to="/landing/go-to-login" className="text-doc text-lg mt-2 hover:text-yellow-500">
+          <Link to="/landing/go-to-login" className="text-doc text-lg mt-3 hover:text-yellow-500">
             Login
           </Link>
-          <Link to="/landing/go-to-signup" className="text-doc text-lg mt-2 hover:text-yellow-500">
+          <Link to="/landing/go-to-signup" className="text-doc text-lg mt-3 hover:text-yellow-500">
             Signup
           </Link>
         </div>
@@ -30,7 +30,7 @@ const LandingPage = () => {
           <img src="/assets/images/logo.png" alt="Description of the image" className="w-[17rem] h-auto ml-20 mb-20" />
         </div>
       </div>
-      <div className="bg-maroon h-[3.25rem] justify-end space-x-4 mt-auto fixed bottom-0 left-0 w-full"></div>
+      <div className="bg-maroon h-[3.75rem] justify-end space-x-4 mt-auto fixed bottom-0 left-0 w-full"></div>
 
 
  
