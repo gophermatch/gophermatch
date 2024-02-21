@@ -2,7 +2,8 @@
 create table u_pictures (
     user_id int,
     picture_id int auto_increment,
-    picture_path varchar(100),
+    picture_url varchar(2048),
+    pic_number int, NOT NULL
     primary key (user_id, picture_id),
     foreign key (user_id) references users(user_id)
         on delete cascade
