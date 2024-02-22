@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { recordUserDecision } from '../backend/match.js';
+import { recordUserDecision } from '../database/match.js';
 
 const router = Router();
 
