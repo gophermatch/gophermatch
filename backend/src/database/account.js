@@ -67,11 +67,32 @@ export async function deleteUser(user_id) {
     })
 }
 
+export async function getUserData(user_id){
+    return new Promise((resolve, reject) => {
+        db.query(`SELECT *
+        FROM ${tableNames.u_userdata}
+        WHERE user_id = ${user_id}`,
+          (err, res) => {
+              if (err) {
+                  reject(err)
+                  return
+              }
+              resolve(res)
+          })
+    })
+}
+
 export async function updateAccountInfo(user_id, userdata){
 
+    let exists = await getUserData(user_id);
+
+    console.log("User has data: " + exists);
+
     return new Promise((resolve, reject) => {
-        db.query(`UPDATE ${tableNames.u_userdata}
-SET first_name = "${userdata.first_name}",
+        db.query(`${exists ? `UPDATE` : `INSERT INTO`} ${tableNames.u_userdata}
+SET 
+    user_id = ${user_id},
+    first_name = "${userdata.first_name}",
     last_name = "${userdata.last_name}",
     date_of_birth = "${userdata.date_of_birth}",
     hear_about_us = "${userdata.hear_about_us}",
@@ -79,18 +100,13 @@ SET first_name = "${userdata.first_name}",
     housing_preference = "${userdata.housing_preference}",
     college = "${userdata.college}",
     major = "${userdata.major}",
-    gender = "${userdata.gender}"
-WHERE user_id = ${user_id};`,
+    gender = "${userdata.gender}"`,
           (err, res) => {
               if (err) {
                   reject(err)
                   return
               }
-              if (res.affectedRows == 0) {
-                  reject(`Something went wrong when updating account. Perhaps the user with user_id ${user_id} is not found`)
-              } else if (res.affectedRows == 1) {
-                  resolve(res)
-              } else reject({})
+              resolve(res)
           })
     })
 }

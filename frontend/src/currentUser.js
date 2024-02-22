@@ -33,16 +33,22 @@ class User {
         this.#user_id = user_id
         this.#email = email
 
+        await this.updateAccountCreated();
+
+        console.log("Account created: " + this.#account_created);
+    }
+
+     async updateAccountCreated(){
         // Check if the user has submitted the account creation page yet by checking their first name
-        const response = await backend.get('/profile', {
-            params: { user_id: currentUser.user_id },
+        const response = await backend.get('/account/fetch', {
+            params: { user_id: this.#user_id },
             withCredentials: true,
         });
-        const profileData = response.data;
 
-        this.#account_created = profileData.first_name !== null && profileData.first_name !== '' && profileData.first_name !== undefined;
+        console.log(response.data)
 
-        console.log("Account created: " + this.#account_created + " First name: " + profileData.first_name);
+        // Should have a more thorough way to do this
+        this.#account_created = response.data.data.length > 0;
     }
 
     // Delete login information

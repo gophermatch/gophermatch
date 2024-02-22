@@ -3,6 +3,7 @@ import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
 import { Link, useNavigate } from 'react-router-dom';
 import AccountTextField from "../ui-components/AccountTextField.jsx";
+import {DateTime} from "luxon";
 
 export default function AccountCreation() {
 
@@ -67,7 +68,7 @@ export default function AccountCreation() {
                 userdata: {
                     first_name: firstName,
                     last_name: lastName,
-                    date_of_birth: dob,
+                    date_of_birth: DateTime.fromFormat(dob, "M/dd/yy").toSQLDate(),
                     gender: gender,
                     college: college,
                     major: major,
@@ -77,7 +78,11 @@ export default function AccountCreation() {
                 }
             })
 
-            navigate("/")
+            console.log(res.data.message);
+
+            await currentUser.updateAccountCreated();
+
+            navigate("/match")
 
         } catch(err) {
             console.error(err)
@@ -97,7 +102,7 @@ export default function AccountCreation() {
     }
 
     const validateFields = () => {
-        return notEmpty(firstName) && notEmpty(lastName) && notEmpty(dob) && notEmpty(major) && notEmpty(college) && notEmpty(referral);
+        return notEmpty(firstName) && notEmpty(lastName) && notEmpty(dob) && dob.length > 6 && notEmpty(major) && notEmpty(college) && notEmpty(referral) && notEmpty(housingPreference);
     }
 
     return (
@@ -123,8 +128,7 @@ export default function AccountCreation() {
                   <div
                     className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition duration-1000 ${pageNum === 2 ? '' : (pageNum < 2 ? 'translate-x-[160%]' : 'translate-x-[-160%]')}`}>
                       <AccountTextField isDate={true} maxLength={8} topMargin="12" visPageNum={2} curPageNum={pageNum} enterKeyPress={enterKeyPress}
-                                        fieldValue={dob} valueSetter={setDOB}
-                                        placeholder="MM/DD/YY"></AccountTextField>
+                                        fieldValue={dob} valueSetter={setDOB} placeholder="MM/DD/YY"></AccountTextField>
                       <select tabIndex={pageNum === 2 ? 2 : -1} onKeyUp={enterKeyPress} value={gender}
                               onChange={handleGenderChange}
                               className="text-maroon_new w-90 rounded-md mt-6 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">

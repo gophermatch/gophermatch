@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { Router } from 'express';
-import { createUser, deleteUser, updateAccountInfo } from "../database/account.js";
+import { createUser, deleteUser, getUserData, updateAccountInfo } from "../database/account.js";
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
 import { createProfile } from '../database/profile.js';
@@ -39,6 +39,21 @@ router.post('/', async (req, res) => {
     }
 })
 
+router.get('/fetch', async (req, res) => {
+    let user_id = req.query.user_id;
+
+    console.log(`fetch account for user id ${user_id}`);
+
+    try {
+        // update the user's account info
+        let data = await getUserData(user_id)
+        res.status(200).json({data: data, message: "User account queried!"})
+    } catch (e) {
+        console.error(e)
+        res.status(400).json(createErrorObj(e))
+    }
+})
+
 router.put('/creation', async (req, res) => {
     let user_id = req.body.user_id
     let userdata = req.body.userdata;
@@ -48,6 +63,7 @@ router.put('/creation', async (req, res) => {
     try {
         // update the user's account info
         await updateAccountInfo(user_id, userdata)
+        res.status(200).json({message: "User account data updated!"})
     } catch (e) {
         console.error(e)
         res.status(400).json(createErrorObj(e))
