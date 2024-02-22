@@ -39,10 +39,14 @@ export default function Login() {
                 email,
                 password
             });
-
+            // data is the request body, put it INSIDE the config object in the second argument
+            // For Get requests:
+            // use routing parameters at the end of url (i.e. ?key1=val1&key2=val2) for get requests
+            // put the routing parameters as an object inside the second argument, the config obj goes in the third argument
+            // dont send data on get requests (it won't be sent)
             const user_id = res.data.user_id;
-            currentUser.login(user_id, email);
-            navigate(from);
+            await currentUser.login(user_id, email) ;  // no need to store password
+            navigate(from);      // redirect to where we redirected from
         } catch(err) {
             console.error(err);
 

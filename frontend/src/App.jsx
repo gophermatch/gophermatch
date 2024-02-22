@@ -11,6 +11,7 @@ import Profile from "./components/pages/Profile.jsx"
 import Settings from "./components/pages/Settings.jsx"
 import Inbox from "./components/pages/Inbox.jsx";
 import Login from "./components/pages/Login.jsx"
+import AccountCreation from "./components/pages/AccountCreation.jsx"
 import ErrorPage from "./components/pages/ErrorPage.jsx"
 import currentUser from "./currentUser.js"
 import Signup from './components/pages/Signup.jsx'
@@ -30,14 +31,29 @@ async function mainPageRedirect({request}) {
 
 // Redirects the login page to match page if user is logged in
 async function loginPageRedirect() {
+    console.log("User attempting to visit login page, is logged in: " + currentUser.logged_in);
     if (currentUser.logged_in) {
-        return redirect("/match")
+        if(currentUser.account_created) {
+            return redirect("/match")
+        }
+        return redirect("/account")
     }
     return null
 }
 
+// Redirects a page to match page if user has created an account
+async function accountCreatedRedirect() {
+    if(currentUser.account_created) {
+        return redirect("/match")
+    }
+    return null;
+}
+
 // Redirects a protected page to login page if user is not logged in
 async function unauthPageRedirect({request}) {
+    if(!currentUser.account_created){
+        return redirect("/account")
+    }
     if (!currentUser.logged_in) {
         let params = new URLSearchParams()
         params.set("from", new URL(request.url).pathname)

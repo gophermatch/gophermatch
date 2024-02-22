@@ -19,6 +19,7 @@ export const tableNames = {
     u_prefs: "u_preferences",
         u_locations: "u_locations",
         u_qna: "u_qna",
+    u_userdata: "u_userdata",
 
     // Lookup tables
     locations: "locations",
