@@ -1,5 +1,7 @@
 import { db, tableNames } from './db.js'
 import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
+import{generateBlobSasUrl} from '../blobService.js'
+
 
 // Returns profile object (with profile_name and bio)
 export async function getProfile(user_id) {
@@ -132,93 +134,50 @@ export async function updateProfile(user_id, profile) {
     });
   }
   
-  
+  export async function savePictureUrl(user_id, pictureUrl, pic_number) {
+    return new Promise((resolve, reject) => {
+        // Adjust the query to include pic_number in the INSERT statement
+        // and ensure the ON DUPLICATE KEY UPDATE clause updates the picture_url for the existing pic_number for the user.
+        const qr = `INSERT INTO u_pictures (user_id, picture_url, pic_number) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE picture_url = VALUES(picture_url);`;
+        
+        // Adjust the parameters to include pic_number
+        db.query(qr, [user_id, pictureUrl, pic_number], (err, result) => {
+            if (err) {
+                console.error("Error saving picture URL to database:", err);
+                reject(err);
+                return;
+            }
+            resolve(result);
+        });
+    });
+}
 
-// // Returns an array of "Questions and Answers" object
-// // Could be an empty list if the user has no QnAs
-// export async function getQnAs(user_id) {
-//     return new Promise((resolve, reject) => {
-//         /* TODO: Write util function for joins
-//         SELECT user_id, questions.question_id, text, answer FROM 
-//             questions INNER JOIN u_qnas ON questions.question_id = u_qnas.question_id
-//         */
-//         const queryString = `SELECT user_id, questions.question_id, text, answer FROM 
-//         questions INNER JOIN u_qnas ON questions.question_id = u_qnas.question_id
-//         WHERE user_id = ?;`
 
-//         db.query(queryString, [user_id], (err, rows) => {
-//             if (err) {
-//                 reject(err)
-//                 return
-//             }
+// Function to get all picture URLs for a user
 
-//             // return result no matter if any are found
-//             const res = queryRowsToArray(rows)
-//             resolve(res)
-//         })
-//     })
-// }
+export async function retrievePictureUrls(user_id) {
+  return new Promise((resolve, reject) => {
+      const queryString = `SELECT picture_url, pic_number FROM ${tableNames.u_pictures} WHERE user_id = ?`;
 
-// // Create an answer to an exisitng question
-// // The question with question_id must exist
-// // The user must have answered the question before
-// export async function createQnA(user_id, question_id, answer) {
-//     return new Promise((resolve, reject) => {
-//         const qr = buildInsertString(tableNames.u_qnas, {user_id, question_id, answer})
+      db.query(queryString, [user_id], (err, rows) => {
+          if (err) {
+              console.error("Error fetching picture URLs from database:", err);
+              reject(err);
+              return;
+          }
 
-//         db.query(qr.queryString, qr.values, (err, res) => {
-//             if (err) {
-//                 if (err.code === "ER_DUP_ENTRY") reject("Answer already exists for this question")
-//                 else reject(err)
-//                 return
-//             }
-//             if (res.affectedRows != 1) {
-//                 reject({})
-//             } else {
-//                 // res.insertId exists iff exactly one row is inserted
-//                 resolve()
-//             }
-//         })
-//     })
-// }
+          // Map through each row to extract the blob name and generate a SAS URL
+          const sasUrlPromises = rows.map(row => {
+              // Extract the blob name from the picture_url
+              const urlParts = row.picture_url.split('/');
+              const blobName = urlParts[urlParts.length - 1]; // Gets the last part of the URL
 
-// // Update an answer to an exisitng question
-// // The question with question_id must exist
-// export async function updateQnA(user_id, question_id, answer) {
-//     return new Promise((resolve, reject) => {
-//         const qr = buildUpdateString(tableNames.u_qnas, {user_id, question_id}, {answer})
+              return generateBlobSasUrl(blobName); // Use the extracted blob name
+          });
 
-//         db.query(qr.queryString, qr.values, (err, res) => {
-//             if (err) {
-//                 reject(err)
-//                 return
-//             }
-//             if (res.affectedRows == 0) {
-//                 reject("No question found!")
-//             } else if (res.affectedRows > 1)  {
-//                 reject("Multiple questions and answers updated!?")
-//             } else {
-//                 // res.insertId exists iff exactly one row is inserted
-//                 resolve()
-//             }
-//         })
-//     })
-// }
-
-// // Deletes a user's existing answer to an exisitng question
-// export async function deleteQnA(user_id, question_id) {
-//     return new Promise((resolve, reject) => {
-//         db.query(`DELETE FROM ${tableNames.u_qnas} WHERE user_id = ? AND question_id = ?;`, [user_id, question_id],
-//         (err, res) => {
-//             if (err) {
-//                 reject(err)
-//                 return
-//             }
-//             if (res.affectedRows == 0) {
-//                 reject(`Question not found!`)
-//             } else if (res.affectedRows == 1) {
-//                 resolve(res)
-//             } else reject({})
-//         })
-//     })
-// }
+          Promise.all(sasUrlPromises)
+              .then(sasUrls => resolve(sasUrls))
+              .catch(error => reject(error));
+      });
+  });
+}

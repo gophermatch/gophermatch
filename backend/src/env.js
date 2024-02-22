@@ -14,3 +14,7 @@ export const db = {
 export const session = {
     secret: process.env.SESSION_SECRET
 }
+
+export const azureStorageConfig = {
+    connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
+};

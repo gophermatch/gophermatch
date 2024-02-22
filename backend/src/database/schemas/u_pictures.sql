@@ -1,9 +1,11 @@
 -- Junction table to link user rows to their profile pictures (as file paths)
 create table u_pictures (
-   picture_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    picture_url VARCHAR(2048) NOT NULL,
-    pic_number INT CHECK (pic_number BETWEEN 1 AND 4),
-    uploaded TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    user_id int,
+    picture_id int auto_increment,
+    picture_url varchar(2048),
+    pic_number int, NOT NULL
+    primary key (user_id, picture_id),
+    foreign key (user_id) references users(user_id)
+        on delete cascade
+        on update cascade
 );
