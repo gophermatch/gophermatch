@@ -1,11 +1,18 @@
-import { Router } from 'express'
+import multer from 'multer';
+import { Router } from 'express';
+import fs from 'fs';
 import { createErrorObj } from './routeutil.js'
 import { 
     getProfile,
     updateProfile,
+    savePictureUrl,
+    retrievePictureUrls
 } from '../database/profile.js'
+import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
-const router = Router()
+
+const upload = multer({ dest: 'uploads/' }); // Temporarily stores files in 'uploads/' directory
+const router = Router();
 
 export default router
 
@@ -113,3 +120,51 @@ router.get('/all-user-ids', async (req, res) => {
 //         res.status(400).json(createErrorObj(e));
 //     }
 // });
+
+router.post('/upload-picture', upload.single('file'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+    const { user_id, pic_number } = req.body;
+    if (!user_id || !pic_number) {
+        return res.status(400).send('Missing user_id or pic_number.');
+    }
+
+    try {
+        // Upload file to blob storage
+        const stream = fs.createReadStream(req.file.path);
+        const streamLength = req.file.size;
+        const blobName = `user-${user_id}-pic-${pic_number}`;
+        const pictureUrl = await uploadFileToBlobStorage(blobName, stream, streamLength);
+
+        // Save picture URL to database
+        await savePictureUrl(user_id, pictureUrl, pic_number);
+
+        // Send success response
+        res.status(200).json({ message: 'File uploaded successfully', pictureUrl });
+
+        // Optionally, delete the file after upload to save space
+        fs.unlink(req.file.path, (err) => {
+            if (err) console.error("Error deleting file:", err);
+        });
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        res.status(500).send('Failed to upload file.');
+    }
+});
+
+router.get('/user-pictures', async (req, res) => {
+    const user_id = req.query.user_id;
+
+    if (!user_id) {
+        return res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+    }
+
+    try {
+        const pictureSasUrls = await retrievePictureUrls(user_id);
+        res.status(200).json({ pictureUrls: pictureSasUrls });
+    } catch (error) {
+        console.error("Error retrieving picture SAS URLs:", error);
+        res.status(500).json(createErrorObj("Failed to retrieve picture URLs. Please try again later."));
+    }
+});
