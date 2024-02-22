@@ -99,7 +99,7 @@ export default function Login() {
                 <div>{loginErr}</div>
                 <div className='flex items-center justify-center mt-10'>
                     <p className="text-maroon text-lg">Don't have an account?</p>
-                    <Link to="/signup" className = "ml-3 hover:text-yellow-500">Sign up</Link>
+                    <Link to="/signup" className = "ml-3 hover:text-yellow-500 text-lg">Sign up</Link>
                 </div>
             </div>
         </div>
