@@ -74,7 +74,52 @@ router.put('/', async (req, res) => {
 })
 
 
+router.get('/all-user-ids', async (req, res) => {
+    try {
+        const userIds = await getAllUserIds();
+        res.json(userIds);
+    } catch (error) {
+        console.error("Failed to retrieve user IDs:", error);
+        res.status(500).json({ error: "Failed to retrieve user IDs" });
+    }
+});
 
+// Get QnA for a user
+// router.get('/qna', async (req, res) => {
+//     const user_id = req.query.user_id;
+
+//     if (!user_id) {
+//         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+//         return;
+//     }
+
+//     try {
+//         const qna = await getQnA(user_id);
+//         res.status(200).json(qna);
+//     } catch (e) {
+//         console.error(e);
+//         res.status(400).json(createErrorObj(e));
+//     }
+// });
+
+// // Save/update QnA for a user
+// router.put('/qna', async (req, res) => {
+//     const user_id = req.body.user_id;
+//     const qna = req.body.qna;
+
+//     if (!user_id || !qna) {
+//         res.status(400).json(createErrorObj("Must specify user_id and qna to update QnA!"));
+//         return;
+//     }
+
+//     try {
+//         await saveQnA(user_id, qna);
+//         res.status(200).json({ message: "QnA updated!" });
+//     } catch (e) {
+//         console.error(e);
+//         res.status(400).json(createErrorObj(e));
+//     }
+// });
 
 router.post('/upload-picture', upload.single('file'), async (req, res) => {
     if (!req.file) {

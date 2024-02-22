@@ -133,6 +133,25 @@ export async function updateProfile(user_id, profile) {
       }
     });
   }
+
+  export async function getAllUserIds() {
+    return new Promise((resolve, reject) => {
+        // Assuming 'user_id' is the column name in your 'users' table that holds the user IDs
+        const qr = buildSelectString("user_id", tableNames.users, {});
+  
+        db.query(qr.queryString, qr.values, (err, rows) => {
+            if (err) {
+                console.error("Error fetching user IDs from database:", err);
+                reject(err);
+                return;
+            }
+  
+            // Extract user_id from each row and return an array of user_ids
+            const userIds = rows.map(row => row.user_id);
+            resolve(userIds);
+        });
+    });
+  }
   
   export async function savePictureUrl(user_id, pictureUrl, pic_number) {
     return new Promise((resolve, reject) => {
@@ -151,7 +170,6 @@ export async function updateProfile(user_id, profile) {
         });
     });
 }
-
 
 // Function to get all picture URLs for a user
 
