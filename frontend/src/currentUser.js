@@ -22,6 +22,10 @@ class User {
         return this.#user_id !== -1
     }
 
+    get account_created(){
+        return false; //TODO implement this
+    }
+
     // Stores login information
     async login(user_id, email) {
         if (typeof user_id !== "number") 

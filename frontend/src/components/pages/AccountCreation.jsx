@@ -26,7 +26,6 @@ export default function AccountCreation() {
 
     const navigate = useNavigate()
 
-
     const handleCollegeChange = (event) => {
         setCollege(event.target.value);
     };
