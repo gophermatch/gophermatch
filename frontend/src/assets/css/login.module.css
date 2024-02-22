@@ -1,4 +1,4 @@
-.login_page {
+/*.login_page {
     position: absolute;
     top: 0; 
     left: 0;
@@ -8,12 +8,12 @@
     align-items: center;
     justify-content: center;
     background: linear-gradient(45deg, #e7a7a7, #e4dfb3); /* #ee8484, #e0d88c*/
-    z-index: -1;
+    /*z-index: -1;
 }
 .login_container {
     background: #8b3939; /* #800000*/
-    color: #f0d53c; /*#ffd700 */
-    display: flex;
+    /*color: #f0d53c; /*#ffd700 */
+    /*display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -79,3 +79,4 @@
     justify-content: center;
     font-size: 1.2em;
 }
+*/

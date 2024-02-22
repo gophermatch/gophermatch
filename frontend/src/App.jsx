@@ -13,9 +13,9 @@ import Inbox from "./components/pages/Inbox.jsx";
 import Login from "./components/pages/Login.jsx"
 import ErrorPage from "./components/pages/ErrorPage.jsx"
 import currentUser from "./currentUser.js"
-import './assets/css/index.css'
 import Signup from './components/pages/Signup.jsx'
 import './index.css';
+import Landing from './components/pages/LandingPage.jsx'
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
@@ -23,7 +23,7 @@ async function mainPageRedirect({request}) {
     if (!currentUser.logged_in) {
         let params = new URLSearchParams()
         params.set("from", new URL(request.url).pathname)
-        return redirect("/login?" + params.toString())
+        return redirect("/landing?" + params.toString())
     }
     return redirect("/match")
 }
@@ -46,23 +46,51 @@ async function unauthPageRedirect({request}) {
       return null;
 }
 
-const router = createBrowserRouter([{
-        path: "/",
-        errorElement: <ErrorPage />,
-        children: [{
-            index: true,
-            path: "",
-            loader: mainPageRedirect
-        },{
-            path: "login",
-            element: <Login />,
-            loader: loginPageRedirect,
-        },{
-            path: "signup",
-            element: <Signup />,
-            loader: loginPageRedirect,
-        },{
-            // wrapper for pages that need sidebar
+// ... (your existing imports)
+
+const router = createBrowserRouter([
+    {
+      path: "/",
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: "",
+          loader: mainPageRedirect,
+        },
+        {
+          path: "login",
+          element: <Login />,
+          loader: loginPageRedirect,
+        },
+        {
+          path: "signup",
+          element: <Signup />,
+          loader: loginPageRedirect,
+        },
+        {
+          path: "landing",
+          element: <Landing />,
+          loader: loginPageRedirect,
+          children: [
+            // Add a route to navigate from landing to login
+            {
+              path: "go-to-login",
+              loader: async () => {
+                // Redirect to the login page
+                return redirect("/login");
+              },
+            },
+            {
+              path: 'go-to-signup',
+              loader: async () => {
+                // Redirect to the signup page
+                return redirect("/signup")
+              },
+            },
+          ],
+        },
+        {
             path: "",
             element: <Layout />,
             errorElement: <ErrorPage />,
