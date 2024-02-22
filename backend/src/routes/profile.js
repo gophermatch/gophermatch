@@ -66,6 +66,17 @@ router.put('/', async (req, res) => {
     }
 })
 
+
+router.get('/all-user-ids', async (req, res) => {
+    try {
+        const userIds = await getAllUserIds();
+        res.json(userIds);
+    } catch (error) {
+        console.error("Failed to retrieve user IDs:", error);
+        res.status(500).json({ error: "Failed to retrieve user IDs" });
+    }
+});
+
 // Get QnA for a user
 // router.get('/qna', async (req, res) => {
 //     const user_id = req.query.user_id;
