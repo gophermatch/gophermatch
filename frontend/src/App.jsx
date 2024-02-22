@@ -11,10 +11,12 @@ import Profile from "./components/pages/Profile.jsx"
 import Settings from "./components/pages/Settings.jsx"
 import Inbox from "./components/pages/Inbox.jsx";
 import Login from "./components/pages/Login.jsx"
+import AccountCreation from "./components/pages/AccountCreation.jsx"
 import ErrorPage from "./components/pages/ErrorPage.jsx"
 import currentUser from "./currentUser.js"
-import './assets/css/index.css'
 import Signup from './components/pages/Signup.jsx'
+import './index.css';
+import Landing from './components/pages/LandingPage.jsx'
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
@@ -22,21 +24,36 @@ async function mainPageRedirect({request}) {
     if (!currentUser.logged_in) {
         let params = new URLSearchParams()
         params.set("from", new URL(request.url).pathname)
-        return redirect("/login?" + params.toString())
+        return redirect("/landing?" + params.toString())
     }
     return redirect("/match")
 }
 
 // Redirects the login page to match page if user is logged in
 async function loginPageRedirect() {
+    console.log("User attempting to visit login page, is logged in: " + currentUser.logged_in);
     if (currentUser.logged_in) {
-        return redirect("/match")
+        if(currentUser.account_created) {
+            return redirect("/match")
+        }
+        return redirect("/account")
     }
     return null
 }
 
+// Redirects a page to match page if user has created an account
+async function accountCreatedRedirect() {
+    if(currentUser.account_created) {
+        return redirect("/match")
+    }
+    return null;
+}
+
 // Redirects a protected page to login page if user is not logged in
 async function unauthPageRedirect({request}) {
+    if(!currentUser.account_created){
+        return redirect("/account")
+    }
     if (!currentUser.logged_in) {
         let params = new URLSearchParams()
         params.set("from", new URL(request.url).pathname)
@@ -45,23 +62,51 @@ async function unauthPageRedirect({request}) {
       return null;
 }
 
-const router = createBrowserRouter([{
-        path: "/",
-        errorElement: <ErrorPage />,
-        children: [{
-            index: true,
-            path: "",
-            loader: mainPageRedirect
-        },{
-            path: "login",
-            element: <Login />,
-            loader: loginPageRedirect,
-        },{
-            path: "signup",
-            element: <Signup />,
-            loader: loginPageRedirect,
-        },{
-            // wrapper for pages that need sidebar
+// ... (your existing imports)
+
+const router = createBrowserRouter([
+    {
+      path: "/",
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          path: "",
+          loader: mainPageRedirect,
+        },
+        {
+          path: "login",
+          element: <Login />,
+          loader: loginPageRedirect,
+        },
+        {
+          path: "signup",
+          element: <Signup />,
+          loader: loginPageRedirect,
+        },
+        {
+          path: "landing",
+          element: <Landing />,
+          loader: loginPageRedirect,
+          children: [
+            // Add a route to navigate from landing to login
+            {
+              path: "go-to-login",
+              loader: async () => {
+                // Redirect to the login page
+                return redirect("/login");
+              },
+            },
+            {
+              path: 'go-to-signup',
+              loader: async () => {
+                // Redirect to the signup page
+                return redirect("/signup")
+              },
+            },
+          ],
+        },
+        {
             path: "",
             element: <Layout />,
             errorElement: <ErrorPage />,

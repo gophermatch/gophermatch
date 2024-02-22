@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import Profile from '../ui-components/Profile';
+import Filter from '../ui-components/Filter';
 import styles from '../../assets/css/match.module.css'
 import TemplateProfile from '../../TemplateProfile.json'
 import TemplateProfile2 from '../../TemplateProfile2.json'
@@ -88,6 +89,7 @@ export default function Match() {
 
     return (
         <div>
+            <Filter/>
             <Profile data={profileDataQueue[0]} editable={false} />
             {/* Replace this button where you want it in your UI */}
             <button onClick={goToNext}>Next Profile</button>
