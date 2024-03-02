@@ -8,18 +8,6 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        maroon: 'rgb(118, 45, 45)',
-        red: 'rgb(255, 0, 0)',
-        white: 'rgb(255, 255, 255)',
-      },
-      fontFamily: {
-        lora: ['Lora', 'serif'],
-      }
-    },
-  },
-  variants: {
-    extend: {
       outline: ['focus'],
       boxShadow: {
         'none': 'none',

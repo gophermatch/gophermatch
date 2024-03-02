@@ -11,8 +11,8 @@ import Profile from "./components/pages/Profile.jsx"
 import Settings from "./components/pages/Settings.jsx"
 import Inbox from "./components/pages/Inbox.jsx";
 import Login from "./components/pages/Login.jsx"
-import AccountCreation from "./components/pages/AccountCreation.jsx"
 import ErrorPage from "./components/pages/ErrorPage.jsx"
+import AccountCreation from "./components/pages/AccountCreation.jsx";
 import currentUser from "./currentUser.js"
 import Signup from './components/pages/Signup.jsx'
 import './index.css';
@@ -41,12 +41,16 @@ async function loginPageRedirect() {
     return null
 }
 
-// Redirects a page to match page if user has created an account
-async function accountCreatedRedirect() {
+// Redirects the account page to match page if user has created account
+async function accountCreationRedirect() {
+  console.log("User attempting to visit login page, is logged in: " + currentUser.logged_in);
+  if (currentUser.logged_in) {
     if(currentUser.account_created) {
-        return redirect("/match")
+      return redirect("/match")
     }
-    return null;
+    return null
+  }
+  return redirect("/login")
 }
 
 // Redirects a protected page to login page if user is not logged in
@@ -83,6 +87,11 @@ const router = createBrowserRouter([
           path: "signup",
           element: <Signup />,
           loader: loginPageRedirect,
+        },
+        {
+          path: "account",
+          element: <AccountCreation />,
+          loader: accountCreationRedirect,
         },
         {
           path: "landing",
