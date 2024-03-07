@@ -4,7 +4,7 @@ import { recordUserDecision } from '../database/match.js';
 const router = Router();
 
 // Endpoint to record a user's decision about another user
-router.post('/match', async (req, res) => {
+router.post('/matcher', async (req, res) => {
     const { user1Id, user2Id, decision } = req.body;
 
     // Basic validation
