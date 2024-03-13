@@ -3,7 +3,8 @@
     --gold-color: #f7cf56;
     --gray-color: #bababa;
     --white-color: #ffffff;
-  }
+    --font-family: 'Lora', serif; /* Use the Lora font */
+}
 
 .settingsCenter {
     display: flex;
@@ -28,7 +29,7 @@
 
 .settingWithButton {
     display: flex;
-    flex-direction:row;
+    flex-direction: row;
     justify-content: center;
     align-items: stretch;
     gap: 1rem;
@@ -39,7 +40,7 @@
     color: var(--maroon-color);
     border: 0.2rem solid var(--maroon-color);
     padding: 0.75rem 1.75rem;
-    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    font-family: var(--font-family); /* Use the custom font family variable */
     font-size: 1rem;
     border-radius: 0.2rem;
     transition-duration: 0.4s;
@@ -59,15 +60,14 @@
 h1 {
     font-size: 5rem;
     color: var(--maroon-color);
-    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    font-family: var(--font-family); /* Use the custom font family variable */
 }
 
 #setting {
     color: var(--maroon-color);
     font-size: 1.5rem;
-    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-}
-
-#setting:hover {
-    color: var(--gold-color);
+    font-family: var(--font-family); /* Use the custom font family variable */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
