@@ -30,6 +30,7 @@ export default {
       offwhite: '#F2EBE6',
       maroon_new: '#7D0000',
       inactive_gray: '#C6C6C6',
+      gold: 'rgb(234 179 8)',
       ...colors
     },
     fontFamily: {
