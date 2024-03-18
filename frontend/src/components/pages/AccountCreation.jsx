@@ -67,9 +67,9 @@ export default function AccountCreation() {
 
     async function submit(){
         try {
-            const res = await backend.put("/account/creation", {
-                user_id: currentUser.user_id,
+            const res = await backend.put("/account/creation/new", {
                 userdata: {
+                    user_id: currentUser.user_id,
                     first_name: firstName,
                     last_name: lastName,
                     date_of_birth: DateTime.fromFormat(dob, "M/dd/yy").toSQLDate(),
