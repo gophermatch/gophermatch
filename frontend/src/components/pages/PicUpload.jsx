@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const PicUpload = () => {
     const [file, setFile] = useState(null);
@@ -28,9 +28,29 @@ const PicUpload = () => {
     };
 
     const handleDoneClick = async () => {
-        // File upload logic
+        if (!file) {
+            console.error("No file selected");
+            return;
+        }
 
-        // Redirect to profile page
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const response = await fetch("/PicUpload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                console.log("File uploaded successfully");
+                // Redirect to profile page
+            } else {
+                throw new Error("Failed to upload file");
+            }
+        } catch (error) {
+            console.error("Error uploading file:", error);
+        }
     };
 
     return (
@@ -53,24 +73,23 @@ const PicUpload = () => {
                     </label>
                 </div>
                 <div className="absolute bottom-[calc(66.67%)] left-0 w-full h-[1px] bg-black"></div>
-                <Link to = "/profile" className="absolute top-[3%] right-[3%] w-[8%] h-[5%] bg-maroon rounded-[1rem] cursor-pointer flex justify-center items-center"
+                <Link to="/profile" className="absolute top-[3%] right-[3%] w-[8%] h-[5%] bg-maroon rounded-[1rem] cursor-pointer flex justify-center items-center"
                     onClick={handleDoneClick}
                 >
                     <span className="text-white">Done</span>
                 </Link>
                 <div className="absolute top-[4%] left-[20%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center">
-                    <span>1</span>
+                    {pictureUrls[0] && <img src={pictureUrls[0]} alt="Profile 1" className="w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
                 </div>
                 <div className="absolute top-[4%] left-[40%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center">
-                    <span>2</span>
+                    {pictureUrls[1] && <img src={pictureUrls[1]} alt="Profile 2" className="w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
                 </div>
                 <div className="absolute top-[4%] left-[60%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center">
-                    <span>3</span>
+                    {pictureUrls[2] && <img src={pictureUrls[2]} alt="Profile 3" className="w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
                 </div>
             </div>
         </div>
     );
-    
 };
 
 export default PicUpload;
