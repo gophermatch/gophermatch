@@ -18,6 +18,7 @@ import Signup from './components/pages/Signup.jsx'
 import './index.css';
 import Landing from './components/pages/LandingPage.jsx'
 import Saved from './components/pages/Saved.jsx'
+import PicUpload from './components/pages/PicUpload.jsx'
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
@@ -140,7 +141,12 @@ const router = createBrowserRouter([
               path: "saved",
               element: <Saved />,
               loader: unauthPageRedirect
-            }]
+            },{
+              path: "PicUpload",
+              element: <PicUpload />,
+              loader: unauthPageRedirect
+            }
+          ]
         }]
 }])
 
