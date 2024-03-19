@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { recordUserDecision } from '../database/match.js';
+import { recordUserDecision, getFilterResults} from '../database/match.js';
 
 const router = Router();
 
 // Endpoint to record a user's decision about another user
-router.post('/match', async (req, res) => {
+router.post('/', async (req, res) => {
     const { user1Id, user2Id, decision } = req.body;
 
     // Basic validation
@@ -18,6 +18,20 @@ router.post('/match', async (req, res) => {
     } catch (error) {
         console.error('Error processing match:', error);
         res.status(500).json({ error: "Failed to process match decision." });
+    }
+});
+
+router.post('/filter-results', async (req, res) => {
+    const filters = req.body;
+
+    // You might want to add validation for your filters here
+
+    try {
+        const results = await getFilterResults(filters);
+        res.json(results);
+    } catch (error) {
+        console.error('Error getting filter results:', error);
+        res.status(500).json({ error: "Failed to get filter results." });
     }
 });
 
