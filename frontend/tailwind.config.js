@@ -36,6 +36,7 @@ export default {
     fontFamily: {
       lora: ['Lora', 'serif'],
       inter: ['Inter', 'serif'],
+      profile: ['Inconsolata', 'serif']
     },
   },
   plugins: [],

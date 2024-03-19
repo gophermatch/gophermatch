@@ -54,15 +54,14 @@ router.get('/fetch', async (req, res) => {
     }
 })
 
-router.put('/creation', async (req, res) => {
-    let user_id = req.body.user_id
+router.put('/creation/new', async (req, res) => {
     let userdata = req.body.userdata;
 
-    console.log(`put account creation for user id ${user_id}`);
+    console.log(`put new account creation for user id ${userdata.user_id}`);
 
     try {
         // update the user's account info
-        await updateAccountInfo(user_id, userdata)
+        await updateAccountInfo(userdata)
         res.status(200).json({message: "User account data updated!"})
     } catch (e) {
         console.error(e)

@@ -1,5 +1,5 @@
 import { db, tableNames } from './db.js'
-import { queryRowsToArray, buildSelectString, buildInsertString } from './dbutils.js'
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from "./dbutils.js";
 
 // Returns a promise that is a user object from the users database, or {} if no user is found
 export async function getUser(email) {
@@ -82,25 +82,15 @@ export async function getUserData(user_id){
     })
 }
 
-export async function updateAccountInfo(user_id, userdata){
+export async function updateAccountInfo(userdata){
+    console.log(userdata);
 
-    let exists = await getUserData(user_id);
+    const insertQuery = buildInsertString(tableNames.u_userdata, userdata);
 
-    console.log("User has data: " + exists);
+    console.log("query: " + insertQuery.queryString);
 
     return new Promise((resolve, reject) => {
-        db.query(`${exists ? `UPDATE` : `INSERT INTO`} ${tableNames.u_userdata}
-SET 
-    user_id = ${user_id},
-    first_name = "${userdata.first_name}",
-    last_name = "${userdata.last_name}",
-    date_of_birth = "${userdata.date_of_birth}",
-    hear_about_us = "${userdata.hear_about_us}",
-    hometown = "${userdata.hometown}",
-    housing_preference = "${userdata.housing_preference}",
-    college = "${userdata.college}",
-    major = "${userdata.major}",
-    gender = "${userdata.gender}"`,
+        db.query(insertQuery.queryString, insertQuery.values,
           (err, res) => {
               if (err) {
                   reject(err)
