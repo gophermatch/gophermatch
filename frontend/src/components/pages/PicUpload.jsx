@@ -29,13 +29,13 @@ const PicUpload = () => {
                 <div className="absolute top-[3%] right-[3%] w-[8%] h-[5%] bg-maroon rounded-[1rem] cursor-pointer flex justify-center items-center" onClick={handleDoneClick}>
                     <span className="text-white">Done</span>
                 </div>
-                <div className="absolute top-[3%] left-[10%] w-[20%] h-[27%] bg-gray-200 rounded-[1rem] flex justify-center items-center">
+                <div className="absolute top-[4%] left-[20%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center">
                     <span>1</span>
                 </div>
-                <div className="absolute top-[3%] left-[37%] w-[20%] h-[27%] bg-gray-200 rounded-[1rem] flex justify-center items-center">
+                <div className="absolute top-[4%] left-[40%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center">
                     <span>2</span>
                 </div>
-                <div className="absolute top-[3%] left-[64%] w-[20%] h-[27%] bg-gray-200 rounded-[1rem] flex justify-center items-center">
+                <div className="absolute top-[4%] left-[60%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center">
                     <span>3</span>
                 </div>
             </div>
