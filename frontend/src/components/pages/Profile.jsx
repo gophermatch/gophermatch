@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Profile from '../ui-components/Profile';
 import currentUser from '../../currentUser';
 import backend from '../../backend';
-
+import { Link } from "react-router-dom";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
@@ -12,20 +12,18 @@ export default function ProfilePage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [firstPictureUrl, setFirstPictureUrl] = useState('');
 
-
-
   useEffect(() => {
     fetchProfile();
   }, []);
 
   const fetchFirstPictureUrl = async () => {
     try {
-      const response = await backend.get('/profile/user-pictures', { // Adjust this endpoint as necessary
+      const response = await backend.get('/profile/user-pictures', {
         params: { user_id: 54 },
         withCredentials: true,
       });
       if (response.data && response.data.pictureUrls && response.data.pictureUrls.length > 0) {
-        setFirstPictureUrl(response.data.pictureUrls[0]); // Assuming the backend returns an array of URLs
+        setFirstPictureUrl(response.data.pictureUrls[0]);
       } else {
         console.log('No pictures found for this user.');
       }
@@ -33,8 +31,6 @@ export default function ProfilePage() {
       console.error('Error fetching picture URL:', error);
     }
   };
-  
-
 
   const fetchProfile = async () => {
     try {
@@ -43,8 +39,6 @@ export default function ProfilePage() {
         withCredentials: true,
       });
       const profileData = response.data;
-      console.log('Incoming data', profileData);
-      // Initialize qnaAnswers if undefined
       setProfile(profileData);
       setEditedProfile({ ...profileData, qnaAnswers: profileData.qnaAnswers || {} });
     } catch (error) {
@@ -61,18 +55,15 @@ export default function ProfilePage() {
     }));
   };
 
-
   const handleQnaChange = (event, questionId) => {
-    const optionId = parseInt(event.target.value, 10); // Convert to integer
+    const optionId = parseInt(event.target.value, 10);
     setEditedProfile(prev => {
       const updatedQnaAnswers = [...prev.qnaAnswers];
       const answerIndex = updatedQnaAnswers.findIndex(ans => ans.question_id === questionId);
 
       if (answerIndex > -1) {
-        // Update existing answer
         updatedQnaAnswers[answerIndex] = { ...updatedQnaAnswers[answerIndex], option_id: optionId };
       } else {
-        // Add new answer
         updatedQnaAnswers.push({ question_id: questionId, option_id: optionId });
       }
 
@@ -80,11 +71,8 @@ export default function ProfilePage() {
     });
   };
 
-
-
   const toggleEditMode = () => {
     if (isEditing) {
-      // Reset editedProfile to profile when canceling edit
       setEditedProfile(profile);
     }
     setIsEditing(prev => !prev);
@@ -92,9 +80,8 @@ export default function ProfilePage() {
 
   const handleSaveChanges = async () => {
     try {
-      // Transform qnaAnswers to an array of objects with question_id (as a number) and option_id
       const formattedQnaAnswers = editedProfile.qnaAnswers.map(answer => ({
-        question_id: parseInt(answer.question_id, 10), // Convert question_id to a number
+        question_id: parseInt(answer.question_id, 10),
         option_id: answer.option_id
       }));
 
@@ -105,8 +92,6 @@ export default function ProfilePage() {
           qnaAnswers: formattedQnaAnswers
         },
       };
-
-      console.log("Formatted payload:", payload);
 
       await backend.put('/profile', payload);
       alert('Profile updated successfully!');
@@ -120,35 +105,41 @@ export default function ProfilePage() {
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
-};
+  };
 
-const handleFileUpload = async () => {
+  const handleFileUpload = async () => {
     if (!selectedFile) {
-        alert('Please select a file to upload.');
-        return;
+      alert('Please select a file to upload.');
+      return;
     }
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('user_id', currentUser.user_id); // Append user_id
-    formData.append('pic_number', 2); // FIX LATER!!!!! For now, hardcoding pic_number as 1 
+    formData.append('user_id', currentUser.user_id);
+    formData.append('pic_number', 1);
 
     try {
-        // Assuming you have an endpoint '/api/upload' to handle file uploads
-        const response = await backend.post('/profile/upload-picture', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        alert('File uploaded successfully');
-        console.log(response.data);
-        // Optionally, update the user's profile or state here with the new picture URL
+      const response = await backend.post('/profile/upload-picture', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      alert('File uploaded successfully');
+      console.log(response.data);
     } catch (error) {
-        console.error('Error uploading file:', error);
-        alert('Failed to upload file.');
+      console.error('Error uploading file:', error);
+      alert('Failed to upload file.');
     }
-};
+  };
 
+  const handleEditProfile = () => {
+    setIsEditing(true);
+  };
+
+  const handleChangeProfilePicture = () => {
+    // Navigate to the PicUpload page
+    // You can use React Router for this
+  };
 
   if (error) {
     return <p>{error}</p>;
@@ -157,7 +148,6 @@ const handleFileUpload = async () => {
   if (!profile) {
     return <p>Loading profile...</p>;
   }
-
 
   return (
     <div>
@@ -168,22 +158,26 @@ const handleFileUpload = async () => {
         handleBioChange={handleBioChange}
         qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
         handleQnaChange={handleQnaChange}
-        
       />
 
-<button onClick={fetchFirstPictureUrl}>Load Profile Picture</button>
-  {firstPictureUrl && <img src={firstPictureUrl} alt="Profile" />}
+      <button onClick={fetchFirstPictureUrl}>Load Profile Picture</button>
+      {firstPictureUrl && <img src={firstPictureUrl} alt="Profile" />}
 
       {isEditing && (
         <>
           <button onClick={handleSaveChanges}>Save Changes</button>
           <button onClick={toggleEditMode}>Cancel</button>
           <input type="file" onChange={handleFileChange} style={{ display: 'block', marginTop: '20px' }} />
-        <button onClick={handleFileUpload}>Upload Picture</button>
+          <button onClick={handleFileUpload}>Upload Picture</button>
         </>
       )}
       {!isEditing && (
-        <button onClick={toggleEditMode}>Edit Profile</button>
+        <>
+          <button onClick={handleEditProfile}>Edit Profile</button>
+          <Link to="/PicUpload">
+            Change Profile Picture
+          </Link>
+        </>
       )}
     </div>
   );
