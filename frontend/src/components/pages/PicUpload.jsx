@@ -42,8 +42,15 @@ const PicUpload = () => {
                     </div>
                 ))}
                 <div className="absolute bottom-0 left-0 w-full h-2/3 flex flex-col justify-center items-center cursor-pointer">
-                    <input type="file" onChange={handleFileChange} />
-                    <p className="ml-2">Drag and drop or click to browse</p>
+                    <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
+                    <label htmlFor="fileInput" className="cursor-pointer flex flex-col items-center w-full h-full">
+                        <img
+                            src="https://www.svgrepo.com/show/344399/arrow-bar-up.svg"
+                            alt="Upload File"
+                            className="h-[12rem] w-[12rem] text-maroon mt-[3rem]"
+                        />
+                        <p className="mt-2">Drag and drop or click to browse</p>
+                    </label>
                 </div>
                 <div className="absolute bottom-[calc(66.67%)] left-0 w-full h-[1px] bg-black"></div>
                 <Link to = "/profile" className="absolute top-[3%] right-[3%] w-[8%] h-[5%] bg-maroon rounded-[1rem] cursor-pointer flex justify-center items-center"
@@ -63,6 +70,7 @@ const PicUpload = () => {
             </div>
         </div>
     );
+    
 };
 
 export default PicUpload;
