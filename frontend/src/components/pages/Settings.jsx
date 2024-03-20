@@ -8,7 +8,7 @@ const fetchUserInfo = async () => {
         return data;
     } catch (error) {
         console.error('Error fetching user info:', error);
-        throw error; // Rethrow the error to be caught by the caller
+        throw error;
     }
 };
 
@@ -31,7 +31,6 @@ export default function SettingsPage1() {
                 ]);
             }
         }).catch(error => {
-            // Handle fetch error
             console.error('Error fetching user info:', error);
         });
     }, []);
@@ -78,7 +77,7 @@ function Setting(props) {
 
     const handleEdit = () => {
         setIsEditing(true);
-        setEditedValue(props.value); // Initialize editedValue with props.value
+        setEditedValue(props.value);
     };
 
     const handleSave = () => {
@@ -88,7 +87,7 @@ function Setting(props) {
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent default form submission behavior
+            e.preventDefault();
             handleSave();
         }
     };
@@ -108,7 +107,7 @@ function Setting(props) {
                     />
                 ) : (
                     <>
-                        <p>{props.text}: {editedValue || (props.value ? props.value : 'Not set')}</p> {/* Display editedValue if available, else display current value or 'Not set' */}
+                        <p>{props.text}: {editedValue || (props.value ? props.value : 'Not set')}</p> {}
                         <span className="flex flex-col mr-[50rem] mt-2 text-maroon hover:text-gold cursor-pointer" onClick={handleEdit}>
                             Edit
                         </span>
