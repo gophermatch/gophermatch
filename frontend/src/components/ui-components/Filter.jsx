@@ -67,6 +67,18 @@ export default function Filter() {
                     <option value="2026">2026</option>
                     <option value="2025">2025</option>
                 </select>
+                <select name="1" id="1" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                    <option value="">Future Option</option>
+                </select>
+                <select name="2" id="2" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                    <option value="">Future Option</option>
+                </select>
+                <select name="3" id="3" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                    <option value="">Future Option</option>
+                </select>
+                <select name="4" id="4" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                    <option value="">Future Option</option>
+                </select>
                 <img class = "bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh]" src="../assets/images/filtercheck.png" onClick={handleApplyFilters}></img>
             </div>
         </div>}
