@@ -4,46 +4,63 @@ import Filter from '../ui-components/Filter';
 import styles from '../../assets/css/match.module.css'
 import TemplateProfile from '../../TemplateProfile.json'
 import TemplateProfile2 from '../../TemplateProfile2.json'
-
+import backend from '../../backend';
 import currentUser from '../../currentUser';
+
+
+const tempIdGrabber = (() => {
+    const tempIds = [42,43,44,45,46,47,48,54,56,57,58,59,60,61,62,63];
+    let pointer = 0;
+    return function() {
+        return new Promise((resolve) => {
+            const selected = [];
+            for (let i = 0; i < 10; i++) {
+                selected.push(tempIds[pointer]);
+                pointer = (pointer + 1) % tempIds.length;
+            }
+            resolve({data: selected});
+        });
+    }
+})();
 
 const deepClone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
 
 export default function Match() {
-    const [profileDataQueue, updateProfileDataQueue] = useState([]);
+    const [nextProfiles, setNextProfiles] = useState([]);
+    const [requestLock, setRequestLock] = useState(false);
 
-    function goToNext() {
-        updateProfileDataQueue(q => {
-            const copy = deepClone(q)
-            copy.shift();
-            return copy
+    if (nextProfiles.length < 5 && !requestLock) {
+        setRequestLock(true);
+        tempIdGrabber().then((res) => {
+            Promise.all(res.data.map((id) => (
+                backend.get('/profile', {params: {user_id: id}})
+            ))).then((profileDatas) => {
+                setNextProfiles(s => [...s, ...profileDatas]);
+                setRequestLock(false);
+                console.log("Got profiles");
+            }).catch(() => console.error("WAAAH"));
         })
     }
 
-    if (profileDataQueue.length == 0) {
-                // get some ids from backend
-                //todo swap out the routes and uncomment all this code once backend good
-        // let generalPromise = backend.get(`profile_${props.user_Id}`);
-        // let preferencePromise = backend.get(`preferences_${props.userId}`);
-        // let final = {}
-        // Promise.all([generalPromise, preferencePromise]).then(tables => {
-        //     values.forEach(value => {
-        //         final = {...final, ...value}
-        //     })
-        //     setProfileData(final);
-        // })
-        const fetchedDataList = [TemplateProfile, TemplateProfile2] // backend request
-        updateProfileDataQueue(q => [...deepClone(q), ...fetchedDataList])
+    function goToNext() {
+        console.log("Going to next");
+        setNextProfiles(s => s.slice(1));
+        console.log(nextProfiles);
+    }
+
+    if (nextProfiles.length == 0) {
         return <p>Loading profiles</p>
     }
 
     return (
         <div>
             <Filter/>
-            <Profile user_data={currentUser.user_data} data={profileDataQueue[0]} editable={false} />
-            {/* Replace this button where you want it in your UI */}
-            <button onClick={goToNext}>Next Profile</button>
+            <Profile user_data={currentUser.user_data} data={nextProfiles[0]} editable={false} />
+            <div className="flex justify-around">
+                <button onClick={goToNext} className="w-[40px] h-[40px] bg-red-500 rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">X</button>
+                <buttonm onClick={goToNext} className="w-[40px] h-[40px] bg-slate-200 rounded-full text-center align-middle text-white font-bold hover:bg-slate-300 shadow-md"></buttonm>
+                <button onClick={goToNext} className="w-[40px] h-[40px] bg-green-500 rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">&#10003;</button>
+            </div>
         </div>
     );
-    
 }
