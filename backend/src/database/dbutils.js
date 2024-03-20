@@ -106,3 +106,19 @@ export function buildUpdateString(tableName, primary_key, newVals) {
         values: vals
     }
 }
+
+/**
+ * Builds a simple DELETE query string with conditions.
+ * @param {string} tableName - The name of the table to delete from.
+ * @param {Object} conds - An object where keys are column names and values are the values those columns must match for the row to be deleted.
+ * @returns {Object} An object containing the queryString for the DELETE operation and an array of values that correspond to the placeholders in the query.
+ */
+export function buildDeleteString(tableName, conds) {
+    if (!conds || Object.keys(conds).length === 0) {
+        throw new Error("Conditions object cannot be empty for DELETE operation.");
+    }
+    // Utilize buildKeyValSep to construct the WHERE clause of the DELETE query.
+    const { keyString, values } = buildKeyValSep(conds, "=", "AND");
+    const queryString = `DELETE FROM ${tableName} WHERE ${keyString};`;
+    return { queryString, values };
+}

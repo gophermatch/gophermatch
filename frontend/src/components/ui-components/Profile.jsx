@@ -20,7 +20,7 @@ export default function Profile(props) {
     return null;
   };
 
-
+  const top5 = "";
 
   const qnaItems = [
     {
@@ -83,11 +83,11 @@ export default function Profile(props) {
       ],
     },
   ].map((item) => (
-    <div key={item.id} className={styles.qnaItem}>
-      <p className={styles.profileItem}>{item.question}</p>
+    <div key={item.id} className={""}>
+      <p className={""}>{item.question}</p>
       {editable ? (
         <select
-          className={styles.profileAnswer}
+          className={""}
           value={getSelectedOptionId(item.id) || ''}
           onChange={(event) => handleQnaChange(event, item.id)}
         >
@@ -98,43 +98,74 @@ export default function Profile(props) {
           ))}
         </select>
       ) : (
-        <p className={styles.profileAnswer}>
+        <p className={"truncate"}>
           {item.options.find(o => o.option_id === getSelectedOptionId(item.id))?.text || 'N/A'}
         </p>
       )}
     </div>
   ));
 
-
   return (
-    <div className={styles.profile}>
-      <div className={styles.upperSide}>
-      <div className={styles.leftSide}>
-        <div className={styles.imageWrapper}>
-          <Carousel pictures={pictures} />
-        </div>
-      </div>
-      <div className={styles.rightSide}>
-        <div className={styles.bioContainer}>
-          <p className={styles.name}>{splitter.general.name}</p>
-          {editable ? (
-            <textarea
-              className={styles.bioTextArea}
-              value={props.editedBio || ''}
-              onChange={handleBioChange}
-            />
-          ) : (
-            <p className={styles.bioText}>{props.editedBio}</p>
-          )}
+      <div className={"m-auto w-[60vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
+        <div className={"m-auto w-full flex flex-col p-8 h-2/3 bg-white rounded-3xl"}>
+          <div className={"flex h-[12vw]"}>
+            <div className={"w-[12vw] bg-white rounded-3xl border-4 border-maroon_new"}>
+              <Carousel pictures={pictures}></Carousel>
+            </div>
+            <div className={"flex-grow flex flex-col bg-white"}>
+              <div className={"pl-20 h-10 text-2xl"}>
+                Kanye West, 40, Male, Music Major, Chicago
+              </div>
+              <div className={"flex-grow ml-5 px-5 py-3 rounded-3xl border-2 border-maroon_new overflow"}>
+                <p className={"w-full"}>
 
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className={"flex flex-grow"}>
+            <div className={"flex-1 flex-col m-[5%] ml-0 mb-[10%] rounded-3xl border-2 border-maroon_new"}>
+
+            </div>
+            <div className={"flex-1 flex-col m-[5%] ml-0 mb-0 rounded-3xl border-2 border-maroon_new overflow-hidden truncate"}>
+              <p className={"absolute"}>
+                {qnaItems}
+              </p>
+            </div>
+            <div className={"flex-1 m-[5%] mx-0 mb-0 rounded-3xl border-2 border-maroon_new"}>
+              {top5}
+            </div>
+          </div>
         </div>
       </div>
-      </div>
-      <div className={styles.bottomSide}>
-        <div className={styles.profileOptions}>
-          {qnaItems}
-        </div>
-      </div>
-    </div>
+      // <div className={styles.profile}>
+    //   <div className={styles.upperSide}>
+    //   <div className={styles.leftSide}>
+    //     <div className={styles.imageWrapper}>
+    //       <Carousel pictures={pictures} />
+    //     </div>
+    //   </div>
+    //   <div className={styles.rightSide}>
+    //     <div className={styles.bioContainer}>
+    //       <p className={styles.name}>{splitter.general.name}</p>
+    //       {editable ? (
+    //         <textarea
+    //           className={styles.bioTextArea}
+    //           value={props.editedBio || ''}
+    //           onChange={handleBioChange}
+    //         />
+    //       ) : (
+    //         <p className={styles.bioText}>{props.editedBio}</p>
+    //       )}
+    //
+    //     </div>
+    //   </div>
+    //   </div>
+    //   <div className={styles.bottomSide}>
+    //     <div className={styles.profileOptions}>
+    //       {qnaItems}
+    //     </div>
+    //   </div>
+    // </div>
   );
 }
