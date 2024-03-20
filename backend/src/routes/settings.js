@@ -6,15 +6,23 @@ const router = Router();
 
 export default router;
 
+
 router.get('/', async (req, res) => {
     const user_id = req.query.user_id;
 
     if (!user_id) {
         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        console.log('User_id missing (if statement)');
         return;
+    }
+    if (user_id) {
+        console.log('Valid user_id (if statement)');
     }
 
     try {
+        console.log('User_valid');
+        const profile = await getProfile(user_id);
+        res.status(200).json(profile);
         const response = await backend.get(`/settings?user_id=${user_id}`);
         const data = await response.json();
         res.status(200).json(data);
@@ -23,6 +31,7 @@ router.get('/', async (req, res) => {
         res.status(500).json(createErrorObj("Failed to fetch user info. Please try again later."));
     }
 });
+
 
 router.put('/', async (req, res) => {
     const user_id = req.body.user_id

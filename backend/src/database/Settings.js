@@ -1,9 +1,9 @@
 import { db, tableNames } from './db.js';
-import { queryRowsToArray, buildSelectString, buildUpdateString } from './dbutils.js';
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
 
 export async function getSettings() {
     return new Promise((resolve, reject) => {
-        const qr = buildSelectString('*', tableNames.settings);
+        const qr = buildSelectString('*', tableNames.settings, {});
 
         db.query(qr.queryString, qr.values, (err, rows) => {
             if (err) {
@@ -33,7 +33,7 @@ export async function updateSetting(name, value) {
 
 export async function getUserInfo() {
     return new Promise((resolve, reject) => {
-        const qr = buildSelectString('*', tableNames.user);
+        const qr = buildSelectString('*', tableNames.user, {});
 
         db.query(qr.queryString, qr.values, (err, rows) => {
             if (err) {
