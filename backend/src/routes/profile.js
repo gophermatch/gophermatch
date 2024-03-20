@@ -2,12 +2,12 @@ import multer from 'multer';
 import { Router } from 'express';
 import fs from 'fs';
 import { createErrorObj } from './routeutil.js'
-import { 
+import {
     getProfile,
     updateProfile,
     savePictureUrl,
-    retrievePictureUrls
-} from '../database/profile.js'
+    retrievePictureUrls, createBio
+} from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
 
@@ -29,6 +29,7 @@ router.get('/', async (req, res) => {
 
     try {
         const profile = await getProfile(user_id);
+
         res.status(200).json(profile);
     } catch (error) {
         console.error("Error fetching profile:", error);
