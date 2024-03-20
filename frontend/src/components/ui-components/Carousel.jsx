@@ -33,8 +33,8 @@ export default function Carousel(props) {
 
     return (
         <div className={styles.container}>
-            <div className={styles.imageWrapper}>
-                <img src={currentImage} />
+            <div>
+                <img src={currentImage} className={"rounded-2xl"}/>
             </div>
             {carouselLen > 1 && dotSection}
         </div>
