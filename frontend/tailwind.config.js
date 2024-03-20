@@ -31,7 +31,7 @@ export default {
       maroon_new: '#7D0000',
       inactive_gray: '#C6C6C6',
       gold: 'rgb(234 179 8)',
-      ...colors
+      pink: 'rgb(254 249 195)',
     },
     fontFamily: {
       lora: ['Lora', 'serif'],

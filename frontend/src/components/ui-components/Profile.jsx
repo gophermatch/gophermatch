@@ -106,7 +106,7 @@ export default function Profile(props) {
   ));
 
   return (
-      <div className={"m-auto w-[60vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
+      <div className={"m-auto w-[60vw] h-screen flex items-center justify-center font-profile font-semibold text-maroon_new"}>
         <div className={"m-auto w-full flex flex-col p-8 h-2/3 bg-white rounded-3xl"}>
           <div className={"flex h-[12vw]"}>
             <div className={"w-[12vw] bg-white rounded-3xl border-4 border-maroon_new"}>
