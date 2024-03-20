@@ -56,8 +56,11 @@ export default function Match() {
         <div>
             <Filter/>
             <Profile data={nextProfiles[0]} editable={false} />
-            <button onClick={goToNext}>Next Profile</button>
+            <div className="flex justify-around">
+                <button onClick={goToNext} className="w-[40px] h-[40px] bg-red-500 rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">X</button>
+                <buttonm onClick={goToNext} className="w-[40px] h-[40px] bg-slate-200 rounded-full text-center align-middle text-white font-bold hover:bg-slate-300 shadow-md"></buttonm>
+                <button onClick={goToNext} className="w-[40px] h-[40px] bg-green-500 rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">&#10003;</button>
+            </div>
         </div>
     );
-    
 }
