@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { createUser, deleteUser, getUserData, updateAccountInfo } from "../database/account.js";
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
-import { createProfile } from '../database/profile.js';
+import { createBio } from '../database/profile.js';
 
 const router = Router()
 const saltRounds = 10;
@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
         const user = await createUser(email, hashpass)
 
         // create the user's profile
-        const profile = await createProfile(user.user_id)
+        const profile = await createBio(user.user_id)
 
         const userWithoutPass = loginUser(req, user)
         res.status(201).json(userWithoutPass)

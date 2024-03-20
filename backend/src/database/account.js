@@ -1,5 +1,6 @@
 import { db, tableNames } from './db.js'
 import { queryRowsToArray, buildSelectString, buildInsertString } from './dbutils.js'
+import account from "../routes/account.js";
 
 // Returns a promise that is a user object from the users database, or {} if no user is found
 export async function getUser(email) {
@@ -69,17 +70,21 @@ export async function deleteUser(user_id) {
 
 export async function getUserData(user_id){
     return new Promise((resolve, reject) => {
-        db.query(`SELECT *
-        FROM ${tableNames.u_userdata}
-        WHERE user_id = ${user_id}`,
-          (err, res) => {
-              if (err) {
-                  reject(err)
-                  return
-              }
-              resolve(res)
-          })
-    })
+        const qr = buildSelectString("*", tableNames.u_userdata, {user_id});
+
+        db.query(qr.queryString, qr.values, (err, rows) => {
+
+            const res = queryRowsToArray(rows)
+
+            if (err) {
+                console.error("Error fetching user data", err);
+                reject(err);
+                return;
+            }
+
+            resolve(res[0]);
+        });
+    });
 }
 
 export async function updateAccountInfo(user_id, userdata){
@@ -89,7 +94,7 @@ export async function updateAccountInfo(user_id, userdata){
     console.log("User has data: " + exists);
 
     return new Promise((resolve, reject) => {
-        db.query(`${exists ? `UPDATE` : `INSERT INTO`} ${tableNames.u_userdata}
+        db.query(`${tableNames.u_userdata}
 SET 
     user_id = ${user_id},
     first_name = "${userdata.first_name}",
