@@ -6,7 +6,6 @@ import MatchRouter from './match.js'
 import ProfileRouter from './profile.js'
 import { AuthStatusChecker } from '../auth.js'
 import { userIDParser } from './requestParser.js'
-import MatchRouter from './match.js'
 
 const router = Router()
 

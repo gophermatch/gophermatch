@@ -1,7 +1,7 @@
-import { Router } from 'express';
-import { recordUserDecision, getFilterResults, deleteMatchDecision, getSavedMatches } from '../database/match.js';
+import { Router } from 'express'
+import { recordUserDecision, getFilterResults, deleteMatchDecision, getSavedMatches } from '../database/match.js'
 
-const router = Router();
+const router = Router()
 
 // Takes a json with the parameters user1Id, user2Id, decision
 router.post('/matcher', async (req, res) => {
@@ -33,6 +33,8 @@ router.post('/filter-results', async (req, res) => {
     } catch (error) {
         console.error('Error getting filter results:', error);
         res.status(500).json({ error: "Failed to get filter results." });
+    }
+});
 
 // http://localhost:3000/api/match/saved-matches/43
 // replace last number with user id to get their saved users
@@ -69,4 +71,4 @@ router.delete('/remove', async (req, res) => {
     }
 });
 
-export default router;
+export default router
