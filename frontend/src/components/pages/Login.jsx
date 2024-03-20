@@ -69,8 +69,8 @@ export default function Login() {
         </div>
         <div className="bg-doc w-screen h-screen flex flex-col font-lora">
             <div className="flex flex-col justify-center items-center w-screen text-maroon">
-                <h1 className="text-maroon font-lora mt-20">Login</h1>
-                <div className="flex flex-col items-center justify-center mt-10 relative">
+                <h1 className="text-maroon font-lora text-[5rem] mt-20">Login</h1>
+                <div className="flex flex-col items-center justify-center mt-[2.75rem] relative">
                     <input 
                         type="text" 
                         value={email} 
@@ -98,7 +98,7 @@ export default function Login() {
                         </p>
                     )}
                 <div className="flex items-center justify-center mt-5">
-                    <button onClick={onLoginAttempt} className="bg-maroon hover:bg-yellow-700 text-doc font-bold py-2 px-20 rounded mt-4">Login</button>
+                    <button onClick={onLoginAttempt} className="bg-maroon hover:bg-yellow-700 text-doc font-bold py-2 px-20 rounded mt-8">Login</button>
                 </div>
                 <div>{loginErr}</div>
                 <div className='flex items-center justify-center mt-10'>

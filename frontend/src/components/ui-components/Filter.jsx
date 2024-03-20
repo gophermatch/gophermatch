@@ -3,10 +3,10 @@ import currentUser from '../../currentUser';
 import backend from '../../backend';
 
 export default function Filter() {
-    const [shouldShowIcon, setShowIcon] = React.useState(true);
-    const [shouldShowUI, setShowUI] = React.useState(false);
+    const [shouldShowIcon, setShowIcon] = useState(true);
+    const [shouldShowUI, setShowUI] = useState(false);
 
-    function expandFilterUI(){
+    function expandFilterUI() {
         setShowIcon(!shouldShowIcon);
         setShowUI(!shouldShowUI);
     }
@@ -22,7 +22,6 @@ export default function Filter() {
           const response = await backend.post('/match/filter-results', filters, {
             withCredentials: true, // If you need to send cookies with the request for session management
           });
-
           if (response.data && Array.isArray(response.data) && response.data.length > 0) {
             console.log('Filters applied, user IDs:', response.data); // Assuming the backend returns an array of user_ids
           } else {
@@ -37,9 +36,9 @@ export default function Filter() {
 
     return(
         <>
-        {shouldShowIcon && <div class = "flex absolute right-0">
-            <img class="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png" onClick={expandFilterUI}></img>
-        </div>}
+            {shouldShowIcon && <div className="flex absolute right-0">
+                <img className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png" onClick={expandFilterUI}></img>
+            </div>}
 
         {shouldShowUI && <div class = "flex bg-maroon w-[80vw] h-[12.5vh] m-auto rounded-b-3xl items-center justify-center">
             <div class = "flex space-x-[0.5vw] text-black text-xs font-lora border-5 items-center">
@@ -83,5 +82,6 @@ export default function Filter() {
             </div>
         </div>}
         </>
-    )
+    );
+
 }
