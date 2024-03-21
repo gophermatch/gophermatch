@@ -7,6 +7,7 @@ class User {
     #user_id;  // private member
     #email;
     #account_created;
+    #user_data;
 
     constructor() {
         this.#setDefaults()
@@ -22,10 +23,6 @@ class User {
         return this.#user_id !== -1
     }
 
-    get account_created(){
-        return false; //TODO implement this
-    }
-
     // Stores login information
     async login(user_id, email) {
         if (typeof user_id !== "number") 
@@ -37,22 +34,20 @@ class User {
         this.#user_id = user_id
         this.#email = email
 
-        await this.updateAccountCreated();
+        this.#user_data = await this.getAccount()
+        this.#account_created = this.#user_data != null;
 
         console.log("Account created: " + this.#account_created);
     }
 
-     async updateAccountCreated(){
+     async getAccount(){
         // Check if the user has submitted the account creation page yet by checking their first name
         const response = await backend.get('/account/fetch', {
             params: { user_id: this.#user_id },
             withCredentials: true,
         });
 
-        console.log(response.data)
-
-        // Should have a more thorough way to do this
-        this.#account_created = response.data.data.length > 0;
+        return response.data.data;
     }
 
     // Delete login information
@@ -69,7 +64,11 @@ class User {
     }
 
     get account_created(){
-        return this.#account_created
+        return this.#user_data != null;
+    }
+
+    get user_data(){
+        return this.#user_data;
     }
 }
 
