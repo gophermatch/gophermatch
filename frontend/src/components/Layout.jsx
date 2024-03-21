@@ -6,7 +6,7 @@ export default function Layout() {
     return (
         <>
         <div id={styles.sidebar}><Sidebar/></div>
-        <div id={styles.page}><Outlet/></div>
+        <div id={styles.page} className={"bg-offwhite"}><Outlet/></div>
         </>
     )
 }

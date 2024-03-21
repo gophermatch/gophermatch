@@ -1,42 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
+import currentUser from '../../currentUser';
+import backend from '../../backend';
 
 export default function Filter() {
-    const [shouldShowIcon, setShowIcon] = React.useState(true);
-    const [shouldShowUI, setShowUI] = React.useState(false);
+    const [shouldShowIcon, setShowIcon] = useState(true);
+    const [shouldShowUI, setShowUI] = useState(false);
 
-    function expandFilterUI(){
+    function expandFilterUI() {
         setShowIcon(!shouldShowIcon);
         setShowUI(!shouldShowUI);
     }
 
+    const handleApplyFilters = async () => {
+        // Collect the selected options
+        const filters = {
+          gender: document.getElementById('gender').value,
+          college: document.getElementById('college').value,
+          graduationyear: document.getElementById('graduationyear').value,
+        };
+        try {
+          const response = await backend.post('/match/filter-results', filters, {
+            withCredentials: true, // If you need to send cookies with the request for session management
+          });
+          if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+            console.log('Filters applied, user IDs:', response.data); // Assuming the backend returns an array of user_ids
+          } else {
+            console.log('No matching users found.');
+          }
+        } catch (error) {
+          console.error('Error applying filters:', error);
+        }
+
+        expandFilterUI();
+    };
+
     return(
         <>
-        {shouldShowIcon && <div class = "flex absolute right-0">
-            <img class="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png" onClick={expandFilterUI}></img>
-        </div>}
+            {shouldShowIcon && <div className="flex absolute right-0">
+                <img className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png" onClick={expandFilterUI}></img>
+            </div>}
 
-        {shouldShowUI && <div class = "flex-column bg-[#D9D9D9] mt-[2vh] w-[50vw] h-[15vh] m-auto rounded-3xl items-center text-xs font-bold">
-            <p class = "ml-[2vw] mb-[1vh] text-lg">Filter by..</p>
-            <div class = "flex space-x-[1.25vw] ml-[1.5vw] text-[#E3E3E3] border-5 items-start drop-shadow-md">
-                <select name="gender" id="gender" class = "bg-[#B7B7B7] w-[10vw] h-[5vh] rounded-2xl px-[1.5vh] py-[1vh]">
+        {shouldShowUI && <div class = "flex bg-maroon w-[80vw] h-[12.5vh] m-auto rounded-b-3xl items-center justify-center">
+            <div class = "flex space-x-[0.5vw] text-black text-xs font-lora border-5 items-center">
+                <select name="gender" id="gender" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Non-Binary">Non-Binary</option>
                 </select>
-                <select name="building" id="building" class = "bg-[#B7B7B7] w-[10vw] h-[5vh] rounded-2xl px-[1.5vh] py-[1vh]">
-                    <option value="">Building</option>
-                    <option value="Pioneer">Pioneer Hall</option>
-                    <option value="Frontier">Frontier Hall</option>
-                    <option value="Territorial">Territorial Hall</option>
-                    <option value="Centennial">Centennial Hall</option>
-                    <option value="Comstock">Comstock Hall</option>
-                    <option value="Sanford">Sanford Hall</option>
-                    <option value="Middlebrook">Middlebrook Hall</option>
-                    <option value="Bailey">Bailey Hall</option>
-                    <option value="17th">17th Avenue Residence Hall</option>
-                </select>
-                <select name="College" id="College" class = "bg-[#B7B7B7] w-[10vw] h-[5vh] rounded-2xl px-[1.5vh] py-[1vh]">
+                <select name="college" id="college" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">College</option>
                     <option value="CLA">College of Liberal Arts</option>
                     <option value="CSE">College of Science and Engineering</option>
@@ -47,10 +59,29 @@ export default function Filter() {
                     <option value="CFANS">College of Food, Agricultural, and Natural Resource Sciences</option>
                     <option value="SN">School of Nursing</option>
                 </select>
-                <p class = "bg-[#B7B7B7] w-[10vw] h-[5vh] rounded-2xl px-[1.5vh] py-[1vh]">Other Options</p>
-                <img class = "bg-[#A4BDA2] w-[2.5vw] h-[5vh] rounded-3xl object-scale-down px-[0.66vh] py-[0.66vh]" src="../assets/images/filtercheck.png" onClick={expandFilterUI}></img>
+                <select name="graduationyear" id="graduationyear" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                    <option value="">Graduation Year</option>
+                    <option value="2028">2028</option>
+                    <option value="2027">2027</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                </select>
+                <select name="1" id="1" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                    <option value="">Future Option</option>
+                </select>
+                <select name="2" id="2" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                    <option value="">Future Option</option>
+                </select>
+                <select name="3" id="3" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                    <option value="">Future Option</option>
+                </select>
+                <select name="4" id="4" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                    <option value="">Future Option</option>
+                </select>
+                <img class = "bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh]" src="../assets/images/filtercheck.png" onClick={handleApplyFilters}></img>
             </div>
         </div>}
         </>
-    )
+    );
+
 }

@@ -2,12 +2,12 @@ import multer from 'multer';
 import { Router } from 'express';
 import fs from 'fs';
 import { createErrorObj } from './routeutil.js'
-import { 
+import {
     getProfile,
     updateProfile,
     savePictureUrl,
-    retrievePictureUrls
-} from '../database/profile.js'
+    retrievePictureUrls, createBio
+} from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
 
@@ -29,6 +29,7 @@ router.get('/', async (req, res) => {
 
     try {
         const profile = await getProfile(user_id);
+
         res.status(200).json(profile);
     } catch (error) {
         console.error("Error fetching profile:", error);
@@ -84,42 +85,41 @@ router.get('/all-user-ids', async (req, res) => {
     }
 });
 
-// Get QnA for a user
-// router.get('/qna', async (req, res) => {
-//     const user_id = req.query.user_id;
+router.get('/qna', async (req, res) => {
+    const user_id = req.query.user_id;
 
-//     if (!user_id) {
-//         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
-//         return;
-//     }
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
 
-//     try {
-//         const qna = await getQnA(user_id);
-//         res.status(200).json(qna);
-//     } catch (e) {
-//         console.error(e);
-//         res.status(400).json(createErrorObj(e));
-//     }
-// });
+    try {
+        const qna = await getQnA(user_id);
+        res.status(200).json(qna);
+    } catch (e) {
+        console.error(e);
+        res.status(400).json(createErrorObj(e));
+    }
+});
 
-// // Save/update QnA for a user
-// router.put('/qna', async (req, res) => {
-//     const user_id = req.body.user_id;
-//     const qna = req.body.qna;
+// Save/update QnA for a user
+router.put('/qna', async (req, res) => {
+    const user_id = req.body.user_id;
+    const qna = req.body.qna;
 
-//     if (!user_id || !qna) {
-//         res.status(400).json(createErrorObj("Must specify user_id and qna to update QnA!"));
-//         return;
-//     }
+    if (!user_id || !qna) {
+        res.status(400).json(createErrorObj("Must specify user_id and qna to update QnA!"));
+        return;
+    }
 
-//     try {
-//         await saveQnA(user_id, qna);
-//         res.status(200).json({ message: "QnA updated!" });
-//     } catch (e) {
-//         console.error(e);
-//         res.status(400).json(createErrorObj(e));
-//     }
-// });
+    try {
+        await saveQnA(user_id, qna);
+        res.status(200).json({ message: "QnA updated!" });
+    } catch (e) {
+        console.error(e);
+        res.status(400).json(createErrorObj(e));
+    }
+});
 
 router.post('/upload-picture', upload.single('file'), async (req, res) => {
     if (!req.file) {
