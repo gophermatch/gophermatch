@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "../../assets/css/profile.module.css";
 
 function TopFive(props){
 
@@ -6,7 +7,15 @@ function TopFive(props){
     <p className={"flex-1"}>{props.question}</p>
     <p className={"truncate"}>
       {props.rankings.map((item, index) => (
-        <li key={index}>{item}</li>
+        props.editing ? (
+            <textarea
+              className={"inline-block flex h-[2rem] resize-none border"}
+              value={item || ''}
+              onChange={null}
+            />
+          ) : (
+            <p className={"inline-block flex h-[2rem]"}>{index+1}. {item}</p>
+          )
       ))}
     </p>
   </div>);
