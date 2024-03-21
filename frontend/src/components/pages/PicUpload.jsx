@@ -36,7 +36,7 @@ const PicUpload = () => {
             const formData = new FormData();
             formData.append("file", file);
             formData.append("user_id", currentUser.user_id);
-            formData.append("pic_number", i + 1);
+            formData.append("pic_number", i);
     
             const response = await backend.post("/profile/upload-picture", formData);
             if (response.ok) {
@@ -106,9 +106,10 @@ const PicUpload = () => {
     return (
         <div className="h-screen w-screen bg-doc flex justify-center items-center">
             <div className="bg-white rounded-[1.5rem] pt-[16rem] pb-[16rem] pl-[40rem] pr-[10rem] mr-[15rem] shadow-lg relative">
-            {pictureUrls.slice(0, 3).map((url, index) => (
+            {[0, 1, 2].map((index) => (
                 <div key={index} className={`absolute top-[4%] left-[${20 + index * 20}%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center`}>
-                    {url && <img src={url} alt={`Profile ${index + 1}`} className="w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
+                    <span className="text-5xl">+</span>
+                    {pictureUrls[index] && <img src={pictureUrls[index]} alt={`Profile ${index + 1}`} className="absolute w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
                 </div>
             ))}
                 <div className="absolute bottom-0 left-0 w-full h-2/3 flex flex-col justify-center items-center cursor-pointer">
