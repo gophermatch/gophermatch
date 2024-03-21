@@ -12,11 +12,26 @@ export default function ProfilePage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [firstPictureUrl, setFirstPictureUrl] = useState('');
 
-
-
   useEffect(() => {
     fetchProfile();
   }, []);
+
+  const fetchUserData = async () => {
+    const response = await backend.get('account/fetch', {
+      params: {
+        user_id: currentUser.user_id},
+      withCredentials: true});
+
+    console.log(response);
+
+    if(response.status === 200) {
+      return response.data.data[0];
+    }else{
+      console.log('Failed to fetch user data.');
+    }
+  }
+
+  const userData = fetchUserData();
 
   const fetchFirstPictureUrl = async () => {
     try {
@@ -42,6 +57,7 @@ export default function ProfilePage() {
         params: { user_id: currentUser.user_id },
         withCredentials: true,
       });
+
       const profileData = response.data;
       console.log('Incoming data', profileData);
       // Initialize qnaAnswers if undefined
@@ -161,30 +177,30 @@ const handleFileUpload = async () => {
 
   return (
     <div>
-      <Profile
-        data={profile}
-        editable={isEditing}
-        editedBio={isEditing ? editedProfile.bio : profile.bio}
-        handleBioChange={handleBioChange}
-        qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
-        handleQnaChange={handleQnaChange}
-        
-      />
-
-<button onClick={fetchFirstPictureUrl}>Load Profile Picture</button>
-  {firstPictureUrl && <img src={firstPictureUrl} alt="Profile" />}
+      <button onClick={fetchFirstPictureUrl}>Load Profile Picture</button>
+      {firstPictureUrl && <img src={firstPictureUrl} alt="Profile" />}
 
       {isEditing && (
         <>
           <button onClick={handleSaveChanges}>Save Changes</button>
           <button onClick={toggleEditMode}>Cancel</button>
           <input type="file" onChange={handleFileChange} style={{ display: 'block', marginTop: '20px' }} />
-        <button onClick={handleFileUpload}>Upload Picture</button>
+          <button onClick={handleFileUpload}>Upload Picture</button>
         </>
       )}
       {!isEditing && (
         <button onClick={toggleEditMode}>Edit Profile</button>
       )}
+  <Profile
+    user_data={currentUser.user_data}
+    editable={isEditing}
+    editedBio={isEditing ? editedProfile.bio : profile.bio}
+    handleBioChange={handleBioChange}
+    qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
+    handleQnaChange={handleQnaChange}
+
+  />
     </div>
-  );
+)
+  ;
 }

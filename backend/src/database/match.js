@@ -1,5 +1,7 @@
 // Assuming the existence of a database module for executing queries
-import { db } from './db.js'; // Your database connection setup
+import { db , tableNames} from './db.js'; // Your database connection setup
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
+
 
 /**
  * Records a user's decision about another user and checks for a mutual match.
@@ -8,32 +10,128 @@ import { db } from './db.js'; // Your database connection setup
  * @param {string} decision - The decision made ('match', 'reject', 'unsure').
  * @returns {Promise<{matchFound: boolean, message: string}>} - A promise that resolves to the outcome of the operation.
  */
-async function recordUserDecision(user1Id, user2Id, decision) {
+export async function recordUserDecision(user1Id, user2Id, decision) {
     try {
-        // Step 1: Insert the decision into the database
+        // SQL query to insert or update the decision in the database.
+        // Make helper function for this in the future
         const insertDecisionQuery = `
-            INSERT INTO u_matches (user_id, match_user_id, match_status) 
+            INSERT INTO ${tableNames.u_matches} (user_id, match_user_id, match_status) 
             VALUES (?, ?, ?)
             ON DUPLICATE KEY UPDATE match_status = VALUES(match_status);
         `;
+        // Execute the query with provided user IDs and decision.
         await db.query(insertDecisionQuery, [user1Id, user2Id, decision]);
 
-        // Step 2: Check if there's a reciprocal match
-        const checkMatchQuery = `
-            SELECT match_status FROM u_matches 
-            WHERE user_id = ? AND match_user_id = ? AND match_status = 'match';
-        `;
-        const [rows] = await db.query(checkMatchQuery, [user2Id, user1Id]);
-        
-        if (rows.length > 0 && decision === 'match') {
-            // A mutual match is found
+        // Check if a reciprocal match exists.
+        const result = await checkMatch(user1Id, user2Id);
+        // If both users have liked each other, return a match found response.
+        if (decision === 'match' && result.length > 0) {
             return { matchFound: true, message: "It's a match!" };
-        } else {
-            // No mutual match yet or the decision is not to match
-            return { matchFound: false, message: "Decision recorded. Waiting for the other user." };
         }
+        // Otherwise, indicate that the decision has been recorded and waiting for the other user.
+        return { matchFound: false, message: "Decision recorded. Waiting for the other user." };
+
     } catch (error) {
+        // Log and throw an error if any part of the process fails.
         console.error('Error in recordUserDecision:', error);
         throw new Error('Failed to record user decision');
+    }
+}
+
+// Function to get user_ids based on filters for gender and college
+export async function getFilterResults(filters) {
+    return new Promise((resolve, reject) => {
+        // Construct where clause based on provided filters
+        // We only include filters that are not empty strings
+        const whereClause = Object.keys(filters).reduce((acc, key) => {
+            if (filters[key] !== '') {
+                acc[key] = filters[key];
+            }
+            return acc;
+        }, {});
+
+        // Build the SQL query string
+        const { queryString, values } = buildSelectString("user_id", tableNames.u_userdata, whereClause);
+
+        // Execute the query
+        db.query(queryString, values, (err, rows) => {
+            if (err) {
+                console.error("Error querying filter results from database:", err);
+                reject(err);
+                return;
+            }
+
+            // Extract user_id from each row and return an array of user_ids
+            const userIds = rows.map(row => row.user_id);
+            resolve(userIds);
+        });
+    });
+}
+
+// Function to check if two users have mutually liked each other.
+export async function checkMatch(user1Id, user2Id) {
+    return new Promise((resolve, reject) => {
+        const { queryString, values } = buildSelectString("match_status", tableNames.u_matches, {
+            user_id: user2Id,
+            match_user_id: user1Id,
+            match_status: 'match'
+        });
+
+        // Execute the query to find if there's a match.
+        db.query(queryString, values, (err, results) => {
+            if (err) {
+                // Log and reject the promise if there's an error.
+                console.error("Error fetching match status from database:", err);
+                reject(err);
+                return;
+            }
+            // Resolve the promise with the results of the query.
+            resolve(results);
+        });
+    });
+}
+
+// Function to retrieve all user IDs that a specified user has marked as 'unsure'.
+export async function getSavedMatches(userId) {
+    return new Promise((resolve, reject) => {
+        const { queryString, values } = buildSelectString("match_user_id", tableNames.u_matches, {
+            user_id: userId,
+            match_status: 'unsure'
+        });
+  
+        // Execute the query to find saved matches.
+        db.query(queryString, values, (err, rows) => {
+            if (err) {
+                // Log and reject the promise if there's an error.
+                console.error("Error fetching user IDs from database:", err);
+                reject(err);
+                return;
+            }
+  
+            // Extract user_id from each row and return an array of user_ids.
+            const saveIds = rows.map(row => row.match_user_id);
+            resolve(saveIds);
+        });
+    });
+}
+
+// Function to delete a match decision from the database.
+export async function deleteMatchDecision(userId, matchUserId, decision) {
+    try {
+        const { queryString, values } = buildDeleteString(tableNames.u_matches, {
+            user_id: userId,
+            match_user_id: matchUserId,
+            match_status: decision
+        });
+
+        // Execute the query to delete the specified decision.
+        await db.query(queryString, values);
+        // Log the successful deletion.
+        console.log(`Deleted decision '${decision}' for user_id=${userId} and match_user_id=${matchUserId}.`);
+
+    } catch (error) {
+        // Log and throw an error if the deletion fails.
+        console.error('Error in deleteMatchDecision:', error);
+        throw new Error('Failed to delete match decision');
     }
 }
