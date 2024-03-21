@@ -177,19 +177,18 @@ const handleFileUpload = async () => {
 
   return (
     <div>
-      <button onClick={fetchFirstPictureUrl}>Load Profile Picture</button>
-      {firstPictureUrl && <img src={firstPictureUrl} alt="Profile" />}
-
       {isEditing && (
-        <>
-          <button onClick={handleSaveChanges}>Save Changes</button>
-          <button onClick={toggleEditMode}>Cancel</button>
-          <input type="file" onChange={handleFileChange} style={{ display: 'block', marginTop: '20px' }} />
-          <button onClick={handleFileUpload}>Upload Picture</button>
-        </>
+        <div className={"w-[50px] m-auto inset-x-5 space-x-[150px]"}>
+          <button className={"absolute px-[15px] mt-5 text-white rounded-xl h-50 bg-maroon_new"} onClick={handleSaveChanges}>Save Changes</button>
+          <button className={"absolute px-[15px] mt-5 rounded-xl h-50 bg-inactive_gray"} onClick={toggleEditMode}>Cancel</button>
+          {/*<input type="file" onChange={handleFileChange} style={{ display: 'block', marginTop: '20px' }} />*/}
+          {/*<button onClick={handleFileUpload}>Upload Picture</button>*/}
+        </div>
       )}
       {!isEditing && (
-        <button onClick={toggleEditMode}>Edit Profile</button>
+        <div className={"w-[50px] m-auto"}>
+        <button className={"absolute px-[15px] mt-5 text-white h-50 rounded-xl bg-maroon_new"} onClick={toggleEditMode}>Edit</button>
+        </div>
       )}
   <Profile
     user_data={currentUser.user_data}

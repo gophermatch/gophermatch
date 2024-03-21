@@ -68,14 +68,21 @@ export default function Match() {
     }
 
     return (
-        <div>
-            <Filter/>
-            <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} />
-            <div className="flex justify-around">
-                <button onClick={() => goToNext("reject")} className="w-[40px] h-[40px] bg-red-500 rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">X</button>
-                <buttonm onClick={() => goToNext("save")} className="w-[40px] h-[40px] bg-slate-200 rounded-full text-center align-middle text-white font-bold hover:bg-slate-300 shadow-md"></buttonm>
-                <button onClick={() => goToNext("match")} className="w-[40px] h-[40px] bg-green-500 rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">&#10003;</button>
-            </div>
-        </div>
+      <div>
+          <Filter />
+          <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} />
+          <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
+              <button onClick={() => goToNext("reject")}
+                      className="w-[50px] h-[50px] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
+                  <p className={"text-gold"}>X</p>
+              </button>
+              <button onClick={() => goToNext("save")}
+                       className="w-[50px] h-[50px] bg-offwhite border-black border-[1px] rounded-full text-center align-middle text-white font-bold hover:bg-slate-300 shadow-md">💾</button>
+              <button onClick={() => goToNext("match")}
+                      className="w-[50px] h-[50px] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">
+                  <p className={"text-maroon_new"}>&#10003;</p>
+              </button>
+          </div>
+      </div>
     );
 }
