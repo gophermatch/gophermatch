@@ -89,7 +89,7 @@ export default function AccountCreation() {
 
             console.log(res.data.message);
 
-            await currentUser.updateAccountCreated();
+            await currentUser.getAccount();
 
             navigate("/match")
 
