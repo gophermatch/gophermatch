@@ -128,7 +128,7 @@ export default function Profile(props) {
         <div className={"m-auto w-full flex flex-col p-8 h-2/3 bg-white rounded-3xl overflow-hidden"}>
           <div className={"flex h-[12vw]"}>
             <div className={"w-[12vw] bg-white rounded-3xl border-4 border-maroon_new"}>
-              <Carousel pictures={pictures}></Carousel>
+              <Carousel pictures={pictures} editable={editable}></Carousel>
             </div>
             <div className={"flex-grow flex flex-col bg-white"}>
               <div className={"pl-10 h-10 text-2xl"}>
