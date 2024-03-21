@@ -16,13 +16,15 @@ const PicUpload = () => {
                     withCredentials: true,
 
                 });
-                console.log('response: ', response);
                 if (response) {
                     const data = response.data;
 
-                    for (let i = 0; i < data.pictureUrls.length; i++) {
-                        pictureUrls[i] = data.pictureUrls[i];
+                    const newArray = [];
+
+                    for (let i = 0; i < Math.max(data.pictureUrls.length, 3); i++) {
+                        newArray[i] = data.pictureUrls[i];
                     }
+                    setPictureUrls(newArray)
                 } else {
                     throw new Error("Failed to fetch picture URLs");
                 }
@@ -49,14 +51,16 @@ const PicUpload = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-                alert('File uploaded successfully');
-                console.log(response.data);
+            alert('File uploaded successfully');
+            console.log(response.data);
 
-                setPictureUrls(prevUrls => {
-                    const newUrls = [...prevUrls];
-                    newUrls[i] = response.data.pictureUrl;
-                    return newUrls;
-                });
+            console.log("Changing picture urls");
+            console.log(pictureUrls);
+            setPictureUrls(prevUrls => {
+                const newUrls = [...prevUrls];
+                newUrls[i] = response.data.pictureUrl;
+                return newUrls;
+            });
         } catch (error) {
             console.error('Error uploading file:', error);
             alert('Failed to upload file.');
@@ -75,6 +79,7 @@ const PicUpload = () => {
             if (firstEmptyIndex !== -1) {
                 updatePictureUrl(file, firstEmptyIndex);
             } else {
+                console.log(pictureUrls)
                 console.error("No empty photo slots available");
                 break;
             }
@@ -84,32 +89,6 @@ const PicUpload = () => {
 
 
     const handleDoneClick = async () => {
-        if (!file) {
-            console.error("No file selected");
-            return;
-        }
-    
-        try {
-            const formData = new FormData();
-            formData.append("file", file);
-    
-            const response = await backend.post("/profile/upload-picture", formData);
-    
-            if (response.ok) {
-                console.log("File uploaded successfully");
-                const data = await response.json();
-                const newPictureUrls = [...pictureUrls];
-                const firstEmptyIndex = newPictureUrls.findIndex(url => !url);
-                if (firstEmptyIndex !== -1) {
-                    newPictureUrls[firstEmptyIndex] = data.pictureUrl;
-                    setPictureUrls(newPictureUrls);
-                }
-            } else {
-                throw new Error("Failed to upload file");
-            }
-        } catch (error) {
-            console.error("Error uploading file:", error);
-        }
     };
     
 
