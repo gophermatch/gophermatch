@@ -178,16 +178,16 @@ const handleFileUpload = async () => {
   return (
     <div>
       {isEditing && (
-        <div className={"w-[50px] m-auto inset-x-5 space-x-[150px]"}>
-          <button className={"absolute px-[15px] mt-5 text-white rounded-xl h-50 bg-maroon_new"} onClick={handleSaveChanges}>Save Changes</button>
-          <button className={"absolute px-[15px] mt-5 rounded-xl h-50 bg-inactive_gray"} onClick={toggleEditMode}>Cancel</button>
+        <div className={"w-[50px] flex flex-center justify-center m-auto inset-x-5 space-x-[150px]"}>
+          <button className={"absolute px-[15px] mr-[3rem] w-[6vw] text-l mt-[3.5rem] text-white rounded-[1.5rem] h-50 bg-maroon_new"} onClick={handleSaveChanges}>Save</button>
+          <button className={"absolute px-[15px] ml-[3rem] w-[6vw] mt-[3.5rem] text-l rounded-[1.5rem] h-50 bg-inactive_gray"} onClick={toggleEditMode}>Cancel</button>
           {/*<input type="file" onChange={handleFileChange} style={{ display: 'block', marginTop: '20px' }} />*/}
           {/*<button onClick={handleFileUpload}>Upload Picture</button>*/}
         </div>
       )}
       {!isEditing && (
         <div className={"w-[50px] m-auto"}>
-        <button className={"absolute px-[15px] mt-5 text-white h-50 rounded-xl bg-maroon_new"} onClick={toggleEditMode}>Edit</button>
+        <button className={"absolute px-[25px] mt-[3.5rem] text-xl text-white h-50 rounded-[1.5rem] bg-maroon_new"} onClick={toggleEditMode}>Edit</button>
         </div>
       )}
   <Profile
