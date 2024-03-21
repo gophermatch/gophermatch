@@ -32,18 +32,33 @@ export default function Match() {
     if (nextProfiles.length < 5 && !requestLock) {
         setRequestLock(true);
         tempIdGrabber().then((res) => {
-            Promise.all(res.data.map((id) => (
-                backend.get('/profile', {params: {user_id: id}})
-            ))).then((profileDatas) => {
-                setNextProfiles(s => [...s, ...profileDatas]);
-                setRequestLock(false);
-                console.log("Got profiles");
-            }).catch(() => console.error("WAAAH"));
-        })
+            const newData = res.data.map(async (id) => {
+                const data = await backend.get('profile', {params: {user_id: id}});
+                return {user_id: id, data: data};
+            });
+            setNextProfiles(s => [...s, ...newData]);
+            setRequestLock(false);
+        }).catch(() => console.error("WAAAH"));
+
+        // setRequestLock(true);
+        // tempIdGrabber().then((res) => {
+        //     Promise.all(res.data.map((id) => (
+        //         backend.get('/profile', {params: {user_id: id}})
+        //     ))).then((profileDatas) => {
+        //         setNextProfiles(s => [...s, ...profileDatas]);
+        //         setRequestLock(false);
+        //         console.log("Got profiles");
+        //     }).catch(() => console.error("WAAAH"));
+        // })
     }
 
-    function goToNext() {
+    function goToNext(decision) {
         console.log("Going to next");
+        backend.post('/match/matcher', {
+            user1Id: currentUser.user_id,
+            user2Id: nextProfiles[0].user_id,
+            decision: decision
+        });
         setNextProfiles(s => s.slice(1));
         console.log(nextProfiles);
     }
@@ -55,11 +70,11 @@ export default function Match() {
     return (
         <div>
             <Filter/>
-            <Profile user_data={currentUser.user_data} data={nextProfiles[0]} editable={false} />
+            <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} />
             <div className="flex justify-around">
-                <button onClick={goToNext} className="w-[40px] h-[40px] bg-red-500 rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">X</button>
-                <buttonm onClick={goToNext} className="w-[40px] h-[40px] bg-slate-200 rounded-full text-center align-middle text-white font-bold hover:bg-slate-300 shadow-md"></buttonm>
-                <button onClick={goToNext} className="w-[40px] h-[40px] bg-green-500 rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">&#10003;</button>
+                <button onClick={() => goToNext("reject")} className="w-[40px] h-[40px] bg-red-500 rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">X</button>
+                <buttonm onClick={() => goToNext("save")} className="w-[40px] h-[40px] bg-slate-200 rounded-full text-center align-middle text-white font-bold hover:bg-slate-300 shadow-md"></buttonm>
+                <button onClick={() => goToNext("match")} className="w-[40px] h-[40px] bg-green-500 rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">&#10003;</button>
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
-import { Router } from 'express'
-import { recordUserDecision, getFilterResults, deleteMatchDecision, getSavedMatches } from '../database/match.js'
+import { Router } from 'express';
+import { recordUserDecision, deleteMatchDecision, getSavedMatches, retrieveUserMatches, getFilterResults } from '../database/match.js';
 
 const router = Router()
 
@@ -71,4 +71,19 @@ router.delete('/remove', async (req, res) => {
     }
 });
 
-export default router
+// Takes a json with parameter userId and returns json with matched userids with match timestamp
+router.get('/inbox', async (req, res) => {
+    try {
+        const {userId} = req.body;
+        if (!userId) {
+            return res.status(400).send('User ID is required');
+        }
+
+        const matches = await retrieveUserMatches(userId);
+        res.json(matches);
+    } catch (error) {
+        res.status(500).send('Failed to retrieve matches');
+    }
+});
+
+export default router;

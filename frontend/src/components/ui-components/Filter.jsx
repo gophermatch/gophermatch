@@ -16,7 +16,7 @@ export default function Filter() {
         const filters = {
           gender: document.getElementById('gender').value,
           college: document.getElementById('college').value,
-          graduationyear: document.getElementById('graduationyear').value,
+          graduating_year: document.getElementById('graduating_year').value,
         };
         try {
           const response = await backend.post('/match/filter-results', filters, {
@@ -59,7 +59,7 @@ export default function Filter() {
                     <option value="CFANS">College of Food, Agricultural, and Natural Resource Sciences</option>
                     <option value="SN">School of Nursing</option>
                 </select>
-                <select name="graduationyear" id="graduationyear" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                <select name="graduating_year" id="graduating_year" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Grad. Year</option>
                     <option value="2028">2028</option>
                     <option value="2027">2027</option>

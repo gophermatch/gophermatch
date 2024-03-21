@@ -7,8 +7,6 @@ import TopFive from "./TopFive.jsx";
 
 export default function Profile(props) {
 
-  console.log(props);
-
   const { profile_data, user_data, editable, handleBioChange, handleQnaChange, qnaAnswers } = props;
   let pictures = [kanye, other, kanye];
 
@@ -93,7 +91,7 @@ export default function Profile(props) {
     },
     {
       id: 7,
-      question: 'Alcohol',
+      question: 'Alcohol?',
       options: [
         { option_id: 32, text: 'Yes' },
         { option_id: 33, text: 'No' },
@@ -105,7 +103,7 @@ export default function Profile(props) {
       <p className={"flex-1"}>{item.question}</p>
       {editable ? (
         <select
-          className={""}
+          className={"text-right"}
           value={getSelectedOptionId(item.id) || ''}
           onChange={(event) => handleQnaChange(event, item.id)}
         >
@@ -151,13 +149,13 @@ export default function Profile(props) {
           </div>
           <div className={"flex flex-grow"}>
             <div className={"flex-1 flex-col m-[5%] ml-0 mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden"}>
-              {qnaItems}
+              {qnaItems.slice(0,7)}
             </div>
             <div className={"flex-1 flex-col flex m-[5%] ml-0 mb-0 rounded-3xl border-2 border-maroon_new overflow-hidden truncate"}>
-              {qnaItems}
+              {qnaItems.slice(8,15)}
             </div>
-            <div className={"flex-1 m-[5%] mx-0 mb-0 rounded-3xl border-2 border-maroon_new"}>
-              <TopFive question={"Top 5 Superheroes"} rankings={["1", "2", "3", "4", "5"]}></TopFive>
+            <div className={"flex-1 m-[5%] mx-0 mb-0 pt-[0.75rem] rounded-3xl border-2 border-maroon_new"}>
+              <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
             </div>
           </div>
         </div>

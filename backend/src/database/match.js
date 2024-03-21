@@ -24,8 +24,9 @@ export async function recordUserDecision(user1Id, user2Id, decision) {
 
         // Check if a reciprocal match exists.
         const result = await checkMatch(user1Id, user2Id);
-        // If both users have liked each other, return a match found response.
+        // If both users have matched with each other, return a match found response.
         if (decision === 'match' && result.length > 0) {
+            handleReciprocalMatch(user1Id, user2Id);
             return { matchFound: true, message: "It's a match!" };
         }
         // Otherwise, indicate that the decision has been recorded and waiting for the other user.
@@ -69,7 +70,7 @@ export async function getFilterResults(filters) {
 }
 
 // Function to check if two users have mutually liked each other.
-export async function checkMatch(user1Id, user2Id) {
+async function checkMatch(user1Id, user2Id) {
     return new Promise((resolve, reject) => {
         const { queryString, values } = buildSelectString("match_status", tableNames.u_matches, {
             user_id: user2Id,
@@ -89,6 +90,24 @@ export async function checkMatch(user1Id, user2Id) {
             resolve(results);
         });
     });
+}
+
+async function handleReciprocalMatch(user1Id, user2Id) {
+    try {
+        // SQL query to insert the match.
+        const insertMatchQuery = `
+            INSERT INTO ${tableNames.u_inboxt} (user1_id, user2_id)
+            VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE match_timestamp = VALUES(match_timestamp);
+        `;
+        // Execute the query.
+        await db.query(insertMatchQuery, [user1Id, user2Id]);
+        
+        // Additional logic here (e.g., notifying users of the match).
+    } catch (error) {
+        console.error('Error in handleReciprocalMatch:', error);
+        throw new Error('Failed to handle reciprocal match');
+    }
 }
 
 // Function to retrieve all user IDs that a specified user has marked as 'unsure'.
@@ -135,3 +154,39 @@ export async function deleteMatchDecision(userId, matchUserId, decision) {
         throw new Error('Failed to delete match decision');
     }
 }
+
+export async function retrieveUserMatches(userId) {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT 
+                CASE 
+                    WHEN user1_id = ? THEN user2_id 
+                    ELSE user1_id 
+                END AS matched_user_id,
+                match_timestamp
+            FROM ${tableNames.u_inboxt}
+            WHERE user1_id = ? OR user2_id = ?
+            ORDER BY match_timestamp ASC;
+        `;
+        
+        db.query(query, [userId, userId, userId], (error, matches) => {
+            if (error) {
+                console.error('Error retrieving user matches:', error);
+                reject(error); // Reject the promise if there's an error
+            } else {
+                // Transform the result to return only the matching user's ID.
+                const transformedMatches = matches.map(match => {
+                    return {
+                        matchId: match.matched_user_id, // Use the aliased matched_user_id from the query result
+                        timestamp: match.match_timestamp
+                    };
+                });
+
+                resolve(transformedMatches); // Resolve the promise with the transformed matches
+            }
+        });
+    });
+}
+
+
+
