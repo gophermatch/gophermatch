@@ -16,6 +16,7 @@ export const tableNames = {
         u_matches: "u_matches", // junction table
         u_qnas: "u_qnas",
         u_pictures: "u_pictures",
+        u_inboxt: "u_inboxt",
     u_prefs: "u_preferences",
         u_locations: "u_locations",
         u_qna: "u_qna",
