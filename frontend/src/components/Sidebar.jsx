@@ -38,7 +38,7 @@ export default function Sidebar() {
                         </NavLink>
                     ))}
 
-                    <div className="text-inactive_gray transition-transform duration-200 hover:scale-110 hover:text-gold cursor-pointer inline-flex items-center">
+                    <div className="text-inactive_gray font-bold transition-transform duration-200 hover:scale-110 hover:text-gold cursor-pointer inline-flex items-center">
                         <Logout id="logout" className="logout" /> <span className="ml-1" onClick={() => document.getElementById('logout').click()}>&#8594;</span>
                     </div>
                 </div>
