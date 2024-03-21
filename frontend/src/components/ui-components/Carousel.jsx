@@ -16,7 +16,15 @@ export default function Carousel(props) {
     const carouselLen = props.pictures.length
 
     function showOverlay(){
+        const imageWrapper = document.getElementById("imageWrapper");
         if(editable){
+            if(imageWrapper.style.filter == "blur(2px)"){
+                imageWrapper.style.filter = "blur(0px)";
+                imageWrapper.style.opacity = 1;
+            } else {
+                imageWrapper.style.filter = "blur(2px)";
+                imageWrapper.style.opacity = 0.8;
+            }
             setIsHovering(prev => !prev);
         }
     }
@@ -51,7 +59,7 @@ export default function Carousel(props) {
         <div className={styles.container}>
             <div class ="flex justify-center items-center">
                 {isHovering && <img src='../../assets/images/imageicon.png' class="absolute scale-[0.15]"/>}
-                <div id="imageWrapper" className = {"hover:bg-gray-900 hover:opacity-80 hover:blur-sm hover:h-full"}>
+                <div id="imageWrapper">
                     <img src={currentImage} className = {"rounded-2xl"} onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay}/>
                 </div>
             </div>
