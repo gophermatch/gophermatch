@@ -16,6 +16,23 @@ export default function ProfilePage() {
     fetchProfile();
   }, []);
 
+  const fetchUserData = async () => {
+    const response = await backend.get('account/fetch', {
+      params: {
+        user_id: currentUser.user_id},
+      withCredentials: true});
+
+    console.log(response);
+
+    if(response.status === 200) {
+      return response.data.data[0];
+    }else{
+      console.log('Failed to fetch user data.');
+    }
+  }
+
+  const userData = fetchUserData();
+
   const fetchFirstPictureUrl = async () => {
     try {
       const response = await backend.get('/profile/user-pictures', {
@@ -38,6 +55,7 @@ export default function ProfilePage() {
         params: { user_id: currentUser.user_id },
         withCredentials: true,
       });
+
       const profileData = response.data;
       setProfile(profileData);
       setEditedProfile({ ...profileData, qnaAnswers: profileData.qnaAnswers || {} });
@@ -151,34 +169,29 @@ export default function ProfilePage() {
 
   return (
     <div>
-      <Profile
-        data={profile}
-        editable={isEditing}
-        editedBio={isEditing ? editedProfile.bio : profile.bio}
-        handleBioChange={handleBioChange}
-        qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
-        handleQnaChange={handleQnaChange}
-      />
-
-      <button onClick={fetchFirstPictureUrl}>Load Profile Picture</button>
-      {firstPictureUrl && <img src={firstPictureUrl} alt="Profile" />}
-
       {isEditing && (
-        <>
-          <button onClick={handleSaveChanges}>Save Changes</button>
-          <button onClick={toggleEditMode}>Cancel</button>
-          <input type="file" onChange={handleFileChange} style={{ display: 'block', marginTop: '20px' }} />
-          <button onClick={handleFileUpload}>Upload Picture</button>
-        </>
+        <div className={"w-[50px] m-auto inset-x-5 space-x-[150px]"}>
+          <button className={"absolute px-[15px] mt-5 text-white rounded-xl h-50 bg-maroon_new"} onClick={handleSaveChanges}>Save Changes</button>
+          <button className={"absolute px-[15px] mt-5 rounded-xl h-50 bg-inactive_gray"} onClick={toggleEditMode}>Cancel</button>
+          {/*<input type="file" onChange={handleFileChange} style={{ display: 'block', marginTop: '20px' }} />*/}
+          {/*<button onClick={handleFileUpload}>Upload Picture</button>*/}
+        </div>
       )}
       {!isEditing && (
-        <>
-          <button onClick={handleEditProfile}>Edit Profile</button>
-          <Link to="/PicUpload">
-            Change Profile Picture
-          </Link>
-        </>
+        <div className={"w-[50px] m-auto"}>
+        <button className={"absolute px-[15px] mt-5 text-white h-50 rounded-xl bg-maroon_new"} onClick={toggleEditMode}>Edit</button>
+        </div>
       )}
+  <Profile
+    user_data={currentUser.user_data}
+    editable={isEditing}
+    editedBio={isEditing ? editedProfile.bio : profile.bio}
+    handleBioChange={handleBioChange}
+    qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
+    handleQnaChange={handleQnaChange}
+
+  />
     </div>
-  );
+)
+  ;
 }

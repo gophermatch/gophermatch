@@ -14,6 +14,7 @@
 }
 
 .progressButton {
+    z-index: 10;
     font-size: 12px;
     line-height: 20px;
     flex: none;
@@ -37,6 +38,7 @@
 }
 
 .dots {
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: space-around;
