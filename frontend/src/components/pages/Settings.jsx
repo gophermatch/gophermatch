@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import backend from '../../backend';
 
-console.log('Does anything happen here?');
 const fetchUserInfo = async () => {
-    console.log('before');
+    console.log('Before try block')
     try {
-        const response = await backend.get('/settings');
-        if (response.ok) {
+        console.log('In try block')
+        const response = await backend.get('/profile/getProfile');
+        console.log('after response')
+        if (response.status === 200) {
             console.log('If statement, user info fetched')
+            const data = response.data;
+            return data;
         }
-        if (!response.ok) {
-            console.log('If statement, user info didnt fetch');
-            throw new Error(`Failed to fetch user info. Status: ${response.status}`);
+        else {
+            console.log('Did not correctly fetch user info. Status: ${response.status}');
         }
-        const data = await response.json();
-        return data;
     } catch (error) {
         console.error('Error fetching user info:', error);
-        return null; // Return null or another default value instead of re-throwing the error
+        return null;
     }
 };
 
 
 export default function SettingsPage1() {
     const [p1settings, setP1Settings] = useState([]);
-    console.log('before in settings');
 
     useEffect(() => {
         fetchUserInfo().then(user => {
@@ -48,7 +47,7 @@ export default function SettingsPage1() {
 
     const handleSaveSetting = async (setting, value) => {
         try {
-            const response = await backend.post('/settings', {
+            const response = await backend.post('/settings/updateSettings', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
