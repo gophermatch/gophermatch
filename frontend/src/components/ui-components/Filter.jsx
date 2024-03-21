@@ -40,7 +40,7 @@ export default function Filter() {
                 <img className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png" onClick={expandFilterUI}></img>
             </div>}
 
-        {shouldShowUI && <div class = "flex bg-maroon w-[80vw] h-[12.5vh] m-auto rounded-b-3xl items-center justify-center">
+        {shouldShowUI && <div class = "flex absolute bg-maroon w-[80vw] h-[12.5vh] left-[3%] rounded-b-3xl items-center justify-center">
             <div class = "flex space-x-[0.5vw] text-black text-xs font-lora border-5 items-center">
                 <select name="gender" id="gender" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Gender</option>
@@ -60,7 +60,7 @@ export default function Filter() {
                     <option value="SN">School of Nursing</option>
                 </select>
                 <select name="graduationyear" id="graduationyear" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Graduation Year</option>
+                    <option value="">Grad. Year</option>
                     <option value="2028">2028</option>
                     <option value="2027">2027</option>
                     <option value="2026">2026</option>
