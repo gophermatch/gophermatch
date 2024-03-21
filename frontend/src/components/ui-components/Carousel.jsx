@@ -58,7 +58,7 @@ export default function Carousel(props) {
     return (
         <div className={styles.container}>
             <div class ="flex justify-center items-center">
-                {isHovering && <img src='../../assets/images/imageicon.png' class="absolute scale-[0.15]"/>}
+                {isHovering && <img src='../../assets/images/imageicon.png' class="absolute scale-[0.1]"/>}
                 <div id="imageWrapper">
                     <img src={currentImage} className = {"rounded-2xl"} onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay}/>
                 </div>
