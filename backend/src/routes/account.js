@@ -29,6 +29,8 @@ router.post('/', async (req, res) => {
         const user = await createUser(email, hashpass)
 
         // create the user's profile
+
+        //const profile = await createProfile(user.user_id)
         const profile = await createBio(user.user_id)
 
         const userWithoutPass = loginUser(req, user)
