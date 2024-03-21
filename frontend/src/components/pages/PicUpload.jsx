@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import backend from "../../backend.js";
+import currentUser from '../../currentUser';
+
 
 const PicUpload = () => {
     const [file, setFile] = useState(null);
@@ -8,9 +11,14 @@ const PicUpload = () => {
     useEffect(() => {
         const fetchPictureUrls = async () => {
             try {
-                const response = await fetch("/api/profile/user-pictures");
-                if (response.ok) {
-                    const data = await response.json();
+                const response = await backend.get("/profile/user-pictures", {
+                    params: {user_id: currentUser.user_id}, 
+                    withCredentials: true,
+
+                });
+                console.log('response: ', response);
+                if (response) {
+                    const data = response.data;
                     setPictureUrls(data.pictureUrls);
                 } else {
                     throw new Error("Failed to fetch picture URLs");
@@ -23,28 +31,21 @@ const PicUpload = () => {
         fetchPictureUrls();
     }, []);
 
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
-    };
-
-    const handleDoneClick = async () => {
-        if (!file) {
-            console.error("No file selected");
-            return;
-        }
-
+    const updatePictureUrl = async (file, i) => {
         try {
             const formData = new FormData();
             formData.append("file", file);
-
-            const response = await fetch("/PicUpload", {
-                method: "POST",
-                body: formData,
-            });
-
+            formData.append("user_id", currentUser.user_id);
+            formData.append("pic_number", i + 1);
+    
+            const response = await backend.post("/profile/upload-picture", formData);
             if (response.ok) {
-                console.log("File uploaded successfully");
-                // Redirect to profile page
+                const data = await response.data();
+                setPictureUrls(prevUrls => {
+                    const newUrls = [...prevUrls];
+                    newUrls[i] = data.pictureUrl;
+                    return newUrls;
+                });
             } else {
                 throw new Error("Failed to upload file");
             }
@@ -52,15 +53,64 @@ const PicUpload = () => {
             console.error("Error uploading file:", error);
         }
     };
+    
+    
+    
+
+    const handleFileChange = (event) => {
+        const files = event.target.files;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const firstEmptyIndex = pictureUrls.findIndex(url => !url);
+            if (firstEmptyIndex !== -1) {
+                updatePictureUrl(file, firstEmptyIndex);
+            } else {
+                console.error("No empty photo slots available");
+                break;
+            }
+        }
+    };
+    
+
+
+    const handleDoneClick = async () => {
+        if (!file) {
+            console.error("No file selected");
+            return;
+        }
+    
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+    
+            const response = await backend.post("/profile/upload-picture", formData);
+    
+            if (response.ok) {
+                console.log("File uploaded successfully");
+                const data = await response.json();
+                const newPictureUrls = [...pictureUrls];
+                const firstEmptyIndex = newPictureUrls.findIndex(url => !url);
+                if (firstEmptyIndex !== -1) {
+                    newPictureUrls[firstEmptyIndex] = data.pictureUrl;
+                    setPictureUrls(newPictureUrls);
+                }
+            } else {
+                throw new Error("Failed to upload file");
+            }
+        } catch (error) {
+            console.error("Error uploading file:", error);
+        }
+    };
+    
 
     return (
         <div className="h-screen w-screen bg-doc flex justify-center items-center">
             <div className="bg-white rounded-[1.5rem] pt-[16rem] pb-[16rem] pl-[40rem] pr-[10rem] mr-[15rem] shadow-lg relative">
-                {pictureUrls.slice(0, 3).map((url, index) => (
-                    <div key={index} className={`absolute top-[4%] left-[${20 + index * 20}%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center`}>
-                        <img src={url} alt={`Profile ${index + 1}`} className="w-[6rem] h-[6rem] object-cover rounded-[1rem]" />
-                    </div>
-                ))}
+            {pictureUrls.slice(0, 3).map((url, index) => (
+                <div key={index} className={`absolute top-[4%] left-[${20 + index * 20}%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center`}>
+                    {url && <img src={url} alt={`Profile ${index + 1}`} className="w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
+                </div>
+            ))}
                 <div className="absolute bottom-0 left-0 w-full h-2/3 flex flex-col justify-center items-center cursor-pointer">
                     <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
                     <label htmlFor="fileInput" className="cursor-pointer flex flex-col items-center w-full h-full">
