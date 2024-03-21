@@ -1,8 +1,9 @@
 import kanye from '../../assets/images/kanye.png'
 import TemplateProfile from '../../TemplateProfile.json'
 import backend from '../../backend.js'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Profile from '../ui-components/Profile.jsx'
+import currentUser from '../../currentUser.js'
 
 const dummyData = {
     id: 865728,
@@ -31,14 +32,43 @@ function isOnProfilePopup(node) {
 
 export default function Inbox() {
     const [openProfile, setOpenProfile] = useState(false);
+    const [matchedProfiles, updateMatchedProfiles] = useState([])
+    const [updateDep, stepUpdateDep] = useState(1);
+    const [matches, updateMatches] = useState([]); // {matchId: userid, timestamp: ???}[]
+
+
     const people = [];
     // get matches
     people.push(dummyData);
     people.push(secondData);
 
+    useEffect(() => {
+        backend.get('profile', {params: {user_id: 54}, withCredentials: true}).then((res) => {
+            console.log(res.data)
+        })
+    })
+
+    useEffect(() => {
+        (async () => {
+            const matchesRes = await backend.get('/match/inbox', {params: {userId: currentUser.user_id}, withCredentials: true})
+            const matchObjects = await Promise.all(matchesRes.data.map(({matchId, timestamp}) => (
+                backend.get('/profile', {params: {user_id: matchId}, withCredentials: true})).then((r) => ({
+                    user_id: matchId,
+                    timestamp: timestamp,
+                    profileData: r.data
+                }))
+            ));
+            updateMatchedProfiles(matchObjects);
+            console.log(matchObjects);
+        })()
+    }, [updateDep]);
+
     function unmatch(profileId) {
-        // backend.put("/unmatch", profileId) ??
-        console.log("Will attempt to unmatch: " + profileId)
+        backend.delete('/match/remove', {params: {
+            user1Id: currentUser.user_id,
+            user2Id: profileId,
+            decision: "match"
+        }}).then(() => stepUpdateDep(s => s + 1));
     }
 
     function displayProfile(id) {
