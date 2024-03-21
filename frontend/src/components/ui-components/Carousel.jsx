@@ -31,7 +31,7 @@ export default function Carousel(props) {
 
     function gotoUpload(){
         if(editable){
-            navigate("/inbox");
+            navigate("/PicUpload");
         }
     }
 
