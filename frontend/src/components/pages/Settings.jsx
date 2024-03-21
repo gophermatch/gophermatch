@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import backend from '../../backend';
+import currentUser from '../../currentUser';
 
 const fetchUserInfo = async () => {
     console.log('Before try block')
     try {
         console.log('In try block')
-        const response = await backend.get('/profile/getProfile');
+        const response = await backend.get('/profile/getProfile', {
+            params: {user_id: currentUser.user_id},
+            withCredentials: true
+
+        });
         console.log('after response')
         if (response.status === 200) {
             console.log('If statement, user info fetched')
