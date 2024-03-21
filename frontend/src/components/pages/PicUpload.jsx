@@ -6,7 +6,7 @@ import currentUser from '../../currentUser';
 
 const PicUpload = () => {
     const [file, setFile] = useState(null);
-    const [pictureUrls, setPictureUrls] = useState([]);
+    const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
 
     useEffect(() => {
         const fetchPictureUrls = async () => {
@@ -19,7 +19,10 @@ const PicUpload = () => {
                 console.log('response: ', response);
                 if (response) {
                     const data = response.data;
-                    setPictureUrls(data.pictureUrls);
+
+                    for (let i = 0; i < data.pictureUrls.length; i++) {
+                        pictureUrls[i] = data.pictureUrls[i];
+                    }
                 } else {
                     throw new Error("Failed to fetch picture URLs");
                 }
@@ -32,25 +35,31 @@ const PicUpload = () => {
     }, []);
 
     const updatePictureUrl = async (file, i) => {
+
+        console.log(file);
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('user_id', currentUser.user_id);
+        formData.append('pic_number', i);
+
         try {
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("user_id", currentUser.user_id);
-            formData.append("pic_number", i);
-    
-            const response = await backend.post("/profile/upload-picture", formData);
-            if (response.ok) {
-                const data = await response.data();
+            const response = await backend.post('/profile/upload-picture', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+                alert('File uploaded successfully');
+                console.log(response.data);
+
                 setPictureUrls(prevUrls => {
                     const newUrls = [...prevUrls];
-                    newUrls[i] = data.pictureUrl;
+                    newUrls[i] = response.data.pictureUrl;
                     return newUrls;
                 });
-            } else {
-                throw new Error("Failed to upload file");
-            }
         } catch (error) {
-            console.error("Error uploading file:", error);
+            console.error('Error uploading file:', error);
+            alert('Failed to upload file.');
         }
     };
     
@@ -61,7 +70,8 @@ const PicUpload = () => {
         const files = event.target.files;
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            const firstEmptyIndex = pictureUrls.findIndex(url => !url);
+            console.log(file);
+            const firstEmptyIndex = pictureUrls.findIndex(url => url==="");
             if (firstEmptyIndex !== -1) {
                 updatePictureUrl(file, firstEmptyIndex);
             } else {
