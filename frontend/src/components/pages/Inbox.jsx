@@ -55,7 +55,7 @@ export default function Inbox() {
 
             const profilePromises = matchesRes.data.map(({matchId, timestamp}) => Promise.all([
                 backend.get('/profile', {params: {user_id: matchId}}),
-                backend.get('account/fetch', {params: {user_id: currentUser.user_id}, withCredentials: true})
+                backend.get('account/fetch', {params: {user_id: matchId}, withCredentials: true})
             ]));
 
             Promise.all(profilePromises).then((promiseResults) => {
