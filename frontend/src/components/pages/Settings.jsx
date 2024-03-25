@@ -9,7 +9,6 @@ const fetchUserInfo = async () => {
         const response = await backend.get('/profile/getProfile', {
             params: {user_id: currentUser.user_id},
             withCredentials: true
-
         });
         console.log('after response')
         if (response.status === 200) {
@@ -52,7 +51,7 @@ export default function SettingsPage1() {
 
     const handleSaveSetting = async (setting, value) => {
         try {
-            const response = await backend.post('/settings/updateSettings', {
+            const response = await backend.post('/profile/updateProfile', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
