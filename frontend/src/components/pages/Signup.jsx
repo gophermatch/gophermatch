@@ -24,11 +24,11 @@ export default function Signup() {
     async function onSignupAttempt() {
         if (!email) {
             setSignupErr("Email missing");
-            return;}
-        // } else if (!email.endsWith("@umn.edu")) {
-        //     setSignupErr("Email must be an umn email");
-        //     return;
-        // }
+            return;
+        } else if (!email.endsWith("@umn.edu")) {
+            setSignupErr("Email must be an umn email");
+            return;
+        }
     
         if (!password) {
             setSignupErr("Password missing");
@@ -45,6 +45,7 @@ export default function Signup() {
         try {
             await backend.post("/email-auth/request-otp", { email });
             setShowOtpInput(true); // Show OTP input after successfully sending the OTP
+            history.push("/account")
         } catch(err) {
             console.error(err);
             // Handle errors (e.g., error sending OTP)
@@ -73,33 +74,41 @@ export default function Signup() {
     
 
     return (
-        <div className={styles.login_page}>
-            <div className={styles.login_container}>
-                <h1>Gopher Match</h1>
-                <div className={styles.login_form}>
-                    <p>Email</p>
-                    <input type="text" value={email} onChange={(event) => setEmail(event.target.value)} autoFocus onKeyUp={enterKeyPress}/>
-                    <p>Password</p>
-                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} onKeyUp={enterKeyPress}/>
-                    <p>Re-enter Password</p>
-                    <input type="password" value={password2} onChange={(event) => setPassword2(event.target.value)} onKeyUp={enterKeyPress}/>
-                    {showOtpInput && (
-                        <>
-                            <p>OTP</p>
-                            <input type="text" value={otp} onChange={(event) => setOtp(event.target.value)} />
-                        </>
-                    )}
-                    <div className={styles.login_failure}>{signupErr}</div>
-                    {!showOtpInput ? (
-                        <button onClick={onSignupAttempt}>Sign up</button>
-                    ) : (
-                        <button onClick={onVerifyOtp}>Verify OTP</button>
-                    )}
-                    <div className={styles.signup_link_container}>
-                        <Link to="/login">Already have an account? Log in</Link>
-                    </div>
+            <div className="bg-doc w-screen h-screen">
+                <div className="bg-maroon h-[3.75rem] space-x-4 mt-auto">
+                    <div className="flex justify-start items-start w-full">
+                    <Link to="/landing" className="text-doc font-lora text-3xl ml-2 mt-2">GopherMatch</Link>
                 </div>
+                <div className = "flex flex-col font-lora text-maroon mt-10 text-center items-center">
+                    <h1 className = "font-lora text-[4rem] mt-[4rem]">Sign Up</h1>
+                    <div className="font-lora">
+                        <div>
+                            <input className="mt-[2.5rem]" placeholder="Email" type="text"  value={email} onChange={(event) => setEmail(event.target.value)} autoFocus onKeyUp={enterKeyPress}/>
+                        </div>
+                        <div>
+                            <input className="mt-[1.5rem]" placeholder="Password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} onKeyUp={enterKeyPress}/>
+                        </div>
+                            <input className="mt-[1.5rem]" placeholder = "Re-enter Password" type="password" value={password2} onChange={(event) => setPassword2(event.target.value)} onKeyUp={enterKeyPress}/>
+                            {showOtpInput && (
+                                <>
+                                    <input className="mt-[1.5rem]" placeholder="OTP" type="text" value={otp} onChange={(event) => setOtp(event.target.value)} />
+                                </>
+                            )}
+                        <div className={styles.login_failure}>{signupErr}</div>
+                        {!showOtpInput ? (
+                            <button className="bg-maroon hover:bg-login text-doc font-bold py-2 w-[11.5rem] rounded mt-12" onClick={onSignupAttempt}>Sign up</button>
+                        ) : (
+                            <button className="hover:text-gold mt-[1.5rem]" onClick={onVerifyOtp}>Verify OTP</button>
+                        )}
+                        <div className="mt-[2rem] text-lg flex items-center">
+                            <p>Already have an account?</p>
+                            &nbsp;
+                            <Link className="hover:text-gold" to="/login"> Log in</Link>
+                        </div>
+                    </div>
             </div>
+            </div>
+            <div className="bg-maroon h-[3.75rem] justify-end space-x-4 mt-auto fixed bottom-0 left-0 w-full"></div>
         </div>
     );
     
