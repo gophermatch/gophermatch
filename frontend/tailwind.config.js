@@ -33,7 +33,8 @@ export default {
       inactive_gray: '#C6C6C6',
       gold: 'rgb(234 179 8)',
       pink: 'rgb(254 249 195)',
-      login: 'rgb(161 98 7)'
+      login: 'rgb(161 98 7)',
+      transparent: 'transparent',
     },
     fontFamily: {
       lora: ['Lora', 'serif'],
