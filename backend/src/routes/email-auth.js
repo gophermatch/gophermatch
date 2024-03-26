@@ -21,6 +21,10 @@ router.post('/request-otp', async (req, res) => {
     if (!email) {
         return res.status(400).json({error: "Email is required"});
     }
+    if (!email.endsWith('@umn.edu')) {
+        res.status(400).json(createErrorObj("Email must be an umn email (ending with @umn.edu)"))
+        return
+    }
     // Generate a 6 digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiry = Date.now() + 300000; // 5 minutes from now
