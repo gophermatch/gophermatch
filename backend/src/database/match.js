@@ -1,6 +1,6 @@
 // Assuming the existence of a database module for executing queries
 import { db , tableNames} from './db.js'; // Your database connection setup
-import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
 
 
 /**
