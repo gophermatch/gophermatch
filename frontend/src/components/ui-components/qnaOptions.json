@@ -1,0 +1,78 @@
+[
+    {
+      "id": 1,
+      "question": "Drugs?",
+      "options": [
+        {"option_id": 1, "text": "Yes"},
+        {"option_id": 2, "text": "No"}
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Year?",
+      "options": [
+        {"option_id": 3, "text": "Freshman"},
+        {"option_id": 4, "text": "Sophomore"},
+        {"option_id": 5, "text": "Junior"},
+        {"option_id": 6, "text": "Senior"}
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Gender?",
+      "options": [
+        {"option_id": 7, "text": "Male"},
+        {"option_id": 8, "text": "Female"},
+        {"option_id": 9, "text": "Non-Binary"}
+      ]
+    },
+    {
+      "id": 4,
+      "question": "College?",
+      "options": [
+        {"option_id": 10, "text": "Carlson"},
+        {"option_id": 11, "text": "CBS"},
+        {"option_id": 12, "text": "Design"},
+        {"option_id": 13, "text": "CEHD"},
+        {"option_id": 14, "text": "CFANS"},
+        {"option_id": 15, "text": "CLA"},
+        {"option_id": 16, "text": "CSE"},
+        {"option_id": 17, "text": "Nursing"}
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Building?",
+      "options": [
+        {"option_id": 18, "text": "17th"},
+        {"option_id": 19, "text": "Bailey"},
+        {"option_id": 20, "text": "Centennial"},
+        {"option_id": 21, "text": "Comstock"},
+        {"option_id": 22, "text": "Frontier"},
+        {"option_id": 23, "text": "Middlebrook"},
+        {"option_id": 24, "text": "Pioneer"},
+        {"option_id": 25, "text": "Sanford"},
+        {"option_id": 26, "text": "Territorial"},
+        {"option_id": 27, "text": "Yudof"},
+        {"option_id": 28, "text": "Any"}
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Open Room?",
+      "options": [
+        {"option_id": 29, "text": "Empty"},
+        {"option_id": 30, "text": "Couple Friends"},
+        {"option_id": 31, "text": "Party"}
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Alcohol?",
+      "options": [
+        {"option_id": 32, "text": "Yes"},
+        {"option_id": 33, "text": "No"}
+      ]
+    }
+  ]
+  
