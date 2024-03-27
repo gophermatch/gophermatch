@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import currentUser from '../../currentUser';
 import backend from '../../backend';
+import qnaOptions from './qnaOptions.json';
 
 export default function Filter() {
     const [shouldShowIcon, setShowIcon] = useState(true);
@@ -12,23 +13,46 @@ export default function Filter() {
     }
 
     const handleApplyFilters = async () => {
-        // Collect the selected options
-        const filters = {
-          gender: document.getElementById('gender').value,
-          college: document.getElementById('college').value,
-          graduating_year: document.getElementById('graduating_year').value,
+        // Collect the selected options for userdata filters
+        const userdataFilters = {
+            gender: document.getElementById('gender').value,
+            college: document.getElementById('college').value,
+            graduating_year: document.getElementById('graduating_year').value,
         };
+
+        // Prepare the qnaFilters payload by finding the selected option_ids
+        const qnaFilterSelections = {
+            'Building?': document.getElementById('Building?').value,
+            'Alcohol?': document.getElementById('Alcohol?').value,
+            'Substances?': document.getElementById('Substances?').value,
+            'Room Activity?': document.getElementById('Room Activity?').value,
+        };
+
+        const qnaFilters = Object.entries(qnaFilterSelections).reduce((acc, [questionText, selectedOptionText]) => {
+            if (selectedOptionText) {
+                const question = qnaOptions.find(q => q.question === questionText);
+                if (question) {
+                    const option = question.options.find(o => o.text === selectedOptionText);
+                    if (option) acc.push(option.option_id);
+                }
+            }
+            return acc;
+        }, []);
+        console.log(qnaFilters);
+
         try {
-          const response = await backend.post('/match/filter-results', filters, {
-            withCredentials: true, // If you need to send cookies with the request for session management
-          });
-          if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-            console.log('Filters applied, user IDs:', response.data); // Assuming the backend returns an array of user_ids
-          } else {
-            console.log('No matching users found.');
-          }
+            // Adjust the backend call as necessary to handle the two payloads
+            const response = await backend.post('/match/filter-results', { userdataFilters, qnaFilters }, {
+                withCredentials: true, // If you need to send cookies with the request for session management
+            });
+
+            if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+                console.log('Filters applied, user IDs:', response.data); // Assuming the backend returns an array of user_ids
+            } else {
+                console.log('No matching users found.');
+            }
         } catch (error) {
-          console.error('Error applying filters:', error);
+            console.error('Error applying filters:', error);
         }
 
         expandFilterUI();
@@ -66,7 +90,7 @@ export default function Filter() {
                     <option value="2026">2026</option>
                     <option value="2025">2025</option>
                 </select>
-                <select name="building" id="building" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                <select name="building" id="Building?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Building</option>
                     <option value="Comstock">Comstock</option>
                     <option value="Pioneer">Pioneer</option>
@@ -78,21 +102,21 @@ export default function Filter() {
                     <option value="Middlebrook">Middlebrook</option>
                     <option value="Bailey">Bailey</option>
                 </select>
-                <select name="alcohol" id="alcohol" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                <select name="alcohol" id="Alcohol?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Alcohol Use</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
                 </select>
-                <select name="substances" id="substances" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                <select name="substances" id="Substances?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Substances</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
                 </select>
-                <select name="openroom" id="openroom" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                <select name="openroom" id="Room Activity?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Open Room</option>
-                    <option value="empty">No One</option>
-                    <option value="couple">A Couple Friends</option>
-                    <option value="party">Party</option>
+                    <option value="Empty">No One</option>
+                    <option value="Couple">A Couple Friends</option>
+                    <option value="Party">Party</option>
                 </select>
                 <img class = "bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh]" src="../assets/images/filtercheck.png" onClick={handleApplyFilters}></img>
             </div>

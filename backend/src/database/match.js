@@ -39,22 +39,31 @@ export async function recordUserDecision(user1Id, user2Id, decision) {
     }
 }
 
-// Function to get user_ids based on filters for gender and college
 export async function getFilterResults(filters) {
     return new Promise((resolve, reject) => {
-        // Construct where clause based on provided filters
-        // We only include filters that are not empty strings
-        const whereClause = Object.keys(filters).reduce((acc, key) => {
-            if (filters[key] !== '') {
-                acc[key] = filters[key];
-            }
-            return acc;
-        }, {});
+        // Check if any filters are provided
+        const hasFilters = Object.values(filters).some(value => value !== '');
 
-        // Build the SQL query string
-        const { queryString, values } = buildSelectString("user_id", tableNames.u_userdata, whereClause);
+        let queryString, values;
 
-        // Execute the query
+        if (!hasFilters) {
+            // If no filters are provided, select all user_ids from u_userdata
+            queryString = `SELECT DISTINCT user_id FROM ${tableNames.u_userdata}`;
+            values = [];
+        } else {
+            // Construct where clause based on provided filters
+            const whereClause = Object.keys(filters).reduce((acc, key) => {
+                if (filters[key] !== '') {
+                    acc[key] = filters[key];
+                }
+                return acc;
+            }, {});
+
+            const queryResult = buildSelectString("user_id", tableNames.u_userdata, whereClause);
+            queryString = queryResult.queryString;
+            values = queryResult.values;
+        }
+
         db.query(queryString, values, (err, rows) => {
             if (err) {
                 console.error("Error querying filter results from database:", err);
@@ -68,6 +77,49 @@ export async function getFilterResults(filters) {
         });
     });
 }
+
+
+
+export async function getFilterResultsQna(optionIds) {
+    return new Promise((resolve, reject) => {
+        // If no optionIds provided, select all user_ids without any conditions
+        if (!optionIds || optionIds.length === 0) {
+            db.query(`SELECT DISTINCT user_id FROM u_qna`, [], (err, rows) => {
+                if (err) {
+                    console.error("Error querying all user_ids from u_qna:", err);
+                    reject(err);
+                    return;
+                }
+                const userIds = rows.map(row => row.user_id);
+                resolve(userIds);
+            });
+            return;
+        }
+
+        const placeholders = optionIds.map(() => '?').join(',');
+        let queryString = `SELECT user_id FROM u_qna WHERE option_id IN (${placeholders})`;
+
+        queryString += ` GROUP BY user_id`;
+
+        // If more than one optionId is provided, ensure users match all specified options
+        if (optionIds.length > 1) {
+            queryString += ` HAVING COUNT(DISTINCT option_id) = ${optionIds.length}`;
+        }
+
+        db.query(queryString, optionIds, (err, rows) => {
+            if (err) {
+                console.error("Error querying filter results from u_qna:", err);
+                reject(err);
+                return;
+            }
+
+            // Extract user_id from each row and return an array of user_ids
+            const userIds = rows.map(row => row.user_id);
+            resolve(userIds);
+        });
+    });
+}
+
 
 // Function to check if two users have mutually liked each other.
 async function checkMatch(user1Id, user2Id) {
