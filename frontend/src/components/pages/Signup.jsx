@@ -78,6 +78,7 @@ export default function Signup() {
 
         // Request OTP
         try {
+            const response = await backend.post("/account/check-email", { email })
             await backend.post("/email-auth/request-otp", { email });
             setShowOtpInput(true);
             setOtpSent(true);
