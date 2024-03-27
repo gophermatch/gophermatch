@@ -1,0 +1,7 @@
+.arrow {
+    transition: fill 0.3s;
+}
+
+.arrow:hover {
+    fill: gold;
+}
