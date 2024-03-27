@@ -1,7 +1,7 @@
 [
     {
       "id": 1,
-      "question": "Drugs?",
+      "question": "Substances?",
       "options": [
         {"option_id": 1, "text": "Yes"},
         {"option_id": 2, "text": "No"}
