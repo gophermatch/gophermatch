@@ -66,7 +66,7 @@ export default function Filter() {
                     <option value="2026">2026</option>
                     <option value="2025">2025</option>
                 </select>
-                <select name="building" id="building" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                <select name="building" id="Building?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Building</option>
                     <option value="Comstock">Comstock</option>
                     <option value="Pioneer">Pioneer</option>
@@ -78,21 +78,21 @@ export default function Filter() {
                     <option value="Middlebrook">Middlebrook</option>
                     <option value="Bailey">Bailey</option>
                 </select>
-                <select name="alcohol" id="alcohol" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                <select name="alcohol" id="Alcohol?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Alcohol Use</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
                 </select>
-                <select name="substances" id="substances" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                <select name="substances" id="Substances?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Substances</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
                 </select>
-                <select name="openroom" id="openroom" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
+                <select name="openroom" id="Room Activity?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Open Room</option>
-                    <option value="empty">No One</option>
-                    <option value="couple">A Couple Friends</option>
-                    <option value="party">Party</option>
+                    <option value="Empty">No One</option>
+                    <option value="Couple">A Couple Friends</option>
+                    <option value="Party">Party</option>
                 </select>
                 <img class = "bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh]" src="../assets/images/filtercheck.png" onClick={handleApplyFilters}></img>
             </div>
