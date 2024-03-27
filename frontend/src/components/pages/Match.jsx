@@ -9,7 +9,7 @@ import currentUser from '../../currentUser';
 
 
 const tempIdGrabber = (() => {
-    const tempIds = [42,43,44,45,46,47,48,54,56,57,58,59,60,61,62,63];
+    const tempIds = [48, 47, 56, 57];
     let pointer = 0;
     return function() {
         return new Promise((resolve) => {
@@ -33,32 +33,40 @@ export default function Match() {
         setRequestLock(true);
         tempIdGrabber().then((res) => {
             const newData = res.data.map(async (id) => {
-                const data = await backend.get('profile', {params: {user_id: id}});
-                return {user_id: id, data: data};
+                const response = await backend.get('account/fetch', {
+                    params: {user_id: id},
+                    withCredentials: true
+                });
+                return {user_id: id, data: response.data};
             });
-            setNextProfiles(s => [...s, ...newData]);
-            setRequestLock(false);
+            Promise.all(newData).then((data) => {
+                setNextProfiles(s => [...s, ...data]);
+                setRequestLock(false);
+            })
         }).catch(() => console.error("WAAAH"));
-
-        // setRequestLock(true);
-        // tempIdGrabber().then((res) => {
-        //     Promise.all(res.data.map((id) => (
-        //         backend.get('/profile', {params: {user_id: id}})
-        //     ))).then((profileDatas) => {
-        //         setNextProfiles(s => [...s, ...profileDatas]);
-        //         setRequestLock(false);
-        //         console.log("Got profiles");
-        //     }).catch(() => console.error("WAAAH"));
-        // })
     }
+    //     setRequestLock(true);
+    //     tempIdGrabber().then((res) => {
+    //         Promise.all(res.data.map((id) => (
+    //             backend.get('/profile', {params: {user_id: id}})
+    //         ))).then((profileDatas) => {
+    //             setNextProfiles(s => [...s, ...profileDatas]);
+    //             setRequestLock(false);
+    //             console.log("Got profiles");
+    //         }).catch(() => console.error("WAAAH"));
+    //     })
+    // }
+
+
 
     function goToNext(decision) {
         console.log("Going to next");
+        console.log(nextProfiles[0].user_id)
         backend.post('/match/matcher', {
             user1Id: currentUser.user_id,
             user2Id: nextProfiles[0].user_id,
             decision: decision
-        });
+        }).then(() => console.log("Success matching"));
         setNextProfiles(s => s.slice(1));
         console.log(nextProfiles);
     }
@@ -70,7 +78,8 @@ export default function Match() {
     return (
       <div>
           <Filter />
-          <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} />
+          <Profile user_data={nextProfiles[0].data.data} data={nextProfiles[0].data} editable={false} />
+          {/* <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} /> */}
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
               <button onClick={() => goToNext("reject")}
                       className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
