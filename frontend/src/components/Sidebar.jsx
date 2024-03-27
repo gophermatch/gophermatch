@@ -24,6 +24,7 @@ export default function Sidebar() {
                         ['Settings', '/settings'],
                         ['Match', '/match'],
                         ['Inbox', '/inbox'],
+                        ['Saved', '/saved']
                     ].map(([label, destination]) => (
                         <NavLink
                             key={label}

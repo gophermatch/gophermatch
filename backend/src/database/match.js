@@ -1,6 +1,6 @@
 // Assuming the existence of a database module for executing queries
 import { db , tableNames} from './db.js'; // Your database connection setup
-import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
 
 
 /**
@@ -25,8 +25,10 @@ export async function recordUserDecision(user1Id, user2Id, decision) {
         // Check if a reciprocal match exists.
         const result = await checkMatch(user1Id, user2Id);
         // If both users have matched with each other, return a match found response.
+        const user1_id = Math.min(user1Id, user2Id);
+        const user2_id = Math.max(user1Id, user2Id);
         if (decision === 'match' && result.length > 0) {
-            handleReciprocalMatch(user1Id, user2Id);
+            handleReciprocalMatch(user1_id, user2_id);
             return { matchFound: true, message: "It's a match!" };
         }
         // Otherwise, indicate that the decision has been recorded and waiting for the other user.
@@ -199,6 +201,28 @@ export async function deleteMatchDecision(userId, matchUserId, decision) {
         await db.query(queryString, values);
         // Log the successful deletion.
         console.log(`Deleted decision '${decision}' for user_id=${userId} and match_user_id=${matchUserId}.`);
+
+    } catch (error) {
+        // Log and throw an error if the deletion fails.
+        console.error('Error in deleteMatchDecision:', error);
+        throw new Error('Failed to delete match decision');
+    }
+}
+
+export async function deleteInboxMatch(user1Id, user2Id) {
+    try {
+        const USER1 = Math.min(user1Id, user2Id);
+        const USER2 = Math.max(user1Id, user2Id);
+        const { queryString, values } = buildDeleteString(tableNames.u_inboxt, {
+            user1_id: USER1,
+            user2_id: USER2,
+        });
+
+        // Execute the query to delete the specified decision.
+        await db.query(queryString, values);
+        deleteMatchDecision(user1Id, user2Id, "match");
+        // Log the successful deletion.
+        console.log(`Deleted inbox match for user1_id=${user1Id} and user2_id=${user2Id}.`);
 
     } catch (error) {
         // Log and throw an error if the deletion fails.

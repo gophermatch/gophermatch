@@ -3,6 +3,7 @@ import { recordUserDecision,
     deleteMatchDecision, 
     getSavedMatches, 
     retrieveUserMatches, 
+    deleteInboxMatch
     getFilterResults, 
     getFilterResultsQna 
 } from '../database/match.js';
@@ -46,18 +47,17 @@ router.post('/filter-results', async (req, res) => {
     }
 });
 
-
-// http://localhost:3000/api/match/saved-matches/43
-// replace last number with user id to get their saved users
-router.get('/saved-matches/:userId', async (req, res) => {
+router.get('/saved-matches', async (req, res) => {
     try {
-        const userId = parseInt(req.params.userId, 10);
-        if (isNaN(userId)) {
+        const { userId } = req.query;
+        console.log(userId);
+        if (!userId) {
             return res.status(400).send({ error: "Invalid user ID." });
         }
 
         const savedMatches = await getSavedMatches(userId);
         res.json(savedMatches);
+
     } catch (error) {
         console.error('Failed to retrieve saved matches:', error);
         res.status(500).send({ error: "Internal server error." });
@@ -68,7 +68,9 @@ router.get('/saved-matches/:userId', async (req, res) => {
 // Takes a json with the parameters user1Id, user2Id, decision
 router.delete('/remove', async (req, res) => {
     // Basic validation
-    const { user1Id, user2Id, decision } = req.body;
+    const { user1Id, user2Id, decision } = req.query;
+    console.log(user1Id);
+    console.log(decision);
     if (!user1Id || !user2Id || !decision) {
         return res.status(400).json({ error: "Missing required fields: user1Id, user2Id, or decision." });
     }
@@ -82,10 +84,26 @@ router.delete('/remove', async (req, res) => {
     }
 });
 
+router.delete('/inbox-delete', async (req, res) => {
+    // Basic validation
+    const { user1_id, user2_id } = req.query;
+    if (!user1_id || !user2_id ) {
+        return res.status(400).json({ error: "Missing required fields: user1_id, user2_id" });
+    }
+
+    try {
+        await deleteInboxMatch(user1_id, user2_id);
+        res.status(200).send({ message: "Inbox match deleted successfully." });
+    } catch (error) {
+        console.error('Error processing match:', error);
+        res.status(500).json({ error: "Failed to process inbox delete." });
+    }
+});
+
 // Takes a json with parameter userId and returns json with matched userids with match timestamp
 router.get('/inbox', async (req, res) => {
     try {
-        const {userId} = req.body;
+        const {userId} = req.query;
         if (!userId) {
             return res.status(400).send('User ID is required');
         }
