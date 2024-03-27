@@ -68,10 +68,9 @@ export default function Inbox() {
     }, [updateDep]);
 
     function unmatch(profileId) {
-        backend.delete('/match/remove', {params: {
-            user1Id: currentUser.user_id,
-            user2Id: profileId,
-            decision: "match"
+        backend.delete('/match/inbox-delete', {params: {
+            user1_id: currentUser.user_id,
+            user2_id: profileId
         }}).then(() => stepUpdateDep(s => s + 1));
     }
 
