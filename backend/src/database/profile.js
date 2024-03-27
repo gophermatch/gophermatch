@@ -1,5 +1,5 @@
 import { db, tableNames } from './db.js'
-import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
 import{generateBlobSasUrl} from '../blobService.js'
 
 
@@ -163,7 +163,7 @@ export async function updateProfile(user_id, profile) {
             if (err) {
                 console.error("Error saving picture URL to database:", err);
                 reject(err);
-                return;
+                return ;
             }
             resolve(result);
         });
@@ -174,27 +174,55 @@ export async function updateProfile(user_id, profile) {
 
 export async function retrievePictureUrls(user_id) {
   return new Promise((resolve, reject) => {
-      const queryString = `SELECT picture_url, pic_number FROM ${tableNames.u_pictures} WHERE user_id = ?`;
+    const queryString = `SELECT picture_url, pic_number FROM ${tableNames.u_pictures} WHERE user_id = ?`;
 
-      db.query(queryString, [user_id], (err, rows) => {
-          if (err) {
-              console.error("Error fetching picture URLs from database:", err);
-              reject(err);
-              return;
-          }
+    db.query(queryString, [user_id], (err, rows) => {
+      if (err) {
+        console.error("Error fetching picture URLs from database:", err);
+        reject(err);
+        return;
+      }
 
-          // Map through each row to extract the blob name and generate a SAS URL
-          const sasUrlPromises = rows.map(row => {
-              // Extract the blob name from the picture_url
-              const urlParts = row.picture_url.split('/');
-              const blobName = urlParts[urlParts.length - 1]; // Gets the last part of the URL
+      // Map through each row to extract the blob name and generate a SAS URL
+      const sasUrlPromises = rows.map(row => {
+        // Extract the blob name from the picture_url
+        const urlParts = row.picture_url.split('/');
+        const blobName = urlParts[urlParts.length - 1]; // Gets the last part of the URL
 
-              return generateBlobSasUrl(blobName); // Use the extracted blob name
-          });
-
-          Promise.all(sasUrlPromises)
-              .then(sasUrls => resolve(sasUrls))
-              .catch(error => reject(error));
+        return generateBlobSasUrl(blobName); // Use the extracted blob name
       });
+
+      Promise.all(sasUrlPromises)
+        .then(sasUrls => resolve(sasUrls))
+        .catch(error => reject(error));
+    });
   });
 }
+
+  export async function removePicture(user_id, pic_number) {
+      try {
+        const { queryString, values } = buildDeleteString(tableNames.u_pictures, {
+          user_id: user_id,
+          pic_number: pic_number
+        });
+
+        // Execute the query to delete the specified decision.
+        await db.query(queryString, values);
+
+        db.query('UPDATE u_pictures SET pic_number = pic_number - 1 WHERE user_id = ? AND pic_number > ?', [user_id, pic_number], (error, results) => {
+          if (error) {
+            console.error('Error reordering pictures:', error);
+          } else {
+            console.log("Successfully reordered pictures");
+          }
+        });
+
+        // Log the successful deletion.
+        console.log(`Deleted picture ${pic_number} for user_id=${user_id}.`);
+
+      } catch (error) {
+        // Log and throw an error if the deletion fails.
+        console.error('Error in removePicture:', error);
+        throw new Error('Failed to remove picture');
+      }
+  }

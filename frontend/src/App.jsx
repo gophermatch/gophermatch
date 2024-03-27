@@ -44,7 +44,7 @@ async function loginPageRedirect() {
 
 // Redirects the account page to match page if user has created account
 async function accountCreationRedirect() {
-  console.log("User attempting to visit login page, is logged in: " + currentUser.logged_in);
+  console.log("User attempting to visit account creation page page, is logged in: " + currentUser.logged_in);
   if (currentUser.logged_in) {
     if(currentUser.account_created) {
       return redirect("/match")

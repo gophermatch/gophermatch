@@ -6,10 +6,11 @@ import {
     getProfile,
     updateProfile,
     savePictureUrl,
-    retrievePictureUrls, createBio
+    retrievePictureUrls, createBio, removePicture
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
+import { azureStorageConfig } from "../env.js";
 
 const upload = multer({ dest: 'uploads/' }); // Temporarily stores files in 'uploads/' directory
 const router = Router();
@@ -134,11 +135,13 @@ router.post('/upload-picture', upload.single('file'), async (req, res) => {
         // Upload file to blob storage
         const stream = fs.createReadStream(req.file.path);
         const streamLength = req.file.size;
-        const blobName = `user-${user_id}-pic-${pic_number}`;
-        const pictureUrl = await uploadFileToBlobStorage(blobName, stream, streamLength);
+        const blobName = `user-${user_id}-uploaded-${Date.now()}`;
+        const pictureUrl = `https://${azureStorageConfig.accountName}.blob.core.windows.net/user-profile-images/${blobName}`;
+
+        await uploadFileToBlobStorage(blobName, stream, streamLength);
 
         // Save picture URL to database
-        await savePictureUrl(user_id, pictureUrl, pic_number);
+        const result = await savePictureUrl(user_id, pictureUrl, pic_number);
 
         // Send success response
         res.status(200).json({ message: 'File uploaded successfully', pictureUrl });
@@ -166,5 +169,28 @@ router.get('/user-pictures', async (req, res) => {
     } catch (error) {
         console.error("Error retrieving picture SAS URLs:", error);
         res.status(500).json(createErrorObj("Failed to retrieve picture URLs. Please try again later."));
+    }
+});
+
+router.delete('/remove-picture', async (req, res) => {
+
+    const { user_id, pic_number } = req.query;
+
+    console.log("removing picture" + user_id + ", " + pic_number);
+
+    if (!user_id) {
+        return res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+    }
+
+    if (!pic_number) {
+        return res.status(400).json(createErrorObj("Must include a pic number in the query parameter!"));
+    }
+
+    try {
+        await removePicture(user_id, pic_number);
+        return res.status(200).json();
+    } catch (error) {
+        console.error("Error removing picture", error);
+        return res.status(500).json(createErrorObj("Failed to remove picture. Please try again later."));
     }
 });
