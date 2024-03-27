@@ -97,6 +97,18 @@ router.delete('/', AuthStatusChecker, async (req, res) => {
     }
 })
 
+router.post('/update', async (req, res) => {
+    const userdata = req.body;
+    try {
+        await updateAccountInfo(userdata);
+        res.status(200).json({message: "Account information updated successfully!"});
+    } catch (error) {
+        console.error(error);
+        res.status(400).json(createErrorObj(error, "Failed to update account information"));
+    }
+});
+
+
 // TODO: Delete account (and maybe change password(?))
 
 export default router
