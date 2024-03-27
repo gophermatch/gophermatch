@@ -57,7 +57,7 @@ router.get('/saved-matches/:userId', async (req, res) => {
 // Takes a json with the parameters user1Id, user2Id, decision
 router.delete('/remove', async (req, res) => {
     // Basic validation
-    const { user1Id, user2Id, decision } = req.body;
+    const { user1Id, user2Id, decision } = req.query;
     if (!user1Id || !user2Id || !decision) {
         return res.status(400).json({ error: "Missing required fields: user1Id, user2Id, or decision." });
     }
