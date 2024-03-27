@@ -1,7 +1,7 @@
 [
     {
       "id": 1,
-      "question": "Substances?",
+      "question": "Drugs?",
       "options": [
         {"option_id": 1, "text": "Yes"},
         {"option_id": 2, "text": "No"}
@@ -59,7 +59,7 @@
     },
     {
       "id": 6,
-      "question": "Room Activity?",
+      "question": "Open Room?",
       "options": [
         {"option_id": 29, "text": "Empty"},
         {"option_id": 30, "text": "Couple Friends"},
