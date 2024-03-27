@@ -17,6 +17,7 @@ import currentUser from "./currentUser.js"
 import Signup from './components/pages/Signup.jsx'
 import './index.css';
 import Landing from './components/pages/LandingPage.jsx'
+import Saved from './components/pages/Saved.jsx'
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
@@ -135,6 +136,10 @@ const router = createBrowserRouter([
                 path: "inbox",
                 element: <Inbox />,
                 loader: unauthPageRedirect
+            },{
+              path: "saved",
+              element: <Saved />,
+              loader: unauthPageRedirect
             }]
         }]
 }])

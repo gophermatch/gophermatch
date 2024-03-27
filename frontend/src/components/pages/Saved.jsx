@@ -30,7 +30,7 @@ function isOnProfilePopup(node) {
     return false;
 }
 
-export default function Inbox() {
+export default function Saved() {
     const [openProfile, setOpenProfile] = useState(false);
     const [matchedProfiles, updateMatchedProfiles] = useState([])
     const [updateDep, stepUpdateDep] = useState(1);
@@ -51,7 +51,7 @@ export default function Inbox() {
 
     useEffect(() => {
         (async () => {
-            const matchesRes = await backend.get('/match/inbox', {params: {userId: currentUser.user_id}})
+            const matchesRes = await backend.get('/match/saved-matches/' + currentUser.user_id)
 
             const profilePromises = matchesRes.data.map(({matchId, timestamp}) => Promise.all([
                 backend.get('/profile', {params: {user_id: matchId}}),
@@ -68,10 +68,9 @@ export default function Inbox() {
     }, [updateDep]);
 
     function unmatch(profileId) {
-        backend.delete('/match/remove', {params: {
+        backend.delete('/match/inbox-delete', {params: {
             user1Id: currentUser.user_id,
-            user2Id: profileId,
-            decision: "match"
+            user2Id: profileId
         }}).then(() => stepUpdateDep(s => s + 1));
     }
 
@@ -91,7 +90,7 @@ export default function Inbox() {
     return (
         <div className="p-8">
             {profilePopup}
-            <h1 className="text-center text-5xl mb-8">Matches</h1>
+            <h1 className="text-center text-5xl mb-8">Saved Profiles</h1>
             {people.map((person) => (
                 <div className="bg-white rounded-md border-2 border-maroon p-4 m-8 w-[80%] flex">
                     <div onClick={() => displayProfile(person.user_id)} className="cursor-pointer h-[80px] w-[80px]">
