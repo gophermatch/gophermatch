@@ -22,7 +22,29 @@ export default function Signup() {
                 firstOtpInput.focus();
             }
         }
-    }, [showOtpInput]);    
+    }, [showOtpInput]);
+    
+    useEffect(() => {
+        const handleKeyPress = (event) => {
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                event.preventDefault();
+                const currentIndex = Number(event.target.id.split('-')[1]);
+                const nextIndex = event.key === 'ArrowLeft' ? currentIndex - 1 : currentIndex + 1;
+                if (nextIndex >= 0 && nextIndex < otp.length) {
+                    const nextElement = document.getElementById(`otp-${nextIndex}`);
+                    if (nextElement) {
+                        nextElement.focus();
+                    }
+                }
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [otp]);
 
     async function enterKeyPress(event) {
         if (event.key !== `Enter` && event.keyCode !== 13) return;
@@ -165,3 +187,4 @@ export default function Signup() {
         </div>
     );
 }
+
