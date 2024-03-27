@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import styles from '../../assets/css/carousel.module.css'
 import { useNavigate } from 'react-router-dom'
+import styles from '../../assets/css/carousel.module.css'
 
 export default function Carousel(props) {
     const [position, setPosition] = React.useState(0)
     const [isHovering, setIsHovering] = useState(false);
     const navigate = useNavigate();
     const editable = props.editable;
-
-    function shiftPosition(n) {
-
-    }
-
-    const currentImage = props.pictures[position];
-    const carouselLen = props.pictures.length
 
     function showOverlay(){
         const imageWrapper = document.getElementById("imageWrapper");
@@ -34,6 +27,13 @@ export default function Carousel(props) {
             navigate("/PicUpload");
         }
     }
+
+    function shiftPosition(n) {
+
+    }
+
+    const currentImage = props.pictures[position];
+    const carouselLen = props.pictures.length
 
     let dots = props.pictures.map((pic, i) => {
         if (i == position) { // the key is weird, will need to change if issues
@@ -59,8 +59,8 @@ export default function Carousel(props) {
         <div className={styles.container}>
             <div class ="flex justify-center items-center">
                 {isHovering && <img src='../../assets/images/imageicon.png' class="absolute scale-[0.1]"/>}
-                <div id="imageWrapper">
-                    <img src={currentImage} className = {"rounded-2xl"} onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay}/>
+                <div id="imageWrapper" class="border-[0.33vw] rounded-[1vw] border-maroon_new">
+                    <img src={currentImage} className = {"rounded-[1vw"} onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay}/>
                 </div>
             </div>
             {carouselLen > 1 && dotSection}

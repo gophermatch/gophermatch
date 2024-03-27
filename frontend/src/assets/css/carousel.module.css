@@ -10,10 +10,11 @@
     display: flex;
     margin-top: 1vh;
     margin-bottom: 1vh;
-    height: 20px;
+    height: 2.5vh;
 }
 
 .progressButton {
+    z-index: 10;
     font-size: 12px;
     line-height: 20px;
     flex: none;
@@ -22,8 +23,8 @@
     background-color: white;
     box-shadow: 0px 0px 5px #888888;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 5vh;
+    height: 5vh;
     overflow: none;
     transition: 0.2s;
 }
@@ -37,6 +38,7 @@
 }
 
 .dots {
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: space-around;

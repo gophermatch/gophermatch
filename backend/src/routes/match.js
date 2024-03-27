@@ -1,5 +1,12 @@
 import { Router } from 'express';
-import { recordUserDecision, deleteMatchDecision, getSavedMatches, retrieveUserMatches, getFilterResults, deleteInboxMatch } from '../database/match.js';
+import { recordUserDecision, 
+    deleteMatchDecision, 
+    getSavedMatches, 
+    retrieveUserMatches, 
+    deleteInboxMatch
+    getFilterResults, 
+    getFilterResultsQna 
+} from '../database/match.js';
 
 const router = Router()
 
@@ -23,19 +30,22 @@ router.post('/matcher', async (req, res) => {
 
 
 router.post('/filter-results', async (req, res) => {
-    const filters = req.body;
-
-    // You might want to add validation for your filters here
+    const { userdataFilters, qnaFilters } = req.body;
 
     try {
-        const results = await getFilterResults(filters);
-        res.json(results);
+        console.log("NEW FILTER")
+        const userdataResults = await getFilterResults(userdataFilters);
+        console.log("udata",userdataResults);
+        const qnaResults = await getFilterResultsQna(qnaFilters);
+        console.log("qna",qnaResults);
+        const commonUserIds = userdataResults.filter(id => qnaResults.includes(id));
+        console.log("real",commonUserIds)
+        res.json(commonUserIds);
     } catch (error) {
         console.error('Error getting filter results:', error);
         res.status(500).json({ error: "Failed to get filter results." });
     }
 });
-
 
 router.get('/saved-matches', async (req, res) => {
     try {

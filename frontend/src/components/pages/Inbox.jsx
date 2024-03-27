@@ -81,7 +81,7 @@ export default function Inbox() {
     const profilePopup = openProfile && (
         <>
         <div id='inbox-profile-popup' onClick={(e) => {if (!isOnProfilePopup(e.target)) setOpenProfile(null)}} className="bg-[#000000a9] fixed inset-0">
-            <Profile data={TemplateProfile} editable={false} />
+            <Profile data={TemplateProfile} user_data={TemplateProfile} editable={false} />
         </div>
         <button onClick={() => setOpenProfile(null)} className="absolute top-[5px] right-[5px] text-5xl text-white">X</button>
         </>

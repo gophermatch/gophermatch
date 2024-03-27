@@ -25,10 +25,13 @@ router.post('/', async (req, res) => {
     try {
         // hash the password
         const hashpass = await bcrypt.hash(password, saltRounds)
+        console.log(hashpass)
         // create the user
         const user = await createUser(email, hashpass)
 
         // create the user's profile
+
+        //const profile = await createProfile(user.user_id)
         const profile = await createBio(user.user_id)
 
         const userWithoutPass = loginUser(req, user)
