@@ -13,12 +13,12 @@ export default function Sidebar() {
 
     return (
         <>
-            <nav className="flex flex-col items-left text-left p-10 w-full text-xl font-comfortaa h-screen bg-maroon rounded-none shadow-md" id="nav">
+            <nav className="flex flex-col items-left items-center text-left p-10 w-full text-[3.5vh] font-comfortaa h-screen bg-maroon rounded-none shadow-md" id="nav">
                 <NavLink exact to="/" className={`transform scale-100 transition-transform duration-200 text-white hover:scale-110 active:scale-90 ${logoClicked ? 'text-white' : ''}`} onClick={handleLogoClick}>
                     <img src="../assets/images/logo.png" className="sidebarLogo" alt="Logo" />
                 </NavLink>
                 <br></br>
-                <div className="text-left left-0 mt-10 relative">
+                <div className="mt-[2.5vh] relative">
                     {[
                         ['Profile', '/profile'],
                         ['Settings', '/settings'],
@@ -29,7 +29,7 @@ export default function Sidebar() {
                         <NavLink
                             key={label}
                             to={destination}
-                            className={`max-h-full flex flex-col relative mb-[5rem] font-sans font-bold drop-shadow-lg transform scale-100 transition-transform duration-200 hover:scale-110 hover:text-gold active:scale-90 ${activePage === destination ? 'text-white text-2xl' : 'text-inactive_gray'}`}
+                            className={`max-h-full flex flex-col relative mb-[7.5vh] font-sans font-bold drop-shadow-lg transform scale-100 transition-transform duration-200 hover:scale-110 hover:text-gold active:scale-90 ${activePage === destination ? 'text-white text-[4vh]' : 'text-inactive_gray'}`}
                             onClick={() => setActivePage(destination)}
                         >
                             {label}

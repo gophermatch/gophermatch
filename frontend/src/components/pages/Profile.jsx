@@ -169,35 +169,28 @@ export default function ProfilePage() {
 
   return (
     <div>
+      {isEditing && (
+        <div className={"flex justify-center m-auto w-[20vw] space-x-[15vw]"}>
+          <button className={"absolute mt-[2vh] text-[3.5vh] text-white h-[5vh] w-[7.5vw] rounded-[4vh] bg-maroon_new"} onClick={handleSaveChanges}>Save</button>
+          <button className={"absolute mt-[2vh] text-[3.5vh] h-[5vh] w-[7.5vw] rounded-[4vh] bg-inactive_gray"} onClick={toggleEditMode}>Cancel</button>
+          {/*<input type="file" onChange={handleFileChange} style={{ display: 'block', marginTop: '20px' }} />*/}
+          {/*<button onClick={handleFileUpload}>Upload Picture</button>*/}
+        </div>
+      )}
+      {!isEditing && (
+        <div className={"w-[10vh] m-auto"}>
+          <button className={"absolute px-[5vh] mt-[2vh] text-[3.5vh] text-white h-[5vh] rounded-[4vh] bg-maroon_new"} onClick={toggleEditMode}>Edit</button>
+        </div>
+      )}
       <Profile
-        data={profile}
+        user_data={currentUser.user_data}
         editable={isEditing}
         editedBio={isEditing ? editedProfile.bio : profile.bio}
         handleBioChange={handleBioChange}
         qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
         handleQnaChange={handleQnaChange}
       />
-
-      <button onClick={fetchFirstPictureUrl}>Load Profile Picture</button>
-      {firstPictureUrl && <img src={firstPictureUrl} alt="Profile" />}
-
-      {isEditing && (
-        <>
-          <button onClick={handleSaveChanges}>Save Changes</button>
-          <button onClick={toggleEditMode}>Cancel</button>
-          <input type="file" onChange={handleFileChange} style={{ display: 'block', marginTop: '20px' }} />
-          <button onClick={handleFileUpload}>Upload Picture</button>
-        </>
-      )}
-      {!isEditing && (
-        <>
-          <button onClick={handleEditProfile}>Edit Profile</button>
-          <Link to="/PicUpload">
-            Change Profile Picture
-          </Link>
-        </>
-      )}
     </div>
-)
+  )
   ;
 }
