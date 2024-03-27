@@ -32,7 +32,7 @@ export async function getUser(email) {
 // Create user acccount with a email and a hashed password
 export async function createUser(email, hashpass) {
     return new Promise(async (resolve, reject) => {
-        const userobj = {email: email, hashpass: hashpass}
+        const userobj = {email: email, hashpass: hashpass, is_verified: 1}
         const qr = buildInsertString(tableNames.users, userobj)
 
         db.query(qr.queryString, qr.values, (err, res) => {
