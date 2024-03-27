@@ -14,7 +14,7 @@ export default function Sidebar() {
     return (
         <>
             <nav className="flex flex-col items-left items-center text-left p-10 w-full text-[3.5vh] font-comfortaa h-screen bg-maroon rounded-none shadow-md" id="nav">
-                <NavLink exact to="/" className={`transform scale-100 transition-transform duration-200 text-white hover:scale-110 active:scale-90 ${logoClicked ? 'text-white' : ''}`} onClick={handleLogoClick}>
+                <NavLink exact to="/" className={"object-scale-down h-[16vh] w-[16vh] hover:scale-110 active:scale-90 ${logoClicked ? 'text-white' : ''}"} onClick={handleLogoClick}>
                     <img src="../assets/images/logo.png" className="sidebarLogo" alt="Logo" />
                 </NavLink>
                 <br></br>
