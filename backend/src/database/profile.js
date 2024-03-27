@@ -209,7 +209,7 @@ export async function retrievePictureUrls(user_id) {
         // Execute the query to delete the specified decision.
         await db.query(queryString, values);
 
-        db.query('UPDATE u_pictures SET pic_number = pic_number - 1 WHERE user_id = ? AND pic_number > ?', [user_id, pic_number], (error, results) => {
+        await db.query('UPDATE u_pictures SET pic_number = pic_number - 1 WHERE user_id = ? AND pic_number > ?', [user_id, pic_number], (error, results) => {
           if (error) {
             console.error('Error reordering pictures:', error);
           } else {
