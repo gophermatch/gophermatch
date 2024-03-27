@@ -18,3 +18,5 @@ export const session = {
 export const azureStorageConfig = {
     connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
 };
+
+export const sendgridApiKey = process.env.SENDGRID_API_KEY;

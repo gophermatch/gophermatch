@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -25,14 +27,19 @@ export default {
       red: 'rgb(255, 0, 0)',
       white: 'rgb(255, 255, 255)',
       doc: 'rgb(243, 237, 220)',
+      black: 'rgb(0,0,0)',
       offwhite: '#F2EBE6',
       maroon_new: '#7D0000',
       inactive_gray: '#C6C6C6',
       gold: 'rgb(234 179 8)',
+      pink: 'rgb(254 249 195)',
+      login: 'rgb(161 98 7)',
+      transparent: 'transparent',
     },
     fontFamily: {
       lora: ['Lora', 'serif'],
       inter: ['Inter', 'serif'],
+      profile: ['Inconsolata', 'serif']
     },
   },
   plugins: [],

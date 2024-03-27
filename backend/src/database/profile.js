@@ -3,14 +3,15 @@ import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateStri
 import{generateBlobSasUrl} from '../blobService.js'
 
 
+// Returns profile object (with profile_name and bio)
 export async function getProfile(user_id) {
   return new Promise((resolve, reject) => {
       const profilePromise = new Promise((resolveProfile) => {
-          const qr = buildSelectString("*", tableNames.u_profiles, { user_id });
+          const qr = buildSelectString("*", tableNames.u_bios, { user_id });
 
           db.query(qr.queryString, qr.values, (err, rows) => {
               if (err) {
-                  resolveProfile({ bio: '', otherProfileFields: null });
+                  resolveProfile({ bio: '', otherProfileFields: null }); // Default empty profile
                   return;
               }
 
@@ -18,6 +19,7 @@ export async function getProfile(user_id) {
               if (profile.length === 1) {
                   resolveProfile(profile[0]);
               } else {
+                  // No profile found or multiple profiles found, return a default empty profile
                   resolveProfile({ bio: '', otherProfileFields: null });
               }
           });
@@ -45,10 +47,17 @@ export async function getProfile(user_id) {
   });
 }
 
+
+
+
+
+// Creates and stores a profile in DB
+// second argument (profile obj) is optional
 export async function createProfile(user_id, profile) {
     if (!profile) profile = {}
     return new Promise((resolve, reject) => {
         const qr = buildInsertString(tableNames.u_profiles, {user_id, ...profile})
+        // "INSERT INTO u_profiles (user_id, profile_name, bio) VALUES (?, ?, ?)"
 
         db.query(qr.queryString, qr.values, (err, res) => {
             if (err) {
@@ -71,7 +80,7 @@ export async function updateProfile(user_id, profile) {
   
       try {
          if (Object.keys(profileData).length > 0) {
-        const updateQuery = buildUpdateString(tableNames.u_profiles, { user_id }, profileData);
+        const updateQuery = buildUpdateString(tableNames.u_bios, { user_id }, profileData);
         console.log(updateQuery);
         await db.query(updateQuery.queryString, updateQuery.values);
       }
