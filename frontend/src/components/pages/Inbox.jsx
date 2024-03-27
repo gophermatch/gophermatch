@@ -103,7 +103,7 @@ export default function Inbox() {
                             <p className="font-bold text-maroon_new text-xl m-0 inline-block">&nbsp;{person.last_name}</p>
                         </div>
                         <button className="">{person.contact_email}</button>
-                        <button className="bg-maroon h-[40px] w-[40px] rounded-lg text-white text-[25px]" onClick={() => unmatch(person.id)}>X</button>
+                        <button className="bg-maroon h-[40px] w-[40px] rounded-lg text-white text-[25px]" onClick={() => unmatch(person.user_id)}>X</button>
                     </div>
                 </div>
             ))}
