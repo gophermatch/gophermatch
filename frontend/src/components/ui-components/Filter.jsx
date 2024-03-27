@@ -90,8 +90,8 @@ export default function Filter() {
                 </select>
                 <select name="openroom" id="openroom" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Open Room</option>
-                    <option value="noone">No One</option>
-                    <option value="couplefriends">A Couple Friends</option>
+                    <option value="empty">No One</option>
+                    <option value="couple">A Couple Friends</option>
                     <option value="party">Party</option>
                 </select>
                 <img class = "bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh]" src="../assets/images/filtercheck.png" onClick={handleApplyFilters}></img>
