@@ -13,7 +13,7 @@ import currentUser from '../../currentUser';
                 console.log('Before try block')
                 try {
                     console.log('In try block')
-                    const response = await backend.get('/profile/getProfile', {
+                    const response = await backend.get('/fetch', {
                         params: {user_id: currentUser.user_id},
                         withCredentials: true
                     });
