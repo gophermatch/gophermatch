@@ -1,6 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import styles from '../../assets/css/login.module.css';
-import React from "react";
+import React, {useEffect} from "react";
 import backend from "../../backend";
 import currentUser from "../../currentUser";
 
@@ -13,6 +13,16 @@ export default function Signup() {
     const [showOtpInput, setShowOtpInput] = React.useState(false);
     const [otpSent, setOtpSent] = React.useState(false);
     const navigate = useNavigate();
+    const firstOtpInputRef = React.useRef(null);
+
+    useEffect(() => {
+        if (showOtpInput) {
+            const firstOtpInput = document.getElementById('otp-0');
+            if (firstOtpInput) {
+                firstOtpInput.focus();
+            }
+        }
+    }, [showOtpInput]);    
 
     async function enterKeyPress(event) {
         if (event.key !== `Enter` && event.keyCode !== 13) return;
@@ -73,22 +83,27 @@ export default function Signup() {
         }
     }
 
-    const handleOtpChange = (index, value, event) => {
-        const newOtp = [...otp];
-        newOtp[index] = value;
+    const handleOtpChange = (index, value) => {
+        const newOtp = otp.map((digit, i) => (i === index ? value : digit));
     
         if (value.length === 1 && index < 5) {
             const nextIndex = index + 1;
-            document.getElementById(`otp-${nextIndex}`).focus();
+            const nextElement = document.getElementById(`otp-${nextIndex}`);
+            if (nextElement) {
+                nextElement.focus();
+            }
         } else if (value.length === 0) {
             const prevIndex = index - 1;
             if (prevIndex >= 0) {
-                document.getElementById(`otp-${prevIndex}`).focus();
+                const prevElement = document.getElementById(`otp-${prevIndex}`);
+                if (prevElement) {
+                    prevElement.focus();
+                }
             }
         }
         setOtp(newOtp);
-    };         
-
+    };    
+            
     return (
         <div className="bg-doc w-screen h-screen">
             <div className="bg-maroon h-[3.75rem] space-x-4 mt-auto">
@@ -126,11 +141,12 @@ export default function Signup() {
                                     {otp.map((digit, index) => (
                                         <div key={index} className="h-[4rem] w-[4rem] mr-1 flex justify-center items-center">
                                             <input
+                                                ref={firstOtpInputRef}
                                                 id={`otp-${index}`}
                                                 type="text"
                                                 maxLength="1"
                                                 value={digit}
-                                                onChange={(event) => handleOtpChange(index, event.target.value, event)} // Pass the event object here
+                                                onChange={(event) => handleOtpChange(index, event.target.value)}
                                                 onKeyDown={enterKeyPress}
                                                 className="w-full h-full bg-transparent text-2xl text-center"
                                                 style={{ borderBottom: "2px solid black", outline: "none" }}
