@@ -54,7 +54,6 @@ export default function Saved() {
             const matchesRes = await backend.get('/match/saved-matches', {params: {
                 userId: currentUser.user_id
             }})
-            console.log("HEY");
 
             const profilePromises = matchesRes.data.map((matchId) => Promise.all([
                 backend.get('/profile', {params: {user_id: matchId}}),
