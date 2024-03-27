@@ -36,8 +36,8 @@ router.post('/request-otp', async (req, res) => {
     const msg = {
         to: email,
         from: 'Gophermatch@gmail.com', 
-        subject: 'Your OTP for account verification',
-        text: `Your OTP is ${otp}. It will expire in 5 minutes.`,
+        subject: 'Your verification code for account verification',
+        text: `Your verification code is ${otp}. It will expire in 5 minutes.`,
     };
 
     try {
