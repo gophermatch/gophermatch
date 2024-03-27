@@ -71,6 +71,48 @@ export async function getFilterResults(filters) {
     });
 }
 
+
+export async function getFilterResultsQna(optionIds) {
+    return new Promise((resolve, reject) => {
+        // If no optionIds provided, select all user_ids without any conditions
+        if (!optionIds || optionIds.length === 0) {
+            db.query(`SELECT DISTINCT user_id FROM u_qna`, [], (err, rows) => {
+                if (err) {
+                    console.error("Error querying all user_ids from u_qna:", err);
+                    reject(err);
+                    return;
+                }
+                const userIds = rows.map(row => row.user_id);
+                resolve(userIds);
+            });
+            return;
+        }
+
+        const placeholders = optionIds.map(() => '?').join(',');
+        let queryString = `SELECT user_id FROM u_qna WHERE option_id IN (${placeholders})`;
+
+        queryString += ` GROUP BY user_id`;
+
+        // If more than one optionId is provided, ensure users match all specified options
+        if (optionIds.length > 1) {
+            queryString += ` HAVING COUNT(DISTINCT option_id) = ${optionIds.length}`;
+        }
+
+        db.query(queryString, optionIds, (err, rows) => {
+            if (err) {
+                console.error("Error querying filter results from u_qna:", err);
+                reject(err);
+                return;
+            }
+
+            // Extract user_id from each row and return an array of user_ids
+            const userIds = rows.map(row => row.user_id);
+            resolve(userIds);
+        });
+    });
+}
+
+
 // Function to check if two users have mutually liked each other.
 async function checkMatch(user1Id, user2Id) {
     return new Promise((resolve, reject) => {
