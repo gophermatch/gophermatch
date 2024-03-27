@@ -9,12 +9,12 @@ function TopFive(props){
       {props.rankings.map((item, index) => (
         props.editing ? (
             <textarea
-              className={"inline-block flex h-[2rem] resize-none border"}
+              className={"inline-block flex h-[5vh] resize-none border"}
               value={item || ''}
               onChange={null}
             />
           ) : (
-            <p className={"inline-block flex h-[2rem]"}>{index+1}. {item}</p>
+            <p className={"inline-block flex h-[5vh]"}>{index+1}. {item}</p>
           )
       ))}
     </p>
