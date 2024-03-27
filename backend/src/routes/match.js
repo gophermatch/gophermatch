@@ -32,6 +32,7 @@ router.post('/filter-results', async (req, res) => {
     const { userdataFilters, qnaFilters } = req.body;
 
     try {
+        console.log("NEW FILTER")
         const userdataResults = await getFilterResults(userdataFilters);
         console.log("udata",userdataResults);
         const qnaResults = await getFilterResultsQna(qnaFilters);
