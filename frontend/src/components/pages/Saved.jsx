@@ -70,11 +70,21 @@ export default function Saved() {
     }, [updateDep]);
 
     function unmatch(profileId) {
-        backend.delete('/match/remove', {params: {
+        return backend.delete('/match/remove', {params: {
             user1Id: currentUser.user_id,
             user2Id: profileId,
             decision: "unsure"
         }}).then(() => stepUpdateDep(s => s + 1));
+    }
+
+    function match(profileId) {
+        unmatch(profileId).then(() => {
+            backend.post('/match/matcher', {
+                user1Id: currentUser.user_id,
+                user2Id: profileId,
+                decision: "match"
+            }).then(() => stepUpdateDep(s => s + 2))
+        })
     }
 
     function displayProfile(id) {
@@ -105,6 +115,7 @@ export default function Saved() {
                             <p className="font-bold text-maroon_new text-xl m-0 inline-block">&nbsp;{person.last_name}</p>
                         </div>
                         <button className="bg-maroon h-[40px] w-[40px] rounded-lg text-white text-[25px]" onClick={() => unmatch(person.user_id)}>X</button>
+                        <button className="bg-gold h-[40px] w-[40px] rounded-lg text-white text-[25px]" onClick={() => match(person.user_id)}>X</button>
                     </div>
                 </div>
             ))}
