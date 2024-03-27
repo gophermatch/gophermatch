@@ -51,9 +51,12 @@ export default function Saved() {
 
     useEffect(() => {
         (async () => {
-            const matchesRes = await backend.get('/match/saved-matches/' + currentUser.user_id)
+            const matchesRes = await backend.get('/match/saved-matches', {params: {
+                userId: currentUser.user_id
+            }})
+            console.log("HEY");
 
-            const profilePromises = matchesRes.data.map(({matchId, timestamp}) => Promise.all([
+            const profilePromises = matchesRes.data.map((matchId) => Promise.all([
                 backend.get('/profile', {params: {user_id: matchId}}),
                 backend.get('account/fetch', {params: {user_id: matchId}, withCredentials: true})
             ]));
@@ -68,9 +71,10 @@ export default function Saved() {
     }, [updateDep]);
 
     function unmatch(profileId) {
-        backend.delete('/match/inbox-delete', {params: {
+        backend.delete('/match/remove', {params: {
             user1Id: currentUser.user_id,
-            user2Id: profileId
+            user2Id: profileId,
+            decision: "unsure"
         }}).then(() => stepUpdateDep(s => s + 1));
     }
 
@@ -101,7 +105,6 @@ export default function Saved() {
                             <p className="font-bold text-maroon_new text-xl m-0 inline-block">{person.first_name}</p>
                             <p className="font-bold text-maroon_new text-xl m-0 inline-block">&nbsp;{person.last_name}</p>
                         </div>
-                        <button className="">{person.contact_email}</button>
                         <button className="bg-maroon h-[40px] w-[40px] rounded-lg text-white text-[25px]" onClick={() => unmatch(person.user_id)}>X</button>
                     </div>
                 </div>

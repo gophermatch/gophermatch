@@ -36,17 +36,18 @@ router.post('/filter-results', async (req, res) => {
     }
 });
 
-// http://localhost:3000/api/match/saved-matches/43
-// replace last number with user id to get their saved users
-router.get('/saved-matches/:userId', async (req, res) => {
+
+router.get('/saved-matches', async (req, res) => {
     try {
-        const userId = parseInt(req.params.userId, 10);
-        if (isNaN(userId)) {
+        const { userId } = req.query;
+        console.log(userId);
+        if (!userId) {
             return res.status(400).send({ error: "Invalid user ID." });
         }
 
         const savedMatches = await getSavedMatches(userId);
         res.json(savedMatches);
+        
     } catch (error) {
         console.error('Failed to retrieve saved matches:', error);
         res.status(500).send({ error: "Internal server error." });
