@@ -64,7 +64,7 @@ export default function Signup() {
             setSignupErr("Email must be an umn email");
             return;
         }
-
+    
         if (!password) {
             setSignupErr("Password missing");
             return;
@@ -75,10 +75,23 @@ export default function Signup() {
             setSignupErr("Re-entered password does not match your password");
             return;
         }
-
+    
+        // Check if email is already in use
+        // try {
+        //     const response = await backend.get("/email-auth/check-email", { params: { email } });
+        //     console.log("Response:", response)
+        //     if (response.data.emailExists) {
+        //         setSignupErr("Email is already in use. Please use a different email.");
+        //         return;
+        //     }
+        // } catch (err) {
+        //     console.error(err);
+        //     setSignupErr("Failed to check email. Please try again.");
+        //     return;
+        // }
+    
         // Request OTP
         try {
-            const response = await backend.post("/account/check-email", { email })
             await backend.post("/email-auth/request-otp", { email });
             setShowOtpInput(true);
             setOtpSent(true);
@@ -88,6 +101,7 @@ export default function Signup() {
             setSignupErr("Failed to send OTP. Please try again.");
         }
     }
+    
 
     async function onVerifyOtp() {
         try {
@@ -102,7 +116,7 @@ export default function Signup() {
             navigate("/");
         } catch (err) {
             console.error(err);
-            setSignupErr("Invalid or expired OTP. Please try again.");
+            setSignupErr("Email already in use. Please login or try again with a different email");
         }
     }
 
@@ -180,7 +194,12 @@ export default function Signup() {
                                 <button className="bg-maroon hover:bg-login text-doc text-xl font-bold py-2 w-[14rem] rounded mt-[6rem]" onClick={onVerifyOtp}>Verify Account</button>
                             </div>
                         )}
-                        <div className={styles.login_failure}>{signupErr}</div>
+                        <div className={'${styles.login_failure}, text-xl mt-12'}>{signupErr}</div>
+                        {showOtpInput && (
+                            <div className="mt-16">
+                                <Link onClick={() => setShowOtpInput(false)} className="text-xl text-maroon underline hover:text-gold">Go back to Signup</Link>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
