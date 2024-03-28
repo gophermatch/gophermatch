@@ -30,6 +30,17 @@ export default function Settings() {
 
     useEffect(() => {
         fetchUserInfo();
+        const updateUserInfo = async () => {
+            try {
+                const response = await backend.post('/account/update', {
+                    params: { user_id: currentnUser.user_id }
+                    
+                })
+            }
+            catch (error) {
+                console.log('Error updating user info');
+            }
+        }
     }, [])
 
     const getLabel = (key) => {
@@ -96,25 +107,31 @@ export default function Settings() {
             </div>
             <div className="ml-10 mt-[6vh] flex flex-col w-full justify-between text-maroon text-xl font-comfortaa">
             {userInfo.map(([key, value], index) => (
-    <div key={index} className="font-comfortaa text-2xl mt-[1vh] justify-between flex h-[4vh] w-[65vw]">
-        <p className="justify-center">{getLabel(key)}:</p>
-        {editMode && editKey === key ? (
-            <input
-                type="text"
-                value={editValues[key]}
-                onChange={(e) => handleInputChange(key, e.target.value)}
-            />
-        ) : (
-            <>
-                <p className="">{value}</p>
-                {editMode && (
-                    <p className="justify-end cursor-pointer hover:text-gold" onClick={() => handleEditClick(key)}>Edit</p>
-                )}
-            </>
-        )}
-    </div>
-))}
-
+                <div key={index} className="font-comfortaa text-2xl mt-[1vh] justify-between flex h-[4vh] w-[65vw]">
+                    <div className="flex justify-start items-center w-[20vw]">
+                        <p className="">{getLabel(key)}:</p>
+                    </div>
+                    <div className="flex justify-center items-center w-[35vw]">
+                        {editMode && editKey === key ? (
+                            <input
+                                type="text"
+                                value={editValues[key]}
+                                onChange={(e) => handleInputChange(key, e.target.value)}
+                            />
+                        ) : (
+                            <p className="">{value}</p>
+                        )}
+                    </div>
+                    <div className="flex justify-end items-center w-[10vw]">
+                        {editMode && editKey === key && (
+                            <p className="cursor-pointer hover:text-gold" onClick={() => handleSaveChangesClick(key)}>Save</p>
+                        )}
+                        {editMode && editKey !== key && (
+                            <p className="cursor-pointer hover:text-gold" onClick={() => handleEditClick(key)}>Edit</p>
+                        )}
+                    </div>
+                </div>
+                ))}
             </div>
         </div>
     );

@@ -98,7 +98,7 @@ router.delete('/', AuthStatusChecker, async (req, res) => {
 })
 
 router.post('/update', async (req, res) => {
-    const userdata = req.body;
+    const userdata = req.body.userdata;
     try {
         await updateAccountInfo(userdata);
         res.status(200).json({message: "Account information updated successfully!"});
