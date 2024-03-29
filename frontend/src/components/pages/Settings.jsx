@@ -7,6 +7,7 @@ export default function Settings() {
     const [editMode, setEditMode] = useState(false);
     const [editKey, setEditKey] = useState(null);
     const [editValues, setEditValues] = useState({});
+    const [isEdited, setIsEdited] = useState(false);
 
     const fetchUserInfo = async () => {
         try {
@@ -30,17 +31,6 @@ export default function Settings() {
 
     useEffect(() => {
         fetchUserInfo();
-        const updateUserInfo = async () => {
-            try {
-                const response = await backend.post('/account/update', {
-                    params: { user_id: currentnUser.user_id }
-                    
-                })
-            }
-            catch (error) {
-                console.log('Error updating user info');
-            }
-        }
     }, [])
 
     const getLabel = (key) => {
@@ -76,21 +66,22 @@ export default function Settings() {
         }
     }
 
-    const handleEditProfileClick = () => {
-        setEditMode(true);
-    };
-
     const handleInputChange = (key, value) => {
-        setEditValues({ ...editValues, [key]: value });
+        setEditValues(prevValues => ({
+            ...prevValues,
+            [key]: value
+        }));
+        setIsEdited(true);
     };
 
     const handleSaveChangesClick = async () => {
         setEditMode(false);
+        setIsEdited(false);
         // Save changes using editValues
     }
 
     const handleEditClick = (key) => {
-        setEditKey(key);
+        setEditKey(key); // Update editKey when clicking on an input field
         setEditMode(true);
     };
 
@@ -100,12 +91,14 @@ export default function Settings() {
                 {editMode ? 'Edit Profile' : 'Settings'}
             </h1>
             <div className="ml-10 mt-[4vh] h-1 w-[80vw] bg-maroon"></div>
-            <div className="ml-10 mt-[4vh] w-[80vw] mr-[1vw] flex flex-col justify-center items-center">
-                <button className="bg-maroon text-doc rounded-full w-[10vw] h-[4vh] text-xl" onClick={editMode ? handleSaveChangesClick : handleEditProfileClick}>
-                    {editMode ? 'Save Changes' : 'Edit Profile'}
-                </button>
-            </div>
-            <div className="mt-[6vh] flex flex-col w-full justify-center items-center text-maroon text-xl font-comfortaa">
+            {isEdited && (
+                <div className="ml-10 mt-[4vh] w-[80vw] mr-[1vw] flex flex-col justify-center items-center">
+                    <button className="bg-maroon text-doc rounded-full w-[10vw] h-[4vh] text-xl" onClick={handleSaveChangesClick}>
+                        Save Changes
+                    </button>
+                </div>
+            )}
+            <div className="flex flex-col w-full justify-center items-center text-maroon text-xl font-comfortaa">
                 <div className="flex flex-wrap w-[65vw] mr-[8vw] justify-center">
                     {userInfo.map(([key, value], index) => (
                         <div key={index} className="font-comfortaa text-2xl mt-[1vh] justify-between flex flex-col w-[30%] mr-[3vw]">
@@ -113,13 +106,13 @@ export default function Settings() {
                                 <p className="text-base mt-[3vh]">{getLabel(key)}</p>
                             </div>
                             <div className="flex justify-start items-center text-black text-xl">
-                                <input
-                                    type="text"
-                                    value={editMode && editKey === key ? editValues[key] : value}
-                                    readOnly={!editMode || editKey !== key}
-                                    className="bg-gray-200 p-1 rounded-md"
-                                    onChange={(e) => handleInputChange(key, e.target.value)}
-                                />
+                            <input
+                                type="text"
+                                value={editMode && editKey === key ? editValues[key] : value}
+                                onChange={(e) => handleInputChange(key, e.target.value)}
+                                onClick={() => handleEditClick(key)} // Set editKey when clicking on an input field
+                                className="bg-gray-200 p-1 rounded-md"
+                            />
                             </div>
                         </div>
                     ))}
