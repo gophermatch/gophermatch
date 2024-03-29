@@ -14,7 +14,7 @@ const LandingPage = () => {
           </Link>
         </div>
       </div>
-      <div className="bg-doc min-h-screen flex items-start px-4 ">
+      <div className="bg-offwhite min-h-screen flex items-start px-4 ">
         <header className="text-maroon mt-64 text-7xl font-lora">
           <span className="font-bold ml-20">GopherMatch</span>
           <p className="text-3xl mt-5 ml-20">University of Minnesota Roommate Finder</p>

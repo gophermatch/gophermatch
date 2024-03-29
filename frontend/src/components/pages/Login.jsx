@@ -67,7 +67,7 @@ export default function Login() {
                 <p className="text-doc font-lora text-3xl ml-2 mt-2">GopherMatch</p>
             </div>
         </div>
-        <div className="bg-doc w-screen h-screen flex flex-col font-lora">
+        <div className="bg-offwhite w-screen h-screen flex flex-col font-lora">
             <div className="flex flex-col justify-center items-center w-screen text-maroon">
                 <h1 className="text-maroon font-lora text-[5rem] mt-20">Login</h1>
                 <div className="flex flex-col items-center justify-center mt-[2.75rem] relative">
