@@ -1,15 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import Carousel from './Carousel';
 import styles from '../../assets/css/profile.module.css';
 import kanye from '../../assets/images/kanye.png';
 import other from '../../assets/images/testprofile.png';
 import TopFive from "./TopFive.jsx";
 import qnaData from "./qnaOptions.json";
+import currentUser from "../../currentUser.js";
+import backend from "../../backend.js";
 
 export default function Profile(props) {
 
   const { profile_data, user_data, editable, handleBioChange, handleQnaChange, qnaAnswers } = props;
   let pictures = [kanye, other, kanye];
+  const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
+
+  useEffect(() => {
+    fetchPictureUrls();
+  }, []);
+
+  const fetchPictureUrls = async () => {
+    try {
+      const response = await backend.get("/profile/user-pictures", {
+        params: {user_id: user_data.user_id},
+        withCredentials: true,
+      });
+      if (response) {
+
+        console.log(response);
+
+        const data = response.data;
+
+        setPictureUrls(data.pictureUrls)
+      } else {
+        throw new Error("Failed to fetch picture URLs");
+      }
+    } catch (error) {
+      console.error("Error fetching picture URLs:", error);
+    }
+  };
 
   // Function to find the selected option_id for a given question_id
   const getSelectedOptionId = (questionId) => {
@@ -48,7 +76,7 @@ export default function Profile(props) {
         <div className={"m-auto w-full flex flex-col p-[1.5vw] h-[75vh] bg-white rounded-3xl overflow-hidden"}>
           <div className={"flex h-[27.25vh]"}>
             <div className={"w-[12vw] bg-white rounded-3xl"}>
-              <Carousel pictures={pictures} editable={editable}></Carousel>
+              <Carousel pictureUrls={pictureUrls} editable={editable}></Carousel>
             </div>
             <div className={"flex-grow flex flex-col bg-white"}>
               <div className={"pl-10 h-10"}>
