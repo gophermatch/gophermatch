@@ -3,6 +3,7 @@ import { recordUserDecision,
     deleteMatchDecision, 
     getSavedMatches, 
     retrieveUserMatches, 
+    deleteInboxMatch,
     getFilterResults, 
     getFilterResultsQna 
 } from '../database/match.js';
