@@ -2,14 +2,6 @@
 import { db , tableNames} from './db.js'; // Your database connection setup
 import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
 
-
-/**
- * Records a user's decision about another user and checks for a mutual match.
- * @param {number} user1Id - ID of the user making the decision.
- * @param {number} user2Id - ID of the user being evaluated.
- * @param {string} decision - The decision made ('match', 'reject', 'unsure').
- * @returns {Promise<{matchFound: boolean, message: string}>} - A promise that resolves to the outcome of the operation.
- */
 export async function recordUserDecision(user1Id, user2Id, decision) {
     try {
         // SQL query to insert or update the decision in the database.
