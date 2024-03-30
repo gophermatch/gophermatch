@@ -28,18 +28,13 @@ export default function Carousel(props) {
         }
     }
 
-    function shiftPosition(n) {
+    const carouselLen = props.pictureUrls.length;
 
-    }
-
-    const currentImage = props.pictures[position];
-    const carouselLen = props.pictures.length
-
-    let dots = props.pictures.map((pic, i) => {
+    let dots = props.pictureUrls.map((url, i) => {
         if (i == position) { // the key is weird, will need to change if issues
-            return <button key={pic + i} className={styles.dotSolid}></button>
+            return <button key={url + i} className={styles.dotSolid}></button>
         } else {
-            return <button key={pic + i} className={styles.dotEmpty} onClick={() => setPosition(i)}></button>
+            return <button key={url + i} className={styles.dotEmpty} onClick={() => setPosition(i)}></button>
         }
     })
 
@@ -57,10 +52,10 @@ export default function Carousel(props) {
 
     return (
         <div className={styles.container}>
-            <div class ="flex justify-center items-center">
-                {isHovering && <img src='../../assets/images/imageicon.png' class="absolute scale-[0.1]"/>}
-                <div id="imageWrapper" class="border-[0.33vw] rounded-[1vw] border-maroon_new">
-                    <img src={currentImage} className = {"rounded-[1vw"} onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay}/>
+            <div className="flex justify-center items-center">
+                {isHovering && <img src='../../assets/images/imageicon.png' className="absolute scale-[0.1]"/>}
+                <div id="imageWrapper" className="border-[0.33vw] w-[100%] h-[100%] overflow-hidden rounded-[1vw] border-maroon_new aspect-square">
+                    <img src={props.pictureUrls[position]} className = {"w-full h-full object-cover rounded-[1vw"} onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay}/>
                 </div>
             </div>
             {carouselLen > 1 && dotSection}
