@@ -47,7 +47,6 @@ router.post('/filter-results', async (req, res) => {
     }
 });
 
-
 router.get('/saved-matches', async (req, res) => {
     try {
         const { userId } = req.query;

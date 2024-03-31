@@ -17,6 +17,7 @@ router.use('/match', MatchRouter)
 router.use('/account', AccountRouter)
 router.use('/preferences', PreferenceRouter)    // TODO: prepend AuthStatusChecker
 router.use('/profile', AuthStatusChecker, ProfileRouter)
+router.use('/email-auth', EmailAuthRouter)
 router.use('/match', MatchRouter)
 router.use('/email-auth', EmailAuthRouter)
 
