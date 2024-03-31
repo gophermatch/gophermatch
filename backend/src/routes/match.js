@@ -5,7 +5,8 @@ import { recordUserDecision,
     retrieveUserMatches, 
     deleteInboxMatch,
     getFilterResults, 
-    getFilterResultsQna 
+    getFilterResultsQna,
+    getUserUnseenMatches
 } from '../database/match.js';
 
 const router = Router()
@@ -110,6 +111,21 @@ router.get('/inbox', async (req, res) => {
 
         const matches = await retrieveUserMatches(userId);
         res.json(matches);
+    } catch (error) {
+        res.status(500).send('Failed to retrieve matches');
+    }
+});
+
+// Takes a json with parameter userId and returns the number of unseen matches in the inbox
+router.get('/inbox-notif', async (req, res) => {
+    try {
+        const {userId} = req.body;
+        if (!userId) {
+            return res.status(400).send('User ID is required');
+        }
+
+        const unseenMatches = await getUserUnseenMatches(userId);
+        res.json(unseenMatches);
     } catch (error) {
         res.status(500).send('Failed to retrieve matches');
     }
