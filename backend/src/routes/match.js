@@ -47,7 +47,7 @@ router.get('/saved-matches', async (req, res) => {
 
         const savedMatches = await getSavedMatches(userId);
         res.json(savedMatches);
-        
+
     } catch (error) {
         console.error('Failed to retrieve saved matches:', error);
         res.status(500).send({ error: "Internal server error." });
@@ -58,7 +58,9 @@ router.get('/saved-matches', async (req, res) => {
 // Takes a json with the parameters user1Id, user2Id, decision
 router.delete('/remove', async (req, res) => {
     // Basic validation
-    const { user1Id, user2Id, decision } = req.body;
+    const { user1Id, user2Id, decision } = req.query;
+    console.log(user1Id);
+    console.log(decision);
     if (!user1Id || !user2Id || !decision) {
         return res.status(400).json({ error: "Missing required fields: user1Id, user2Id, or decision." });
     }
