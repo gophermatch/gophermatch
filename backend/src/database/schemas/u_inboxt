@@ -3,6 +3,8 @@ CREATE TABLE u_inboxt (
     user1_id INT NOT NULL,
     user2_id INT NOT NULL,
     match_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user1_is_seen TINYINT(1) DEFAULT 0 NOT NULL,
+    user2_is_seen TINYINT(1) DEFAULT 0 NOT NULL,
     FOREIGN KEY (user1_id) REFERENCES users(user_id),
     FOREIGN KEY (user2_id) REFERENCES users(user_id),
     UNIQUE KEY unique_match (user1_id, user2_id)
