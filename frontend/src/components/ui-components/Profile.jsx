@@ -48,9 +48,9 @@ export default function Profile(props) {
     return null;
   };
 
-  const qnaItems = qnaData.map((item) => (
-    <div key={item.id} className={"flex w-full pl-5 pr-5 border-b"}>
-      <p className={"flex-1"}>{item.question}</p>
+  const qnaItems = qnaData.map((item, index) => (
+    <div key={item.id} className={`flex w-full pl-5 pr-5 border-b ${index !== qnaData.length - 1 ? 'mb-2' : ''} ${index === 0 ? 'mt-3' : ''}`} style={{ minHeight: '1rem' }}>
+      <p className="flex-1 flex items-center" style={{ lineHeight: '2' }}>{item.question}</p>
       {editable ? (
         <select
           className={"text-right"}
@@ -64,18 +64,18 @@ export default function Profile(props) {
           ))}
         </select>
       ) : (
-        <p className={"truncate"}>
+        <p className="truncate whitespace-nowrap">
           {item.options.find(o => o.option_id === getSelectedOptionId(item.id))?.text || 'N/A'}
         </p>
       )}
     </div>
-  ));
+  ));         
 
   return (
       <div className={"m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
         <div className={"m-auto w-full flex flex-col p-[1.5vw] h-[75vh] bg-white rounded-3xl overflow-hidden"}>
-          <div className={"flex h-[27.25vh]"}>
-            <div className={"w-[12vw] bg-white rounded-3xl"}>
+          <div className={"flex h-[27.25vh] "}>
+            <div className={"w-[12vw] bg-white rounded-3xl mt-[1vh]"}>
               <Carousel pictureUrls={pictureUrls} editable={editable}></Carousel>
             </div>
             <div className={"flex-grow flex flex-col bg-white"}>

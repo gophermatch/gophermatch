@@ -102,7 +102,7 @@ export default function ProfilePage() {
   return (
     <div>
       {isEditing && (
-        <div className={"flex justify-center m-auto w-[20vw] space-x-[15vw]"}>
+        <div className={"flex justify-center m-auto w-[20vw] space-x-[5vw]"}>
           <button className={"absolute mt-[2vh] text-[3.5vh] text-white h-[5vh] w-[7.5vw] rounded-[4vh] bg-maroon_new"} onClick={handleSaveChanges}>Save</button>
           <button className={"absolute mt-[2vh] text-[3.5vh] h-[5vh] w-[7.5vw] rounded-[4vh] bg-inactive_gray"} onClick={toggleEditMode}>Cancel</button>
         </div>
@@ -121,6 +121,5 @@ export default function ProfilePage() {
         handleQnaChange={handleQnaChange}
       />
     </div>
-  )
-  ;
+  );
 }
