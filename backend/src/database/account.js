@@ -87,21 +87,20 @@ export async function getUserData(user_id){
     });
 }
 
-export async function updateAccountInfo(userdata){
+export async function updateAccountInfo(userdata, userId){
     console.log(userdata);
-
-    const insertQuery = buildInsertString(tableNames.u_userdata, userdata);
-
-    console.log("query: " + insertQuery.queryString);
-
+    const primary_key = { user_id: userId }; 
+    const newVals = userdata;
+    const updateQuery = buildUpdateString(tableNames.u_userdata, primary_key, newVals);
+    console.log("query: " + updateQuery.queryString);
     return new Promise((resolve, reject) => {
-        db.query(insertQuery.queryString, insertQuery.values,
+        db.query(updateQuery.queryString, updateQuery.values,
           (err, res) => {
               if (err) {
-                  reject(err)
-                  return
+                  reject(err);
+                  return;
               }
-              resolve(res)
+              resolve(res);
           })
-    })
+    });
 }

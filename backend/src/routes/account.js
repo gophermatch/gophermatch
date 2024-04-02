@@ -98,13 +98,14 @@ router.delete('/', AuthStatusChecker, async (req, res) => {
 })
 
 router.post('/update', async (req, res) => {
-    const userdata = req.body;
+    const { userId, ...userdata } = req.body; // Destructure userId from the request body and capture the rest as userdata
     try {
-        await updateAccountInfo(userdata);
+        if (!userId) throw new Error("userId is required");
+        await updateAccountInfo(userdata, userId);
         res.status(200).json({message: "Account information updated successfully!"});
     } catch (error) {
         console.error(error);
-        res.status(400).json(createErrorObj(error, "Failed to update account information"));
+        res.status(400).json({error: error.toString(), message: "Failed to update account information"});
     }
 });
 
