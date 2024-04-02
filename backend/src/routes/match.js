@@ -88,7 +88,7 @@ router.delete('/remove', async (req, res) => {
 
 router.delete('/inbox-delete', async (req, res) => {
     // Basic validation
-    const { user1_id, user2_id } = req.query;
+    const { user1_id, user2_id } = req.body;
     if (!user1_id || !user2_id ) {
         return res.status(400).json({ error: "Missing required fields: user1_id, user2_id" });
     }
