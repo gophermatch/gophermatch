@@ -87,7 +87,7 @@ export default function Settings() {
 
     const colleges = ['CSE', 'CBS', 'Carlson', 'Design', 'CEHD', 'CFANS', 'Nursing', 'Other']
     const gradYear = ['2025', '2026', '2027', '2028', '2029', 'Other']
-    const gender = ['Male', 'Female', 'Non-binary']
+    const gender = ['Male', 'Female', 'Non-binary', 'Prefer Not to Say', 'Other']
     const housePref = ['Apartments', 'Dorms', 'Both']
 
     return (
