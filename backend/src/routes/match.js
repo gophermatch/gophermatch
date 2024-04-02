@@ -6,7 +6,8 @@ import { recordUserDecision,
     deleteInboxMatch,
     getFilterResults, 
     getFilterResultsQna,
-    getUserUnseenMatches
+    getUserUnseenMatches,
+    markUserMatchesAsSeen
 } from '../database/match.js';
 
 const router = Router()
@@ -116,7 +117,7 @@ router.get('/inbox', async (req, res) => {
     }
 });
 
-// Takes a json with parameter userId and returns the number of unseen matches in the inbox
+// Takes a json with parameter userId and returns an array of unseen match ids in the inbox
 router.get('/inbox-notif', async (req, res) => {
     try {
         const {userId} = req.query;
@@ -128,6 +129,22 @@ router.get('/inbox-notif', async (req, res) => {
         res.json(unseenMatches);
     } catch (error) {
         res.status(500).send('Failed to retrieve matches');
+    }
+});
+
+// Call this when a user clicks on inbox to set all unseen new matches to seen
+router.post('/mark-seen', async (req, res) => {
+    const {userId} = req.body;
+    if (!userId) {
+        return res.status(400).send('User ID is required');
+    }
+
+    try {
+        await markUserMatchesAsSeen(userId);
+        res.status(200).send('All matches marked as seen');
+    } catch (error) {
+        console.error('Failed to mark matches as seen:', error);
+        res.status(500).send('Internal Server Error');
     }
 });
 

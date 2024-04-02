@@ -276,3 +276,27 @@ export async function getUserUnseenMatches(userId) {
         });
     });
 }
+
+export async function markUserMatchesAsSeen(userId) {
+    return new Promise((resolve, reject) => {
+        const markAsSeenQuery = `
+            UPDATE ${tableNames.u_inboxt}
+            SET user1_is_seen = CASE WHEN user1_id = ? THEN 1 ELSE user1_is_seen END,
+                user2_is_seen = CASE WHEN user2_id = ? THEN 1 ELSE user2_is_seen END
+            WHERE user1_id = ? OR user2_id = ?;
+        `;
+
+        // Execute the query to mark all matches as seen
+        db.query(markAsSeenQuery, [userId, userId, userId, userId], (err) => {
+            if (err) {
+                // Log and reject the promise if there's an error
+                console.error("Error updating matches as seen in database:", err);
+                reject(err);
+                return;
+            }
+
+            // If the update is successful, resolve the promise
+            resolve();
+        });
+    });
+}
