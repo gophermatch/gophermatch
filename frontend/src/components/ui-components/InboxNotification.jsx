@@ -22,21 +22,29 @@ const InboxNotification = ({ inboxClicked }) => {
 
         fetchUnseenMatches();
 
-
-
         const intervalId = setInterval(fetchUnseenMatches, 5000);
     
         return () => clearInterval(intervalId);
     }, []);
 
+    const markMatchesAsSeen = async () => {
+        try {
+            await backend.post('/match/mark-seen', { userId: currentUser.user_id });
+            setUnseenMatches(0);
+        } catch (error) {
+            console.error('Failed to mark matches as seen:', error);
+        }
+    };
+
     return (
-        <div style={{ position: 'relative', minHeight: '20px', minWidth: '20px' }}> {/* Ensure minimum size for visibility */}
+        <div style={{ position: 'relative', minHeight: '20px', minWidth: '20px' }}>
             {!inboxClicked && unseenMatches > 0 && (
                 <div
+                    onClick={markMatchesAsSeen} // Add onClick to mark matches as seen
                     style={{
                         position: 'absolute',
-                        top: '-1550%', // Adjust position for better visibility
-                        right: '50px',
+                        top: '-1450%', // Adjust position for better visibility
+                        right: '75px',
                         backgroundColor: 'gold', // Use a more visible color
                         borderRadius: '50%',
                         width: '30px', // Increase size for better visibility
@@ -44,11 +52,11 @@ const InboxNotification = ({ inboxClicked }) => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'white',
+                        color: 'black',
                         fontSize: '12px',
+                        fontWeight: 'bold',
                     }}
                 >
-                    {/* Optionally, display the number of unseen matches */}
                     {unseenMatches}
                 </div>
             )}
