@@ -117,7 +117,7 @@ router.get('/inbox', async (req, res) => {
     }
 });
 
-// Takes a json with parameter userId and returns the number of unseen matches in the inbox
+// Takes a json with parameter userId and returns an array of unseen match ids in the inbox
 router.get('/inbox-notif', async (req, res) => {
     try {
         const {userId} = req.body;
