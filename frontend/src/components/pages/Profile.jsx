@@ -10,44 +10,10 @@ export default function ProfilePage() {
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [firstPictureUrl, setFirstPictureUrl] = useState('');
 
   useEffect(() => {
     fetchProfile();
   }, []);
-
-  const fetchUserData = async () => {
-    const response = await backend.get('account/fetch', {
-      params: {
-        user_id: currentUser.user_id},
-      withCredentials: true});
-
-    console.log(response);
-
-    if(response.status === 200) {
-      return response.data.data[0];
-    }else{
-      console.log('Failed to fetch user data.');
-    }
-  }
-
-  const userData = fetchUserData();
-
-  const fetchFirstPictureUrl = async () => {
-    try {
-      const response = await backend.get('/profile/user-pictures', {
-        params: { user_id: 54 },
-        withCredentials: true,
-      });
-      if (response.data && response.data.pictureUrls && response.data.pictureUrls.length > 0) {
-        setFirstPictureUrl(response.data.pictureUrls[0]);
-      } else {
-        console.log('No pictures found for this user.');
-      }
-    } catch (error) {
-      console.error('Error fetching picture URL:', error);
-    }
-  };
 
   const fetchProfile = async () => {
     try {
@@ -121,42 +87,8 @@ export default function ProfilePage() {
     }
   };
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
-  const handleFileUpload = async () => {
-    if (!selectedFile) {
-      alert('Please select a file to upload.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-    formData.append('user_id', currentUser.user_id);
-    formData.append('pic_number', 1);
-
-    try {
-      const response = await backend.post('/profile/upload-picture', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      alert('File uploaded successfully');
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      alert('Failed to upload file.');
-    }
-  };
-
   const handleEditProfile = () => {
     setIsEditing(true);
-  };
-
-  const handleChangeProfilePicture = () => {
-    // Navigate to the PicUpload page
-    // You can use React Router for this
   };
 
   if (error) {
@@ -170,28 +102,25 @@ export default function ProfilePage() {
   return (
     <div>
       {isEditing && (
-        <div className={"w-[50px] flex flex-center justify-center m-auto inset-x-5 space-x-[150px]"}>
-          <button className={"absolute px-[15px] mr-[3rem] w-[6vw] text-l mt-[3.5rem] text-white rounded-[1.5rem] h-50 bg-maroon_new"} onClick={handleSaveChanges}>Save</button>
-          <button className={"absolute px-[15px] ml-[3rem] w-[6vw] mt-[3.5rem] text-l rounded-[1.5rem] h-50 bg-inactive_gray"} onClick={toggleEditMode}>Cancel</button>
-          {/*<input type="file" onChange={handleFileChange} style={{ display: 'block', marginTop: '20px' }} />*/}
-          {/*<button onClick={handleFileUpload}>Upload Picture</button>*/}
+        <div className={"flex justify-center m-auto w-[20vw] space-x-[15vw]"}>
+          <button className={"absolute mt-[2vh] text-[3.5vh] text-white h-[5vh] w-[7.5vw] rounded-[4vh] bg-maroon_new"} onClick={handleSaveChanges}>Save</button>
+          <button className={"absolute mt-[2vh] text-[3.5vh] h-[5vh] w-[7.5vw] rounded-[4vh] bg-inactive_gray"} onClick={toggleEditMode}>Cancel</button>
         </div>
       )}
       {!isEditing && (
-        <div className={"w-[50px] m-auto"}>
-        <button className={"absolute px-[25px] mt-[3.5rem] text-xl text-white h-50 rounded-[1.5rem] bg-maroon_new"} onClick={toggleEditMode}>Edit</button>
+        <div className={"w-[10vh] m-auto"}>
+          <button className={"absolute px-[5vh] mt-[2vh] text-[3.5vh] text-white h-[5vh] rounded-[4vh] bg-maroon_new"} onClick={toggleEditMode}>Edit</button>
         </div>
       )}
-  <Profile
-    user_data={currentUser.user_data}
-    editable={isEditing}
-    editedBio={isEditing ? editedProfile.bio : profile.bio}
-    handleBioChange={handleBioChange}
-    qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
-    handleQnaChange={handleQnaChange}
-
-  />
+      <Profile
+        user_data={currentUser.user_data}
+        editable={isEditing}
+        editedBio={isEditing ? editedProfile.bio : profile.bio}
+        handleBioChange={handleBioChange}
+        qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
+        handleQnaChange={handleQnaChange}
+      />
     </div>
-)
+  )
   ;
 }

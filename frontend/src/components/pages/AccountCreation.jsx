@@ -29,7 +29,7 @@ export default function AccountCreation() {
     const [contactSnapchat, setContactSnapchat] = React.useState('')
     const [contactInstagram, setContactInstagram] = React.useState('')
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleCollegeChange = (event) => {
         setCollege(event.target.value);
@@ -89,9 +89,11 @@ export default function AccountCreation() {
 
             console.log(res.data.message);
 
-            await currentUser.getAccount();
+            currentUser.user_data = await currentUser.getAccount();
 
-            navigate("/match")
+            console.log("redirecting to match");
+
+            navigate("/match");
 
         } catch(err) {
             console.error(err)

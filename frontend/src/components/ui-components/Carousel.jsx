@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import styles from '../../assets/css/carousel.module.css'
 import { useNavigate } from 'react-router-dom'
+import styles from '../../assets/css/carousel.module.css'
 
 export default function Carousel(props) {
     const [position, setPosition] = React.useState(0)
     const [isHovering, setIsHovering] = useState(false);
     const navigate = useNavigate();
     const editable = props.editable;
-
-    function shiftPosition(n) {
-
-    }
-
-    const currentImage = props.pictures[position];
-    const carouselLen = props.pictures.length
 
     function showOverlay(){
         const imageWrapper = document.getElementById("imageWrapper");
@@ -35,11 +28,13 @@ export default function Carousel(props) {
         }
     }
 
-    let dots = props.pictures.map((pic, i) => {
+    const carouselLen = props.pictureUrls.length;
+
+    let dots = props.pictureUrls.map((url, i) => {
         if (i == position) { // the key is weird, will need to change if issues
-            return <button key={pic + i} className={styles.dotSolid}></button>
+            return <button key={url + i} className={styles.dotSolid}></button>
         } else {
-            return <button key={pic + i} className={styles.dotEmpty} onClick={() => setPosition(i)}></button>
+            return <button key={url + i} className={styles.dotEmpty} onClick={() => setPosition(i)}></button>
         }
     })
 
@@ -57,10 +52,10 @@ export default function Carousel(props) {
 
     return (
         <div className={styles.container}>
-            <div class ="flex justify-center items-center">
-                {isHovering && <img src='../../assets/images/imageicon.png' class="absolute scale-[0.1]"/>}
-                <div id="imageWrapper">
-                    <img src={currentImage} className = {"rounded-2xl"} onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay}/>
+            <div className="flex justify-center items-center">
+                {isHovering && <img src='../../assets/images/imageicon.png' className="absolute scale-[0.1]"/>}
+                <div id="imageWrapper" className="border-[0.33vw] w-[100%] h-[100%] overflow-hidden rounded-[1vw] border-maroon_new aspect-square">
+                    <img src={props.pictureUrls[position]} className = {"w-full h-full object-cover rounded-[1vw"} onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay}/>
                 </div>
             </div>
             {carouselLen > 1 && dotSection}

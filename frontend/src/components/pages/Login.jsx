@@ -64,7 +64,7 @@ export default function Login() {
         <div>
         <div className="bg-maroon h-[3.75rem] space-x-4 mt-auto">
             <div className="flex justify-start items-start w-full">
-                <p className="text-doc font-lora text-3xl ml-2 mt-2">GopherMatch</p>
+                <Link to="/landing" className="text-doc font-lora text-3xl ml-2 mt-2">GopherMatch</Link>
             </div>
         </div>
         <div className="bg-offwhite w-screen h-screen flex flex-col font-lora">
@@ -98,12 +98,12 @@ export default function Login() {
                         </p>
                     )}
                 <div className="flex items-center justify-center mt-5">
-                    <button onClick={onLoginAttempt} className="bg-maroon hover:bg-yellow-700 text-doc font-bold py-2 px-20 rounded mt-8">Login</button>
+                    <button onClick={onLoginAttempt} className="bg-maroon hover:bg-login text-doc font-bold py-2 px-20 rounded mt-8">Login</button>
                 </div>
                 <div>{loginErr}</div>
                 <div className='flex items-center justify-center mt-10'>
                     <p className="text-maroon text-lg">Don't have an account?</p>
-                    <Link to="/signup" className = "ml-3 hover:text-yellow-500 text-lg">Sign up</Link>
+                    <Link to="/signup" className = "ml-3 hover:text-gold text-lg">Sign up</Link>
                 </div>
             </div>
         </div>
