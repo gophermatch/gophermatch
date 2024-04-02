@@ -10,7 +10,7 @@ const InboxNotification = () => {
                 console.log('In block')
                 const response = await backend.get(`/match/inbox-notif`, {
                     params: {
-                        userId: currentUser.userId,
+                        userId: currentUser.user_Id,
                     },
                 });
                 console.log('After response')

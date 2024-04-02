@@ -119,7 +119,7 @@ router.get('/inbox', async (req, res) => {
 // Takes a json with parameter userId and returns the number of unseen matches in the inbox
 router.get('/inbox-notif', async (req, res) => {
     try {
-        const {userId} = req.body;
+        const {userId} = req.query;
         if (!userId) {
             return res.status(400).send('User ID is required');
         }
