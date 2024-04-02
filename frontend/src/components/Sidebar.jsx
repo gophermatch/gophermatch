@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Logout from './Logout';
+import InboxNotification from './ui-components/InboxNotification';
+import currentUser from '../currentUser';
 
 export default function Sidebar() {
     const [activePage, setActivePage] = useState('/match');
@@ -34,6 +36,7 @@ export default function Sidebar() {
                         >
                             {label}
                             {activePage === destination && <div className="absolute bottom-0 left-0 w-full h-1 bg-gold"></div>}
+                            {label === 'Inbox' && <InboxNotification userId={currentUser.userId} />} {/* InboxNotification component */}
                             <div className="absolute top-0 left-0 w-full h-full bg-maroon hover:bg-gold transition-all duration-200 opacity-0 group-hover:opacity-30"></div>
                         </NavLink>
                     ))}
