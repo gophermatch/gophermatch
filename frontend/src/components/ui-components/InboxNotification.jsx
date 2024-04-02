@@ -21,8 +21,10 @@ const InboxNotification = ({ inboxClicked }) => {
 
         fetchUnseenMatches();
 
-        const intervalId = setInterval(fetchUnseenMatches, 5000);
 
+
+        const intervalId = setInterval(fetchUnseenMatches, 5000);
+    
         return () => clearInterval(intervalId);
     }, []);
 
@@ -46,4 +48,3 @@ const InboxNotification = ({ inboxClicked }) => {
 };
 
 export default InboxNotification;
-a
