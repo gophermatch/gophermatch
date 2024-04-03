@@ -71,7 +71,9 @@ export default function Inbox() {
         backend.delete('/match/inbox-delete', {params: {
             user1_id: currentUser.user_id,
             user2_id: profileId
-        }}).then(() => stepUpdateDep(s => s + 1));
+        }}).then(() => {
+            updateMatchedProfiles(prevProfiles => prevProfiles.filter(profile => profile.user_id !== profileId));
+        });
     }
 
     function displayProfile(id) {
