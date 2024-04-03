@@ -1,8 +1,8 @@
 
 
 .imageWrapper img {
-    max-width: 100%;
-    border-radius: 10px;
+    max-width: 120%;
+    border-radius: 0vw;
     box-shadow: 0px 0px 5px #888888;
 }
 
@@ -23,8 +23,8 @@
     background-color: white;
     box-shadow: 0px 0px 5px #888888;
     border-radius: 50%;
-    width: 5vh;
-    height: 5vh;
+    width: 3vh;
+    height: 3vh;
     overflow: none;
     transition: 0.2s;
 }

@@ -48,7 +48,7 @@ export default function Carousel(props) {
                 &gt;
             </button>
         </div>
-    );
+    );    
 
     return (
         <div className={styles.container}>

@@ -75,20 +75,23 @@ export default function Profile(props) {
       <div className={"m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
         <div className={"m-auto w-full flex flex-col p-[1.5vw] h-[75vh] bg-white rounded-3xl overflow-hidden"}>
           <div className={"flex h-[27.25vh] "}>
-            <div className={"w-[12vw] bg-white rounded-3xl mt-[1vh]"}>
+            <div className={"w-[120rem] h-70 bg-white rounded-3xl mt-[2vh]"}>
               <Carousel pictureUrls={pictureUrls} editable={editable}></Carousel>
             </div>
             <div className={"flex-grow flex flex-col bg-white"}>
               <div className={"pl-10 h-10"}>
-                <p className={"text-[1.33vw] inline-block"}>{props.user_data.first_name} {props.user_data.last_name}, {props.user_data.gender.charAt(0).toUpperCase() + props.user_data.gender.slice(1)}, {props.user_data.major} Major, {props.user_data.college.toUpperCase()} Class of {props.user_data.graduating_year}</p>
+              <p className={"text-[1.33vw] ml-[4vw] inline-block"}>
+                <span className="font-bold text-3xl">{props.user_data.first_name} {props.user_data.last_name}:</span> {props.user_data.gender.charAt(0).toUpperCase() + props.user_data.gender.slice(1)}, {props.user_data.major} Major, {props.user_data.college.toUpperCase()} Class of {props.user_data.graduating_year}
+              </p>
               </div>
-              <div className={"flex-grow ml-5 px-5 py-3 rounded-3xl border-2 border-maroon_new overflow"}>
-                <p className={"w-full"}>
+              <div className={"flex-grow rounded-3xl ml-[5vw] w-[44vw]  border-2 border-maroon_new overflow"}>
+                <p className={"w-full h-full"}>
                   {editable ? (
                             <textarea
                               className={styles.bioTextArea}
                               value={props.editedBio || ''}
                               onChange={handleBioChange}
+                              placeholder="Edit Bio"
                             />
                           ) : (
                             <p>{props.editedBio}</p>
