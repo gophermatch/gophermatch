@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
+import { Link } from "react-router-dom";
 
 export default function Sublease()
 {
@@ -27,7 +28,7 @@ export default function Sublease()
 
   return(
     <div className="h-screen flex flex-col bg-offwhite items-center justify-center font-profile font-semibold">
-      <div className={"overflow-y-auto flex-grow"} style={{
+      <div className={"overflow-y-auto overflow-x-visible flex-grow"} style={{
         WebkitOverflowScrolling: 'touch',
         '&::-webkit-scrollbar': {
           display: 'none'
@@ -38,15 +39,16 @@ export default function Sublease()
         }
       }}>
 
-        <button className={"flex-1 w-[70vw] mt-[4vh] h-[50px] m-auto bg-white rounded-3xl text-lg text-black"}>
-          Add a sublease
-        </button>
+        <Link to={"/createsublease"} color="primary" className={"flex flex-1 w-[70vw] mt-[4vh] h-[50px] m-auto bg-white rounded-3xl text-lg text-black transition-transform duration-500 scale-[98%] hover:scale-100"}>
+          <p className={"m-auto"}>Add a sublease</p>
+        </Link>
         <SubleaseEntry sublease={sampleSublease}/>
         <SubleaseEntry sublease={sampleSublease}/>
         <SubleaseEntry sublease={sampleSublease}/>
         <SubleaseEntry sublease={sampleSublease}/>
         <SubleaseEntry sublease={sampleSublease}/>
         <SubleaseEntry sublease={sampleSublease}/>
+        <br></br>
       </div>
     </div>
   )

@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 
 export default function SubleaseEntry({ sublease }) {
 
+  async function accept() {
+      //TODO: connect to backend route
+  }
+
   return (
-    <div className={"mt-[3vh] h-[30vh] w-[70vw] flex-col items-center justify-center font-profile font-bold bg-cream text-maroon_new rounded-3xl"}>
+    <div
+      className={"mt-[3vh] h-[30vh] w-[70vw] flex-col items-center justify-center font-profile font-bold bg-cream text-maroon_new rounded-3xl scale-100"}>
       <div className={"bg-maroon_new h-[33%] w-full self-start rounded-t-3xl"}>
         <p className={"flex justify-between text-white text-[1.5vw] w-full ml-[1vw] mt-[1vh]"}>
           <span className={"mt-[0.7vh]"}>{sublease.building_name}, ${sublease.rent_amount} per
@@ -33,6 +38,11 @@ export default function SubleaseEntry({ sublease }) {
         <span>Gym</span>
         <span className="font-light">{sublease.has_gym ? "Yes" : "No"}</span>
       </div>
+
+      <button className={"absolute right-0 bottom-0 w-[50px] h-[50px] bg-light_gray"}>
+
+      </button>
+
     </div>
   )
 
