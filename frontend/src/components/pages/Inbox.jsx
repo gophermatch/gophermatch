@@ -67,11 +67,6 @@ export default function Inbox() {
         })();
     }, [updateDep]);
 
-    useEffect(() => {
-        backend.post('/match/mark-seen', {params: {userId: currentUser.user_id}})
-        console.log("Sucess mark-seen")
-    }, [])
-
     function unmatch(profileId) {
         backend.delete('/match/inbox-delete', {params: {
             user1_id: currentUser.user_id,
