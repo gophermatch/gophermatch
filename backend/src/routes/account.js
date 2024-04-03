@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { Router } from 'express';
-import { createUser, deleteUser, getUserData, updateAccountInfo } from "../database/account.js";
+import { changePassword, createUser, deleteUser, getUserData, updateAccountInfo } from "../database/account.js";
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
 import { createBio } from '../database/profile.js';
@@ -98,6 +98,18 @@ router.delete('/', AuthStatusChecker, async (req, res) => {
     }
 })
 
-// TODO: Delete account (and maybe change password(?))
+// Implement this with the email-auth routes
+router.post('/change-pass',  async (req, res) => {
+    const { userEmail, newPassword } = req.body;
+
+    try {
+        const hashpass = await bcrypt.hash(newPassword, saltRounds)
+        await changePassword(userEmail, hashpass);
+        res.json({ success: true, message: 'Password updated successfully.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to update password.' });
+    }
+});
 
 export default router

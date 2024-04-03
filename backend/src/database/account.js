@@ -1,5 +1,5 @@
 import { db, tableNames } from './db.js'
-import { queryRowsToArray, buildSelectString, buildInsertString } from './dbutils.js'
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
 import account from "../routes/account.js";
 
 // Returns a promise that is a user object from the users database, or {} if no user is found
@@ -104,4 +104,23 @@ export async function updateAccountInfo(userdata){
               resolve(res)
           })
     })
+}
+
+// update password (use with email auth routes)
+export async function changePassword(userEmail, hashpass){
+    try {
+        const qr = `UPDATE ${tableNames.users}
+                    SET hashpass = ?
+                    WHERE email = ?;
+                    `;
+
+        // Execute the query to update the hashpass
+        await db.query(qr, [hashpass, userEmail]);
+        // Log the successful update
+        console.log(`Updated hashpass`);
+    } catch (error) {
+        // Log and throw an error if the deletion fails.
+        console.error('Error in changePassword:', error);
+        throw new Error('Failed to update hashpass');
+    }
 }
