@@ -1,5 +1,5 @@
 import { db, tableNames } from './db.js'
-import { queryRowsToArray, buildSelectString, buildInsertString } from './dbutils.js'
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
 import account from "../routes/account.js";
 
 // Returns a promise that is a user object from the users database, or {} if no user is found
@@ -27,29 +27,6 @@ export async function getUser(email) {
             }
         })
     })
-}
-
-export function buildUpdateString(tableName, primaryKey, newValues) {
-    let updateString = `UPDATE ${tableName} SET `;
-    let values = [];
-
-    for (let key in newValues) {
-        updateString += `${key} = ?, `;
-        values.push(newValues[key]);
-    }
-
-    // Remove the trailing comma and space
-    updateString = updateString.slice(0, -2);
-
-    updateString += ` WHERE `;
-    for (let key in primaryKey) {
-        updateString += `${key} = ? AND `;
-        values.push(primaryKey[key]);
-    }
-
-    updateString = updateString.slice(0, -5);
-
-    return { queryString: updateString, values: values };
 }
 
 // Create user acccount with a email and a hashed password
@@ -112,10 +89,20 @@ export async function getUserData(user_id){
 
 export async function updateAccountInfo(userdata, userId){
     console.log(userdata);
-    const primary_key = { user_id: userId }; 
-    const newVals = userdata;
-    const updateQuery = buildUpdateString(tableNames.u_userdata, primary_key, newVals);
+        const filteredNewVals = Object.entries(userdata).reduce((acc, [key, value]) => {
+        if(value !== '') acc[key] = value;
+        return acc;
+    }, {});
+
+    if (Object.keys(filteredNewVals).length === 0) {
+        console.log("No valid data provided for update.");
+        return Promise.resolve("No update performed due to lack of valid data.");
+    }
+
+    const primary_key = { user_id: userId };
+    const updateQuery = buildUpdateString(tableNames.u_userdata, primary_key, filteredNewVals);
     console.log("query: " + updateQuery.queryString);
+
     return new Promise((resolve, reject) => {
         db.query(updateQuery.queryString, updateQuery.values,
           (err, res) => {
