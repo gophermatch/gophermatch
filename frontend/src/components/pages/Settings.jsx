@@ -8,11 +8,12 @@ export default function Settings() {
     const [editKey, setEditKey] = useState(null);
     const [editValues, setEditValues] = useState({});
     const [isEdited, setIsEdited] = useState(false);
+    const [userID, setUserID] = useState(currentUser.user_id);
 
     const fetchUserInfo = async () => {
         try {
             const response = await backend.get('/account/fetch', {
-                params: { user_id: currentUser.user_id }
+                params: { user_id: userID }
             });
             if (response.status === 200) {
                 const data = response.data.data;
@@ -50,7 +51,7 @@ export default function Settings() {
             case 'housing_preference':
                 return 'Housing Preference';
             case 'graduating_year':
-                return 'Graduation Year'
+                return 'Graduation Year';
             case 'gender':
                 return 'Gender';
             case 'contact_email':
@@ -65,6 +66,20 @@ export default function Settings() {
                 return key;
         }
     }
+    const saveUserInfo = async () => {
+        try {
+            console.log('In try block')
+            const response = await backend.post('/account/update', {
+                userId: userID,
+                ...editValues,
+            });
+            console.log('Account information successfully updated')
+        }
+        catch (error) {
+            console.log('Error saving user data:', error)
+        }
+    }
+        
 
     const handleInputChange = (key, value) => {
         setEditValues(prevValues => ({
@@ -77,11 +92,11 @@ export default function Settings() {
     const handleSaveChangesClick = async () => {
         setEditMode(false);
         setIsEdited(false);
-        // Save changes using editValues
+        saveUserInfo();
     }
 
     const handleEditClick = (key) => {
-        setEditKey(key); // Update editKey when clicking on an input field
+        setEditKey(key);
         setEditMode(true);
     };
 

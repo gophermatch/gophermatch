@@ -29,6 +29,29 @@ export async function getUser(email) {
     })
 }
 
+export function buildUpdateString(tableName, primaryKey, newValues) {
+    let updateString = `UPDATE ${tableName} SET `;
+    let values = [];
+
+    for (let key in newValues) {
+        updateString += `${key} = ?, `;
+        values.push(newValues[key]);
+    }
+
+    // Remove the trailing comma and space
+    updateString = updateString.slice(0, -2);
+
+    updateString += ` WHERE `;
+    for (let key in primaryKey) {
+        updateString += `${key} = ? AND `;
+        values.push(primaryKey[key]);
+    }
+
+    updateString = updateString.slice(0, -5);
+
+    return { queryString: updateString, values: values };
+}
+
 // Create user acccount with a email and a hashed password
 export async function createUser(email, hashpass) {
     return new Promise(async (resolve, reject) => {
