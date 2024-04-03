@@ -69,6 +69,7 @@ export default function Inbox() {
 
     useEffect(() => {
         backend.post('/match/mark-seen', {params: {userId: currentUser.user_id}})
+        console.log("Sucess mark-seen")
     }, [])
 
     function unmatch(profileId) {

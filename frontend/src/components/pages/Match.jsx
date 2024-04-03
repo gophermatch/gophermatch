@@ -85,7 +85,7 @@ export default function Match() {
                       className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
                   <p className={"text-gold"}>X</p>
               </button>
-              <button onClick={() => goToNext("save")}
+              <button onClick={() => goToNext("unsure")}
                        className="w-[8vh] h-[8vh] bg-offwhite border-black border-[1px] rounded-full text-center align-middle text-white font-bold hover:bg-slate-300 shadow-md">💾</button>
               <button onClick={() => goToNext("match")}
                       className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">
