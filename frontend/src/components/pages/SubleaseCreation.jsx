@@ -69,6 +69,7 @@ export default function SubleaseCreation()
 
   return (
     <div className="max-w-lg mx-auto">
+      <br></br>
       <h2 className="text-xl font-semibold mb-4">Sublease Form</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4 flex">
