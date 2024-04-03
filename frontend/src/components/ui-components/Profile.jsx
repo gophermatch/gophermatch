@@ -85,7 +85,7 @@ export default function Profile(props) {
               </p>
               </div>
               <div className={"flex-grow rounded-3xl w-[41.5vw] ml-[2vw] mt-[8vh] border-2 border-maroon_new overflow"}>
-                <p className={"w-full h-full ml-[1vw]"}>
+                <p className={"w-full h-full"}>
                   {editable ? (
                             <textarea
                             className={`${styles.bioTextArea} ${editable ? 'w-full h-full' : ''}`}
@@ -94,8 +94,8 @@ export default function Profile(props) {
                               placeholder="Edit Bio"
                             />
                           ) : (
-                            <p>{props.editedBio}</p>
-                          )}
+                            <p className={`${styles.bioTextArea}`}>{props.editedBio}</p>
+                            )}
                 </p>
               </div>
             </div>
