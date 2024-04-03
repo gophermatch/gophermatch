@@ -19,7 +19,7 @@ export default function Settings() {
                 const data = response.data.data;
                 const filteredData = Object.entries(data).filter(([key, value]) => key !== 'user_id' && key !== 'hear_about_us' && key !== 'date_of_birth');
                 setUserInfo(filteredData);
-                setEditValues(Object.fromEntries(filteredData.map(([key, value]) => [key, ""])));
+                setEditValues(Object.fromEntries(filteredData.map(([key, value]) => [key, value])));
                 console.log(userInfo);
                 return data;
             } else {
@@ -79,7 +79,6 @@ export default function Settings() {
             console.log('Error saving user data:', error)
         }
     }
-        
 
     const handleInputChange = (key, value) => {
         setEditValues(prevValues => ({
@@ -130,7 +129,7 @@ export default function Settings() {
                             <div className="flex justify-start items-center text-black text-xl">
                                 {key === 'college' ? (
                                     <select
-                                        value={editMode && editKey === key ? editValues[key] : value}
+                                        value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
                                         className="bg-gray-200 p-1 rounded-md w-full"
@@ -141,7 +140,7 @@ export default function Settings() {
                                     </select>
                                 ) : key === 'graduating_year' ? (
                                     <select
-                                        value={editMode && editKey === key ? editValues[key] : value}
+                                        value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
                                         className="bg-gray-200 p-1 rounded-md w-full"
@@ -152,7 +151,7 @@ export default function Settings() {
                                     </select>
                                 ) : key === 'gender' ? (
                                     <select
-                                        value={editMode && editKey === key ? editValues[key] : value}
+                                        value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
                                         className="bg-gray-200 p-1 rounded-md w-full"
@@ -163,7 +162,7 @@ export default function Settings() {
                                     </select>
                                 ) : key === 'housing_preference' ? (
                                     <select
-                                        value={editMode && editKey === key ? editValues[key] : value}
+                                        value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
                                         className="bg-gray-200 p-1 rounded-md w-full"
@@ -172,28 +171,21 @@ export default function Settings() {
                                             <option key={index} value={pref}>{pref}</option>
                                         ))}
                                     </select>
-                                ) : key === 'major' ? (
-                                    <input
-                                        type="text"
-                                        value={editMode && editKey === key ? editValues[key] : value}
-                                        onChange={(e) => handleInputChange(key, e.target.value)}
-                                        onClick={() => handleEditClick(key)} // Set editKey when clicking on an input field
-                                        className="bg-gray-200 p-1 rounded-md w-full"
-                                    />
                                 ) : (
                                     <input
                                         type="text"
-                                        value={editMode && editKey === key ? editValues[key] : value}
+                                        value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
-                                        onClick={() => handleEditClick(key)} // Set editKey when clicking on an input field
+                                        onClick={() => handleEditClick(key)}
                                         className="bg-gray-200 p-1 rounded-md w-full"
-                                    />
-                                )}
+                                        />
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
+    
