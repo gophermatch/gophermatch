@@ -104,10 +104,10 @@ export default function Profile(props) {
             <div className={"flex-1 flex-col h-[16.6vh] m-[5%] mt-[10vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[1.2vw]"}>
               {qnaItems.slice(0,3)}
             </div>
-            <div className={"flex-1 flex-col flex h-[21vh] mt-[8vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[1.2vw]"}>
+            <div className={"flex-1 flex-col flex h-[21vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[1.2vw]"}>
               {qnaItems.slice(3,7)}
             </div>
-            <div className={"flex-1 m-[5%] mx-0 mb-0 pt-[1vh] h-[21vh] mt-[8vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[1.2vw]"}>
+            <div className={"flex-1 m-[5%] mx-0 mb-0 pt-[1vh] h-[21vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[1.2vw]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
             </div>
           </div>
