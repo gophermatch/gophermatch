@@ -134,7 +134,7 @@ router.get('/inbox-notif', async (req, res) => {
 
 // Call this when a user clicks on inbox to set all unseen new matches to seen
 router.post('/mark-seen', async (req, res) => {
-    const {userId} = req.body;
+    const {userId} = req.query;
     if (!userId) {
         return res.status(400).send('User ID is required');
     }
