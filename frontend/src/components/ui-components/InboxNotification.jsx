@@ -31,6 +31,7 @@ const InboxNotification = ({ inboxClicked }) => {
         try {
             await backend.post('/match/mark-seen', { userId: currentUser.user_id });
             setUnseenMatches(0);
+            inboxClicked && inboxClicked(true); // Set inboxClicked to true
         } catch (error) {
             console.error('Failed to mark matches as seen:', error);
         }
