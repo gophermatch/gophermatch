@@ -121,7 +121,7 @@ const PicUpload = () => {
     
 
     return (
-        <div className="h-screen w-screen bg-doc flex justify-center items-center">
+        <div className="h-screen w-screen bg-offwhite flex justify-center items-center">
             <div
               className="bg-white rounded-[1.5rem] pt-[16rem] pb-[16rem] pl-[40rem] pr-[10rem] mr-[15rem] shadow-lg relative">
                 <div

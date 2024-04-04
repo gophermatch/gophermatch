@@ -48,9 +48,9 @@ export default function Profile(props) {
     return null;
   };
 
-  const qnaItems = qnaData.map((item) => (
-    <div key={item.id} className={"flex w-full pl-5 pr-5 border-b"}>
-      <p className={"flex-1"}>{item.question}</p>
+  const qnaItems = qnaData.map((item, index) => (
+    <div key={item.id} className={`flex w-full pl-5 pr-5 border-b ${index !== qnaData.length - 1 ? 'mb-2' : ''} ${index === 0 ? 'mt-2' : ''} ${index === 3 ? 'mt-2' : ''} ${index===6 ? 'border-b-0' : ''} ${index===2 ? 'border-b-0' : ''}`} style={{ minHeight: '1rem' }}>
+      <p className="flex-1 flex items-center" style={{ lineHeight: '2' }}>{item.question}</p>
       {editable ? (
         <select
           className={"text-right"}
@@ -64,47 +64,50 @@ export default function Profile(props) {
           ))}
         </select>
       ) : (
-        <p className={"truncate"}>
+        <p className="truncate whitespace-nowrap">
           {item.options.find(o => o.option_id === getSelectedOptionId(item.id))?.text || 'N/A'}
         </p>
       )}
     </div>
-  ));
+  ));         
 
   return (
       <div className={"m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
-        <div className={"m-auto w-full flex flex-col p-[1.5vw] h-[75vh] bg-white rounded-3xl overflow-hidden"}>
-          <div className={"flex h-[27.25vh]"}>
-            <div className={"w-[12vw] bg-white rounded-3xl"}>
+        <div className={"w-full flex flex-col  h-[70vh] mb-[6vh] bg-white rounded-3xl overflow-hidden"}>
+          <div className={"flex h-[35vh] "}>
+            <div className={"w-[18vw] h-[20vh] bg-white rounded-3xl mt-[4vh] ml-[4vh]"}>
               <Carousel pictureUrls={pictureUrls} editable={editable}></Carousel>
             </div>
             <div className={"flex-grow flex flex-col bg-white"}>
-              <div className={"pl-10 h-10"}>
-                <p className={"text-[1.33vw] inline-block"}>{props.user_data.first_name} {props.user_data.last_name}, {props.user_data.gender.charAt(0).toUpperCase() + props.user_data.gender.slice(1)}, {props.user_data.major} Major, {props.user_data.college.toUpperCase()} Class of {props.user_data.graduating_year}</p>
+              <div className={"h-10"}>
+              <p className={"text-[1.33vw] mt-[6vh] inline-block"}>
+                <span className="font-bold ml-[2vw] text-3xl">{props.user_data.first_name} {props.user_data.last_name}:</span> {props.user_data.gender.charAt(0).toUpperCase() + props.user_data.gender.slice(1)}, {props.user_data.major} Major, {props.user_data.college.toUpperCase()} Class of {props.user_data.graduating_year}
+              </p>
               </div>
-              <div className={"flex-grow ml-5 px-5 py-3 rounded-3xl border-2 border-maroon_new overflow"}>
-                <p className={"w-full"}>
+              <div className={"flex-grow rounded-3xl w-[41.5vw] ml-[2vw] mt-[8vh] border-2 border-maroon_new overflow"}>
+                <p className={"w-full h-full"}>
                   {editable ? (
                             <textarea
-                              className={styles.bioTextArea}
-                              value={props.editedBio || ''}
+                            className={`${styles.bioTextArea} ${editable ? 'w-full h-full' : ''}`}
+                            value={props.editedBio || ''}
                               onChange={handleBioChange}
+                              placeholder="Edit Bio"
                             />
                           ) : (
-                            <p>{props.editedBio}</p>
-                          )}
+                            <p className={`${styles.bioTextArea}`}>{props.editedBio}</p>
+                            )}
                 </p>
               </div>
             </div>
           </div>
           <div className={"flex flex-grow"}>
-            <div className={"flex-1 flex-col m-[5%] ml-0 mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[1.2vw]"}>
-              {qnaItems.slice(0,7)}
+            <div className={"flex-1 flex-col h-[16.6vh] m-[5%] mt-[10vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[1.2vw]"}>
+              {qnaItems.slice(0,3)}
             </div>
-            <div className={"flex-1 flex-col flex m-[5%] ml-0 mb-0 rounded-3xl border-2 border-maroon_new overflow-hidden truncate text-[1.2vw]"}>
-              {qnaItems.slice(8,15)}
+            <div className={"flex-1 flex-col flex h-[21vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[1.2vw]"}>
+              {qnaItems.slice(3,7)}
             </div>
-            <div className={"flex-1 m-[5%] mx-0 mb-0 pt-[1vh] rounded-3xl border-2 border-maroon_new text-[1.2vw]"}>
+            <div className={"flex-1 m-[5%] mx-0 mb-0 pt-[1vh] h-[21vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[1.2vw]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
             </div>
           </div>

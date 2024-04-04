@@ -62,7 +62,7 @@
       "question": "Room Activity?",
       "options": [
         {"option_id": 29, "text": "Empty"},
-        {"option_id": 30, "text": "Couple Friends"},
+        {"option_id": 30, "text": "Friends"},
         {"option_id": 31, "text": "Party"}
       ]
     },
