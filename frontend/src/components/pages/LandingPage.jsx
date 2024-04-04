@@ -19,12 +19,11 @@ const LandingPage = () => {
         <header className="text-maroon mt-[30vh] text-[12.5vh] font-lora">
           <span className="font-bold ml-[5vw]">GopherMatch</span>
           <p className="text-[5vh] mt-[2vh] ml-[5vw]">University of Minnesota Roommate Finder</p>
-            <a href="/landing/go-to-signup" className="text-maroon flex items-center">
-              <p className="text-[3vh] text-maroon ml-[5vw] mt-[2vh] hover:text-gold">Get started</p>
-              <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" className="text-maroon mt-5 ml-2">
-                <path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z" fill="currentColor" className="hover:text-gold" />
-              </svg>
-            </span>
+          <Link to="/landing/go-to-signup" className="text-maroon flex items-center">
+            <p className="text-[3vh] text-maroon ml-[5vw] mt-[2vh] hover:text-gold">Get started</p>
+            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" className="text-maroon mt-5 ml-2">
+              <path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z" fill="currentColor" className="hover:text-gold" />
+            </svg>
           </Link>
         </header>
         <div className="flex justify-start items-center h-screen flex-grow max-w-md">
