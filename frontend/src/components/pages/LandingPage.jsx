@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styles from '../../assets/css/signin.module.css';
 
 const LandingPage = () => {
   return (
@@ -23,17 +24,14 @@ const LandingPage = () => {
               <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" className="text-maroon mt-5 ml-2">
                 <path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z" fill="currentColor" className="hover:text-gold" />
               </svg>
-            </a>
+            </span>
+          </Link>
         </header>
         <div className="flex justify-start items-center h-screen flex-grow max-w-md">
           <img src="/assets/images/logo.png" alt="Description of the image" className="w-[20vw] h-auto ml-[10vw] mb-[10vh]" />
         </div>
       </div>
       <div className="bg-maroon h-[10vh] justify-end space-x-4 mt-auto fixed bottom-0 left-0 w-full"></div>
-
-
- 
-      
     </>
   );
 };

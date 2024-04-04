@@ -25,6 +25,7 @@ router.post('/', async (req, res) => {
     try {
         // hash the password
         const hashpass = await bcrypt.hash(password, saltRounds)
+        console.log(hashpass)
         // create the user
         const user = await createUser(email, hashpass)
 
@@ -96,6 +97,33 @@ router.delete('/', AuthStatusChecker, async (req, res) => {
         res.status(400).json(createErrorObj(e))
     }
 })
+
+router.get('/userdata', async (req, res) => {
+    try {
+        const {userId} = req.body;
+        if (!userId) {
+            return res.status(400).send('User ID is required');
+        }
+
+        const userdata = await getUserData(userId);
+        res.json(userdata);
+    } catch (error) {
+        res.status(500).send('Failed to get user data');
+    }
+});
+
+router.post('/update', async (req, res) => {
+    const { userId, ...userdata } = req.body; // Destructure userId from the request body and capture the rest as userdata
+    try {
+        if (!userId) throw new Error("userId is required");
+        await updateAccountInfo(userdata, userId);
+        res.status(200).json({message: "Account information updated successfully!"});
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({error: error.toString(), message: "Failed to update account information"});
+    }
+});
+
 
 // TODO: Delete account (and maybe change password(?))
 

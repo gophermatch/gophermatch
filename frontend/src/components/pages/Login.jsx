@@ -64,10 +64,10 @@ export default function Login() {
         <div>
         <div className="bg-maroon h-[10vh] space-x-4 mt-auto">
             <div className="flex justify-start items-start w-full">
-                <p className="text-doc font-lora text-[5vh] ml-[1vw] mt-[1vh]">GopherMatch</p>
+                <Link to="/landing" className="text-doc font-lora text-[5vh] ml-[1vw] mt-[1vh]">GopherMatch</Link>
             </div>
         </div>
-        <div className="bg-doc w-screen h-screen flex flex-col font-lora">
+        <div className="bg-offwhite w-screen h-screen flex flex-col font-lora">
             <div className="flex flex-col justify-center items-center w-screen text-maroon">
                 <h1 className="text-maroon font-lora text-[10vh] mt-[10vh]">Login</h1>
                 <div className="flex flex-col items-center justify-center text-[3vh] mt-[5vh] relative">

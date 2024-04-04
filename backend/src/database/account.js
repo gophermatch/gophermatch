@@ -1,5 +1,5 @@
 import { db, tableNames } from './db.js'
-import { queryRowsToArray, buildSelectString, buildInsertString } from './dbutils.js'
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
 import account from "../routes/account.js";
 
 // Returns a promise that is a user object from the users database, or {} if no user is found
@@ -32,7 +32,7 @@ export async function getUser(email) {
 // Create user acccount with a email and a hashed password
 export async function createUser(email, hashpass) {
     return new Promise(async (resolve, reject) => {
-        const userobj = {email: email, hashpass: hashpass}
+        const userobj = {email: email, hashpass: hashpass, is_verified: 1}
         const qr = buildInsertString(tableNames.users, userobj)
 
         db.query(qr.queryString, qr.values, (err, res) => {
@@ -87,21 +87,30 @@ export async function getUserData(user_id){
     });
 }
 
-export async function updateAccountInfo(userdata){
+export async function updateAccountInfo(userdata, userId){
     console.log(userdata);
+        const filteredNewVals = Object.entries(userdata).reduce((acc, [key, value]) => {
+        if(value !== '') acc[key] = value;
+        return acc;
+    }, {});
 
-    const insertQuery = buildInsertString(tableNames.u_userdata, userdata);
+    if (Object.keys(filteredNewVals).length === 0) {
+        console.log("No valid data provided for update.");
+        return Promise.resolve("No update performed due to lack of valid data.");
+    }
 
-    console.log("query: " + insertQuery.queryString);
+    const primary_key = { user_id: userId };
+    const updateQuery = buildUpdateString(tableNames.u_userdata, primary_key, filteredNewVals);
+    console.log("query: " + updateQuery.queryString);
 
     return new Promise((resolve, reject) => {
-        db.query(insertQuery.queryString, insertQuery.values,
+        db.query(updateQuery.queryString, updateQuery.values,
           (err, res) => {
               if (err) {
-                  reject(err)
-                  return
+                  reject(err);
+                  return;
               }
-              resolve(res)
+              resolve(res);
           })
-    })
+    });
 }

@@ -70,6 +70,11 @@ class User {
     get user_data(){
         return this.#user_data;
     }
+
+    set user_data(data){
+        this.#account_created = true;
+        this.#user_data = data;
+    }
 }
 
 const currentUser = new User()

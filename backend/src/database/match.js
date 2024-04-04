@@ -1,15 +1,7 @@
 // Assuming the existence of a database module for executing queries
 import { db , tableNames} from './db.js'; // Your database connection setup
-import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
 
-
-/**
- * Records a user's decision about another user and checks for a mutual match.
- * @param {number} user1Id - ID of the user making the decision.
- * @param {number} user2Id - ID of the user being evaluated.
- * @param {string} decision - The decision made ('match', 'reject', 'unsure').
- * @returns {Promise<{matchFound: boolean, message: string}>} - A promise that resolves to the outcome of the operation.
- */
 export async function recordUserDecision(user1Id, user2Id, decision) {
     try {
         // SQL query to insert or update the decision in the database.
@@ -25,8 +17,10 @@ export async function recordUserDecision(user1Id, user2Id, decision) {
         // Check if a reciprocal match exists.
         const result = await checkMatch(user1Id, user2Id);
         // If both users have matched with each other, return a match found response.
+        const user1_id = Math.min(user1Id, user2Id);
+        const user2_id = Math.max(user1Id, user2Id);
         if (decision === 'match' && result.length > 0) {
-            handleReciprocalMatch(user1Id, user2Id);
+            handleReciprocalMatch(user1_id, user2_id);
             return { matchFound: true, message: "It's a match!" };
         }
         // Otherwise, indicate that the decision has been recorded and waiting for the other user.
@@ -37,36 +31,6 @@ export async function recordUserDecision(user1Id, user2Id, decision) {
         console.error('Error in recordUserDecision:', error);
         throw new Error('Failed to record user decision');
     }
-}
-
-// Function to get user_ids based on filters for gender and college
-export async function getFilterResults(filters) {
-    return new Promise((resolve, reject) => {
-        // Construct where clause based on provided filters
-        // We only include filters that are not empty strings
-        const whereClause = Object.keys(filters).reduce((acc, key) => {
-            if (filters[key] !== '') {
-                acc[key] = filters[key];
-            }
-            return acc;
-        }, {});
-
-        // Build the SQL query string
-        const { queryString, values } = buildSelectString("user_id", tableNames.u_userdata, whereClause);
-
-        // Execute the query
-        db.query(queryString, values, (err, rows) => {
-            if (err) {
-                console.error("Error querying filter results from database:", err);
-                reject(err);
-                return;
-            }
-
-            // Extract user_id from each row and return an array of user_ids
-            const userIds = rows.map(row => row.user_id);
-            resolve(userIds);
-        });
-    });
 }
 
 // Function to check if two users have mutually liked each other.
@@ -108,6 +72,85 @@ async function handleReciprocalMatch(user1Id, user2Id) {
         console.error('Error in handleReciprocalMatch:', error);
         throw new Error('Failed to handle reciprocal match');
     }
+}
+
+export async function getFilterResults(filters) {
+    return new Promise((resolve, reject) => {
+        // Check if any filters are provided
+        const hasFilters = Object.values(filters).some(value => value !== '');
+
+        let queryString, values;
+
+        if (!hasFilters) {
+            // If no filters are provided, select all user_ids from u_userdata
+            queryString = `SELECT DISTINCT user_id FROM ${tableNames.u_userdata}`;
+            values = [];
+        } else {
+            // Construct where clause based on provided filters
+            const whereClause = Object.keys(filters).reduce((acc, key) => {
+                if (filters[key] !== '') {
+                    acc[key] = filters[key];
+                }
+                return acc;
+            }, {});
+
+            const queryResult = buildSelectString("user_id", tableNames.u_userdata, whereClause);
+            queryString = queryResult.queryString;
+            values = queryResult.values;
+        }
+
+        db.query(queryString, values, (err, rows) => {
+            if (err) {
+                console.error("Error querying filter results from database:", err);
+                reject(err);
+                return;
+            }
+
+            // Extract user_id from each row and return an array of user_ids
+            const userIds = rows.map(row => row.user_id);
+            resolve(userIds);
+        });
+    });
+}
+
+export async function getFilterResultsQna(optionIds) {
+    return new Promise((resolve, reject) => {
+        // If no optionIds provided, select all user_ids without any conditions
+        if (!optionIds || optionIds.length === 0) {
+            db.query(`SELECT DISTINCT user_id FROM u_qna`, [], (err, rows) => {
+                if (err) {
+                    console.error("Error querying all user_ids from u_qna:", err);
+                    reject(err);
+                    return;
+                }
+                const userIds = rows.map(row => row.user_id);
+                resolve(userIds);
+            });
+            return;
+        }
+
+        const placeholders = optionIds.map(() => '?').join(',');
+        let queryString = `SELECT user_id FROM u_qna WHERE option_id IN (${placeholders})`;
+
+        queryString += ` GROUP BY user_id`;
+
+        // If more than one optionId is provided, ensure users match all specified options
+        if (optionIds.length > 1) {
+            queryString += ` HAVING COUNT(DISTINCT option_id) = ${optionIds.length}`;
+        }
+
+        db.query(queryString, optionIds, (err, rows) => {
+            if (err) {
+                console.error("Error querying filter results from u_qna:", err);
+                reject(err);
+                return;
+            }
+
+            // Extract user_id from each row and return an array of user_ids
+            const userIds = rows.map(row => row.user_id);
+            resolve(userIds);
+        });
+    });
 }
 
 // Function to retrieve all user IDs that a specified user has marked as 'unsure'.
@@ -155,6 +198,28 @@ export async function deleteMatchDecision(userId, matchUserId, decision) {
     }
 }
 
+export async function deleteInboxMatch(user1Id, user2Id) {
+    try {
+        const USER1 = Math.min(user1Id, user2Id);
+        const USER2 = Math.max(user1Id, user2Id);
+        const { queryString, values } = buildDeleteString(tableNames.u_inboxt, {
+            user1_id: USER1,
+            user2_id: USER2,
+        });
+
+        // Execute the query to delete the specified decision.
+        await db.query(queryString, values);
+        deleteMatchDecision(user1Id, user2Id, "match");
+        // Log the successful deletion.
+        console.log(`Deleted inbox match for user1_id=${user1Id} and user2_id=${user2Id}.`);
+
+    } catch (error) {
+        // Log and throw an error if the deletion fails.
+        console.error('Error in deleteMatchDecision:', error);
+        throw new Error('Failed to delete match decision');
+    }
+}
+
 export async function retrieveUserMatches(userId) {
     return new Promise((resolve, reject) => {
         const query = `
@@ -188,5 +253,50 @@ export async function retrieveUserMatches(userId) {
     });
 }
 
+export async function getUserUnseenMatches(userId) {
+    return new Promise((resolve, reject) => {
+        const getUnseenMatchesQuery = `
+            SELECT * FROM ${tableNames.u_inboxt}
+            WHERE (user1_id = ? AND user1_is_seen = 0) 
+               OR (user2_id = ? AND user2_is_seen = 0);
+        `;
+  
+        // Execute the query to get all unseen matches
+        db.query(getUnseenMatchesQuery, [userId, userId], (err, rows) => {
+            if (err) {
+                // Log and reject the promise if there's an error
+                console.error("Error fetching user IDs from database:", err);
+                reject(err);
+                return;
+            }
+  
+            // Extract match_id from each row and return an array
+            const unseenMatches = rows.map(row => row.match_id);
+            resolve(unseenMatches);
+        });
+    });
+}
 
+export async function markUserMatchesAsSeen(userId) {
+    return new Promise((resolve, reject) => {
+        const markAsSeenQuery = `
+            UPDATE ${tableNames.u_inboxt}
+            SET user1_is_seen = CASE WHEN user1_id = ? THEN 1 ELSE user1_is_seen END,
+                user2_is_seen = CASE WHEN user2_id = ? THEN 1 ELSE user2_is_seen END
+            WHERE user1_id = ? OR user2_id = ?;
+        `;
 
+        // Execute the query to mark all matches as seen
+        db.query(markAsSeenQuery, [userId, userId, userId, userId], (err) => {
+            if (err) {
+                // Log and reject the promise if there's an error
+                console.error("Error updating matches as seen in database:", err);
+                reject(err);
+                return;
+            }
+
+            // If the update is successful, resolve the promise
+            resolve();
+        });
+    });
+}

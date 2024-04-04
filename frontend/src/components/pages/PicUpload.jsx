@@ -1,42 +1,75 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import backend from "../../backend.js";
 import currentUser from '../../currentUser';
 
 
 const PicUpload = () => {
-    const [file, setFile] = useState(null);
     const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
+    const [status, setStatusValue] = useState("");
+
+    const setStatus = (newValue) => {
+        // TODO: A fade out on the status would be nice here
+        setStatusValue(newValue);
+    };
 
     useEffect(() => {
-        const fetchPictureUrls = async () => {
-            try {
-                const response = await backend.get("/profile/user-pictures", {
-                    params: {user_id: currentUser.user_id}, 
-                    withCredentials: true,
-
-                });
-                if (response) {
-                    const data = response.data;
-
-                    const newArray = [];
-
-                    for (let i = 0; i < Math.max(data.pictureUrls.length, 3); i++) {
-                        newArray[i] = data.pictureUrls[i];
-                    }
-                    setPictureUrls(newArray)
-                } else {
-                    throw new Error("Failed to fetch picture URLs");
-                }
-            } catch (error) {
-                console.error("Error fetching picture URLs:", error);
-            }
-        };
-
         fetchPictureUrls();
     }, []);
 
-    const updatePictureUrl = async (file, i) => {
+    const fetchPictureUrls = async () => {
+        try {
+            const response = await backend.get("/profile/user-pictures", {
+                params: {user_id: currentUser.user_id},
+                withCredentials: true,
+            });
+            if (response) {
+
+                console.log(response);
+
+                const data = response.data;
+
+                const newArray = [];
+
+                for (let i = 0; i < 3; i++) {
+                    if(data.pictureUrls.length <= i){
+                        newArray[i] = "";
+                    }else{
+                        newArray[i] = data.pictureUrls[i];
+                    }
+                }
+                setPictureUrls(newArray)
+            } else {
+                throw new Error("Failed to fetch picture URLs");
+            }
+        } catch (error) {
+            console.error("Error fetching picture URLs:", error);
+        }
+    };
+
+    const handleRemovePic = async (i) => {
+        try {
+            const response = await backend.delete('/profile/remove-picture', {
+                params: {user_id: currentUser.user_id, pic_number: i},
+                withCredentials: true,
+            });
+
+            setStatus('Profile pictured successfully removed!');
+            console.log(response);
+
+            console.log("Changing picture urls");
+        } catch (error) {
+            console.error('Error removing file:', error);
+            setStatus('Failed to remove profile picture. Please try again later.');
+        }
+
+        //TODO: might be bad practice, but fixes for now
+        await new Promise(resolve => setTimeout(resolve, 50));
+
+        await fetchPictureUrls();
+    }
+
+    const uploadFile = async (file, i) => {
 
         console.log(file);
 
@@ -51,19 +84,15 @@ const PicUpload = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            alert('File uploaded successfully');
+            setStatus('Profile picture uploaded successfully!');
             console.log(response.data);
 
             console.log("Changing picture urls");
-            console.log(pictureUrls);
-            setPictureUrls(prevUrls => {
-                const newUrls = [...prevUrls];
-                newUrls[i] = response.data.pictureUrl;
-                return newUrls;
-            });
+
+            await fetchPictureUrls();
         } catch (error) {
             console.error('Error uploading file:', error);
-            alert('Failed to upload file.');
+            setStatus('Failed to upload picture. Please try again later.');
         }
     };
     
@@ -77,16 +106,15 @@ const PicUpload = () => {
             console.log(file);
             const firstEmptyIndex = pictureUrls.findIndex(url => url==="");
             if (firstEmptyIndex !== -1) {
-                updatePictureUrl(file, firstEmptyIndex);
+                uploadFile(file, firstEmptyIndex);
             } else {
                 console.log(pictureUrls)
                 console.error("No empty photo slots available");
+                setStatus("No empty photo slots available! Please remove one before uploading.");
                 break;
             }
         }
     };
-    
-
 
     const handleDoneClick = async () => {
     };
@@ -118,14 +146,32 @@ const PicUpload = () => {
                 >
                     <span className="text-white w-[5vw] h-[4vh] text-[2.5vh] ml-[1vw]">Done</span>
                 </Link>
-                <div className="absolute top-[4%] left-[20%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center">
-                    {pictureUrls[0] && <img src={pictureUrls[0]} alt="Profile 1" className="w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
+                <div
+                  className="absolute top-[4%] left-[20%] w-[8rem] h-[8rem] bg-inactive_gray rounded-[1rem] flex justify-center items-center">
+                    {pictureUrls[0] && <img src={pictureUrls[0]} alt="Profile 1"
+                                            className="w-[8rem] h-[8rem] object-cover rounded-[1rem]" />}
+                    {pictureUrls[0] && <button onClick={() => handleRemovePic(0)}
+                                               className="absolute font-bold text-white bg-black bg-opacity-20 w-[25px] h-[25px] rounded-full transition duration-200 hover:bg-opacity-50">
+                        X
+                    </button>}
                 </div>
-                <div className="absolute top-[4%] left-[40%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center">
-                    {pictureUrls[1] && <img src={pictureUrls[1]} alt="Profile 2" className="w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
+                <div
+                  className="absolute top-[4%] left-[40%] w-[8rem] h-[8rem] bg-inactive_gray rounded-[1rem] flex justify-center items-center">
+                    {pictureUrls[1] && <img src={pictureUrls[1]} alt="Profile 2"
+                                            className="w-[8rem] h-[8rem] object-cover rounded-[1rem]" />}
+                    {pictureUrls[1] && <button onClick={() => handleRemovePic(1)}
+                                               className="absolute font-bold text-white bg-black bg-opacity-20 w-[25px] h-[25px] rounded-full transition duration-200 hover:bg-opacity-50">
+                        X
+                    </button>}
                 </div>
-                <div className="absolute top-[4%] left-[60%] w-[8rem] h-[8rem] bg-gray-200 rounded-[1rem] flex justify-center items-center">
-                    {pictureUrls[2] && <img src={pictureUrls[2]} alt="Profile 3" className="w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
+                <div
+                  className="absolute top-[4%] left-[60%] w-[8rem] h-[8rem] bg-inactive_gray rounded-[1rem] flex justify-center items-center">
+                    {pictureUrls[2] && <img src={pictureUrls[2]} alt="Profile 3"
+                                            className="w-[8rem] h-[8rem] object-cover rounded-[1rem]" />}
+                    {pictureUrls[2] && <button onClick={() => handleRemovePic(2)}
+                                               className="absolute font-bold text-white bg-black bg-opacity-20 w-[25px] h-[25px] rounded-full transition duration-200 hover:bg-opacity-50">
+                        X
+                    </button>}
                 </div>
             </div>
         </div>
