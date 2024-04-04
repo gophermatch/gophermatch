@@ -2,14 +2,6 @@
 import { db , tableNames} from './db.js'; // Your database connection setup
 import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
 
-
-/**
- * Records a user's decision about another user and checks for a mutual match.
- * @param {number} user1Id - ID of the user making the decision.
- * @param {number} user2Id - ID of the user being evaluated.
- * @param {string} decision - The decision made ('match', 'reject', 'unsure').
- * @returns {Promise<{matchFound: boolean, message: string}>} - A promise that resolves to the outcome of the operation.
- */
 export async function recordUserDecision(user1Id, user2Id, decision) {
     try {
         // SQL query to insert or update the decision in the database.
@@ -38,6 +30,47 @@ export async function recordUserDecision(user1Id, user2Id, decision) {
         // Log and throw an error if any part of the process fails.
         console.error('Error in recordUserDecision:', error);
         throw new Error('Failed to record user decision');
+    }
+}
+
+// Function to check if two users have mutually liked each other.
+async function checkMatch(user1Id, user2Id) {
+    return new Promise((resolve, reject) => {
+        const { queryString, values } = buildSelectString("match_status", tableNames.u_matches, {
+            user_id: user2Id,
+            match_user_id: user1Id,
+            match_status: 'match'
+        });
+
+        // Execute the query to find if there's a match.
+        db.query(queryString, values, (err, results) => {
+            if (err) {
+                // Log and reject the promise if there's an error.
+                console.error("Error fetching match status from database:", err);
+                reject(err);
+                return;
+            }
+            // Resolve the promise with the results of the query.
+            resolve(results);
+        });
+    });
+}
+
+async function handleReciprocalMatch(user1Id, user2Id) {
+    try {
+        // SQL query to insert the match.
+        const insertMatchQuery = `
+            INSERT INTO ${tableNames.u_inboxt} (user1_id, user2_id)
+            VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE match_timestamp = VALUES(match_timestamp);
+        `;
+        // Execute the query.
+        await db.query(insertMatchQuery, [user1Id, user2Id]);
+        
+        // Additional logic here (e.g., notifying users of the match).
+    } catch (error) {
+        console.error('Error in handleReciprocalMatch:', error);
+        throw new Error('Failed to handle reciprocal match');
     }
 }
 
@@ -80,8 +113,6 @@ export async function getFilterResults(filters) {
     });
 }
 
-
-
 export async function getFilterResultsQna(optionIds) {
     return new Promise((resolve, reject) => {
         // If no optionIds provided, select all user_ids without any conditions
@@ -120,48 +151,6 @@ export async function getFilterResultsQna(optionIds) {
             resolve(userIds);
         });
     });
-}
-
-
-// Function to check if two users have mutually liked each other.
-async function checkMatch(user1Id, user2Id) {
-    return new Promise((resolve, reject) => {
-        const { queryString, values } = buildSelectString("match_status", tableNames.u_matches, {
-            user_id: user2Id,
-            match_user_id: user1Id,
-            match_status: 'match'
-        });
-
-        // Execute the query to find if there's a match.
-        db.query(queryString, values, (err, results) => {
-            if (err) {
-                // Log and reject the promise if there's an error.
-                console.error("Error fetching match status from database:", err);
-                reject(err);
-                return;
-            }
-            // Resolve the promise with the results of the query.
-            resolve(results);
-        });
-    });
-}
-
-async function handleReciprocalMatch(user1Id, user2Id) {
-    try {
-        // SQL query to insert the match.
-        const insertMatchQuery = `
-            INSERT INTO ${tableNames.u_inboxt} (user1_id, user2_id)
-            VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE match_timestamp = VALUES(match_timestamp);
-        `;
-        // Execute the query.
-        await db.query(insertMatchQuery, [user1Id, user2Id]);
-        
-        // Additional logic here (e.g., notifying users of the match).
-    } catch (error) {
-        console.error('Error in handleReciprocalMatch:', error);
-        throw new Error('Failed to handle reciprocal match');
-    }
 }
 
 // Function to retrieve all user IDs that a specified user has marked as 'unsure'.
@@ -264,5 +253,50 @@ export async function retrieveUserMatches(userId) {
     });
 }
 
+export async function getUserUnseenMatches(userId) {
+    return new Promise((resolve, reject) => {
+        const getUnseenMatchesQuery = `
+            SELECT * FROM ${tableNames.u_inboxt}
+            WHERE (user1_id = ? AND user1_is_seen = 0) 
+               OR (user2_id = ? AND user2_is_seen = 0);
+        `;
+  
+        // Execute the query to get all unseen matches
+        db.query(getUnseenMatchesQuery, [userId, userId], (err, rows) => {
+            if (err) {
+                // Log and reject the promise if there's an error
+                console.error("Error fetching user IDs from database:", err);
+                reject(err);
+                return;
+            }
+  
+            // Extract match_id from each row and return an array
+            const unseenMatches = rows.map(row => row.match_id);
+            resolve(unseenMatches);
+        });
+    });
+}
 
+export async function markUserMatchesAsSeen(userId) {
+    return new Promise((resolve, reject) => {
+        const markAsSeenQuery = `
+            UPDATE ${tableNames.u_inboxt}
+            SET user1_is_seen = CASE WHEN user1_id = ? THEN 1 ELSE user1_is_seen END,
+                user2_is_seen = CASE WHEN user2_id = ? THEN 1 ELSE user2_is_seen END
+            WHERE user1_id = ? OR user2_id = ?;
+        `;
 
+        // Execute the query to mark all matches as seen
+        db.query(markAsSeenQuery, [userId, userId, userId, userId], (err) => {
+            if (err) {
+                // Log and reject the promise if there's an error
+                console.error("Error updating matches as seen in database:", err);
+                reject(err);
+                return;
+            }
+
+            // If the update is successful, resolve the promise
+            resolve();
+        });
+    });
+}

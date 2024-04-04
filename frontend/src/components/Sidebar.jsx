@@ -1,20 +1,24 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Logout from './Logout';
+import InboxNotification from './ui-components/InboxNotification';
+import currentUser from '../currentUser';
 
 export default function Sidebar() {
     const [activePage, setActivePage] = useState('/match');
     const [logoClicked, setLogoClicked] = useState(false);
+    const [inboxClicked, setInboxClicked] = useState(false);
 
     const handleLogoClick = () => {
         setLogoClicked(true);
         setActivePage('/match');
+        setInboxClicked(false);
     };
 
     return (
         <>
             <nav className="flex flex-col items-left items-center text-left p-10 w-full text-[3.5vh] font-comfortaa h-screen bg-maroon rounded-none shadow-md" id="nav">
-                <NavLink exact to="/" className={"object-scale-down h-[16vh] w-[16vh] hover:scale-110 active:scale-90 ${logoClicked ? 'text-white' : ''}"} onClick={handleLogoClick}>
+                <NavLink exact to="/" className={`object-scale-down h-[16vh] w-[16vh] hover:scale-110 active:scale-90 ${logoClicked ? 'text-white' : ''}`} onClick={handleLogoClick}>
                     <img src="../assets/images/logo.png" className="sidebarLogo" alt="Logo" />
                 </NavLink>
                 <br></br>
@@ -30,7 +34,14 @@ export default function Sidebar() {
                             key={label}
                             to={destination}
                             className={`max-h-full flex flex-col relative mb-[7.5vh] font-sans font-bold drop-shadow-lg transform scale-100 transition-transform duration-200 hover:scale-110 hover:text-gold active:scale-90 ${activePage === destination ? 'text-white text-[4vh]' : 'text-inactive_gray'}`}
-                            onClick={() => setActivePage(destination)}
+                            onClick={() => {
+                                setActivePage(destination);
+                                if (label === 'Inbox') {
+                                    setInboxClicked(true);
+                                } else {
+                                    setInboxClicked(false);
+                                }
+                            }}
                         >
                             {label}
                             {activePage === destination && <div className="absolute bottom-0 left-0 w-full h-1 bg-gold"></div>}
@@ -43,6 +54,7 @@ export default function Sidebar() {
                     </div>
                 </div>
             </nav>
+            <InboxNotification inboxClicked={inboxClicked} />
         </>
     );
 }
