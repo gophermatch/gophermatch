@@ -35,6 +35,8 @@ export default {
       pink: 'rgb(254 249 195)',
       login: 'rgb(161 98 7)',
       transparent: 'transparent',
+      cream: '#FFFAF7',
+      light_gray: '#EDEDED'
     },
     fontFamily: {
       lora: ['Lora', 'serif'],
