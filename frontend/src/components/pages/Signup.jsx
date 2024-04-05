@@ -142,7 +142,7 @@ export default function Signup() {
     };    
             
     return (
-        <div className="bg-doc w-screen h-screen">
+        <div className="bg-offwhite w-screen h-screen">
             <div className="bg-maroon h-[3.75rem] space-x-4 mt-auto">
                 <div className="flex justify-start items-start w-full">
                     <Link to="/landing" className="text-doc font-lora text-3xl ml-2 mt-2">GopherMatch</Link>

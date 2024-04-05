@@ -75,16 +75,16 @@ export default function Profile(props) {
       <div className={"m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
         <div className={"w-full flex flex-col  h-[70vh] mb-[6vh] bg-white rounded-3xl overflow-hidden"}>
           <div className={"flex h-[35vh] "}>
-            <div className={"w-[18vw] h-[20vh] bg-white rounded-3xl mt-[4vh] ml-[4vh]"}>
+            <div className={"w-[18vw] h-[20vh] bg-white rounded-3xl mt-[4vh] ml-[3vh]"}>
               <Carousel pictureUrls={pictureUrls} editable={editable}></Carousel>
             </div>
             <div className={"flex-grow flex flex-col bg-white"}>
               <div className={"h-10"}>
-              <p className={"text-[1.33vw] mt-[6vh] inline-block"}>
-                <span className="font-bold ml-[2vw] text-3xl">{props.user_data.first_name} {props.user_data.last_name}:</span> {props.user_data.gender.charAt(0).toUpperCase() + props.user_data.gender.slice(1)}, {props.user_data.major} Major, {props.user_data.college.toUpperCase()} Class of {props.user_data.graduating_year}
+              <p className={"text-[1.22vw] mt-[6vh] inline-block"}>
+                <span className="font-bold ml-[1.3vw] text-[1.7vw]">{props.user_data.first_name} {props.user_data.last_name}:</span> {props.user_data.gender.charAt(0).toUpperCase() + props.user_data.gender.slice(1)}, {props.user_data.major} Major, {props.user_data.college.toUpperCase()} Class of {props.user_data.graduating_year}
               </p>
               </div>
-              <div className={"flex-grow rounded-3xl w-[41.5vw] ml-[2vw] mt-[8vh] border-2 border-maroon_new overflow"}>
+              <div className={"flex-grow rounded-3xl w-[41.5vw] ml-[1.5vw] mt-[8vh] border-2 border-maroon_new overflow"}>
                 <p className={"w-full h-full"}>
                   {editable ? (
                             <textarea
