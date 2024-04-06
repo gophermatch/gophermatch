@@ -29,6 +29,12 @@ export default function Match() {
     const [nextProfiles, setNextProfiles] = useState([]);
     const [requestLock, setRequestLock] = useState(false);
 
+    const [user_ids, setUserIds] = useState([]);
+
+    useEffect(()=>{
+        // Update profiles
+    }, [user_ids]);
+
     if (nextProfiles.length < 5 && !requestLock) {
         setRequestLock(true);
         tempIdGrabber().then((res) => {
@@ -77,7 +83,7 @@ export default function Match() {
 
     return (
       <div>
-          <Filter />
+          <Filter user_id_setter={setUserIds}/>
           <Profile user_data={nextProfiles[0].data.data} data={nextProfiles[0].data} editable={false} />
           {/* <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} /> */}
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">

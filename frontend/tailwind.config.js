@@ -30,6 +30,7 @@ export default {
       black: 'rgb(0,0,0)',
       offwhite: '#F2EBE6',
       maroon_new: '#7D0000',
+      maroon_dark: '#5E0000',
       inactive_gray: '#C6C6C6',
       gold: 'rgb(234 179 8)',
       pink: 'rgb(254 249 195)',
@@ -39,7 +40,8 @@ export default {
     fontFamily: {
       lora: ['Lora', 'serif'],
       inter: ['Inter', 'serif'],
-      profile: ['Inconsolata', 'serif']
+      profile: ['Inconsolata', 'serif'],
+      roboto: ['Roboto', 'serif']
     },
   },
   plugins: [],

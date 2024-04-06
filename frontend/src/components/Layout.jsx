@@ -5,8 +5,8 @@ import styles from "../assets/css/layout.module.css"
 export default function Layout() {
     return (
         <>
-        <div id={styles.sidebar}><Sidebar/></div>
-        <div className={"bg-offwhite relative w-[85vw] h-[100vh] left-[15vw] z-0"}><Outlet/></div>
+        <div className={"fixed w-[16vw]"}><Sidebar/></div>
+        <div className={"bg-offwhite relative w-[84vw] h-[100vh] left-[16vw] z-0"}><Outlet/></div>
         </>
     )
 }
