@@ -26,21 +26,17 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
         return () => clearInterval(intervalId);
     }, []);
 
-    const markMatchesAsSeen = async () => {
-        try {
-            await backend.post('/match/mark-seen', { userId: currentUser.user_id });
+    useEffect(() => {
+        // If inbox is clicked and there are unseen matches, set unseenMatches to 0
+        if (inboxClicked) {
             setUnseenMatches(0);
-            setInboxClicked(true); // Set inboxClicked to true
-        } catch (error) {
-            console.error('Failed to mark matches as seen:', error);
         }
-    };
+    }, [inboxClicked, unseenMatches]);
 
     return (
         <div style={{ position: 'relative', minHeight: '20px', minWidth: '20px' }}>
             {!inboxClicked && unseenMatches > 0 && (
                 <div
-                    onClick={markMatchesAsSeen}
                     style={{
                         position: 'absolute',
                         top: '-1700%', // Adjust position for better visibility
@@ -65,3 +61,4 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
 };
 
 export default InboxNotification;
+
