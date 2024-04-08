@@ -3,14 +3,16 @@ import currentUser from '../../currentUser';
 import backend from '../../backend';
 import qnaOptions from './qnaOptions.json';
 
-export default function Filter() {
-    const [shouldShowIcon, setShowIcon] = useState(true);
-    const [shouldShowUI, setShowUI] = useState(false);
+const FilterItem = function({title, setFilters}) {
+    return <label onChange={(e) => setFilters(s => e.target.checked ? [...s, title] : s.filter(v => v!== title))} className="block hover:bg-[#EBE1BA]"><input type="checkbox" name={title} /> {title}</label>
+}
 
-    function expandFilterUI() {
-        setShowIcon(!shouldShowIcon);
-        setShowUI(!shouldShowUI);
-    }
+export default function Filter() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [openedDropdown, setOpenedDropdown] = useState(null);
+    const [filters, setFilters] = useState([]);
+
+    // console.log(filters)
 
     const handleApplyFilters = async () => {
         // Collect the selected options for userdata filters
@@ -60,12 +62,26 @@ export default function Filter() {
 
     return(
         <>
-            {shouldShowIcon && <div className="flex absolute right-0">
-                <img className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png" onClick={expandFilterUI}></img>
-            </div>}
+        {isOpen &&
+        <div className="flex absolute right-0">
+            <img className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png" onClick={expandFilterUI}></img>
+        </div>
+        }
 
-        {shouldShowUI && <div class = "flex absolute bg-maroon w-[80vw] h-[12.5vh] left-[3%] rounded-b-3xl items-center justify-center">
+        {!isOpen &&
+        <div class = "flex absolute bg-maroon w-[80vw] h-[12.5vh] left-[3%] rounded-b-3xl items-center justify-center">
             <div class = "flex space-x-[0.5vw] text-black text-[1vw] font-lora border-5 items-center">
+
+                <div className="relative">
+                    <button onClick={() => setOpenedDropdown(openedDropdown === "Gender" ? null : "Gender")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Gender&emsp;&darr;</button>
+                    <div className={`${openedDropdown === "Gender" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden`}>
+                        <FilterItem title="Male" setFilters={setFilters} />
+                        <FilterItem title="Female" setFilters={setFilters} />
+                        <FilterItem title="Non-Binary" setFilters={setFilters} />
+                    </div>
+                </div>
+
+
                 <select name="gender" id="gender" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
                     <option value="">Gender</option>
                     <option value="Male">Male</option>
@@ -120,7 +136,8 @@ export default function Filter() {
                 </select>
                 <img class = "bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh]" src="../assets/images/filtercheck.png" onClick={handleApplyFilters}></img>
             </div>
-        </div>}
+        </div>
+        }
         </>
     );
 
