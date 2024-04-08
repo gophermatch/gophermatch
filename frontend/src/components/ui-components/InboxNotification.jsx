@@ -34,23 +34,23 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
     }, [inboxClicked, unseenMatches]);
 
     return (
-        <div style={{ position: 'relative', minHeight: '20px', minWidth: '20px' }}>
+        <div style={{ position: 'relative', /*minHeight: '20px', minWidth: '20px' */ }}>
             {!inboxClicked && unseenMatches > 0 && (
                 <div
                     style={{
                         position: 'absolute',
-                        top: '-1700%', // Adjust position for better visibility
-                        right: '105px',
+                        top: '-33.4vh', // Adjust position for better visibility
+                        right: '5.5vw',
                         backgroundColor: 'gold', // Use a more visible color
-                        borderRadius: '50%',
-                        width: '30px', // Increase size for better visibility
-                        height: '30px',
+                        borderRadius: '2vh',
+                        width: '2vw', // Increase size for better visibility
+                        height: '3.25vh',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         color: 'black',
-                        fontSize: '12px',
-                        fontWeight: 'bold',
+                        fontSize: '1.85vh',
+                        //fontWeight: 'bold',
                     }}
                 >
                     {unseenMatches}
