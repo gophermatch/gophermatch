@@ -57,7 +57,7 @@ const LandingPage = () => {
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
               <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
-                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Adam</h3>
+                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Adhi</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                 <div className="flex justify-center">
                   <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
@@ -72,7 +72,7 @@ const LandingPage = () => {
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
               <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
-                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Adam</h3>
+                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">AJ</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                 <div className="flex justify-center">
                   <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
@@ -87,7 +87,7 @@ const LandingPage = () => {
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
               <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
-                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Adam</h3>
+                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Allen</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                 <div className="flex justify-center">
                   <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
@@ -105,7 +105,7 @@ const LandingPage = () => {
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
               <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
-                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Adam</h3>
+                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Alex</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                 <div className="flex justify-center">
                   <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
@@ -120,7 +120,7 @@ const LandingPage = () => {
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
               <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
-                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Adam</h3>
+                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Tony</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                 <div className="flex justify-center">
                   <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
@@ -135,7 +135,7 @@ const LandingPage = () => {
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
               <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
-                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Adam</h3>
+                <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Quang</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                 <div className="flex justify-center">
                   <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">

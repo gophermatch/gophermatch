@@ -121,7 +121,7 @@ const PicUpload = () => {
     
 
     return (
-        <div className="h-screen w-screen bg-doc flex justify-center items-center">
+        <div className="h-screen w-screen bg-offwhite flex justify-center items-center">
             <div className="bg-white rounded-[1.5rem] pt-[42.5vh] pb-[42.5vh] pl-[50vw] pr-[12.5vw] mr-[12.5vw] shadow-lg relative">
             {[0, 1, 2].map((index) => (
                 <div key={index} className={`absolute top-[4%] left-[${20 + index * 20}%] w-[10vw] h-[20vh] bg-gray-200 rounded-[1rem] flex justify-center items-center`}>
