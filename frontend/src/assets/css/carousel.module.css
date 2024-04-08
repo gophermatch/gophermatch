@@ -11,7 +11,6 @@
     margin-top: 1vh;
     margin-bottom: 1vh;
     height: 2.5vh;
-    
 }
 
 .progressButton {
@@ -42,7 +41,7 @@
     z-index: 10;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
     flex:  5;
     margin-top: 11px;
 }
@@ -55,8 +54,9 @@
     border-radius: 50%;
     border: none;
     background: none;
-    margin: 0 1vw;
     padding: 0;
+    margin-left: 1.25vw;
+    margin-right: 1.25vw;
 }
 
 .dotSolid {
@@ -66,3 +66,4 @@
     border: 2px solid maroon;
     cursor: pointer;
 }
+
