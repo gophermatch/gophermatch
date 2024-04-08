@@ -36,7 +36,8 @@ export default {
       login: 'rgb(161 98 7)',
       transparent: 'transparent',
       cream: '#FFFAF7',
-      light_gray: '#EDEDED'
+      light_gray: '#EDEDED',
+      gray: 'rgb(212 212 216)',
     },
     fontFamily: {
       lora: ['Lora', 'serif'],

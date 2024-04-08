@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from '../../assets/css/signin.module.css';
 
 const LandingPage = () => {
+
   return (
     <>
       <div className="bg-maroon h-[8vh] flex justify-between items-center px-4">
@@ -33,18 +34,115 @@ const LandingPage = () => {
               </svg>
             </span>
           </Link>
+          <div className="ml-[6vw] h-[0.125vh] w-[86vw] mt-[35vh] bg-maroon"></div>
         </header>
-        {/* Additional section for scrolling */}
-        <div className="bg-offwhite flex flex-col items-center justify-center h-screen mt-[35vh]">
-          <Link to="#scroll-to-content" className="text-maroon h-10 w-10 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-maroon group-hover:text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </Link>
-          <div className="mt-[30vh]">
-              <h3>AJ</h3>
-              <h3>Adhi</h3>
-              <h3>Tony</h3>
+        <div className="bg-offwhite flex flex-col items-center justify-center h-screen">
+          <div className="mt-[14vh] flex flex-wrap justify-center">
+            <div className="p-[1vh] rounded-lg mb-[3vh] mx-[0.5vh] h-[32vh] w-[13vw] flex flex-col items-center border border-gray">
+              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[9vw] h-[16vh] rounded-full" />
+              <div className="text-center">
+                <h3 className="font-bold text-maroon text-[2.75vh] mt-[0.75vh]">Adam</h3>
+                <p className="text-[2vh] text-black mt-[0.2vh]">Job description</p>
+                <div className="flex justify-center">
+                  <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[4vh] h-[4vh] mt-[1vh]" />
+                  </a>
+                  <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/github.png" alt="GitHub" className="w-[4vh] h-[4vh] ml-[1vh] mt-[1vh]" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="p-[1vh] rounded-lg mb-[3vh] mx-[0.5vh] h-[32vh] w-[13vw] flex flex-col items-center border border-gray">
+              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[9vw] h-[16vh] rounded-full" />
+              <div className="text-center">
+                <h3 className="font-bold text-maroon text-[2.75vh] mt-[0.75vh]">Adam</h3>
+                <p className="text-[2vh] text-black mt-[0.2vh]">Job description</p>
+                <div className="flex justify-center">
+                  <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[4vh] h-[4vh] mt-[1vh]" />
+                  </a>
+                  <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/github.png" alt="GitHub" className="w-[4vh] h-[4vh] ml-[1vh] mt-[1vh]" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="p-[1vh] rounded-lg mb-[3vh] mx-[0.5vh] h-[32vh] w-[13vw] flex flex-col items-center border border-gray">
+              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[9vw] h-[16vh] rounded-full" />
+              <div className="text-center">
+                <h3 className="font-bold text-maroon text-[2.75vh] mt-[0.75vh]">Adam</h3>
+                <p className="text-[2vh] text-black mt-[0.2vh]">Job description</p>
+                <div className="flex justify-center">
+                  <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[4vh] h-[4vh] mt-[1vh]" />
+                  </a>
+                  <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/github.png" alt="GitHub" className="w-[4vh] h-[4vh] ml-[1vh] mt-[1vh]" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="p-[1vh] rounded-lg mb-[3vh] mx-[0.5vh] h-[32vh] w-[13vw] flex flex-col items-center border border-gray">
+              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[9vw] h-[16vh] rounded-full" />
+              <div className="text-center">
+                <h3 className="font-bold text-maroon text-[2.75vh] mt-[0.75vh]">Adam</h3>
+                <p className="text-[2vh] text-black mt-[0.2vh]">Job description</p>
+                <div className="flex justify-center">
+                  <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[4vh] h-[4vh] mt-[1vh]" />
+                  </a>
+                  <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/github.png" alt="GitHub" className="w-[4vh] h-[4vh] ml-[1vh] mt-[1vh]" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="p-[1vh] rounded-lg mb-[3vh] mx-[0.5vh] h-[32vh] w-[13vw] flex flex-col items-center border border-gray">
+              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[9vw] h-[16vh] rounded-full" />
+              <div className="text-center">
+                <h3 className="font-bold text-maroon text-[2.75vh] mt-[0.75vh]">Adam</h3>
+                <p className="text-[2vh] text-black mt-[0.2vh]">Job description</p>
+                <div className="flex justify-center">
+                  <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[4vh] h-[4vh] mt-[1vh]" />
+                  </a>
+                  <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/github.png" alt="GitHub" className="w-[4vh] h-[4vh] ml-[1vh] mt-[1vh]" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="p-[1vh] rounded-lg mb-[3vh] mx-[0.5vh] h-[32vh] w-[13vw] flex flex-col items-center border border-gray">
+              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[9vw] h-[16vh] rounded-full" />
+              <div className="text-center">
+                <h3 className="font-bold text-maroon text-[2.75vh] mt-[0.75vh]">Adam</h3>
+                <p className="text-[2vh] text-black mt-[0.2vh]">Job description</p>
+                <div className="flex justify-center">
+                  <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[4vh] h-[4vh] mt-[1vh]" />
+                  </a>
+                  <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/github.png" alt="GitHub" className="w-[4vh] h-[4vh] ml-[1vh] mt-[1vh]" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="p-[1vh] rounded-lg mb-[3vh] mx-[0.5vh] h-[32vh] w-[13vw] flex flex-col items-center border border-gray">
+              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[9vw] h-[16vh] rounded-full" />
+              <div className="text-center">
+                <h3 className="font-bold text-maroon text-[2.75vh] mt-[0.75vh]">Adam</h3>
+                <p className="text-[2vh] text-black mt-[0.2vh]">Job description</p>
+                <div className="flex justify-center">
+                  <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[4vh] h-[4vh] mt-[1vh]" />
+                  </a>
+                  <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/images/github.png" alt="GitHub" className="w-[4vh] h-[4vh] ml-[1vh] mt-[1vh]" />
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

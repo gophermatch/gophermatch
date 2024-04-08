@@ -109,7 +109,7 @@ export default function Settings() {
             <h1 className="ml-10 mt-10 font-lora text-4xl text-maroon">
                 {editMode ? 'Edit Profile' : 'Settings'}
             </h1>
-            <div className="ml-10 mt-[4vh] h-1 w-[80vw] bg-maroon"></div>
+            <div className="ml-10 mt-[3vh] h-1 w-[80vw] bg-maroon"></div>
             <div className="ml-10 mt-[4vh] w-[80vw] mr-[1vw] flex flex-col justify-center items-center">
                 <button
                     className={`text-doc rounded-full w-[10vw] h-[4vh] text-xl ${editMode ? 'bg-maroon' : 'bg-green-500'}`}
