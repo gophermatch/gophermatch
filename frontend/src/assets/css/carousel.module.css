@@ -11,6 +11,7 @@
     margin-top: 1vh;
     margin-bottom: 1vh;
     height: 2.5vh;
+    
 }
 
 .progressButton {
@@ -42,7 +43,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    flex: 5;
+    flex:  5;
     margin-top: 11px;
 }
 
@@ -54,7 +55,7 @@
     border-radius: 50%;
     border: none;
     background: none;
-    margin: 0;
+    margin: 0 1vw;
     padding: 0;
 }
 
@@ -62,6 +63,6 @@
     background-color: maroon;
 }
 .dotEmpty {
-    border: 2px solid black;
+    border: 2px solid maroon;
     cursor: pointer;
 }
