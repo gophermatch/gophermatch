@@ -64,7 +64,7 @@ export default function Login() {
         <div>
         <div className="bg-maroon h-[7vh] space-x-4 mt-auto">
             <div className="flex justify-start items-start w-full">
-                <Link to="/landing" className="text-doc font-lora text-3xl ml-2 mt-2">GopherMatch</Link>
+                <Link to="/landing" className="text-offwhite font-lora text-3xl ml-2 mt-2">GopherMatch</Link>
             </div>
         </div>
         <div className="bg-offwhite w-screen h-screen flex flex-col font-lora">

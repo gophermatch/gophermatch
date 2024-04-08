@@ -38,6 +38,7 @@ export default {
       cream: '#FFFAF7',
       light_gray: '#EDEDED',
       gray: 'rgb(212 212 216)',
+      gray_text: 'rgb(31 41 55)',
     },
     fontFamily: {
       lora: ['Lora', 'serif'],
