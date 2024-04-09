@@ -106,13 +106,13 @@ export default function Settings() {
 
     return (
         <div className="flex flex-col h-screen w-screen font-comfortaa bg-offwhite">
-            <h1 className="ml-10 mt-10 font-lora text-4xl text-maroon">
+            <h1 className="ml-[3vw] mt-[5vh] font-lora text-4xl text-maroon">
                 {editMode ? 'Edit Profile' : 'Settings'}
             </h1>
-            <div className="ml-10 mt-[4vh] h-1 w-[80vw] bg-maroon"></div>
-            <div className="ml-10 mt-[4vh] w-[80vw] mr-[1vw] flex flex-col justify-center items-center">
+            <div className="ml-[3vw] mt-[4vh] h-1 w-[80vw] bg-maroon"></div>
+            <div className="mt-[4vh] w-[80vw] mr-[5vw] flex flex-col justify-center items-center">
                 <button
-                    className={`text-doc rounded-full w-[10vw] h-[4vh] text-xl ${editMode ? 'bg-maroon' : 'bg-green-500'}`}
+                    className={`text-doc rounded-full w-[10vw] h-[4vh] text-[1vw] ${editMode ? 'bg-maroon' : 'bg-green-500'}`}
                     onClick={handleSaveChangesClick}
                     disabled={!isEdited}
                 >
@@ -120,9 +120,9 @@ export default function Settings() {
                 </button>
             </div>
             <div className="flex flex-col w-full justify-center items-center text-maroon text-xl font-comfortaa">
-                <div className="flex flex-wrap w-[65vw] mr-[8vw] justify-center">
+                <div className="flex flex-wrap w-[65vw] mr-[12vw] justify-center">
                     {userInfo.map(([key, value], index) => (
-                        <div key={index} className="font-comfortaa text-2xl mt-[1vh] justify-between flex flex-col w-[30%] mr-[3vw]">
+                        <div key={index} className="font-comfortaa text-2xl mt-[1vh] justify-between flex flex-col w-[12.5vw] mr-[3vw]">
                             <div className="flex justify-start items-center">
                                 <p className="text-base mt-[3vh]">{getLabel(key)}</p>
                             </div>
@@ -132,7 +132,7 @@ export default function Settings() {
                                         value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
-                                        className="bg-gray-200 p-1 rounded-md w-full"
+                                        className="bg-gray-200 p-[1vh] rounded-md w-full"
                                     >
                                         {colleges.map((college, index) => (
                                             <option key={index} value={college}>{college}</option>
@@ -143,7 +143,7 @@ export default function Settings() {
                                         value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
-                                        className="bg-gray-200 p-1 rounded-md w-full"
+                                        className="bg-gray-200 p-[1vh] rounded-md w-full"
                                     >
                                         {gradYear.map((year, index) => (
                                             <option key={index} value={year}>{year}</option>
@@ -154,7 +154,7 @@ export default function Settings() {
                                         value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
-                                        className="bg-gray-200 p-1 rounded-md w-full"
+                                        className="bg-gray-200 p-[1vh] rounded-md w-full"
                                     >
                                         {gender.map((gender, index) => (
                                             <option key={index} value={gender}>{gender}</option>
@@ -165,7 +165,7 @@ export default function Settings() {
                                         value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
-                                        className="bg-gray-200 p-1 rounded-md w-full"
+                                        className="bg-gray-200 p-[1vh] rounded-md w-full"
                                     >
                                         {housePref.map((pref, index) => (
                                             <option key={index} value={pref}>{pref}</option>
@@ -177,7 +177,7 @@ export default function Settings() {
                                         value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
-                                        className="bg-gray-200 p-1 rounded-md w-full"
+                                        className="bg-gray-200 p-[1vh] rounded-md w-full"
                                         />
                                     )}
                                 </div>
