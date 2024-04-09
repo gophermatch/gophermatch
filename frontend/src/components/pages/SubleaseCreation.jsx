@@ -1,39 +1,17 @@
 import { useState } from "react";
+import { useHistory } from "react-router-dom"; // Import useHistory for navigation
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
-import { DateTime } from "luxon";
 
-export default function SubleaseCreation()
-{
-  async function submit(){
-    try {
-      const res = await backend.put("/sublease/insert", {
-        sublease_data: {
-          user_id: currentUser.user_id,
-          //todo: insert form data here
-        }
-      })
-
-      console.log(res.data.message);
-
-      currentUser.user_data = await currentUser.getAccount();
-
-      //TODO: navigate back to sublease page when done
-
-    } catch(err) {
-      console.error(err)
-    }
-  }
-
+export default function SubleaseCreation() {
   const [formData, setFormData] = useState({
-    user_id: '',
     building_name: '',
     building_address: '',
     num_bathrooms: '',
     num_bedrooms: '',
     num_roommates: '',
     rent_amount: '',
-    housing_type: 'House',
+    housing_type: 'House', // Assuming this is the same as building_type based on your form
     pets_allowed: 'Any',
     has_kitchen: 'Full',
     has_laundry: 'None',
@@ -44,6 +22,28 @@ export default function SubleaseCreation()
     sublease_start_date: '',
     sublease_end_date: '',
   });
+
+  const history = useHistory(); // Use the useHistory hook for navigation
+
+  async function submit() {
+    try {
+      const res = await backend.put("/sublease/insert", {
+        sublease_data: {
+          user_id: currentUser.user_id,
+          ...formData, // Spread the formData directly into the sublease_data
+        }
+      });
+
+      console.log(res.data.message);
+
+      currentUser.user_data = await currentUser.getAccount();
+
+      history.push('/sublease'); // Navigate back to the sublease page
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,10 +61,9 @@ export default function SubleaseCreation()
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Send formData to backend or perform any other action
-    console.log(formData);
+    await submit();
   };
 
   return (
