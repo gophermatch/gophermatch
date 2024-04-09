@@ -6,6 +6,7 @@ import MatchRouter from './match.js'
 import ProfileRouter from './profile.js'
 import EmailAuthRouter from './email-auth.js'
 import SubleaseRouter from './sublease.js'
+import PaymentRouter from './payment.js'
 import { AuthStatusChecker } from '../auth.js'
 import { userIDParser } from './requestParser.js'
 
@@ -22,5 +23,7 @@ router.use('/profile', AuthStatusChecker, ProfileRouter)
 router.use('/email-auth', EmailAuthRouter)
 router.use('/match', MatchRouter)
 router.use('/sublease', SubleaseRouter)
+router.use('/payment', PaymentRouter)
+
 
 export default router

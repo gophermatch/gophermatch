@@ -30,6 +30,7 @@ export default function Sidebar() {
                         ['Inbox', '/inbox'],
                         ['Saved', '/saved'],
                         ['Sublease', '/sublease']
+                        //['Payment', '/payment']
                     ].map(([label, destination]) => (
                         <NavLink
                             key={label}
