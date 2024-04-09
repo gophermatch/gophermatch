@@ -1,9 +1,31 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom"; // Import useHistory for navigation
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
+import { DateTime } from "luxon";
 
-export default function SubleaseCreation() {
+export default function SubleaseCreation()
+{
+  async function submit() {
+    try {
+      const res = await backend.put("/sublease/insert", {
+        sublease_data: {
+          user_id: currentUser.user_id,
+          ...formData, // Now includes the form data in the request
+        }
+      });
+  
+      console.log(res.data.message);
+  
+      currentUser.user_data = await currentUser.getAccount();
+  
+      // TODO: Navigate back to sublease page when done
+      // You'll need to implement navigation based on your routing solution (e.g., using react-router)
+  
+    } catch (err) {
+      console.error(err);
+    }
+  }  
+
   const [formData, setFormData] = useState({
     building_name: '',
     building_address: '',
@@ -11,7 +33,7 @@ export default function SubleaseCreation() {
     num_bedrooms: '',
     num_roommates: '',
     rent_amount: '',
-    housing_type: 'House', // Assuming this is the same as building_type based on your form
+    housing_type: 'House',
     pets_allowed: 'Any',
     has_kitchen: 'Full',
     has_laundry: 'None',
@@ -22,28 +44,6 @@ export default function SubleaseCreation() {
     sublease_start_date: '',
     sublease_end_date: '',
   });
-
-  const history = useHistory(); // Use the useHistory hook for navigation
-
-  async function submit() {
-    try {
-      const res = await backend.put("/sublease/insert", {
-        sublease_data: {
-          user_id: currentUser.user_id,
-          ...formData, // Spread the formData directly into the sublease_data
-        }
-      });
-
-      console.log(res.data.message);
-
-      currentUser.user_data = await currentUser.getAccount();
-
-      history.push('/sublease'); // Navigate back to the sublease page
-
-    } catch (err) {
-      console.error(err);
-    }
-  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,23 +62,25 @@ export default function SubleaseCreation() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    await submit();
+    e.preventDefault(); // Prevent the default form submission behavior
+    await submit(); // Call the submit function that sends data to the backend
   };
+  
 
   return (
     <div className="max-w-lg mx-auto">
       <br></br>
       <h2 className="text-xl font-semibold mb-4">Sublease Form</h2>
       <form onSubmit={handleSubmit}>
+        <div><button type="submit" className="bg-maroon_new text-white mt-4 px-4 w-full py-2 rounded hover:bg-blue-600">Submit</button></div>
         <div className="mb-4 flex">
           <div className="w-2/3 pr-2">
             <label htmlFor="building_name" className="block mb-1">Building Name</label>
             <input type="text" id="building_name" name="building_name" value={formData.building_name} onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full" placeholder="Enter building name" />
           </div>
           <div className="w-1/3 pl-2">
-            <label htmlFor="building_type" className="block mb-1">Building Type</label>
-            <select id="building_type" name="building_type" value={formData.building_type} onChange={handleChange}
+            <label htmlFor="housing_type" className="block mb-1">Building Type</label>
+            <select id="housing_type" name="housing_type" value={formData.housing_type} onChange={handleChange}
                     className="border border-gray-300 rounded px-3 py-2 w-full">
               <option value="House">House</option>
               <option value="Apartment">Apartment</option>
@@ -189,9 +191,32 @@ export default function SubleaseCreation() {
           </div>
         </div>
 
+        <div className="mb-4">
+  <label htmlFor="sublease_start_date" className="block mb-1">Sublease Start Date</label>
+  <input 
+    type="date" 
+    id="sublease_start_date" 
+    name="sublease_start_date" 
+    value={formData.sublease_start_date}
+    onChange={handleChange} 
+    className="border border-gray-300 rounded px-3 py-2 w-full" 
+  />
+</div>
+
+<div className="mb-4">
+  <input 
+    type="date" 
+    id="sublease_end_date" 
+    name="sublease_end_date" 
+    value={formData.sublease_end_date}
+    onChange={handleChange} 
+    className="border border-gray-300 rounded px-3 py-2 w-full" 
+  />
+</div>
+
         {/* Fill out the rest of the inputs similarly */}
 
-        <button type="submit" className="bg-maroon_new text-white mt-4 px-4 w-full py-2 rounded hover:bg-blue-600">Submit</button>
+        
       </form>
     </div>
   );

@@ -18,12 +18,35 @@ export async function createSublease(sublease_data) {
     });
   }
 
-//TODO
-export async function getSublease(user_id){
+  export async function getSublease(user_id) {
+    return new Promise((resolve, reject) => {
+      const { queryString, values } = buildSelectString("*", tableNames.u_subleases, { user_id });
+      
+      db.query(queryString, values, (err, results) => {
+        if (err) {
+          reject(err);
+        } else if (results.length === 0) {
+          reject(new Error('No sublease found for the given user ID.'));
+        } else {
+          resolve(results[0]); // Assuming user_id is unique and can only have one sublease
+        }
+      });
+    });
+  }
 
-}
-
-//TODO
-export async function deleteSublease(user_id){
-
-}
+  export async function deleteSublease(user_id) {
+    return new Promise((resolve, reject) => {
+      const queryString = `DELETE FROM u_subleases WHERE user_id = ?`;
+  
+      db.query(queryString, [user_id], (err, result) => {
+        if (err) {
+          reject(err);
+        } else if (result.affectedRows === 0) {
+          reject(new Error('No sublease found with the given user ID, or it could not be deleted.'));
+        } else {
+          resolve({ message: 'Sublease deleted successfully.' });
+        }
+      });
+    });
+  }
+  
