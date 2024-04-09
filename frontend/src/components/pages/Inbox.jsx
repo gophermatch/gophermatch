@@ -72,6 +72,7 @@ export default function Inbox() {
     }, [])
 
     function unmatch(profileId) {
+        console.log("HEY");
         backend.delete('/match/inbox-delete', {params: {
             user1_id: currentUser.user_id,
             user2_id: profileId
@@ -108,7 +109,7 @@ export default function Inbox() {
                             <p className="font-bold text-maroon_new text-[4vh] m-0 inline-block">&nbsp;{person.lastName}</p>
                         </div>
                         <button className="text-[3vh]">{person.contact_email}</button>
-                        <button className="bg-maroon h-[6vh] z-10 w-[4vw] rounded-lg text-white text-[5vh]" onClick={() => unmatch(person.id)}>X</button>
+                        <button className="bg-maroon h-[6vh] z-10 w-[4vw] rounded-lg text-white text-[5vh]" onClick={() => unmatch(person.user_id)}>X</button>
                     </div>
                 </div>
             ))}
