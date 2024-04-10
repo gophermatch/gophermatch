@@ -23,9 +23,6 @@ export default function Match() {
     const [filters, setFilters] = useState(null);
     const [nextProfiles, setNextProfiles] = useState([]);
     const [requestLock, setRequestLock] = useState(false);
-    const [dorm, setDorm] = useState(true);
-    const [apartment, setApartment] = useState(false);
-    const [both, setBoth] = useState(false);
 
     useEffect(() => {
         // console.log("Getting new ids")
@@ -98,22 +95,6 @@ export default function Match() {
         }
     }
 
-    function changeSearchType(decision){
-        if(decision == "dorm"){
-            setDorm(true);
-            setBoth(false);
-            setApartment(false);
-        }else if(decision == "both"){
-            setDorm(false);
-            setBoth(true);
-            setApartment(false);
-        } else if(decision == "apartment"){
-            setDorm(false);
-            setBoth(false);
-            setApartment(true);
-        }
-    }
-
     if (nextProfiles.length == 0) {
         return <p>Loading profiles</p>
     }
@@ -121,7 +102,7 @@ export default function Match() {
     return (
       <div>
           <Filter />
-          <Profile user_data={nextProfiles[0].data.data} dormMode = {dorm} apartmentMode = {apartment || both} editable={false} />
+          <Profile user_data={nextProfiles[0].data.data} editable={false} />
           {/* <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} /> */}
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-[1vw]">
               <button onClick={() => goToNext("reject")}
@@ -133,19 +114,6 @@ export default function Match() {
               <button onClick={() => goToNext("match")}
                       className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">
                   <p className={"text-maroon_new"}>&#10003;</p>
-              </button>
-          </div>
-
-          <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
-              <button onClick={() => changeSearchType("dorm")}
-                      className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
-                  <p>Dorm</p>
-              </button>
-              <button onClick={() => changeSearchType("both")}
-                       className="w-[8vh] h-[8vh] bg-offwhite border-black border-[1px] rounded-full text-center align-middle text-black font-bold hover:bg-slate-300 shadow-md">Both</button>
-              <button onClick={() => changeSearchType("apartment")}
-                      className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">
-                  <p>Apt.</p>
               </button>
           </div>
       </div>

@@ -10,9 +10,28 @@ import backend from "../../backend.js";
 
 export default function Profile(props) {
 
-  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, qnaAnswers, dormMode, apartmentMode } = props;
+  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, qnaAnswers } = props;
   let pictures = [kanye, other, kanye];
   const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
+  const [dormMode, setDormMode] = useState(true);
+  const [apartmentMode, setApartmentMode] = useState(true);
+  const [bothMode, setBothMode] = useState(true);
+
+  function changeSearchType(decision){
+    if(decision == "dorm"){
+        setDormMode(true);
+        setBothMode(false);
+        setApartmentMode(false);
+    }else if(decision == "both"){
+        setDormMode(false);
+        setBothMode(true);
+        setApartmentMode(false);
+    } else if(decision == "apartment"){
+        setDormMode(false);
+        setBothMode(false);
+        setApartmentMode(true);
+    }
+}
 
   useEffect(() => {
     fetchPictureUrls();
@@ -115,7 +134,7 @@ export default function Profile(props) {
         </div>
       </div>}
 
-      {apartmentMode && <div className={"m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
+      {(apartmentMode || bothMode) && <div className={"m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
         <div className={"w-full flex flex-col  h-[70vh] mb-[6vh] bg-white rounded-3xl overflow-hidden"}>
           <div className={"flex h-[35vh] "}>
             <div className={"w-[18vw] h-[31.5vh] bg-white rounded-3xl mt-[4vh] ml-[4vh]"}>
@@ -156,6 +175,18 @@ export default function Profile(props) {
           </div>
         </div>
       </div>}
+      <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
+        <button onClick={() => changeSearchType("dorm")}
+          className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
+          <p>Dorm</p>
+        </button>
+        <button onClick={() => changeSearchType("both")}
+          className="w-[8vh] h-[8vh] bg-offwhite border-black border-[1px] rounded-full text-center align-middle text-black font-bold hover:bg-slate-300 shadow-md">Both</button>
+        <button onClick={() => changeSearchType("apartment")}
+          className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">
+          <p>Apt.</p>
+        </button>
+      </div>
     </>
   );
 }
