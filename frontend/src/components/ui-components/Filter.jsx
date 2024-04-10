@@ -1,140 +1,183 @@
-import React, { useState } from 'react';
-import currentUser from '../../currentUser';
+import React, { useEffect, useState } from 'react';
 import backend from '../../backend';
 import qnaOptions from './qnaOptions.json';
 
-const FilterItem = function({title, setFilters}) {
-    return <label onChange={(e) => setFilters(s => e.target.checked ? [...s, title] : s.filter(v => v!== title))} className="block hover:bg-[#EBE1BA]"><input type="checkbox" name={title} /> {title}</label>
+function getIdFromOptionText(questionId, optionText) {
+    const question = qnaOptions.find(v => v.id === questionId);
+    return question.options.find(item => item.text === optionText).option_id;
+}
+
+function getOptionTextFromId(id) {
+    for (const question of qnaOptions) {
+        const option = question.options.find(item => item.option_id === id)
+        if (option) return option.text
+    }
+}
+
+const NormalFilterItem = function({optionId, setFilters}) {
+    return <label onChange={(e) => setFilters(s => e.target.checked ? [...s, optionId] : s.filter(v => v!== optionId))} className="block hover:bg-[#EBE1BA]"><input type="checkbox" name={optionId} /> {getOptionTextFromId(optionId)}</label>
+}
+const UserDataItem = function({k, value, setUserData}) {
+    return <label
+        onChange={(e) => setUserData((prevData) => {
+            if (e.target.checked) {
+                prevData[k][value] = true;
+            } else {
+                delete prevData[k][value];
+            }
+            return prevData
+        })}
+        className="block hover:bg-[#EBE1BA]"
+    ><input type="checkbox" name={value}/> {value}</label>
 }
 
 export default function Filter() {
     const [isOpen, setIsOpen] = useState(false);
     const [openedDropdown, setOpenedDropdown] = useState(null);
     const [filters, setFilters] = useState([]);
+    const [userData, setUserData] = useState({gender: {}, college: {}, graduating_year: {}});
 
-    // console.log(filters)
+    const [filterResults, setFilterResults] = useState(null);
 
-    const handleApplyFilters = async () => {
-        // Collect the selected options for userdata filters
-        const userdataFilters = {
-            gender: document.getElementById('gender').value,
-            college: document.getElementById('college').value,
-            graduating_year: document.getElementById('graduating_year').value,
-        };
+    useEffect(() => {
+        backend.post('/match/filter-results', {userData, filters}, {withCredentials: true}).then((res) => {
+            setFilterResults(res.data)
+            console.log(res.data);
+        })
+    }, [filters, userData]);
 
-        // Prepare the qnaFilters payload by finding the selected option_ids
-        const qnaFilterSelections = {
-            'Building?': document.getElementById('Building?').value,
-            'Alcohol?': document.getElementById('Alcohol?').value,
-            'Substances?': document.getElementById('Substances?').value,
-            'Room Activity?': document.getElementById('Room Activity?').value,
-        };
+    // const userdataFilters = {
+    //     gender: "Male",
+    //     college: "College of Science and Engineering",
+    //     graduating_year: "2027"
+    // }
 
-        const qnaFilters = Object.entries(qnaFilterSelections).reduce((acc, [questionText, selectedOptionText]) => {
-            if (selectedOptionText) {
-                const question = qnaOptions.find(q => q.question === questionText);
-                if (question) {
-                    const option = question.options.find(o => o.text === selectedOptionText);
-                    if (option) acc.push(option.option_id);
-                }
-            }
-            return acc;
-        }, []);
-        console.log(qnaFilters);
+    // const handleApplyFilters = async () => {
+    //     // Collect the selected options for userdata filters
+    //     const userdataFilters = {
+    //         gender: document.getElementById('gender').value,
+    //         college: document.getElementById('college').value,
+    //         graduating_year: document.getElementById('graduating_year').value,
+    //     };
 
-        try {
-            // Adjust the backend call as necessary to handle the two payloads
-            const response = await backend.post('/match/filter-results', { userdataFilters, qnaFilters }, {
-                withCredentials: true, // If you need to send cookies with the request for session management
-            });
+    //     // Prepare the qnaFilters payload by finding the selected option_ids
+    //     const qnaFilterSelections = {
+    //         'Building?': document.getElementById('Building?').value,
+    //         'Alcohol?': document.getElementById('Alcohol?').value,
+    //         'Substances?': document.getElementById('Substances?').value,
+    //         'Room Activity?': document.getElementById('Room Activity?').value,
+    //     };
 
-            if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-                console.log('Filters applied, user IDs:', response.data); // Assuming the backend returns an array of user_ids
-            } else {
-                console.log('No matching users found.');
-            }
-        } catch (error) {
-            console.error('Error applying filters:', error);
-        }
+    //     const qnaFilters = Object.entries(qnaFilterSelections).reduce((acc, [questionText, selectedOptionText]) => {
+    //         if (selectedOptionText) {
+    //             const question = qnaOptions.find(q => q.question === questionText);
+    //             if (question) {
+    //                 const option = question.options.find(o => o.text === selectedOptionText);
+    //                 if (option) acc.push(option.option_id);
+    //             }
+    //         }
+    //         return acc;
+    //     }, []);
+    //     console.log(qnaFilters);
 
-        expandFilterUI();
-    };
+    //     try {
+    //         // Adjust the backend call as necessary to handle the two payloads
+    //         const response = await backend.post('/match/filter-results', { userdataFilters, qnaFilters }, {
+    //             withCredentials: true, // If you need to send cookies with the request for session management
+    //         });
+
+    //         if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+    //             console.log('Filters applied, user IDs:', response.data); // Assuming the backend returns an array of user_ids
+    //         } else {
+    //             console.log('No matching users found.');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error applying filters:', error);
+    //     }
+
+    //     expandFilterUI();
+    // };
 
     return(
         <>
-        {isOpen &&
+        {!isOpen &&
         <div className="flex absolute right-0">
-            <img className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png" onClick={expandFilterUI}></img>
+            <img onClick={() => setIsOpen(true)} className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png"></img>
         </div>
         }
 
-        {!isOpen &&
+        {isOpen &&
         <div class = "flex absolute bg-maroon w-[80vw] h-[12.5vh] left-[3%] rounded-b-3xl items-center justify-center">
             <div class = "flex space-x-[0.5vw] text-black text-[1vw] font-lora border-5 items-center">
 
                 <div className="relative">
                     <button onClick={() => setOpenedDropdown(openedDropdown === "Gender" ? null : "Gender")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Gender&emsp;&darr;</button>
-                    <div className={`${openedDropdown === "Gender" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden`}>
-                        <FilterItem title="Male" setFilters={setFilters} />
-                        <FilterItem title="Female" setFilters={setFilters} />
-                        <FilterItem title="Non-Binary" setFilters={setFilters} />
+                    <div className={`${openedDropdown === "Gender" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                        <UserDataItem k="gender" value="Male" setUserData={setUserData} />
+                        <UserDataItem k="gender" value="Female" setUserData={setUserData} />
+                        <UserDataItem k="gender" value="Non-Binary" setUserData={setUserData} />
                     </div>
                 </div>
-
-
-                <select name="gender" id="gender" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Non-Binary">Non-Binary</option>
-                </select>
-                <select name="college" id="college" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">College</option>
-                    <option value="CLA">College of Liberal Arts</option>
-                    <option value="CSE">College of Science and Engineering</option>
-                    <option value="CSOM">Carlson School of Management</option>
-                    <option value="CBS">College of Biological Sciences</option>
-                    <option value="CDES">College of Design</option>
-                    <option value="CEHD">College of Education And Human Development</option>
-                    <option value="CFANS">College of Food, Agricultural, and Natural Resource Sciences</option>
-                    <option value="SN">School of Nursing</option>
-                </select>
-                <select name="graduating_year" id="graduating_year" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Grad. Year</option>
-                    <option value="2028">2028</option>
-                    <option value="2027">2027</option>
-                    <option value="2026">2026</option>
-                    <option value="2025">2025</option>
-                </select>
-                <select name="building" id="Building?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Building</option>
-                    <option value="Comstock">Comstock</option>
-                    <option value="Pioneer">Pioneer</option>
-                    <option value="Frontier">Frontier</option>
-                    <option value="Territorial">Territorial</option>
-                    <option value="Centennial">Centennial</option>
-                    <option value="17th">17th Avenue</option>
-                    <option value="Sanford">Sanford</option>
-                    <option value="Middlebrook">Middlebrook</option>
-                    <option value="Bailey">Bailey</option>
-                </select>
-                <select name="alcohol" id="Alcohol?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Alcohol Use</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-                <select name="substances" id="Substances?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Substances</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-                <select name="openroom" id="Room Activity?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Open Room</option>
-                    <option value="Empty">No One</option>
-                    <option value="Couple">A Couple Friends</option>
-                    <option value="Party">Party</option>
-                </select>
-                <img class = "bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh]" src="../assets/images/filtercheck.png" onClick={handleApplyFilters}></img>
+                <div className="relative">
+                    <button onClick={() => setOpenedDropdown(openedDropdown === "College" ? null : "College")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">College&emsp;&darr;</button>
+                    <div className={`${openedDropdown === "College" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                        <UserDataItem k="college" value="Carlson" setUserData={setUserData} />
+                        <UserDataItem k="college" value="CBS" setUserData={setUserData} />
+                        <UserDataItem k="college" value="Design" setUserData={setUserData} />
+                        <UserDataItem k="college" value="CEHD" setUserData={setUserData} />
+                        <UserDataItem k="college" value="CFANS" setUserData={setUserData} />
+                        <UserDataItem k="college" value="CLA" setUserData={setUserData} />
+                        <UserDataItem k="college" value="CSE" setUserData={setUserData} />
+                        <UserDataItem k="college" value="Nursing" setUserData={setUserData} />
+                    </div>
+                </div>
+                <div className="relative">
+                    <button onClick={() => setOpenedDropdown(openedDropdown === "Grad. Year" ? null : "Grad. Year")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Grad. Year&emsp;&darr;</button>
+                    <div className={`${openedDropdown === "Grad. Year" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                        <UserDataItem k="graduating_year" value="Freshman" setUserData={setUserData} />
+                        <UserDataItem k="graduating_year" value="Sophomore" setUserData={setUserData} />
+                        <UserDataItem k="graduating_year" value="Junior" setUserData={setUserData} />
+                        <UserDataItem k="graduating_year" value="Senior" setUserData={setUserData} />
+                    </div>
+                </div>
+                <div className="relative">
+                    <button onClick={() => setOpenedDropdown(openedDropdown === "Building" ? null : "Building")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Building&emsp;&darr;</button>
+                    <div className={`${openedDropdown === "Building" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "17th")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Bailey")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Centennial")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Comstock")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Frontier")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Middlebrook")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Pioneer")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Sanford")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Territorial")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Yudof")} setFilters={setFilters} />
+                    </div>
+                </div>
+                <div className="relative">
+                    <button onClick={() => setOpenedDropdown(openedDropdown === "Alcohol Use" ? null : "Alcohol Use")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Alcohol Use&emsp;&darr;</button>
+                    <div className={`${openedDropdown === "Alcohol Use" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                        <NormalFilterItem optionId={getIdFromOptionText(7, "Yes")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(7, "No")} setFilters={setFilters} />
+                    </div>
+                </div>
+                <div className="relative">
+                    <button onClick={() => setOpenedDropdown(openedDropdown === "Substances" ? null : "Substances")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Substances&emsp;&darr;</button>
+                    <div className={`${openedDropdown === "Substances" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                        <NormalFilterItem optionId={getIdFromOptionText(1, "Yes")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(1, "No")} setFilters={setFilters} />
+                    </div>
+                </div>
+                <div className="relative">
+                    <button onClick={() => setOpenedDropdown(openedDropdown === "Room Use" ? null : "Room Use")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Room Use&emsp;&darr;</button>
+                    <div className={`${openedDropdown === "Room Use" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                        <NormalFilterItem optionId={getIdFromOptionText(6, "Empty")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(6, "Friends")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(6, "Party")} setFilters={setFilters} />
+                    </div>
+                </div>
+                <img onClick={() => setIsOpen(false)} className="bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh] cursor-pointer" src="../assets/images/filtercheck.png"></img>
             </div>
         </div>
         }
