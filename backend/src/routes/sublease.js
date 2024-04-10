@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
-import { createSublease, getSublease, deleteSublease } from '../database/sublease.js';
+import { createSublease, getSublease, deleteSublease, getSubleases } from "../database/sublease.js";
 
 const router = Router()
 
@@ -18,7 +18,21 @@ router.get('/get', async (req, res) => {
       res.status(404).json({ message: err.message });
     }
   });
-  
+
+router.get('/getmultiple', async (req, res) => {
+  const { count, page } = req.query;
+
+  if (!count || !page) {
+    return res.status(400).json({ message: "invalid params" });
+  }
+
+  try {
+    const subleases = await getSubleases(count, page);
+    res.json(subleases);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+});
 
   router.delete('/delete', async (req, res) => {
     const { user_id } = req.query; // Or req.params if you're using route parameters

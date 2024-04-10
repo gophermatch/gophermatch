@@ -1,10 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
 import { Link } from "react-router-dom";
+import backend from "../../backend.js";
+import currentUser from "../../currentUser.js";
 
 export default function Sublease()
 {
   const [subleases, setSubleases] = useState([]);
+
+  async function fetchSubleases() {
+    try {
+      const res = await backend.get("/sublease/getmultiple", {
+        params:{count: 5,
+        page: 0}
+      });
+
+      console.log(setSubleases(res.data));
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchSubleases();
+  }, []);
 
   const sampleSublease = {
     user_id: 1,
@@ -42,12 +62,10 @@ export default function Sublease()
         <Link to={"/createsublease"} color="primary" className={"flex flex-1 w-[70vw] mt-[4vh] h-[50px] m-auto bg-white rounded-3xl text-lg text-black transition-transform duration-500 scale-[98%] hover:scale-100"}>
           <p className={"m-auto"}>Add a sublease</p>
         </Link>
-        <SubleaseEntry sublease={sampleSublease}/>
-        <SubleaseEntry sublease={sampleSublease}/>
-        <SubleaseEntry sublease={sampleSublease}/>
-        <SubleaseEntry sublease={sampleSublease}/>
-        <SubleaseEntry sublease={sampleSublease}/>
-        <SubleaseEntry sublease={sampleSublease}/>
+        {subleases.length > 0 ? subleases.map(item => (
+          // Return a React element for each item in the array
+        <SubleaseEntry key={item} sublease={item}/>
+        )) : <br></br>}
         <br></br>
       </div>
     </div>

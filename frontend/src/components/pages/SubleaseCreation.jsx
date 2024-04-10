@@ -2,9 +2,12 @@ import { useState } from "react";
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
 import { DateTime } from "luxon";
+import { useNavigate } from 'react-router-dom';
 
 export default function SubleaseCreation()
 {
+  const navigate = useNavigate();
+
   async function submit() {
     try {
       const res = await backend.put("/sublease/insert", {
@@ -15,12 +18,9 @@ export default function SubleaseCreation()
       });
   
       console.log(res.data.message);
-  
-      currentUser.user_data = await currentUser.getAccount();
-  
-      // TODO: Navigate back to sublease page when done
-      // You'll need to implement navigation based on your routing solution (e.g., using react-router)
-  
+
+      navigate("/sublease");
+
     } catch (err) {
       console.error(err);
     }
@@ -62,17 +62,30 @@ export default function SubleaseCreation()
   };
 
   const handleSubmit = async (e) => {
+    console.log("submitting")
     e.preventDefault(); // Prevent the default form submission behavior
     await submit(); // Call the submit function that sends data to the backend
   };
+
+  const validateData = () => {
+    return formData.num_roommates >= 0 && formData.num_roommates !== "" && formData.num_bedrooms >= 0 && formData.num_bedrooms !== "" && formData.num_bathrooms >= 0 && formData.num_bathrooms !== "" && formData.building_name != "";
+  }
   
 
   return (
     <div className="max-w-lg mx-auto">
       <br></br>
       <h2 className="text-xl font-semibold mb-4">Sublease Form</h2>
-      <form onSubmit={handleSubmit}>
-        <div><button type="submit" className="bg-maroon_new text-white mt-4 px-4 w-full py-2 rounded hover:bg-blue-600">Submit</button></div>
+      <form className="py-5 overflow-y-scroll max-h-[90vh]" onSubmit={handleSubmit} style={{
+        WebkitOverflowScrolling: 'touch',
+        '&::-webkit-scrollbar': {
+          display: 'none'
+        },
+        scrollbarWidth: 'none',
+        '&::-webkit-scrollbar': {
+          width: '0'
+        }
+      }}>
         <div className="mb-4 flex">
           <div className="w-2/3 pr-2">
             <label htmlFor="building_name" className="block mb-1">Building Name</label>
@@ -92,7 +105,7 @@ export default function SubleaseCreation()
           <label htmlFor="building_address" className="block mb-1">Building Address (Optional)</label>
           <input type="text" id="building_address" name="building_address" value={formData.building_address}
                  onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full"
-                 placeholder="Enter building address" />
+                 placeholder="Street Address, City, State, Zip Code" />
         </div>
 
         <div className="mb-4 flex">
@@ -100,19 +113,19 @@ export default function SubleaseCreation()
             <label htmlFor="num_bedrooms" className="block mb-1">Bedrooms</label>
             <input type="number" id="num_bedrooms" name="num_bedrooms" value={formData.num_bedrooms}
                    onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full"
-                   placeholder="Enter number of bedrooms" />
+                   placeholder="Enter number of bedrooms" min={0}/>
           </div>
           <div className="w-1/3 pl-2 pr-2">
             <label htmlFor="num_bathrooms" className="block mb-1">Bathrooms</label>
             <input type="number" id="num_bathrooms" name="num_bathrooms" value={formData.num_bathrooms}
                    onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full"
-                   placeholder="Enter number of bathrooms" />
+                   placeholder="Enter number of bathrooms" min={0}/>
           </div>
           <div className="w-1/3 pl-2">
             <label htmlFor="num_roommates" className="block mb-1">Roommates</label>
             <input type="number" id="num_roommates" name="num_roommates" value={formData.num_roommates}
                    onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full"
-                   placeholder="Enter number of roommates" />
+                   placeholder="Enter number of roommates" min={0}/>
           </div>
         </div>
 
@@ -122,7 +135,7 @@ export default function SubleaseCreation()
             <span className="mr-2">$</span>
             <input type="number" id="rent_amount" name="rent_amount" value={formData.rent_amount}
                    onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full"
-                   placeholder="Enter rent amount" />
+                   placeholder="Enter rent amount" min={0} max={10000}/>
           </div>
         </div>
 
@@ -199,24 +212,25 @@ export default function SubleaseCreation()
     name="sublease_start_date" 
     value={formData.sublease_start_date}
     onChange={handleChange} 
-    className="border border-gray-300 rounded px-3 py-2 w-full" 
+    className="border border-gray-300 rounded px-3 py-2 w-full"
   />
 </div>
 
-<div className="mb-4">
-  <input 
-    type="date" 
-    id="sublease_end_date" 
-    name="sublease_end_date" 
-    value={formData.sublease_end_date}
-    onChange={handleChange} 
-    className="border border-gray-300 rounded px-3 py-2 w-full" 
-  />
-</div>
+        <div className="mb-4">
+          <label htmlFor="sublease_end_date" className="block mb-1">Sublease End Date</label>
+          <input
+            type="date"
+            id="sublease_end_date"
+            name="sublease_end_date"
+            value={formData.sublease_end_date}
+            onChange={handleChange}
+            className="border border-gray-300 rounded px-3 py-2 w-full"
+          />
+        </div>
 
-        {/* Fill out the rest of the inputs similarly */}
+        <div><button type="submit" className={`text-white mt-4 px-4 w-full py-2 rounded ${validateData() ? 'bg-maroon_new opacity-100' : 'bg-inactive_gray pointer-events-none opacity-80'}`}>Submit</button></div>
 
-        
+
       </form>
     </div>
   );

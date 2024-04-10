@@ -34,6 +34,24 @@ export async function createSublease(sublease_data) {
     });
   }
 
+export async function getSubleases(count, page) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT *
+FROM ${tableNames.u_subleases}
+LIMIT ${count} OFFSET ${page*count};`;
+
+    db.query(query, (err, results) => {
+      if (err) {
+        reject(err);
+      } else if (results.length === 0) {
+        reject(new Error('No subleases found.'));
+      } else {
+        resolve(results); // Return all found subleases
+      }
+    });
+  });
+}
+
   export async function deleteSublease(user_id) {
     return new Promise((resolve, reject) => {
       const queryString = `DELETE FROM u_subleases WHERE user_id = ?`;
