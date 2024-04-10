@@ -81,7 +81,7 @@ export default function Login() {
                         onKeyUp={enterKeyPress}
                     />
                 </div>
-                <div className="flex items-center justify-center text-[3vh] mt-5">
+                <div className="flex items-center justify-center text-[3vh] mt-[3vh]">
                     <input 
                         type="password" 
                         value={password} 

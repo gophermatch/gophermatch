@@ -10,11 +10,9 @@ import backend from "../../backend.js";
 
 export default function Profile(props) {
 
-  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, qnaAnswers } = props;
+  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, qnaAnswers, dormMode, apartmentMode } = props;
   let pictures = [kanye, other, kanye];
   const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
-  const [dormMode, setDorm] = useState(false);
-  const [apartmentMode, setApartment] = useState(true);
 
   useEffect(() => {
     fetchPictureUrls();
