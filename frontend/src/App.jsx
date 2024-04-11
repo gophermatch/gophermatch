@@ -19,6 +19,8 @@ import './index.css';
 import Landing from './components/pages/LandingPage.jsx'
 import Saved from './components/pages/Saved.jsx'
 import PicUpload from './components/pages/PicUpload.jsx'
+import Sublease from './components/pages/Sublease.jsx'
+import SubleaseCreation from "./components/pages/SubleaseCreation.jsx";
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
@@ -144,6 +146,14 @@ const router = createBrowserRouter([
             },{
               path: "PicUpload",
               element: <PicUpload />,
+              loader: unauthPageRedirect
+            },{
+              path: "Sublease",
+              element: <Sublease />,
+              loader: unauthPageRedirect
+            }, {
+              path: "CreateSublease",
+              element: <SubleaseCreation />,
               loader: unauthPageRedirect
             }
           ]

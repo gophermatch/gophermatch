@@ -1,0 +1,20 @@
+CREATE TABLE u_subleases (
+    user_id INT PRIMARY KEY,
+    building_name VARCHAR(100),
+    building_address VARCHAR(200),
+    num_bathrooms INT,
+    num_bedrooms INT,
+    num_roommates INT,
+    rent_amount INT,
+    housing_type ENUM('House', 'Apartment'),
+    pets_allowed ENUM('Any', 'Limited', 'None'),
+    has_kitchen ENUM('Full', 'Partial', 'None'),
+    has_laundry ENUM('Included', 'Additional Cost', 'None') DEFAULT 'None',
+    has_parking ENUM('Included', 'Additional Cost', 'None') DEFAULT 'None',
+    has_pool BOOLEAN,
+    is_furnished ENUM('Fully', 'Partially', 'No'),
+    has_gym BOOLEAN,
+    sublease_start_date DATE,
+    sublease_end_date DATE,
+    UNIQUE (user_id)
+);

@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Logout from './Logout';
-import currentUser from "../currentUser.js";
+import InboxNotification from './ui-components/InboxNotification';
+import currentUser from '../currentUser';
 
 export default function Sidebar() {
     const [activePage, setActivePage] = useState('/match');
     const [logoClicked, setLogoClicked] = useState(false);
+    const [inboxClicked, setInboxClicked] = useState(false);
 
     const handleLogoClick = () => {
         setLogoClicked(true);
         setActivePage('/match');
+        setInboxClicked(false);
     };
 
     return (
@@ -35,7 +38,14 @@ export default function Sidebar() {
                             key={label}
                             to={destination}
                             className={`max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 ${activePage === destination ? 'text-maroon_new bg-white' : 'hover:bg-maroon_dark text-white'}`}
-                            onClick={() => setActivePage(destination)}
+                      onClick={() => {
+                                setActivePage(destination);
+                                if (label === 'Inbox') {
+                                    setInboxClicked(true);
+                                } else {
+                                    setInboxClicked(false);
+                                }
+                            }}
                         >
                             {label}
                             {/*{activePage === destination && <div className="absolute bottom-0 left-0 w-full h-1 bg-gold"></div>}*/}
@@ -47,6 +57,7 @@ export default function Sidebar() {
                     </div>
                 </div>
             </nav>
+            <InboxNotification inboxClicked={inboxClicked} />
         </>
     );
 }

@@ -122,27 +122,29 @@ const PicUpload = () => {
 
     return (
         <div className="h-screen w-screen bg-doc flex justify-center items-center">
-            <div
-              className="bg-white rounded-[1.5rem] pt-[16rem] pb-[16rem] pl-[40rem] pr-[10rem] mr-[15rem] shadow-lg relative">
-                <div
-                  className="absolute bottom-0 left-0 w-full h-2/3 flex flex-col justify-center items-center cursor-pointer">
+            <div className="bg-white rounded-[1.5rem] pt-[42.5vh] pb-[42.5vh] pl-[50vw] pr-[12.5vw] mr-[12.5vw] shadow-lg relative">
+            {[0, 1, 2].map((index) => (
+                <div key={index} className={`absolute top-[4%] left-[${20 + index * 20}%] w-[10vw] h-[20vh] bg-gray-200 rounded-[1rem] flex justify-center items-center`}>
+                    <span className="text-[5vw]">+</span>
+                    {pictureUrls[index] && <img src={pictureUrls[index]} alt={`Profile ${index + 1}`} className="absolute w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
+                </div>
+            ))}
+                <div className="absolute bottom-0 left-0 w-full h-[60vh] flex flex-col justify-center items-center cursor-pointer">
                     <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
                     <label htmlFor="fileInput" className="cursor-pointer flex flex-col items-center w-full h-full">
                         <img
-                          src="https://www.svgrepo.com/show/344399/arrow-bar-up.svg"
-                          alt="Upload File"
-                          className="h-[12rem] w-[12rem] text-maroon mt-[3rem]"
+                            src="https://www.svgrepo.com/show/344399/arrow-bar-up.svg"
+                            alt="Upload File"
+                            className="h-[35vh] w-[35vw] text-maroon mt-[5vh]"
                         />
-                        <p className="mt-2">Drag and drop or click to browse</p>
-                        <p className={"mt-2 text-maroon_new"}>{status}</p>
+                        <p className="mt-[1vh] text-[3vh]">Drag and drop or click to browse</p>
                     </label>
                 </div>
-                <div className="absolute bottom-[calc(66.67%)] left-0 w-full h-[1px] bg-black"></div>
-                <Link to="/profile"
-                      className="absolute top-[3%] right-[3%] w-[8%] h-[5%] bg-maroon rounded-[1rem] cursor-pointer flex justify-center items-center"
-                      onClick={handleDoneClick}
+                <div className="absolute bottom-[60vh] left-0 w-full h-[1px] bg-black"></div>
+                <Link to="/profile" className="absolute top-[3%] right-[3%] w-[8%] h-[5%] bg-maroon rounded-[1rem] cursor-pointer flex justify-center items-center"
+                    onClick={handleDoneClick}
                 >
-                    <span className="text-white">Done</span>
+                    <span className="text-white w-[5vw] h-[4vh] text-[2.5vh] ml-[1vw]">Done</span>
                 </Link>
                 <div
                   className="absolute top-[4%] left-[20%] w-[8rem] h-[8rem] bg-inactive_gray rounded-[1rem] flex justify-center items-center">
