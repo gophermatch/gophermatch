@@ -72,7 +72,6 @@ export default function Inbox() {
     }, [])
 
     function unmatch(profileId) {
-        console.log("HEY");
         backend.delete('/match/inbox-delete', {params: {
             user1_id: currentUser.user_id,
             user2_id: profileId

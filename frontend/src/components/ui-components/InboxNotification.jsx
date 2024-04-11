@@ -39,8 +39,8 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
                 <div
                     style={{
                         position: 'absolute',
-                        top: '-33.4vh', // Adjust position for better visibility
-                        right: '5.5vw',
+                        top: '-32.3vh', // Adjust position for better visibility
+                        right: '4.4vw',
                         backgroundColor: 'gold', // Use a more visible color
                         borderRadius: '2vh',
                         width: '2vw', // Increase size for better visibility
@@ -50,6 +50,7 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
                         justifyContent: 'center',
                         color: 'black',
                         fontSize: '1.85vh',
+                        opacity: 0.75,
                         //fontWeight: 'bold',
                     }}
                 >
