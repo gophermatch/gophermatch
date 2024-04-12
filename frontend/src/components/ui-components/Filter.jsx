@@ -60,8 +60,8 @@ export default function Filter() {
 
     return(
         <>
-            {shouldShowIcon && <div className="flex absolute right-0">
-                <img className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png" onClick={expandFilterUI}></img>
+            {shouldShowIcon && <div className="flex absolute right-[37.5vw]">
+                <img className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filterdropdown.png" onClick={expandFilterUI}></img>
             </div>}
 
         {shouldShowUI && <div class = "flex absolute bg-maroon w-[80vw] h-[12.5vh] left-[3%] rounded-b-3xl items-center justify-center">

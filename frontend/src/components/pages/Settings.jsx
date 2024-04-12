@@ -120,7 +120,7 @@ export default function Settings() {
                 </button>
             </div>
             <div className="flex flex-col w-full justify-center items-center text-maroon text-xl font-comfortaa">
-                <div className="flex flex-wrap w-[65vw] mr-[12vw] justify-center">
+                <div className="flex flex-wrap w-[50vw] mr-[12vw] justify-center">
                     {userInfo.map(([key, value], index) => (
                         <div key={index} className="font-comfortaa text-2xl mt-[1vh] justify-between flex flex-col w-[12.5vw] mr-[3vw]">
                             <div className="flex justify-start items-center">

@@ -111,5 +111,63 @@
         {"option_id": 46, "text": "Yes"},
         {"option_id": 47, "text": "No"}
       ]
+    },
+    {
+      "id": 12,
+      "question": "Number of Bathrooms?",
+      "options": [
+        {"option_id": 48, "text": "5+"},
+        {"option_id": 49, "text": "4"},
+        {"option_id": 50, "text": "3"},
+        {"option_id": 51, "text": "2"},
+        {"option_id": 52, "text": "1"}
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Number of Bedrooms??",
+      "options": [
+        {"option_id": 53, "text": "5+"},
+        {"option_id": 54, "text": "4"},
+        {"option_id": 55, "text": "3"},
+        {"option_id": 56, "text": "2"},
+        {"option_id": 57, "text": "1"}
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Move in Date?",
+      "options": [
+        {"option_id": 58, "text": "January"},
+        {"option_id": 59, "text": "February"},
+        {"option_id": 60, "text": "March"},
+        {"option_id": 61, "text": "April"},
+        {"option_id": 62, "text": "May"},
+        {"option_id": 63, "text": "June"},
+        {"option_id": 64, "text": "July"},
+        {"option_id": 65, "text": "August"},
+        {"option_id": 66, "text": "September"},
+        {"option_id": 67, "text": "October"},
+        {"option_id": 68, "text": "November"},
+        {"option_id": 69, "text": "December"}
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Move out Date?",
+      "options": [
+        {"option_id": 70, "text": "January"},
+        {"option_id": 71, "text": "February"},
+        {"option_id": 72, "text": "March"},
+        {"option_id": 73, "text": "April"},
+        {"option_id": 74, "text": "May"},
+        {"option_id": 75, "text": "June"},
+        {"option_id": 76, "text": "July"},
+        {"option_id": 77, "text": "August"},
+        {"option_id": 78, "text": "September"},
+        {"option_id": 79, "text": "October"},
+        {"option_id": 80, "text": "November"},
+        {"option_id": 81, "text": "December"}
+      ]
     }
   ]

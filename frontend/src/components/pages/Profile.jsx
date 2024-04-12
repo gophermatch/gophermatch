@@ -10,6 +10,7 @@ export default function ProfilePage() {
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [profileMode, setProfileMode] = useState(0);
 
   useEffect(() => {
     fetchProfile();
@@ -119,7 +120,14 @@ export default function ProfilePage() {
         handleBioChange={handleBioChange}
         qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
         handleQnaChange={handleQnaChange}
+        dormMode={profileMode}
       />
+      <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
+        <button onClick={() => setProfileMode(0)}
+          className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">Dorm</button>
+        <button onClick={() => setProfileMode(1)}
+          className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">Apt.</button>
+      </div>
     </div>
   );
 }

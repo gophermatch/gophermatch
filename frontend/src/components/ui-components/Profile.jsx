@@ -10,28 +10,9 @@ import backend from "../../backend.js";
 
 export default function Profile(props) {
 
-  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, qnaAnswers } = props;
+  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, qnaAnswers, dormMode } = props;
   let pictures = [kanye, other, kanye];
   const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
-  const [dormMode, setDormMode] = useState(true);
-  const [apartmentMode, setApartmentMode] = useState(true);
-  const [bothMode, setBothMode] = useState(true);
-
-  function changeSearchType(decision){
-    if(decision == "dorm"){
-        setDormMode(true);
-        setBothMode(false);
-        setApartmentMode(false);
-    }else if(decision == "both"){
-        setDormMode(false);
-        setBothMode(true);
-        setApartmentMode(false);
-    } else if(decision == "apartment"){
-        setDormMode(false);
-        setBothMode(false);
-        setApartmentMode(true);
-    }
-}
 
   useEffect(() => {
     fetchPictureUrls();
@@ -92,7 +73,7 @@ export default function Profile(props) {
 
   return (
     <>
-      {dormMode && <div className={"m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
+      <div className={`m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
         <div className={"w-full flex flex-col  h-[70vh] mb-[6vh] bg-white rounded-3xl overflow-hidden"}>
           <div className={"flex h-[35vh] "}>
             <div className={"w-[18vw] h-[31.5vh] bg-white rounded-3xl mt-[4vh] ml-[4vh]"}>
@@ -120,72 +101,29 @@ export default function Profile(props) {
               </div>
             </div>
           </div>
-          <div className={"flex flex-grow"}>
+          <div className={`${dormMode === 0 ? "block" : "hidden"} flex flex-grow`}>
             <div className={"flex-1 flex-col h-[25vh] m-[5%] mt-[6vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[2vh]"}>
-              {qnaItems.slice(0,4)}
+              {qnaItems.slice(0,3)}
             </div>
             <div className={"flex-1 flex-col flex h-[25vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
-              {qnaItems.slice(4,7)}
+              {qnaItems.slice(3,7)}
+            </div>
+            <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
+              <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
+            </div>
+          </div>
+          <div className={`${dormMode === 1 || dormMode === 2 ? "block" : "hidden"} flex flex-grow`}>
+            <div className={"flex-1 flex-col h-[25vh] m-[5%] mt-[6vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[2vh]"}>
+              {qnaItems.slice(0,6)}
+            </div>
+            <div className={"flex-1 flex-col flex h-[25vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
+              {qnaItems.slice(6, 12)}
             </div>
             <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
             </div>
           </div>
         </div>
-      </div>}
-
-      {(apartmentMode || bothMode) && <div className={"m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
-        <div className={"w-full flex flex-col  h-[70vh] mb-[6vh] bg-white rounded-3xl overflow-hidden"}>
-          <div className={"flex h-[35vh] "}>
-            <div className={"w-[18vw] h-[31.5vh] bg-white rounded-3xl mt-[4vh] ml-[4vh]"}>
-              <Carousel pictureUrls={pictureUrls} editable={editable}></Carousel>
-            </div>
-            <div className={"flex-grow flex flex-col bg-white"}>
-              <div className={"h-10"}>
-              <p className={"text-[1.33vw] mt-[6vh] inline-block"}>
-                <span className="font-bold ml-[2vw]">{props.user_data.first_name} {props.user_data.last_name}:</span> {props.user_data.gender.charAt(0).toUpperCase() + props.user_data.gender.slice(1)}, {props.user_data.major} Major, {props.user_data.college.toUpperCase()} Class of {props.user_data.graduating_year}
-              </p>
-              </div>
-              <div className={"flex-grow rounded-3xl w-[41.5vw] ml-[2vw] mt-[8vh] border-2 border-maroon_new overflow"}>
-                <p className={"w-full h-full"}>
-                  {editable ? (
-                            <textarea
-                            className={`${styles.bioTextArea} ${editable ? 'w-full h-full' : ''}`}
-                            value={props.editedBio || ''}
-                              onChange={handleBioChange}
-                              placeholder="Edit Bio"
-                            />
-                          ) : (
-                            <p className={`${styles.bioTextArea}`}>{props.editedBio}</p>
-                            )}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className={"flex flex-grow"}>
-            <div className={"flex-1 flex-col h-[25vh] m-[5%] mt-[6vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[2vh]"}>
-              {qnaItems.slice(0,5)}
-            </div>
-            <div className={"flex-1 flex-col flex h-[25vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
-              {qnaItems.slice(5, 11)}
-            </div>
-            <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
-              <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
-            </div>
-          </div>
-        </div>
-      </div>}
-      <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
-        <button onClick={() => changeSearchType("dorm")}
-          className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
-          <p>Dorm</p>
-        </button>
-        <button onClick={() => changeSearchType("both")}
-          className="w-[8vh] h-[8vh] bg-offwhite border-black border-[1px] rounded-full text-center align-middle text-black font-bold hover:bg-slate-300 shadow-md">Both</button>
-        <button onClick={() => changeSearchType("apartment")}
-          className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">
-          <p>Apt.</p>
-        </button>
       </div>
     </>
   );
