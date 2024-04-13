@@ -49,7 +49,7 @@ export default function Profile(props) {
   };
 
   const qnaItems = qnaData.map((item, index) => (
-    <div key={item.id} className={`flex w-full pl-5 pr-5 border-b ${index !== qnaData.length - 1 ? 'mb-2' : ''} ${index === 0 ? 'mt-2' : ''} ${index === 3 ? 'mt-2' : ''} ${index===6 ? 'border-b-0' : ''} ${index===2 ? 'border-b-0' : ''}`} style={{ minHeight: '1rem' }}>
+    <div key={item.id} className={`flex w-full pl-5 pr-5 border-b ${index !== qnaData.length - 1 ? 'mb-2' : ''} ${index === 0 ? 'mt-2' : ''} ${index === 2 ? 'mt-2' : ''} ${index===1 ? 'border-b-0' : ''} ${index===3 ? 'border-b-0' : ''}`} style={{ minHeight: '1rem' }}>
       <p className="flex-1 flex items-center" style={{ lineHeight: '2' }}>{item.question}</p>
       {editable ? (
         <select
@@ -101,16 +101,17 @@ export default function Profile(props) {
             </div>
           </div>
           <div className={"flex flex-grow"}>
-            <div className={"flex-1 flex-col h-[16.6vh] m-[5%] mt-[10vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[1.2vw]"}>
-              {qnaItems.slice(0,3)}
+            <div className={"flex-1 flex-col h-[12vh] mt-[8vh] ml-[2vw] rounded-3xl border-2 border-maroon_new overflow-hidden text-[1.2vw]"}>
+              {qnaItems.slice(0,2)}
             </div>
-            <div className={"flex-1 flex-col flex h-[21vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[1.2vw]"}>
-              {qnaItems.slice(3,7)}
+            <div className={"flex-1 flex-col flex h-[12vh] mt-[8vh] mr-[3vw] ml-[3vw] rounded-3xl border-2 overflow-hidden text-[1.2vw]"}>
+              {qnaItems.slice(2,4)}
             </div>
-            <div className={"flex-1 m-[5%] mx-0 mb-0 pt-[1vh] h-[21vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[1.2vw]"}>
+            <div className={"flex-1 m-[5%] mx-0 mb-0 pt-[1vh] h-[21vh] mt-[8vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[1.2vw]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
             </div>
           </div>
+          <div className="border-b border-maroon h-[3vh] w-[30vw] absolute bottom-[23vh] left-[17vw]"></div>
         </div>
       </div>
   );
