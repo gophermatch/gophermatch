@@ -1,0 +1,18 @@
+/* slider.module.css */
+
+.slider {
+    background-color: maroon;
+  }
+  
+  .track {
+    background-color: maroon;
+  }
+  
+  .activeTrack {
+    background-color: maroon;
+  }
+  
+  .labelContainer {
+    background-color: maroon;
+  }
+  

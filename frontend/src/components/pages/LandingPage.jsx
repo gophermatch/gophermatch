@@ -133,7 +133,7 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-              <img src="assets/images/Quang.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+              <img src="assets/images/Quang2.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
                 <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Quang</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
