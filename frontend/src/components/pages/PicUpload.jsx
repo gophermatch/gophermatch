@@ -146,7 +146,6 @@ const PicUpload = () => {
                 >
                     <span className="text-white w-[5vw] h-[4vh] text-[2.5vh] ml-[1vw]">Done</span>
                 </Link>
-                
             </div>
         </div>
     );
