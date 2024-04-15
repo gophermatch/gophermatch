@@ -70,14 +70,11 @@ const PicUpload = () => {
     }
 
     const uploadFile = async (file, i) => {
-
-        console.log(file);
-
         const formData = new FormData();
         formData.append('file', file);
         formData.append('user_id', currentUser.user_id);
         formData.append('pic_number', i);
-
+    
         try {
             const response = await backend.post('/profile/upload-picture', formData, {
                 headers: {
@@ -86,17 +83,18 @@ const PicUpload = () => {
             });
             setStatus('Profile picture uploaded successfully!');
             console.log(response.data);
-
-            console.log("Changing picture urls");
-
+    
+            // Update pictureUrls state with the uploaded picture URL
+            const newPictureUrls = [...pictureUrls];
+            newPictureUrls[i] = response.data.pictureUrl;
+            setPictureUrls(newPictureUrls);
+    
             await fetchPictureUrls();
         } catch (error) {
             console.error('Error uploading file:', error);
             setStatus('Failed to upload picture. Please try again later.');
         }
     };
-    
-    
     
 
     const handleFileChange = (event) => {
@@ -121,11 +119,11 @@ const PicUpload = () => {
     
 
     return (
-        <div className="h-screen w-screen bg-offwhite flex justify-center items-center">
+        <div className="h-screen w-screen bg-doc flex justify-center items-center">
             <div className="bg-white rounded-[1.5rem] pt-[42.5vh] pb-[42.5vh] pl-[50vw] pr-[12.5vw] mr-[12.5vw] shadow-lg relative">
             {[0, 1, 2].map((index) => (
-                <div key={index} className={`absolute top-[4%] left-[${20 + index * 20}%] w-[9vw] h-[18vh] bg-gray rounded-[1rem] flex justify-center items-center`}>
-                    <span className="text-[5vw]">+</span>
+                <div key={index} className={`absolute top-[4%] left-[${20 + index * 20}%] w-[10vw] h-[17vh] bg-inactive_gray rounded-[1rem] flex justify-center items-center`}>
+                    <span className="text-[3vw]">+</span>
                     {pictureUrls[index] && <img src={pictureUrls[index]} alt={`Profile ${index + 1}`} className="absolute w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
                 </div>
             ))}
@@ -146,6 +144,7 @@ const PicUpload = () => {
                 >
                     <span className="text-white w-[5vw] h-[4vh] text-[2.5vh] ml-[1vw]">Done</span>
                 </Link>
+        
             </div>
         </div>
     );
