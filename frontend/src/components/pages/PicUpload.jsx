@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import backend from "../../backend.js";
 import currentUser from '../../currentUser';
-import style from '../../assets/css/arrow.module.css'
+
 
 const PicUpload = () => {
     const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
@@ -122,45 +122,22 @@ const PicUpload = () => {
 
     return (
         <div className="h-screen w-screen bg-offwhite flex justify-center items-center">
-            <div className="bg-white rounded-[3.5vh] pt-[42.5vh] pb-[42.5vh] pl-[50vw] pr-[12.5vw] mr-[12.5vw] shadow-lg relative">
-                {[0, 1, 2].map((index) => (
-                    <div key={index} className={`absolute top-[4vh] left-[${(index+1)*15}vw] w-[10vw] h-[18vh] bg-inactive_gray rounded-[1vw] flex justify-center items-center`}>
-                        {pictureUrls[index] && (
-                            <label htmlFor={`fileInput-${index}`} className="cursor-pointer flex justify-center items-center w-full h-full">
-                                <img src={pictureUrls[index]} alt={`Profile ${index + 1}`} className="w-full h-full object-cover rounded-[1rem]" />
-                                <input
-                                    id={`fileInput-${index}`}
-                                    type="file"
-                                    className="hidden"
-                                    onChange={(e) => handleFileChange(e, index)}
-                                />
-                            </label>
-                        )}
-                        {!pictureUrls[index] && (
-                            <label htmlFor={`fileInput-${index}`} className="cursor-pointer flex justify-center items-center w-full h-full">
-                                <span className="text-black text-4xl">+</span>
-                                <input
-                                    id={`fileInput-${index}`}
-                                    type="file"
-                                    className="hidden"
-                                    onChange={(e) => handleFileChange(e, index)}
-                                />
-                            </label>
-                        )}
-                        {pictureUrls[index] && (
-                            <button onClick={() => handleRemovePic(index)} className="absolute font-bold text-white bg-black bg-opacity-20 w-[25px] h-[25px] rounded-full transition duration-200 hover:bg-opacity-50">X</button>
-                        )}
-                    </div>
-                ))}
-                    <div className="absolute bottom-0 left-0 w-full h-[60vh] flex flex-col justify-center items-center cursor-pointer">
+            <div className="bg-white rounded-[1.5rem] pt-[42.5vh] pb-[42.5vh] pl-[50vw] pr-[12.5vw] mr-[12.5vw] shadow-lg relative">
+            {[0, 1, 2].map((index) => (
+                <div key={index} className={`absolute top-[4%] left-[${20 + index * 20}%] w-[9vw] h-[18vh] bg-gray rounded-[1rem] flex justify-center items-center`}>
+                    <span className="text-[5vw]">+</span>
+                    {pictureUrls[index] && <img src={pictureUrls[index]} alt={`Profile ${index + 1}`} className="absolute w-[6rem] h-[6rem] object-cover rounded-[1rem]" />}
+                </div>
+            ))}
+                <div className="absolute bottom-0 left-0 w-full h-[60vh] flex flex-col justify-center items-center cursor-pointer">
                     <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
-                    <label htmlFor="fileInput" className="cursor-pointer text-offwhite flex flex-col items-center w-full h-full">
+                    <label htmlFor="fileInput" className="cursor-pointer flex flex-col items-center w-full h-full">
                         <img
                             src="https://www.svgrepo.com/show/344399/arrow-bar-up.svg"
                             alt="Upload File"
-                            className="h-[35vh] w-[35vw] mt-[5vh] arrow-offwhite"
+                            className="h-[35vh] w-[35vw] text-maroon mt-[5vh]"
                         />
-                        <p className="mt-[1vh] text-black text-[3vh]">Drag and drop or click to browse</p>
+                        <p className="mt-[1vh] text-[3vh]">Drag and drop or click to browse</p>
                     </label>
                 </div>
                 <div className="absolute bottom-[60vh] left-0 w-full h-[1px] bg-black"></div>
