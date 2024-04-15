@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {DateTime} from "luxon";
 
 export default function SubleaseEntry({ sublease }) {
 
@@ -10,18 +11,18 @@ export default function SubleaseEntry({ sublease }) {
     <div
       className={"mt-[3vh] h-[30vh] w-[70vw] flex items-center"}>
       <div className={"font-profile font-bold p-0 text-maroon_new h-full w-[90%] bg-cream rounded-3xl"}>
-      <div className={"bg-maroon_new h-[33%] relative top-[-1vh] w-full rounded-t-3xl"}>
+      <div className={`h-[33%] relative top-[-1vh] w-full rounded-t-3xl ${sublease.premium ? 'bg-gold': 'bg-maroon_new'}`}>
         <p className={"flex justify-between text-white text-[1.5vw] w-full ml-[1vw] mt-[1vh]"}>
           <span className={"mt-[0.7vh]"}>{sublease.building_name}, ${sublease.rent_amount} per
           month, {sublease.num_bedrooms} bed {sublease.num_bathrooms} bath
           </span>
           <span></span>
           <span className={"ml-[3vw] inline-block text-right mr-[2vw] mt-[0.7vh]"}>
-            Available {sublease.sublease_start_date}-{sublease.sublease_end_date}
+            Available {DateTime.fromISO(sublease.sublease_start_date).toFormat('MM/dd/yyyy')}-{DateTime.fromISO(sublease.sublease_end_date).toFormat('MM/dd/yyyy')}
           </span>
         </p>
         <p className={"text-white text-[1vw] ml-[1vw] mt-[0vh]"}>
-          {sublease.building_address} ({sublease.num_roommates} roommates)
+          {sublease.building_address} ({sublease.num_roommates} roommate{sublease.num_roommates !== 1 && 's'})
         </p>
       </div>
 

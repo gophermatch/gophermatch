@@ -38,6 +38,7 @@ export async function getSubleases(count, page) {
   return new Promise((resolve, reject) => {
     const query = `SELECT *
 FROM ${tableNames.u_subleases}
+ORDER BY premium DESC
 LIMIT ${count} OFFSET ${page*count};`;
 
     db.query(query, (err, results) => {

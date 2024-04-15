@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
 import { Link } from "react-router-dom";
 import backend from "../../backend.js";
@@ -7,48 +7,68 @@ import currentUser from "../../currentUser.js";
 export default function Sublease()
 {
   const [subleases, setSubleases] = useState([]);
+  const [userSublease, setUserSublease] = useState(null);
+
+  const divRef = useRef(null);
+
+  let [numPages, setNumPages] = useState(1);
+
+  let [loadingFinished, setFinished] = useState(false);
+
+  const resultsPerPage = 5;
+
+  const handleScroll = () => {
+    if(loadingFinished) return;
+    const { scrollTop, scrollHeight, clientHeight } = divRef.current;
+    if (scrollTop + clientHeight + 20 >= scrollHeight) {
+      setNumPages(numPages+1);
+      console.log("Scrolled to the bottom, attempting to load more: " + numPages);
+    }
+  };
 
   async function fetchSubleases() {
+
+    if(loadingFinished) return;
+
     try {
-      const res = await backend.get("/sublease/getmultiple", {
-        params:{count: 5,
-        page: 0}
+      let singleRes = null;
+      if (userSublease === null) {
+        singleRes = await backend.get("/sublease/get", {
+          params: { user_id: currentUser.user_id }
+        });
+      }
+
+      if(singleRes != null) setUserSublease(singleRes.data);
+    } catch (err) {
+      console.log(err);
+      setUserSublease(null);
+    }
+
+    try {
+      const multiRes = await backend.get("/sublease/getmultiple", {
+        params:{count: resultsPerPage,
+        page: numPages-1}
       });
 
-      console.log(setSubleases(res.data));
+      setSubleases(subleases.concat(multiRes.data));
 
     } catch (err) {
+      // If no profiles are found in our query, don't try to load more in the future
+      if(err.response.status === 404) {
+        setFinished(true);
+        return;
+      }
       console.error(err);
     }
   }
 
   useEffect(() => {
     fetchSubleases();
-  }, []);
-
-  const sampleSublease = {
-    user_id: 1,
-    building_name: "Sample Building",
-    building_address: "123 Sample St, Sample City, Sample State, 12345",
-    num_bathrooms: 2,
-    num_bedrooms: 3,
-    num_roommates: 2,
-    rent_amount: 2000,
-    housing_type: "Apartment",
-    pets_allowed: "Limited",
-    has_kitchen: "Full",
-    has_laundry: "Included",
-    has_parking: "Additional Cost",
-    has_pool: true,
-    is_furnished: "Partially",
-    has_gym: false,
-    sublease_start_date: "2024/04/01",
-    sublease_end_date: "2025/04/01"
-  };
+  }, [numPages]);
 
   return(
     <div className="h-screen flex flex-col bg-offwhite items-center justify-center font-profile font-semibold">
-      <div className={"overflow-y-auto overflow-x-visible flex-grow"} style={{
+      <div ref={divRef} className={"overflow-y-auto overflow-x-visible flex-grow"} onScroll={handleScroll} style={{
         WebkitOverflowScrolling: 'touch',
         '&::-webkit-scrollbar': {
           display: 'none'
@@ -59,12 +79,12 @@ export default function Sublease()
         }
       }}>
 
-        <Link to={"/createsublease"} color="primary" className={"flex flex-1 w-[70vw] mt-[4vh] h-[50px] m-auto bg-white rounded-3xl text-lg text-black transition-transform duration-500 scale-[98%] hover:scale-100"}>
+        {userSublease == null && <Link to={"/createsublease"} color="primary" className={"flex flex-1 w-[70vw] mt-[4vh] h-[50px] m-auto bg-white rounded-3xl text-lg text-black transition-transform duration-500 scale-[98%] hover:scale-100"}>
           <p className={"m-auto"}>Add a sublease</p>
-        </Link>
+        </Link>}
         {subleases.length > 0 ? subleases.map(item => (
           // Return a React element for each item in the array
-        <SubleaseEntry key={item} sublease={item}/>
+          item.user_id !== currentUser.user_id && <SubleaseEntry key={item.user_id} sublease={item}/>
         )) : <br></br>}
         <br></br>
       </div>

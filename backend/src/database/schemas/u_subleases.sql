@@ -16,5 +16,6 @@ CREATE TABLE u_subleases (
     is_furnished ENUM('Fully', 'Partially', 'No'),
     has_gym BOOLEAN,
     sublease_start_date DATE,
-    sublease_end_date DATE
+    sublease_end_date DATE,
+    premium BOOLEAN
 );

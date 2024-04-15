@@ -6,7 +6,7 @@ import { createSublease, getSublease, deleteSublease, getSubleases } from "../da
 const router = Router()
 
 router.get('/get', async (req, res) => {
-    const { user_id } = req.query; // Or req.params if you're using route parameters
+    const { user_id } = req.query;
     if (!user_id) {
       return res.status(400).json({ message: "user_id is required" });
     }

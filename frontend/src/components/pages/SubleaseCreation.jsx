@@ -12,12 +12,10 @@ export default function SubleaseCreation()
     try {
       const res = await backend.put("/sublease/insert", {
         sublease_data: {
-          user_id: currentUser.user_id,
+          user_id: currentUser.user_id,//currentUser.user_id,
           ...formData, // Now includes the form data in the request
         }
       });
-  
-      console.log(res.data.message);
 
       navigate("/sublease");
 
@@ -43,21 +41,22 @@ export default function SubleaseCreation()
     has_gym: false,
     sublease_start_date: '',
     sublease_end_date: '',
+    premium: false,
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
+    let convertedValue = value;
+
+    // Convert "Yes" to true and "No" to false
+    if (value === "Yes" || value === "No") {
+      convertedValue = (value === "Yes");
+    }
+
     setFormData({
       ...formData,
-      [name]: checked,
+      [name]: convertedValue
     });
   };
 
@@ -68,7 +67,12 @@ export default function SubleaseCreation()
   };
 
   const validateData = () => {
-    return formData.num_roommates >= 0 && formData.num_roommates !== "" && formData.num_bedrooms >= 0 && formData.num_bedrooms !== "" && formData.num_bathrooms >= 0 && formData.num_bathrooms !== "" && formData.building_name != "";
+    const startDate = DateTime.fromFormat(formData.sublease_start_date, "yyyy-MM-dd");
+    const endDate = DateTime.fromFormat(formData.sublease_end_date, "yyyy-MM-dd");
+
+    const validDate = startDate < endDate && startDate >= DateTime.now();
+
+    return validDate && formData.num_roommates >= 0 && formData.num_roommates !== "" && formData.num_bedrooms >= 0 && formData.num_bedrooms !== "" && formData.num_bathrooms >= 0 && formData.num_bathrooms !== "" && formData.building_name != "";
   }
   
 
@@ -170,7 +174,7 @@ export default function SubleaseCreation()
           </div>
           <div>
             <label htmlFor="has_pool" className="block mb-1">Pool</label>
-            <select id="has_pool" name="has_pool" value={formData.has_pool} onChange={handleChange}
+            <select id="has_pool" name="has_pool" value={(formData.has_pool === true ? "Yes" : "No")} onChange={handleChange}
                     className="border border-gray-300 rounded px-3 py-2 w-full">
               <option value="Yes">Yes</option>
               <option value="No">No</option>
@@ -178,7 +182,7 @@ export default function SubleaseCreation()
           </div>
           <div>
             <label htmlFor="has_gym" className="block mb-1">Gym</label>
-            <select id="has_gym" name="has_gym" value={formData.has_gym} onChange={handleChange}
+            <select id="has_gym" name="has_gym" value={(formData.has_gym === true ? "Yes" : "No")} onChange={handleChange}
                     className="border border-gray-300 rounded px-3 py-2 w-full">
               <option value="Yes">Yes</option>
               <option value="No">No</option>
@@ -202,19 +206,27 @@ export default function SubleaseCreation()
               <option value="None">None</option>
             </select>
           </div>
+          <div>
+            <label htmlFor="premium" className="block mb-1">Premium Sublease</label>
+            <select id="premium" name="premium" value={(formData.premium === true ? "Yes" : "No")} onChange={handleChange}
+                    className="border border-gray-300 rounded px-3 py-2 w-full">
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
         </div>
 
         <div className="mb-4">
-  <label htmlFor="sublease_start_date" className="block mb-1">Sublease Start Date</label>
-  <input 
-    type="date" 
-    id="sublease_start_date" 
-    name="sublease_start_date" 
-    value={formData.sublease_start_date}
-    onChange={handleChange} 
-    className="border border-gray-300 rounded px-3 py-2 w-full"
-  />
-</div>
+          <label htmlFor="sublease_start_date" className="block mb-1">Sublease Start Date</label>
+          <input
+            type="date"
+            id="sublease_start_date"
+            name="sublease_start_date"
+            value={formData.sublease_start_date}
+            onChange={handleChange}
+            className="border border-gray-300 rounded px-3 py-2 w-full"
+          />
+        </div>
 
         <div className="mb-4">
           <label htmlFor="sublease_end_date" className="block mb-1">Sublease End Date</label>
