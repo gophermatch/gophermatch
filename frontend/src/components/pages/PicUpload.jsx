@@ -124,13 +124,9 @@ const PicUpload = () => {
         <div className="h-screen w-screen bg-doc flex justify-center items-center">
             <div className="bg-white rounded-[1.5rem] pt-[42.5vh] pb-[42.5vh] pl-[50vw] pr-[12.5vw] mr-[12.5vw] shadow-lg relative">
             {[0, 1, 2].map((index) => (
-                <div key={index} className={`absolute top-[5%] left-[${20 + index * 20}%] w-[9vw] h-[17vh] bg-inactive_gray rounded-[2vh] flex justify-center items-center`}>
-                    <span className="text-[3vw]">+</span>
-                    {pictureUrls[index] && 
-                    <img src={pictureUrls[index]} alt={`Profile ${index + 1}`} className="absolute w-full h-full object-cover rounded-[2vh]" />}
-                    <button className='flex items-center text-center justify-center text-black z-10 h-[3vw] w-[3vw] bg-gray'>
-                        X
-                    </button>
+                <div key={index} className={`absolute top-[4%] left-[${20 + index * 20}%] w-[10vw] h-[20vh] bg-inactive_gray rounded-[1rem] flex justify-center items-center`}>
+                    <span className="text-[5vw]">+</span>
+                    {pictureUrls[index] && <img src={pictureUrls[index]} alt={`Profile ${index + 1}`} className="absolute w-full h-full object-cover rounded-[1rem]" />}
                 </div>
             ))}
                 <div className="absolute bottom-0 left-0 w-full h-[60vh] flex flex-col justify-center items-center cursor-pointer">
@@ -157,3 +153,4 @@ const PicUpload = () => {
 };
 
 export default PicUpload;
+
