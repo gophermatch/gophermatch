@@ -14,8 +14,8 @@ function getOptionTextFromId(id) {
     }
 }
 
-const NormalFilterItem = function({optionId, setFilters}) {
-    return <label onChange={(e) => setFilters(s => e.target.checked ? [...s, optionId] : s.filter(v => v!== optionId))} className="block hover:bg-[#EBE1BA]"><input type="checkbox" name={optionId} /> {getOptionTextFromId(optionId)}</label>
+const NormalFilterItem = function({optionId, filters, setFilters}) {
+    return <label onChange={(e) => setFilters(s => e.target.checked ? [...s.filter(v => v!== optionId), optionId] : s.filter(v => v!== optionId))} className="block hover:bg-[#EBE1BA]"><input type="checkbox" name={optionId} checked={filters.includes(optionId)} /> {getOptionTextFromId(optionId)}</label>
 }
 const UserDataItem = function({k, value, setUserData}) {
     return <label
@@ -37,6 +37,8 @@ export default function Filter() {
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState({gender: {}, college: {}, graduating_year: {}});
 
+    console.log(filters)
+
     const [filterResults, setFilterResults] = useState(null);
 
     useEffect(() => {
@@ -44,7 +46,7 @@ export default function Filter() {
             setFilterResults(res.data)
             console.log(res.data);
         })
-    }, [filters, userData]);
+    }, [isOpen]);
 
     // const userdataFilters = {
     //     gender: "Male",
@@ -143,38 +145,38 @@ export default function Filter() {
                 <div className="relative">
                     <button onClick={() => setOpenedDropdown(openedDropdown === "Building" ? null : "Building")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Building&emsp;&darr;</button>
                     <div className={`${openedDropdown === "Building" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                        <NormalFilterItem optionId={getIdFromOptionText(5, "17th")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(5, "Bailey")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(5, "Centennial")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(5, "Comstock")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(5, "Frontier")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(5, "Middlebrook")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(5, "Pioneer")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(5, "Sanford")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(5, "Territorial")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(5, "Yudof")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "17th")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Bailey")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Centennial")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Comstock")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Frontier")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Middlebrook")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Pioneer")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Sanford")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Territorial")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(5, "Yudof")} filters={filters} setFilters={setFilters} />
                     </div>
                 </div>
                 <div className="relative">
                     <button onClick={() => setOpenedDropdown(openedDropdown === "Alcohol Use" ? null : "Alcohol Use")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Alcohol Use&emsp;&darr;</button>
                     <div className={`${openedDropdown === "Alcohol Use" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                        <NormalFilterItem optionId={getIdFromOptionText(7, "Yes")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(7, "No")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(7, "Yes")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(7, "No")} filters={filters} setFilters={setFilters} />
                     </div>
                 </div>
                 <div className="relative">
                     <button onClick={() => setOpenedDropdown(openedDropdown === "Substances" ? null : "Substances")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Substances&emsp;&darr;</button>
                     <div className={`${openedDropdown === "Substances" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                        <NormalFilterItem optionId={getIdFromOptionText(1, "Yes")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(1, "No")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(1, "Yes")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(1, "No")} filters={filters} setFilters={setFilters} />
                     </div>
                 </div>
                 <div className="relative">
                     <button onClick={() => setOpenedDropdown(openedDropdown === "Room Use" ? null : "Room Use")} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Room Use&emsp;&darr;</button>
                     <div className={`${openedDropdown === "Room Use" ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                        <NormalFilterItem optionId={getIdFromOptionText(6, "Empty")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(6, "Friends")} setFilters={setFilters} />
-                        <NormalFilterItem optionId={getIdFromOptionText(6, "Party")} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(6, "Empty")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(6, "Friends")} filters={filters} setFilters={setFilters} />
+                        <NormalFilterItem optionId={getIdFromOptionText(6, "Party")} filters={filters} setFilters={setFilters} />
                     </div>
                 </div>
                 <img onClick={() => setIsOpen(false)} className="bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh] cursor-pointer" src="../assets/images/filtercheck.png"></img>
