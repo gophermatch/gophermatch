@@ -124,7 +124,7 @@ const PicUpload = () => {
         <div className="h-screen w-screen bg-offwhite flex justify-center items-center">
             <div className="bg-white rounded-[3.5vh] pt-[42.5vh] pb-[42.5vh] pl-[50vw] pr-[12.5vw] mr-[12.5vw] shadow-lg relative">
                 {[0, 1, 2].map((index) => (
-                    <div key={index} className={`absolute top-[4%] left-[${20 + index * 20}%] w-[9rem] h-[9rem] bg-inactive_gray rounded-[1rem] flex justify-center items-center`}>
+                    <div key={index} className={`absolute top-[4vh] left-[${(index+1)*15}vw] w-[10vw] h-[18vh] bg-inactive_gray rounded-[1vw] flex justify-center items-center`}>
                         {pictureUrls[index] && (
                             <label htmlFor={`fileInput-${index}`} className="cursor-pointer flex justify-center items-center w-full h-full">
                                 <img src={pictureUrls[index]} alt={`Profile ${index + 1}`} className="w-full h-full object-cover rounded-[1rem]" />
@@ -138,7 +138,7 @@ const PicUpload = () => {
                         )}
                         {!pictureUrls[index] && (
                             <label htmlFor={`fileInput-${index}`} className="cursor-pointer flex justify-center items-center w-full h-full">
-                                <span className="text-offwhite text-4xl">+</span>
+                                <span className="text-black text-4xl">+</span>
                                 <input
                                     id={`fileInput-${index}`}
                                     type="file"
@@ -155,12 +155,12 @@ const PicUpload = () => {
                     <div className="absolute bottom-0 left-0 w-full h-[60vh] flex flex-col justify-center items-center cursor-pointer">
                     <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
                     <label htmlFor="fileInput" className="cursor-pointer text-offwhite flex flex-col items-center w-full h-full">
-                    <img
-                        src="https://www.svgrepo.com/show/344399/arrow-bar-up.svg"
-                        alt="Upload File"
-                        className={`${style.arrowOffwhite} h-[35vh] w-[35vw] mt-[5vh]`}
-                    />
-                        <p className="mt-[1vh] text-offwhite text-[3vh]">Drag and drop or click to browse</p>
+                        <img
+                            src="https://www.svgrepo.com/show/344399/arrow-bar-up.svg"
+                            alt="Upload File"
+                            className="h-[35vh] w-[35vw] mt-[5vh] arrow-offwhite"
+                        />
+                        <p className="mt-[1vh] text-black text-[3vh]">Drag and drop or click to browse</p>
                     </label>
                 </div>
                 <div className="absolute bottom-[60vh] left-0 w-full h-[1px] bg-black"></div>

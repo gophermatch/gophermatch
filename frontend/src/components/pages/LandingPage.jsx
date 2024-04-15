@@ -40,7 +40,7 @@ const LandingPage = () => {
           <div className="mt-[10vh] flex flex-wrap justify-center">
             {/* Top four profiles */}
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+              <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
                 <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Adam</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
@@ -55,7 +55,7 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+              <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
                 <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Adhi</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
@@ -70,7 +70,7 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+              <img src="assets/images/AJ2.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
                 <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">AJ</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
@@ -85,7 +85,7 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+              <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
                 <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Allen</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
@@ -103,7 +103,7 @@ const LandingPage = () => {
           <div className="flex flex-col items-center">
             <div className='flex flex-wrap justify-center'>
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+              <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
                 <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Alex</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
@@ -118,7 +118,7 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-              <img src="assets/images/AJ.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+              <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
                 <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">Tony</h3>
                 <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
