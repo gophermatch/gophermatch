@@ -135,10 +135,10 @@ const PicUpload = () => {
 
     return (
         <div className="h-screen w-screen bg-offwhite flex justify-center text-center items-center">
-            <Link to="/profile" className="absolute top-[1.5%] right-[46.5%] w-[7%] h-[5%] bg-maroon rounded-[3vw] cursor-pointer flex justify-center text-center items-center"
+            <Link to="/profile" className="absolute top-[2.5%] right-[46.5%] w-[7%] h-[5%] bg-maroon rounded-[3vw] cursor-pointer flex justify-center text-center items-center"
                     onClick={handleDoneClick}
                 >
-                    <span className=" text-white w-[5vw] h-[4vh] text-[2.5vh]">Done</span>
+                    <span className=" text-white w-[5vw] h-[4vh] font- text-[2.5vh]">Done</span>
                 </Link>
                 <div className="bg-white rounded-[3vh] h-[80vh] w-[70vw] mr-[15vw] shadow-lg relative">
                     <DragDropContext onDragEnd={onDragEnd} className = ''>
@@ -183,19 +183,24 @@ const PicUpload = () => {
                     <div className="absolute top-[23vh] left-0 w-full h-[3px] bg-black"></div>
                 </div>
                 <div className="absolute bottom-0 left-0 w-[70vw] mb-[10vh] ml-[7.5vw] h-[57vh] flex flex-col justify-center items-center cursor-pointer"
-                    onClick={() => document.uploadFile('File input')}>
-                    <div className="cursor-pointer flex flex-col items-center w-full h-full">
-                    <svg 
-                        width="40vw" 
-                        height="40vh" 
-                        viewBox="0 0 64 64" 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        fill="none" 
-                        stroke="#000000"><path d="M42 44a14 14 0 1 0-4.46-27.26A12 12 0 0 0 16.71 28H16a8 8 0 0 0 0 16h6"/><polyline points="40 36 32 28 24 36"/><line x1="32" y1="28" x2="32" y2="52"/></svg>
+     onClick={() => document.getElementById('fileInput').click()}>
+    <div className="cursor-pointer flex flex-col items-center w-full h-full">
+        <svg 
+            width="40vw" 
+            height="40vh" 
+            viewBox="0 0 64 64" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            stroke="#000000">
+            <path d="M42 44a14 14 0 1 0-4.46-27.26A12 12 0 0 0 16.71 28H16a8 8 0 0 0 0 16h6"/>
+            <polyline points="40 36 32 28 24 36"/>
+            <line x1="32" y1="28" x2="32" y2="52"/>
+        </svg>
+        <p className="text-[3vh] text-black">Click here to upload a picture</p>
+    </div>
+</div>
 
-                        <p className="text-[3vh] text-black">Drag and drop or click to browse</p>
-                    </div>
-                </div>
+<input type="file" id="fileInput" className="hidden" onChange={handleFileChange} accept="image/*" multiple />
             </div>
     );
 };
