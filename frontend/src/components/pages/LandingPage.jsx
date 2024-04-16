@@ -73,7 +73,7 @@ const LandingPage = () => {
               <img src="assets/images/AJ2.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
               <div className="text-center">
                 <h3 className="font-bold text-maroon text-[2.5vh] mt-[0.75vh]">AJ</h3>
-                <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
+                <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Project Lead</p>
                 <div className="flex justify-center">
                   <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
                     <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
