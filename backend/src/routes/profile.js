@@ -4,9 +4,10 @@ import fs from 'fs';
 import { createErrorObj } from './routeutil.js'
 import {
     getProfile,
+    getApartmentProfile,
     updateProfile,
     savePictureUrl,
-    retrievePictureUrls, createBio, removePicture
+    retrievePictureUrls, createBio, removePicture, updateApartmentInfo
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
