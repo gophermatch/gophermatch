@@ -32,13 +32,16 @@ router.post('/matcher', async (req, res) => {
 
 
 router.post('/filter-results', async (req, res) => {
-    const { userdataFilters, qnaFilters } = req.body;
+    const { userData, filters } = req.body;
+    console.log("NEW FILTER")
+    console.log("filter udata",userData)
+    console.log("filter qna", filters)
 
-    try {
-        console.log("NEW FILTER")
-        const userdataResults = await getFilterResults(userdataFilters);
+    try {        
+        const userdataResults = await getFilterResults(userData);
         console.log("udata",userdataResults);
-        const qnaResults = await getFilterResultsQna(qnaFilters);
+
+        const qnaResults = await getFilterResultsQna(filters);
         console.log("qna",qnaResults);
         const commonUserIds = userdataResults.filter(id => qnaResults.includes(id));
         console.log("real",commonUserIds)

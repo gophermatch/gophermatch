@@ -1,6 +1,7 @@
 // Assuming the existence of a database module for executing queries
 import { db , tableNames} from './db.js'; // Your database connection setup
 import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
+import qnaOptions from '../../../frontend/src/components/ui-components/qnaOptions.json' assert { type: 'json' };
 
 export async function recordUserDecision(user1Id, user2Id, decision) {
     try {
@@ -76,82 +77,87 @@ async function handleReciprocalMatch(user1Id, user2Id) {
 
 export async function getFilterResults(filters) {
     return new Promise((resolve, reject) => {
-        // Check if any filters are provided
-        const hasFilters = Object.values(filters).some(value => value !== '');
-
-        let queryString, values;
-
-        if (!hasFilters) {
-            // If no filters are provided, select all user_ids from u_userdata
-            queryString = `SELECT DISTINCT user_id FROM ${tableNames.u_userdata}`;
-            values = [];
-        } else {
-            // Construct where clause based on provided filters
-            const whereClause = Object.keys(filters).reduce((acc, key) => {
-                if (filters[key] !== '') {
-                    acc[key] = filters[key];
-                }
-                return acc;
-            }, {});
-
-            const queryResult = buildSelectString("user_id", tableNames.u_userdata, whereClause);
-            queryString = queryResult.queryString;
-            values = queryResult.values;
+      // Start the query string with all user_ids
+      let queryString = `SELECT DISTINCT user_id FROM ${tableNames.u_userdata}`;
+  
+      // Initialize an array to hold WHERE conditions
+      const whereConditions = [];
+  
+      // Loop through each filter and construct WHERE conditions for non-empty values
+      Object.entries(filters).forEach(([key, options]) => {
+        // Check if options is not an empty object
+        if (Object.keys(options).length > 0) {
+          // Add a condition for each option
+          const conditions = Object.keys(options).map(option => `${key} = '${option}'`);
+          whereConditions.push(`(${conditions.join(' OR ')})`);
         }
-
-        db.query(queryString, values, (err, rows) => {
-            if (err) {
-                console.error("Error querying filter results from database:", err);
-                reject(err);
-                return;
-            }
-
-            // Extract user_id from each row and return an array of user_ids
-            const userIds = rows.map(row => row.user_id);
-            resolve(userIds);
-        });
+      });
+  
+      // If there are any WHERE conditions, append them to the query string
+      if (whereConditions.length > 0) {
+        queryString += ` WHERE ${whereConditions.join(' AND ')}`;
+      }
+  
+      // Execute the database query
+      db.query(queryString, (err, rows) => {
+        if (err) {
+          console.error("Error querying filter results from database:", err);
+          reject(err);
+          return;
+        }
+        // Map the results to an array of user_ids
+        const userIds = rows.map(row => row.user_id);
+        resolve(userIds);
+      });
     });
-}
+  }
+  
 
-export async function getFilterResultsQna(optionIds) {
+  export async function getFilterResultsQna(optionIds) {
     return new Promise((resolve, reject) => {
-        // If no optionIds provided, select all user_ids without any conditions
-        if (!optionIds || optionIds.length === 0) {
-            db.query(`SELECT DISTINCT user_id FROM u_qna`, [], (err, rows) => {
-                if (err) {
-                    console.error("Error querying all user_ids from u_qna:", err);
-                    reject(err);
-                    return;
-                }
-                const userIds = rows.map(row => row.user_id);
-                resolve(userIds);
-            });
+      if (!optionIds || optionIds.length === 0) {
+        db.query(`SELECT DISTINCT user_id FROM u_qna`, [], (err, rows) => {
+          if (err) {
+            console.error("Error querying all user_ids from u_qna:", err);
+            reject(err);
             return;
-        }
-
-        const placeholders = optionIds.map(() => '?').join(',');
-        let queryString = `SELECT user_id FROM u_qna WHERE option_id IN (${placeholders})`;
-
-        queryString += ` GROUP BY user_id`;
-
-        // If more than one optionId is provided, ensure users match all specified options
-        if (optionIds.length > 1) {
-            queryString += ` HAVING COUNT(DISTINCT option_id) = ${optionIds.length}`;
-        }
-
-        db.query(queryString, optionIds, (err, rows) => {
-            if (err) {
-                console.error("Error querying filter results from u_qna:", err);
-                reject(err);
-                return;
-            }
-
-            // Extract user_id from each row and return an array of user_ids
-            const userIds = rows.map(row => row.user_id);
-            resolve(userIds);
+          }
+          const userIds = rows.map(row => row.user_id);
+          resolve(userIds);
         });
+        return;
+      }
+  
+      // Map option IDs to their respective questions using the qnaOptions data
+      const questionIdToOptionIds = qnaOptions.reduce((acc, q) => {
+        q.options.forEach(opt => {
+          if (optionIds.includes(opt.option_id)) {
+            if (!acc[q.id]) acc[q.id] = [];
+            acc[q.id].push(opt.option_id);
+          }
+        });
+        return acc;
+      }, {});
+  
+      // Create an array of conditions, each condition checks for one question's options.
+      const conditions = Object.entries(questionIdToOptionIds).map(([questionId, options]) => 
+        `question_id = ${questionId} AND option_id IN (${options.join(',')})`
+      );
+  
+      let queryString = `SELECT user_id FROM u_qna WHERE (${conditions.join(') OR (')}) GROUP BY user_id`;
+  
+      db.query(queryString, (err, rows) => {
+        if (err) {
+          console.error("Error querying filter results from u_qna:", err);
+          reject(err);
+          return;
+        }
+        // Extract user_id from each row and return an array of unique user_ids
+        const userIds = rows.map(row => row.user_id);
+        resolve(userIds);
+      });
     });
-}
+  }
 
 // Function to retrieve all user IDs that a specified user has marked as 'unsure'.
 export async function getSavedMatches(userId) {

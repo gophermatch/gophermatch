@@ -37,14 +37,13 @@ export default function Filter() {
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState({gender: {}, college: {}, graduating_year: {}});
 
-    console.log(filters)
-
     const [filterResults, setFilterResults] = useState(null);
 
     useEffect(() => {
         backend.post('/match/filter-results', {userData, filters}, {withCredentials: true}).then((res) => {
             setFilterResults(res.data)
-            console.log(res.data);
+            console.log("ids",res.data)
+            
         })
     }, [isOpen]);
 
