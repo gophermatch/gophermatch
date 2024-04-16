@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import backend from "../../backend.js";
 import currentUser from '../../currentUser';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 
 const PicUpload = () => {
@@ -119,6 +120,18 @@ const PicUpload = () => {
     const handleDoneClick = async () => {
     };
     
+    const onDragEnd = (result) => {
+        if (!result.destination) {
+            return;
+        }
+    
+        const items = Array.from(pictureUrls);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+    
+        setPictureUrls(items);
+    };
+    
 
     return (
         <div className="h-screen w-screen bg-offwhite flex justify-center text-center items-center">
@@ -127,8 +140,50 @@ const PicUpload = () => {
                 >
                     <span className=" text-white w-[5vw] h-[4vh] text-[2.5vh]">Done</span>
                 </Link>
-            <div className="bg-white rounded-[3vh] pt-[38vh] pb-[45vh] pl-[50vw] pr-[12.5vw] mr-[12.5vw] shadow-lg relative">
-                <div className="absolute bottom-0 left-0 w-full h-[60vh] flex flex-col justify-center items-center cursor-pointer">
+                <div className="bg-white rounded-[3vh] h-[80vh] w-[70vw] mr-[15vw] shadow-lg relative">
+                    <DragDropContext onDragEnd={onDragEnd} className = ''>
+                        <Droppable droppableId="pictures" direction="horizontal" className = ''>
+                            {(provided) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                    className="flex justify-center"
+                                >
+                                    {pictureUrls.map((url, index) => (
+                                        <Draggable key={index} draggableId={`picture-${index}`} index={index}>
+                                            {(provided) => (
+                                                <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                className="relative w-[10vw] h-[17vh] bg-inactive_gray rounded-[1vw] ml-[1.5vw] mt-[3vh]"
+                                            >
+                                                {url ? (
+                                                    <>
+                                                        <img src={url} alt={`Profile ${index + 1}`} className="w-full h-full object-cover rounded-[1rem]" />
+                                                        <button onClick={() => handleRemovePic(index)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-white bg-black bg-opacity-20 w-[25px] h-[25px] rounded-full transition duration-200 hover:bg-opacity-50" style={{ }}>
+                                                            X
+                                                        </button>
+                                                    </>
+                                                ) : (
+                                                    <label htmlFor="fileInput" className="cursor-pointer flex flex-col justify-center items-center w-full h-full">
+                                                        <span className="text-[4vh]">+</span>
+                                                    </label>
+                                                )}
+                                            </div>
+                                            
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+                    <div className="absolute top-[23vh] left-0 w-full h-[3px] bg-black"></div>
+                </div>
+                <div className="absolute bottom-0 left-0 w-[70vw] mb-[10vh] ml-[7.5vw] h-[57vh] flex flex-col justify-center items-center cursor-pointer"
+                    onClick={() => document.uploadFile('File input')}>
                     <div className="cursor-pointer flex flex-col items-center w-full h-full">
                     <svg 
                         width="40vw" 
@@ -136,59 +191,12 @@ const PicUpload = () => {
                         viewBox="0 0 64 64" 
                         xmlns="http://www.w3.org/2000/svg" 
                         fill="none" 
-                        stroke="#000000">
-                            <path d="M42 44a14 14 0 1 0-4.46-27.26A12 12 0 0 0 16.71 28H16a8 8 0 0 0 0 16h6"/><polyline points="40 36 32 28 24 36"/><line x1="32" y1="28" x2="32" y2="52"/></svg>
+                        stroke="#000000"><path d="M42 44a14 14 0 1 0-4.46-27.26A12 12 0 0 0 16.71 28H16a8 8 0 0 0 0 16h6"/><polyline points="40 36 32 28 24 36"/><line x1="32" y1="28" x2="32" y2="52"/></svg>
+
                         <p className="text-[3vh] text-black">Drag and drop or click to browse</p>
                     </div>
                 </div>
-                <div className="absolute bottom-[60vh] left-0 w-full h-[3px] bg-black"></div>
-                <div
-                  className="absolute top-[4%] left-[20%] w-[10vw] h-[17vh] bg-inactive_gray rounded-[1rem] flex justify-center items-center">
-                    {pictureUrls[0] ? (
-                        <>
-                            <img src={pictureUrls[0]} alt="Profile 1" className="w-full h-full object-cover rounded-[1rem]" />
-                            <button onClick={() => handleRemovePic(0)} className="absolute font-bold text-white bg-black bg-opacity-20 w-[25px] h-[25px] rounded-full transition duration-200 hover:bg-opacity-50">
-                                X
-                            </button>
-                        </>
-                    ) : (
-                        <label htmlFor="fileInput" className="cursor-pointer flex flex-col justify-center items-center w-full h-full">
-                            <span className="text-[4vh]">+</span>
-                        </label>
-                    )}
-                </div>
-                <div
-                  className="absolute top-[4%] left-[40%] w-[10vw] h-[17vh] bg-inactive_gray rounded-[1rem] flex justify-center items-center">
-                    {pictureUrls[1] ? (
-                        <>
-                            <img src={pictureUrls[1]} alt="Profile 1" className="w-full h-full object-cover rounded-[1rem]" />
-                            <button onClick={() => handleRemovePic(1)} className="absolute font-bold text-white bg-black bg-opacity-20 w-[25px] h-[25px] rounded-full transition duration-200 hover:bg-opacity-50">
-                                X
-                            </button>
-                        </>
-                    ) : (
-                        <label htmlFor="fileInput" className="cursor-pointer flex flex-col justify-center items-center w-full h-full">
-                            <span className="text-[4vh]">+</span>
-                        </label>
-                    )}
-                </div>
-                <div
-                  className="absolute top-[4%] left-[60%] w-[10vw] h-[17vh] bg-inactive_gray rounded-[1rem] flex justify-center items-center">
-                    {pictureUrls[2] ? (
-                        <>
-                            <img src={pictureUrls[2]} alt="Profile 1" className="w-full h-full object-cover rounded-[1rem]" />
-                            <button onClick={() => handleRemovePic(2)} className="absolute font-bold text-white bg-black bg-opacity-20 w-[25px] h-[25px] rounded-full transition duration-200 hover:bg-opacity-50">
-                                X
-                            </button>
-                        </>
-                    ) : (
-                        <label htmlFor="fileInput" className="cursor-pointer flex flex-col justify-center items-center w-full h-full">
-                            <span className="text-[4vh]">+</span>
-                        </label>
-                    )}
-                </div>
             </div>
-        </div>
     );
 };
 
