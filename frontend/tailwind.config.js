@@ -26,6 +26,7 @@ export default {
       maroon: 'rgb(118, 45, 45)',
       red: 'rgb(255, 0, 0)',
       white: 'rgb(255, 255, 255)',
+      dark_maroon: '#5E0000',
       doc: 'rgb(243, 237, 220)',
       black: 'rgb(0,0,0)',
       offwhite: '#F2EBE6',

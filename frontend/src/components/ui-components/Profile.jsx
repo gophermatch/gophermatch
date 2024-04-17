@@ -130,13 +130,15 @@ export default function Profile(props) {
             <div className={"flex-1 flex-col h-[18.5vh] w-[20vw] mt-[7vh] ml-[2vw] rounded-3xl border-2 border-maroon_new overflow-hidden text-[1.2vw]"}>
               {qnaItems.slice(0,5)}
             </div>
-            <div className={"flex-1 flex-col flex h-[30vh] mt-[2vh] mr-[3vw] ml-[3vw] rounded-3xl border-2 overflow-hidden text-[1.2vw]"}>
+            <div className={"flex-1 flex-col flex h-[31.5vh] mt-[2vh] mr-[3vw] ml-[3vw] rounded-3xl border-2 overflow-hidden text-[1.2vw]"}>
             </div>
-            <div className={"flex-1 mx-0 mb-0 pt-[1vh] h-[30vh] mt-[2vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[1.2vw]"}>
+            <div className={"flex-1 mx-0 mb-0 pt-[1vh] h-[31.5vh] mt-[2vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[1.2vw]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
             </div>
           </div>
-          <div className="absolute bottom-[20vh] left-[13vw] w-[20%]">
+          <div className="absolute bottom-[19vh] left-[13vw] w-[20%]">
+          <span className="ml-[5vw]">Sleep Schedule</span>
+
             <InputRange
               draggableTrack
               maxValue={144}
