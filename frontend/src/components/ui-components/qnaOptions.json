@@ -5,7 +5,8 @@
       "options": [
         {"option_id": 1, "text": "Yes"},
         {"option_id": 2, "text": "No"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 2,
@@ -15,7 +16,8 @@
         {"option_id": 4, "text": "Sophomore"},
         {"option_id": 5, "text": "Junior"},
         {"option_id": 6, "text": "Senior"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 3,
@@ -24,7 +26,8 @@
         {"option_id": 7, "text": "Male"},
         {"option_id": 8, "text": "Female"},
         {"option_id": 9, "text": "Non-Binary"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 4,
@@ -38,7 +41,8 @@
         {"option_id": 15, "text": "CLA"},
         {"option_id": 16, "text": "CSE"},
         {"option_id": 17, "text": "Nursing"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 5,
@@ -55,7 +59,8 @@
         {"option_id": 26, "text": "Territorial"},
         {"option_id": 27, "text": "Yudof"},
         {"option_id": 28, "text": "Any"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 6,
@@ -64,7 +69,8 @@
         {"option_id": 29, "text": "Empty"},
         {"option_id": 30, "text": "Friends"},
         {"option_id": 31, "text": "Party"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 7,
@@ -72,7 +78,8 @@
       "options": [
         {"option_id": 32, "text": "Yes"},
         {"option_id": 33, "text": "No"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 8,
@@ -83,7 +90,8 @@
         {"option_id": 36, "text": "$800-$1,000"},
         {"option_id": 37, "text": "$600-$800"},
         {"option_id": 38, "text": "<$600"}
-      ]
+      ],
+      "isTextField": true
     },
     {
       "id": 9,
@@ -91,7 +99,8 @@
       "options": [
         {"option_id": 39, "text": "Yes"},
         {"option_id": 40, "text": "No"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 10,
@@ -102,7 +111,8 @@
         {"option_id": 43, "text": "3"},
         {"option_id": 44, "text": "2"},
         {"option_id": 45, "text": "1"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 11,
@@ -110,7 +120,8 @@
       "options": [
         {"option_id": 46, "text": "Yes"},
         {"option_id": 47, "text": "No"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 12,
@@ -121,7 +132,8 @@
         {"option_id": 50, "text": "3"},
         {"option_id": 51, "text": "2"},
         {"option_id": 52, "text": "1"}
-      ]
+      ],
+      "isTextField": true
     },
     {
       "id": 13,
@@ -132,7 +144,8 @@
         {"option_id": 55, "text": "3"},
         {"option_id": 56, "text": "2"},
         {"option_id": 57, "text": "1"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 14,
@@ -150,7 +163,8 @@
         {"option_id": 67, "text": "October"},
         {"option_id": 68, "text": "November"},
         {"option_id": 69, "text": "December"}
-      ]
+      ],
+      "isTextField": false
     },
     {
       "id": 15,
@@ -168,6 +182,7 @@
         {"option_id": 79, "text": "October"},
         {"option_id": 80, "text": "November"},
         {"option_id": 81, "text": "December"}
-      ]
+      ],
+      "isTextField": false
     }
   ]

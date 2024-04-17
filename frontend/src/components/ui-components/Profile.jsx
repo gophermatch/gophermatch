@@ -10,7 +10,7 @@ import backend from "../../backend.js";
 
 export default function Profile(props) {
 
-  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, qnaAnswers, dormMode } = props;
+  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, handleTextChange, qnaAnswers, dormMode } = props;
   let pictures = [kanye, other, kanye];
   const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
 
@@ -48,10 +48,26 @@ export default function Profile(props) {
     return null;
   };
 
+  const getSelectedTextField = (questionId) => {
+    if (Array.isArray(qnaAnswers)) {
+      const answer = qnaAnswers.find(ans => ans.question_id === questionId);
+      return answer ? answer.special_text_field : null;
+    }
+    return null;
+  };
+
   const qnaItems = qnaData.map((item, index) => (
     <div key={item.id} className={`flex w-full pl-5 pr-5 border-b ${index !== qnaData.length - 1 ? 'mb-[0.1vh]' : ''} ${index === 0 ? 'mt-[0.25vh]' : ''} ${index === 3 ? 'mt-[0.25vh]' : ''} ${index===6 ? 'border-b-0' : ''} ${index===2 ? 'border-b-0' : ''}`} style={{ minHeight: '1vh' }}>
       <p className="flex-[1vh] flex items-center" style={{ lineHeight: '2' }}>{item.question}</p>
-      {editable ? (
+      {editable && item.isTextField ? (
+        <input
+          type="text"
+          className="text-right"
+          // write function below
+          onChange={(event) => handleTextChange(event, item.id)}
+        />
+      ) : null}
+      {editable && !item.isTextField ? (
         <select
           className={"text-right"}
           value={getSelectedOptionId(item.id) || ''}
@@ -63,11 +79,13 @@ export default function Profile(props) {
             </option>
           ))}
         </select>
-      ) : (
-        <p className="truncate whitespace-nowrap">
+      ) : ( null)}
+      {(!editable && !item.isTextField) && <p className="truncate whitespace-nowrap">
           {item.options.find(o => o.option_id === getSelectedOptionId(item.id))?.text || 'N/A'}
-        </p>
-      )}
+        </p>}
+      {(!editable && item.isTextField) && <p className="truncate whitespace-nowrap">
+        {getSelectedTextField(item.id)}
+      </p>}
     </div>
   ));         
 
