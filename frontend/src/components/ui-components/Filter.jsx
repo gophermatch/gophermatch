@@ -55,6 +55,7 @@ export default function Filter() {
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState(defaultUserdata);
 
+
     const [filterResults, setFilterResults] = useState(null);
 
     function requestFilterResults() {
