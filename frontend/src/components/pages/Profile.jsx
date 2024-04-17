@@ -40,6 +40,22 @@ export default function ProfilePage() {
     }));
   };
 
+  const handleTextChange = (event, questionId) => {
+    const newText = event.target.value;
+    setEditedProfile(prev => {
+      const updatedQnaAnswers = [...prev.qnaAnswers];
+      const answerIndex = updatedQnaAnswers.findIndex(ans => ans.question_id === questionId);
+
+      if (answerIndex > -1) {
+        updatedQnaAnswers[answerIndex] = { ...updatedQnaAnswers[answerIndex], special_text_field: newText };
+      } else {
+        updatedQnaAnswers.push({ question_id: questionId, special_text_field: newText });
+      }
+
+      return { ...prev, qnaAnswers: updatedQnaAnswers };
+    });
+  };
+
   const handleQnaChange = (event, questionId) => {
     const optionId = parseInt(event.target.value, 10);
     setEditedProfile(prev => {
@@ -67,7 +83,8 @@ export default function ProfilePage() {
     try {
       const formattedQnaAnswers = editedProfile.qnaAnswers.map(answer => ({
         question_id: parseInt(answer.question_id, 10),
-        option_id: answer.option_id
+        option_id: answer.option_id,
+        special_text_field: answer.textField
       }));
 
       const payload = {
@@ -120,6 +137,7 @@ export default function ProfilePage() {
         handleBioChange={handleBioChange}
         qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
         handleQnaChange={handleQnaChange}
+        handleTextChange={handleTextChange}
         dormMode={profileMode}
       />
       <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
