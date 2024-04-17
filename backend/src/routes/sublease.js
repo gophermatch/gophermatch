@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
-import { createSublease, getSublease, deleteSublease, getSubleases } from "../database/sublease.js";
+import { createSublease, getSublease, deleteSublease, getSubleases, updateSublease } from "../database/sublease.js";
 
 const router = Router()
 
@@ -62,6 +62,23 @@ router.put('/insert', async (req, res) =>{
     console.error('Error inserting sublease:', error);
     
     res.status(500).json(createErrorObj('Error creating sublease', error.message));
+  }
+});
+
+router.put('/update', async (req, res) =>{
+  try{
+    const subleaseData = req.body.sublease_data;
+
+    const result = await updateSublease(subleaseData);
+
+    res.status(201).json({
+      message: 'Sublease updated successfully',
+      data: result // This could be the newly created sublease object/ID
+    });
+  } catch (error) {
+    console.error('Error updated sublease:', error);
+
+    res.status(500).json(createErrorObj('Error updating sublease', error.message));
   }
 });
 

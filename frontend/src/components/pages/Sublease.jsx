@@ -111,9 +111,9 @@ export default function Sublease()
         }
       }}>
 
-        {userSublease == null && <Link to={"/createsublease"} color="primary" className={"flex flex-1 w-[70vw] mt-[4vh] h-[50px] m-auto bg-white rounded-3xl text-lg text-black transition-transform duration-500 scale-[98%] hover:scale-100"}>
-          <p className={"m-auto"}>Add a sublease</p>
-        </Link>}
+        <Link to={"/createsublease"} color="primary" className={"flex flex-1 w-[70vw] mt-[4vh] h-[50px] m-auto bg-white rounded-3xl text-lg text-black transition-transform duration-500 scale-[98%] hover:scale-100"}>
+          <p className={"m-auto"}>{userSublease==null ? "Add your sublease" : "Edit your sublease"}</p>
+        </Link>
         {subleases.length > 0 ? subleases.map(item => (
           // Return a React element for each item in the array
           item.user_id !== currentUser.user_id && <SubleaseEntry key={item.user_id} sublease={item}/>

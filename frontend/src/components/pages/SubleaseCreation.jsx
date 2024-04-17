@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
 import { DateTime } from "luxon";
@@ -9,6 +9,21 @@ export default function SubleaseCreation()
   const navigate = useNavigate();
 
   async function submit() {
+    if (editingMode) {
+      try {
+        const res = await backend.put("/sublease/update", {
+          sublease_data: {
+            user_id: currentUser.user_id,//currentUser.user_id,
+            ...formData, // Now includes the form data in the request
+          }
+        });
+
+        navigate("/sublease");
+
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
     try {
       const res = await backend.put("/sublease/insert", {
         sublease_data: {
@@ -22,6 +37,7 @@ export default function SubleaseCreation()
     } catch (err) {
       console.error(err);
     }
+  }
   }  
 
   const [formData, setFormData] = useState({
@@ -43,6 +59,11 @@ export default function SubleaseCreation()
     sublease_end_date: '',
     premium: false,
   });
+
+  let [userSublease, setUserSublease] = useState(null);
+
+  let [editingMode, setEditingMode] = useState(false);
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -73,6 +94,37 @@ export default function SubleaseCreation()
     const validDate = startDate < endDate && startDate >= DateTime.now();
 
     return validDate && formData.num_roommates >= 0 && formData.num_roommates !== "" && formData.num_bedrooms >= 0 && formData.num_bedrooms !== "" && formData.num_bathrooms >= 0 && formData.num_bathrooms !== "" && formData.building_name != "";
+  }
+
+  useEffect(() => {
+    fetchUserSublease();
+  }, []);
+
+  const fetchUserSublease = async () => {
+
+    try {
+      let singleRes = null;
+      if (userSublease === null) {
+        singleRes = await backend.get("/sublease/get", {
+          params: { user_id: currentUser.user_id }
+        });
+      }
+
+      if(singleRes != null) {
+        setEditingMode(true);
+
+        const formData = { ...singleRes.data };
+        delete formData.user_id;
+
+        formData.sublease_start_date = DateTime.fromISO(formData.sublease_start_date).toFormat("yyyy-MM-dd");
+        formData.sublease_end_date = DateTime.fromISO(formData.sublease_end_date).toFormat("yyyy-MM-dd");
+
+        setFormData(formData);
+      }
+    } catch (err) {
+      console.log(err);
+      setUserSublease(null);
+    }
   }
   
 
