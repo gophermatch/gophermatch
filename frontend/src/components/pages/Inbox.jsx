@@ -130,7 +130,7 @@ export default function Inbox({ user_data }) {
                     </div>
                     <button 
                         className="h-[13vh] w-[8vw] mt-[2vh] bg-offgold border border-black rounded-[1.5vh] ml-[1vw] cursor-default"
-                        onClick={() => unmatch(person.id)}>
+                        onClick={() => unmatch(person.user_id)}>
                         <svg width="10vw" height="10vh" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mt-[1.5vh] ml-[-1vw]">
                             <g id="ic-contact-message">
                                 <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5px" d="M19.89,3.25H4.11a2,2,0,0,0-2,2v9.06a2,2,0,0,0,2,2H5.75l2.31,4a.85.85,0,0,0,1.48,0l2.32-4h8a2,2,0,0,0,2-2V5.25A2,2,0,0,0,19.89,3.25Z"/>
@@ -140,7 +140,7 @@ export default function Inbox({ user_data }) {
                         </svg>
                     </button>
                     <button className="h-[13vh] w-[8vw] mt-[2vh] ml-[2vw] bg-maroon_transparent rounded-[1.5vh]"
-                        onClick={() => unmatch(person.id)}>
+                        onClick={() => unmatch(person.user_id)}>
                         <svg fill="black" width="10vw" height="10vh" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mt-[1.5vh] ml-[-1vw]"><path d="M1,20a1,1,0,0,0,1,1h8a1,1,0,0,0,0-2H3.071A7.011,7.011,0,0,1,10,13a5.044,5.044,0,1,0-3.377-1.337A9.01,9.01,0,0,0,1,20ZM10,5A3,3,0,1,1,7,8,3,3,0,0,1,10,5Zm12.707,9.707L20.414,17l2.293,2.293a1,1,0,1,1-1.414,1.414L19,18.414l-2.293,2.293a1,1,0,0,1-1.414-1.414L17.586,17l-2.293-2.293a1,1,0,0,1,1.414-1.414L19,15.586l2.293-2.293a1,1,0,0,1,1.414,1.414Z"/></svg>
                     </button>
                 </div>
