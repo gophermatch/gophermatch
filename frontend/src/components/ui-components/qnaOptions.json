@@ -84,21 +84,17 @@
     {
       "id": 8,
       "question": "Rent?",
-      "options": [
-        {"option_id": 34, "text": "$1,200+"},
-        {"option_id": 35, "text": "$1,000-1,200"},
-        {"option_id": 36, "text": "$800-$1,000"},
-        {"option_id": 37, "text": "$600-$800"},
-        {"option_id": 38, "text": "<$600"}
-      ],
       "isTextField": true
     },
     {
       "id": 9,
       "question": "Pets?",
       "options": [
-        {"option_id": 39, "text": "Yes"},
-        {"option_id": 40, "text": "No"}
+        {"option_id": 34, "text": "Cat"},
+        {"option_id": 35, "text": "Dog"},
+        {"option_id": 36, "text": "Other"},
+        {"option_id": 37, "text": "None but yes"},
+        {"option_id": 38, "text": "None and no"}
       ],
       "isTextField": false
     },
@@ -106,11 +102,11 @@
       "id": 10,
       "question": "Number of Roommates?",
       "options": [
-        {"option_id": 41, "text": "5+"},
-        {"option_id": 42, "text": "4"},
-        {"option_id": 43, "text": "3"},
-        {"option_id": 44, "text": "2"},
-        {"option_id": 45, "text": "1"}
+        {"option_id": 39, "text": "5+"},
+        {"option_id": 40, "text": "4"},
+        {"option_id": 41, "text": "3"},
+        {"option_id": 42, "text": "2"},
+        {"option_id": 43, "text": "1"}
       ],
       "isTextField": false
     },
@@ -118,8 +114,9 @@
       "id": 11,
       "question": "Furnished?",
       "options": [
-        {"option_id": 46, "text": "Yes"},
-        {"option_id": 47, "text": "No"}
+        {"option_id": 44, "text": "Yes"},
+        {"option_id": 45, "text": "No"},
+        {"option_id": 46, "text": "Any"}
       ],
       "isTextField": false
     },
@@ -127,23 +124,24 @@
       "id": 12,
       "question": "Number of Bathrooms?",
       "options": [
-        {"option_id": 48, "text": "5+"},
-        {"option_id": 49, "text": "4"},
-        {"option_id": 50, "text": "3"},
-        {"option_id": 51, "text": "2"},
-        {"option_id": 52, "text": "1"}
+        {"option_id": 47, "text": "4"},
+        {"option_id": 48, "text": "3"},
+        {"option_id": 49, "text": "2"},
+        {"option_id": 50, "text": "1"},
+        {"option_id": 51, "text": "Any"}
       ],
-      "isTextField": true
+      "isTextField": false
     },
     {
       "id": 13,
       "question": "Number of Bedrooms??",
       "options": [
-        {"option_id": 53, "text": "5+"},
-        {"option_id": 54, "text": "4"},
-        {"option_id": 55, "text": "3"},
-        {"option_id": 56, "text": "2"},
-        {"option_id": 57, "text": "1"}
+        {"option_id": 52, "text": "5"},
+        {"option_id": 53, "text": "4"},
+        {"option_id": 54, "text": "3"},
+        {"option_id": 55, "text": "2"},
+        {"option_id": 56, "text": "1"},
+        {"option_id": 57, "text": "Any"}
       ],
       "isTextField": false
     },

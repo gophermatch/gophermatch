@@ -10,7 +10,7 @@ import backend from "../../backend.js";
 
 export default function Profile(props) {
 
-  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, handleTextChange, qnaAnswers, dormMode } = props;
+  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, handleTextChange, qnaAnswers, apartmentData, dormMode } = props;
   let pictures = [kanye, other, kanye];
   const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
 
@@ -41,7 +41,11 @@ export default function Profile(props) {
 
   // Function to find the selected option_id for a given question_id
   const getSelectedOptionId = (questionId) => {
-    if (Array.isArray(qnaAnswers)) {
+    if(questionId == 9){
+      return apartmentData ? apartmentData.pets : null;
+    } else if(questionId == 10){
+      return apartmentData ? apartmentData.num_of_roommates : null;
+    } else if (Array.isArray(qnaAnswers)) {
       const answer = qnaAnswers.find(ans => ans.question_id === questionId);
       return answer ? answer.option_id : null;
     }
@@ -49,9 +53,8 @@ export default function Profile(props) {
   };
 
   const getSelectedTextField = (questionId) => {
-    if (Array.isArray(qnaAnswers)) {
-      const answer = qnaAnswers.find(ans => ans.question_id === questionId);
-      return answer ? answer.special_text_field : null;
+    if(questionId == 8){
+      return apartmentData ? apartmentData.rent : null;
     }
     return null;
   };

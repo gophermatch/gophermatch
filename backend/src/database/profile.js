@@ -198,7 +198,7 @@ export async function updateProfile(user_id, profile) {
     });
   }
 
-  //meant to update all Apartent specific QNA
+  //meant to update all Apartment specific QNA
   export async function updateApartmentInfo(user_id, apartmentData) {
     return new Promise(async (resolve, reject) => {
       try {
