@@ -129,7 +129,7 @@ export default function Inbox({ user_data }) {
                         </div>
                     </div>
                     <button 
-                        className="h-[13vh] w-[8vw] mt-[2vh] bg-offgold rounded-[1.5vh] ml-[1vw]"
+                        className="h-[13vh] w-[8vw] mt-[2vh] bg-offgold border border-black rounded-[1.5vh] ml-[1vw] cursor-default"
                         onClick={() => unmatch(person.id)}>
                         <svg width="10vw" height="10vh" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mt-[1.5vh] ml-[-1vw]">
                             <g id="ic-contact-message">
