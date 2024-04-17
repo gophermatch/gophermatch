@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
-import { createSublease, getSublease, deleteSublease, getSubleases, updateSublease } from "../database/sublease.js";
+import { createSublease, getSublease, deleteSublease, getSubleases, updateSublease, saveSublease, deleteSavedSublease, getSavedSubleases } from "../database/sublease.js";
 
 const router = Router()
 
@@ -79,6 +79,53 @@ router.put('/update', async (req, res) =>{
     console.error('Error updated sublease:', error);
 
     res.status(500).json(createErrorObj('Error updating sublease', error.message));
+  }
+});
+
+router.post('/save', async (req, res) =>{
+  try {
+    const {user_id, sublease_id} = req.body;
+    console.log(user_id)
+    console.log(sublease_id)
+    if(!user_id || !sublease_id){
+      return res.status(400).json({ error: "Missing required fields: user_id, sublease_id." });
+    }
+    await saveSublease(user_id, sublease_id);
+    res.json({ message: 'Sublease successfully saved' });
+  } catch (error) {
+    console.error("Error saving sublease: ", error);
+    res.status(500).json(createErrorObj('Error saving sublease', error.message));
+  }
+});
+
+router.delete('/delete-save', async (req, res) =>{
+  try {
+    const {user_id, sublease_id} = req.body;
+    console.log(user_id)
+    console.log(sublease_id)
+    if(!user_id || !sublease_id){
+      return res.status(400).json({ error: "Missing required fields: user_id, sublease_id." });
+    }
+    await deleteSavedSublease(user_id, sublease_id);
+    res.json({ message: 'Sublease successfully deleted' });
+  } catch (error) {
+    console.error("Error deleting sublease: ", error);
+    res.status(500).json(createErrorObj('Error deleting sublease', error.message));
+  }
+});
+
+router.get('/get-saves', async (req, res) =>{
+  try {
+    const {user_id} = req.body;
+    console.log(user_id)
+    if(!user_id){
+      return res.status(400).json({ error: "Missing required fields: user_id." });
+    }
+    const subleases = await getSavedSubleases(user_id);
+    res.json(subleases);
+  } catch (error) {
+    console.error("Error getting saved sublease: ", error);
+    res.status(500).json(createErrorObj('Error geting saved sublease', error.message));
   }
 });
 
