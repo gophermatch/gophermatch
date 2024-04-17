@@ -13,8 +13,9 @@
     "concurrently": "^8.2.1"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.2.4",
     "@azure/storage-blob": "^12.17.0",
-    "multer": "^1.4.5-lts.1",
-    "luxon": "^3.4.4"
+    "luxon": "^3.4.4",
+    "multer": "^1.4.5-lts.1"
   }
 }
