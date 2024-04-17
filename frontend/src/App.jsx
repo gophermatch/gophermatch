@@ -3,6 +3,7 @@ import {
     redirect, 
     RouterProvider
 } from 'react-router-dom'
+import { Auth0Provider } from '@auth0/auth0-react';
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Layout from "./components/Layout.jsx"
@@ -21,6 +22,20 @@ import Saved from './components/pages/Saved.jsx'
 import PicUpload from './components/pages/PicUpload.jsx'
 import Sublease from './components/pages/Sublease.jsx'
 import SubleaseCreation from "./components/pages/SubleaseCreation.jsx";
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+      <Auth0Provider
+          domain="dev-iysxkb0letym7hif.us.auth0.com"
+          clientId="Fjm29DesdBC1mJn0nQW6qVwMXKS5qF3m"
+          redirectUri={window.location.origin}
+      >
+          <RouterProvider router={router} />
+      </Auth0Provider>
+  </React.StrictMode>
+);
+
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
