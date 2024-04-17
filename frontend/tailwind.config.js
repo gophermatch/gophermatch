@@ -26,6 +26,7 @@ export default {
       maroon: 'rgb(118, 45, 45)',
       red: 'rgb(255, 0, 0)',
       white: 'rgb(255, 255, 255)',
+      dark_maroon: '#5E0000',
       doc: 'rgb(243, 237, 220)',
       black: 'rgb(0,0,0)',
       offwhite: '#F2EBE6',
@@ -37,7 +38,9 @@ export default {
       login: 'rgb(161 98 7)',
       transparent: 'transparent',
       cream: '#FFFAF7',
-      light_gray: '#EDEDED'
+      light_gray: '#EDEDED',
+      gray: 'rgb(212 212 216)',
+      gray_text: 'rgb(31 41 55)',
     },
     fontFamily: {
       lora: ['Lora', 'serif'],
