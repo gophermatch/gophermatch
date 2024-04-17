@@ -45,8 +45,9 @@ export default function Inbox({ user_data }) {
 
     function selectProfile(profile, event) {
         const clickedBox = event.target.getBoundingClientRect();
-        setSelectedProfile({...profile, clickedBox, showShortBox: true});
-    }    
+        setSelectedProfile({...profile, clickedBox, showShortBox: true, showAdditionalInfo: true});
+    } 
+        
 
     useEffect(() => {
         (async () => {
@@ -110,23 +111,21 @@ export default function Inbox({ user_data }) {
 
     const profilePopup = selectedProfile && selectedProfile.clickedBox && (
         <>
-            {/* Only render the shorter box if a profile is selected */}
             {selectedProfile.showShortBox && (
                 <div
                     id='inbox-profile-popup'
                     className="fixed inset-0 flex justify-center items-center"
                     onClick={() => setSelectedProfile(null)}
                 >
-                    {/* Shorter box content */}
                     <div
                         className="bg-white rounded-md border-[0.25vh] border-maroon p-[1vw] h-[14vh] w-[59vw] flex"
                         style={{
                             position: 'absolute',
                             top: `${selectedProfile.clickedBox.top}px`,
-                            left: `17.61vw`, // Adjust 10px for spacing
+                            left: `17.61vw`,
                         }}
                     >
-                        <img src={selectedProfile.profileURL || kanye} alt="Profile" className="rounded-md w-[8vw] h-[12vh] mt-[-1vh]"></img>
+                        <img src={selectedProfile.profileURL || kanye} alt="Profile" className="rounded-md w-[7vw] h-[12vh] mt-[-1vh]"></img>
                         <div className="flex flex-col text-maroon text-[2vh] ml-[3vw] mt-[-1vh]">
                             <div className="flex flex-row">
                                 <p className="text-maroon text-[2vh] ml-[3vw]">Email:</p>
@@ -176,9 +175,9 @@ export default function Inbox({ user_data }) {
                 <Link to="/showMatch" className="bg-white rounded-md border-[0.25vh] border-maroon p-[1vw] ml-[0.5vw] h-[14vh] m-[2vh] w-[59vw] flex cursor-pointer">
                     {/* Content of the link */}
                 
-                        <img src={person.profileURL || kanye} className="rounded-md w-[8vw] h-[12vh] mt-[-1vh]"></img>
-                        <div className="flex flex-1 text-center justify-center pt-[2.5vh]">
-                            <p className="text-maroon text-center text-[2.8vh] inline-block">{`${person.first_name} ${person.last_name}`}</p>
+                        <img src={person.profileURL || kanye} className="rounded-md w-[7vw] h-[12vh] mt-[-1vh]"></img>
+                        <div className="flex flex-1 text-center justify-center pt-[1.5vh]">
+                            <p className="text-maroon text-center text-[4vh] inline-block">{`${person.first_name} ${person.last_name}`}</p>
                             <div className="h-[8vh] w-[5vw] inline-flex object-scale-down hover:scale-110 active:scale-90 justify-center items-center">
                                 {/* <svg width="8vw" height="8vh" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
                                     <g id="Group_718" data-name="Group 718" transform="translate(-50.5 -150.5)">
@@ -190,10 +189,10 @@ export default function Inbox({ user_data }) {
                         </Link>
                     </div>
                     <button 
-                        className="h-[13vh] w-[8vw] mt-[2vh] bg-offgold bordef border-black rounded-[1.5vh] ml-[1vw]"
+                        className="h-[14vh] w-[8vw] mt-[2vh] bg-offgold bordef border-black rounded-[1.5vh] ml-[1vw]"
                         onClick={(e) => selectProfile(person, e)}>
                         <div style={{pointerEvents: 'none'}}>
-                            <svg width="10vw" height="10vh" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mt-[1.5vh] ml-[-1vw]">
+                            <svg width="10vw" height="10vh" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mt-[1vh] ml-[-1vw]">
                                 <g id="ic-contact-message">
                                     <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5px" d="M19.89,3.25H4.11a2,2,0,0,0-2,2v9.06a2,2,0,0,0,2,2H5.75l2.31,4a.85.85,0,0,0,1.48,0l2.32-4h8a2,2,0,0,0,2-2V5.25A2,2,0,0,0,19.89,3.25Z"/>
                                     <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5px" x1="5.01" y1="7.86" x2="11.01" y2="7.86"/>
@@ -202,7 +201,7 @@ export default function Inbox({ user_data }) {
                             </svg>
                         </div>
                     </button>
-                    <button className="h-[13vh] w-[8vw] mt-[2vh] ml-[2vw] bg-maroon_transparent rounded-[1.5vh]"
+                    <button className="h-[14vh] w-[8vw] mt-[2vh] ml-[2vw] bg-maroon_transparent rounded-[1.5vh]"
                         onClick={() => unmatch(person.user_id)}>
                             <div style={{pointerEvents: 'none'}}>
                                 <svg fill="black" width="10vw" height="10vh" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mt-[1.5vh] ml-[-1vw]"><path d="M1,20a1,1,0,0,0,1,1h8a1,1,0,0,0,0-2H3.071A7.011,7.011,0,0,1,10,13a5.044,5.044,0,1,0-3.377-1.337A9.01,9.01,0,0,0,1,20ZM10,5A3,3,0,1,1,7,8,3,3,0,0,1,10,5Zm12.707,9.707L20.414,17l2.293,2.293a1,1,0,1,1-1.414,1.414L19,18.414l-2.293,2.293a1,1,0,0,1-1.414-1.414L17.586,17l-2.293-2.293a1,1,0,0,1,1.414-1.414L19,15.586l2.293-2.293a1,1,0,0,1,1.414,1.414Z"/></svg>
