@@ -15,7 +15,6 @@ function toggleObjectItem(obj, item) {
     } else {
         obj[item] = true;
     }
-    console.log("Setting: ", obj, item)
     return obj;
 }
 
@@ -32,7 +31,7 @@ function getOptionTextFromId(id) {
 }
 
 const NormalFilterItem = function({optionId, filters, setFilters}) {
-    return <label onChange={(e) => setFilters(s => e.target.checked ? [...s.filter(v => v!== optionId), optionId] : s.filter(v => v!== optionId))} className="block hover:bg-[#EBE1BA]"><input type="checkbox" name={optionId} checked={filters.includes(optionId)} /> {getOptionTextFromId(optionId)}</label>
+    return <label className="block hover:bg-[#EBE1BA]"><input type="checkbox" name={optionId} checked={filters.includes(optionId)} onChange={(e) => setFilters(s => e.target.checked ? [...s.filter(v => v!== optionId), optionId] : s.filter(v => v!== optionId))} /> {getOptionTextFromId(optionId)}</label>
 }
 const UserDataItem = function({k, value, setUserData}) {
     return <label
@@ -55,7 +54,6 @@ export default function Filter() {
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState(defaultUserdata);
 
-
     const [filterResults, setFilterResults] = useState(null);
 
     function requestFilterResults() {
@@ -66,9 +64,6 @@ export default function Filter() {
     }
 
     useEffect(requestFilterResults, []);
-
-    console.log("Currently: ", openedDropdowns)
-
 
     // const userdataFilters = {
     //     gender: "Male",
@@ -124,12 +119,6 @@ export default function Filter() {
 
     return(
         <div>
-            {!isOpen &&
-            <div className="flex absolute right-0">
-                <img onClick={() => setIsOpen(true)} className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png"></img>
-            </div>
-            }
-
             {isOpen &&
             <div class = "flex absolute bg-maroon w-[80vw] h-[12.5vh] left-[3%] rounded-b-3xl items-center justify-center">
                 <div class = "flex space-x-[0.5vw] text-black text-[1vw] font-lora border-5 items-center">
@@ -209,8 +198,7 @@ export default function Filter() {
                 </div>
             </div>
             }
-            <img onClick={() => setIsOpen(isOpen => !isOpen)} src={`../assets/images/${isOpen ? "dropup" : "dropdown"}.png`} className={`absolute top-[${isOpen ? "13vh" : "0"}] left-0 right-0 ml-auto mr-auto w-[7vh] h-[7vh]`} />
+            <img onClick={() => setIsOpen(isOpen => !isOpen)} src={`../assets/images/${isOpen ? "dropup" : "dropdown"}.png`} className={`absolute top-[${isOpen ? "13vh" : "0"}] right-[10vh] ml-auto mr-auto w-[7vh] h-[7vh]`} />
         </div>
     );
-
 }
