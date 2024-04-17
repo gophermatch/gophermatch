@@ -20,14 +20,12 @@ router.get('/get', async (req, res) => {
   });
 
 router.get('/getmultiple', async (req, res) => {
-  const { count, page } = req.query;
-
-  if (!count || !page) {
+  if (!req.query) {
     return res.status(400).json({ message: "invalid params" });
   }
 
   try {
-    const subleases = await getSubleases(count, page);
+    const subleases = await getSubleases(req.query);
     res.json(subleases);
   } catch (err) {
     res.status(404).json({ message: err.message });

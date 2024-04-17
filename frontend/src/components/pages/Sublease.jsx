@@ -3,6 +3,7 @@ import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
 import { Link } from "react-router-dom";
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
+import SubleaseFilter from "../ui-components/SubleaseFilter.jsx";
 
 export default function Sublease()
 {
@@ -17,6 +18,22 @@ export default function Sublease()
 
   const resultsPerPage = 5;
 
+  const [filter, _setFilter] = useState({
+    rent_range: "any"
+  });
+
+  const setFilter = async (newFilter) => {
+
+    console.log(newFilter);
+
+    // On filter change, clear subleases
+    _setFilter(newFilter)
+    if(subleases.length > 0) { setSubleases([]) }
+    else { fetchSubleases(newFilter); }
+    setFinished(false);
+    setNumPages(1);
+  };
+
   const handleScroll = () => {
     if(loadingFinished) return;
     const { scrollTop, scrollHeight, clientHeight } = divRef.current;
@@ -26,9 +43,16 @@ export default function Sublease()
     }
   };
 
-  async function fetchSubleases() {
+  async function fetchSubleases(filt) {
 
-    if(loadingFinished) return;
+    console.log("Trying to fetch subleases");
+    console.log(filt);
+
+    if(loadingFinished)
+    {
+      console.log("Returning");
+      return;
+    }
 
     try {
       let singleRes = null;
@@ -47,7 +71,8 @@ export default function Sublease()
     try {
       const multiRes = await backend.get("/sublease/getmultiple", {
         params:{count: resultsPerPage,
-        page: numPages-1}
+        page: numPages-1,
+        filter: filt}
       });
 
       setSubleases(subleases.concat(multiRes.data));
@@ -63,11 +88,18 @@ export default function Sublease()
   }
 
   useEffect(() => {
-    fetchSubleases();
+    fetchSubleases(filter);
   }, [numPages]);
+
+  useEffect(() => {
+    if(subleases.length === 0) {
+      fetchSubleases(filter);
+    }
+  }, [subleases]);
 
   return(
     <div className="h-screen flex flex-col bg-offwhite items-center justify-center font-profile font-semibold">
+      <SubleaseFilter filterSetter={setFilter}></SubleaseFilter>
       <div ref={divRef} className={"overflow-y-auto overflow-x-visible flex-grow"} onScroll={handleScroll} style={{
         WebkitOverflowScrolling: 'touch',
         '&::-webkit-scrollbar': {

@@ -34,12 +34,22 @@ export async function createSublease(sublease_data) {
     });
   }
 
-export async function getSubleases(count, page) {
+export async function getSubleases(params) {
+
+  let rentFilters = params['filter[rent_range]'].split('-');
+  if(rentFilters[0] === "any") { rentFilters = ["0", "1000000"]; }
+  else if(rentFilters[1] === "+") { rentFilters[1] = "1000000"; }
+
+  console.log(rentFilters);
+
   return new Promise((resolve, reject) => {
     const query = `SELECT *
 FROM ${tableNames.u_subleases}
+WHERE rent_amount BETWEEN ${rentFilters[0]} AND ${rentFilters[1]}
 ORDER BY premium DESC
-LIMIT ${count} OFFSET ${page*count};`;
+LIMIT ${params.count} OFFSET ${params.page*params.count};`;
+
+    console.log(query);
 
     db.query(query, (err, results) => {
       if (err) {
