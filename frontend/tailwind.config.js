@@ -23,9 +23,10 @@ export default {
       'button-hover': '0 0px 10px 0px rgba(0, 0, 0, 0.4)',
     },
     colors: {
-      maroon: 'rgb(118, 45, 45)',
+      maroon: '#7D0000',
       maroon_transparent: 'rgba(118, 45, 45, 0.83)',
       offgold: '#DDB16F',
+      maroon: '#7D0000',
       red: 'rgb(255, 0, 0)',
       white: 'rgb(255, 255, 255)',
       dark_maroon: '#5E0000',

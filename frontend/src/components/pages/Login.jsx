@@ -62,14 +62,14 @@ export default function Login() {
 
     return (
         <div>
-        <div className="bg-maroon h-[7vh] space-x-4 mt-auto">
+        <div className="bg-maroon_new h-[7vh] space-x-4 mt-auto">
             <div className="flex justify-start items-start w-full">
                 <Link to="/landing" className="text-offwhite font-lora text-3xl ml-2 mt-2">GopherMatch</Link>
             </div>
         </div>
         <div className="bg-offwhite w-screen h-screen flex flex-col font-lora">
             <div className="flex flex-col justify-center items-center w-screen text-maroon">
-                <h1 className="text-maroon font-lora text-[9vh] mt-[10vh]">Login</h1>
+                <h1 className="text-maroon_new font-lora text-[9vh] mt-[10vh]">Login</h1>
                 <div className="flex flex-col items-center justify-center text-[1.9vh] mt-[5vh] relative">
                     <input 
                         type="text" 
@@ -98,16 +98,16 @@ export default function Login() {
                         </p>
                     )}
                 <div className="flex items-center justify-center mt-[2vh]">
-                    <button onClick={onLoginAttempt} className="bg-maroon hover:bg-login text-doc font-bold h-[5vh] w-[12vw] rounded mt-[4vh] text-[2.3vh]">Login</button>
+                    <button onClick={onLoginAttempt} className="bg-maroon_new hover:bg-login text-doc font-bold h-[5vh] w-[12vw] rounded mt-[4vh] text-[2.3vh]">Login</button>
                 </div>
                 <div>{loginErr}</div>
-                <div className='flex items-center justify-center mt-[4vh]'>
-                    <p className="text-maroon text-[2.3vh]">Don't have an account?</p>
+                <div className='flex items-center justify-center text-maroon_new mt-[4vh]'>
+                    <p className="text-maroon_new text-[2.3vh]">Don't have an account?</p>
                     <Link to="/signup" className = "ml-[0.5vw] hover:text-gold text-[2.3vh]">Sign up</Link>
                 </div>
             </div>
         </div>
-        <div className="bg-maroon h-[7vh] justify-end space-x-4 mt-auto fixed bottom-0 left-0 w-full"></div>
+        <div className="bg-maroon_new h-[7vh] justify-end space-x-4 mt-auto fixed bottom-0 left-0 w-full"></div>
     </div>
     
     
