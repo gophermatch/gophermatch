@@ -118,7 +118,7 @@ export default function Inbox({ user_data }) {
                     onClick={() => setSelectedProfile(null)}
                 >
                     <div
-                        className="bg-white rounded-md border-[0.25vh] border-maroon p-[1vw] h-[14vh] w-[59vw] flex"
+                        className="bg-white rounded-md border-[0.25vh] ml-[1vw] border-maroon p-[1vw] h-[14vh] w-[59vw] flex"
                         style={{
                             position: 'absolute',
                             top: `${selectedProfile.clickedBox.top}px`,
