@@ -8,6 +8,15 @@ const defaultUserdata = {
     graduating_year: {}
 }
 
+const deepCloneArr = (items) => items.map(item => Array.isArray(item) ? deepCloneArr(item) : item);
+const deepCloneObj = (items) => {
+    const finalObj = {};
+    for (let key of Object.keys(items)) {
+        finalObj[key] = typeof items[key] !== "object" ? items[key] : deepCloneObj(items[key]);
+    }
+    return finalObj;
+}
+
 function toggleObjectItem(obj, item) {
     obj = {...obj}
     if (item in obj) {
@@ -33,124 +42,78 @@ function getOptionTextFromId(id) {
 const NormalFilterItem = function({optionId, filters, setFilters}) {
     return <label className="block hover:bg-[#EBE1BA]"><input type="checkbox" name={optionId} checked={filters.includes(optionId)} onChange={(e) => setFilters(s => e.target.checked ? [...s.filter(v => v!== optionId), optionId] : s.filter(v => v!== optionId))} /> {getOptionTextFromId(optionId)}</label>
 }
-const UserDataItem = function({k, value, setUserData}) {
-    return <label
-        onChange={(e) => setUserData((prevData) => {
-            if (e.target.checked) {
-                prevData[k][value] = true;
-            } else {
-                delete prevData[k][value];
-            }
-            return prevData
-        })}
-        className="block hover:bg-[#EBE1BA]"
-    ><input type="checkbox" name={value}/> {value}</label>
+const UserDataItem = function({k, value, userData, setUserData}) {
+    return <label className="block hover:bg-[#EBE1BA]">
+            <input
+                type="checkbox"
+                checked={value in userData[k]}
+                name={value}
+                onChange={(e) => setUserData((prevData) => {
+                    prevData = deepCloneObj(prevData);
+                    if (e.target.checked) {
+                        prevData[k][value] = true;
+                    } else {
+                        delete prevData[k][value];
+                    }
+                    return prevData
+                })}
+            />
+            {value}
+    </label>
 }
 
 
-export default function Filter() {
+export default function Filter(props) {
     const [isOpen, setIsOpen] = useState(false);
     const [openedDropdowns, setOpenedDropdowns] = useState({});
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState(defaultUserdata);
 
-    const [filterResults, setFilterResults] = useState(null);
-
-    function requestFilterResults() {
+    function requestFilterResults(props) {
         backend.post('/match/filter-results', {userData, filters}, {withCredentials: true}).then((res) => {
             setFilterResults(res.data)
-            console.log(res.data);
+            console.log("Filtered profiles: ", res.data);
         });
     }
 
     useEffect(requestFilterResults, []);
 
-    // const userdataFilters = {
-    //     gender: "Male",
-    //     college: "College of Science and Engineering",
-    //     graduating_year: "2027"
-    // }
-
-    // const handleApplyFilters = async () => {
-    //     // Collect the selected options for userdata filters
-    //     const userdataFilters = {
-    //         gender: document.getElementById('gender').value,
-    //         college: document.getElementById('college').value,
-    //         graduating_year: document.getElementById('graduating_year').value,
-    //     };
-
-    //     // Prepare the qnaFilters payload by finding the selected option_ids
-    //     const qnaFilterSelections = {
-    //         'Building?': document.getElementById('Building?').value,
-    //         'Alcohol?': document.getElementById('Alcohol?').value,
-    //         'Substances?': document.getElementById('Substances?').value,
-    //         'Room Activity?': document.getElementById('Room Activity?').value,
-    //     };
-
-    //     const qnaFilters = Object.entries(qnaFilterSelections).reduce((acc, [questionText, selectedOptionText]) => {
-    //         if (selectedOptionText) {
-    //             const question = qnaOptions.find(q => q.question === questionText);
-    //             if (question) {
-    //                 const option = question.options.find(o => o.text === selectedOptionText);
-    //                 if (option) acc.push(option.option_id);
-    //             }
-    //         }
-    //         return acc;
-    //     }, []);
-    //     console.log(qnaFilters);
-
-    //     try {
-    //         // Adjust the backend call as necessary to handle the two payloads
-    //         const response = await backend.post('/match/filter-results', { userdataFilters, qnaFilters }, {
-    //             withCredentials: true, // If you need to send cookies with the request for session management
-    //         });
-
-    //         if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-    //             console.log('Filters applied, user IDs:', response.data); // Assuming the backend returns an array of user_ids
-    //         } else {
-    //             console.log('No matching users found.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error applying filters:', error);
-    //     }
-
-    //     expandFilterUI();
-    // };
+    const setFilterResults = props.setFilterResults;
 
     return(
         <div>
             {isOpen &&
-            <div class = "flex absolute bg-maroon w-[80vw] h-[12.5vh] left-[3%] rounded-b-3xl items-center justify-center">
-                <div class = "flex space-x-[0.5vw] text-black text-[1vw] font-lora border-5 items-center">
+            <div className = "flex absolute bg-maroon w-[80vw] h-[12.5vh] left-[3%] rounded-b-3xl items-center justify-center">
+                <div className = "flex space-x-[0.5vw] text-black text-[1vw] font-lora border-5 items-center">
 
                     <div className="relative">
                         <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Gender"))} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Gender&emsp;&darr;</button>
                         <div className={`${openedDropdowns["Gender"] ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                            <UserDataItem k="gender" value="Male" setUserData={setUserData} />
-                            <UserDataItem k="gender" value="Female" setUserData={setUserData} />
-                            <UserDataItem k="gender" value="Non-Binary" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="gender" value="Male" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="gender" value="Female" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="gender" value="Non-Binary" setUserData={setUserData} />
                         </div>
                     </div>
                     <div className="relative">
                         <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "College")) } className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">College&emsp;&darr;</button>
                         <div className={`${openedDropdowns["College"] ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                            <UserDataItem k="college" value="Carlson" setUserData={setUserData} />
-                            <UserDataItem k="college" value="CBS" setUserData={setUserData} />
-                            <UserDataItem k="college" value="Design" setUserData={setUserData} />
-                            <UserDataItem k="college" value="CEHD" setUserData={setUserData} />
-                            <UserDataItem k="college" value="CFANS" setUserData={setUserData} />
-                            <UserDataItem k="college" value="CLA" setUserData={setUserData} />
-                            <UserDataItem k="college" value="CSE" setUserData={setUserData} />
-                            <UserDataItem k="college" value="Nursing" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="Carlson" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="CBS" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="Design" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="CEHD" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="CFANS" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="CLA" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="CSE" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="Nursing" setUserData={setUserData} />
                         </div>
                     </div>
                     <div className="relative">
                         <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Grad. Year"))} className="bg-[#DED7D7] w-[10vw] h-[6vh] rounded-md px-[1.5vh] py-[1vh] shadow-xl hover:opacity-95">Grad. Year&emsp;&darr;</button>
                         <div className={`${openedDropdowns["Grad. Year"] ? "block" : "hidden"} absolute bg-[#DED7D7] mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                            <UserDataItem k="graduating_year" value="Freshman" setUserData={setUserData} />
-                            <UserDataItem k="graduating_year" value="Sophomore" setUserData={setUserData} />
-                            <UserDataItem k="graduating_year" value="Junior" setUserData={setUserData} />
-                            <UserDataItem k="graduating_year" value="Senior" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="Freshman" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="Sophomore" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="Junior" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="Senior" setUserData={setUserData} />
                         </div>
                     </div>
                     <div className="relative">
@@ -194,11 +157,10 @@ export default function Filter() {
                         <button onClick={requestFilterResults} className="bg-gold rounded-md text-sm" >Confirm</button>
                         <button onClick={() => {setFilters([]); setUserData(defaultUserdata)}} className="bg-gold rounded-md text-sm" >Reset</button>
                     </div>
-                    {/* <img onClick={() => setIsOpen(false)} className="bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh] cursor-pointer" src="../assets/images/filtercheck.png"></img> */}
                 </div>
             </div>
             }
-            <img onClick={() => setIsOpen(isOpen => !isOpen)} src={`../assets/images/${isOpen ? "dropup" : "dropdown"}.png`} className={`absolute top-[${isOpen ? "13vh" : "0"}] right-[10vh] ml-auto mr-auto w-[7vh] h-[7vh]`} />
+            <img onClick={() => setIsOpen(isOpen => !isOpen)} src={`../assets/images/${isOpen ? "dropup" : "dropdown"}.png`} className={`absolute ${isOpen ? "top-[13vh]" : "top-0"} right-[10vh] ml-auto mr-auto w-[7vh] h-[7vh]`} />
         </div>
     );
 }

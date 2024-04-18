@@ -18,90 +18,122 @@ const tempIdGrabber = () => {
 const deepClone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
 
 export default function Match() {
-    const [filteredIds, setFilteredIds] = useState([]);
-    const [filterIndex, setFilterIndex] = useState(0);
-    const [filters, setFilters] = useState(null);
+    const [filterResults, setFilterResults] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [nextProfiles, setNextProfiles] = useState([]);
-    const [requestLock, setRequestLock] = useState(false);
+    const [isRequesting, setIsRequesting] = useState(false);
 
     useEffect(() => {
-        // console.log("Getting new ids")
-        tempIdGrabber().then((res) => {
-            setFilteredIds(res.data); //todo: use filters in backend query here
-            setFilterIndex(0);
-            setNextProfiles([]);
-        })
-    }, [filters]);
+        setCurrentIndex(0);
+        setNextProfiles([]);
+    }, [filterResults]);
 
-    useEffect(storeNextProfiles, [filteredIds]);
+    function loadNextProfiles() {
+        if (isRequesting || currentIndex >= filterResults.length) {
+            // console.log("Not loading more profiles");
+            return;
+        }
+        // console.log("Loading more profiles")
 
-    function storeNextProfiles() {
-        if (filteredIds.length === 0) return;
-        // console.log("Getting next profiles")
         const LOAD_COUNT = 3;
-        setRequestLock(true);
+        setIsRequesting(true);
 
-        // console.log("Filtered ids now are: ", filteredIds)
-        // console.log("Index: " + filterIndex + " To: " + (filterIndex + LOAD_COUNT))
-        const nextIds = filteredIds.slice(filterIndex, filterIndex + LOAD_COUNT);
-        // console.log("Next ids are: ", nextIds)
+        // console.log("Index: " + currentIndex + " To: " + (currentIndex + LOAD_COUNT));
+        const nextIds = filterResults.slice(currentIndex, currentIndex + LOAD_COUNT);
+        setCurrentIndex(i => i + LOAD_COUNT);
+        // console.log("Next ids are: ", nextIds);
 
         Promise.all(nextIds.map(id => backend.get('account/fetch', {params: {user_id: id}})))
             .then((responses) => {
-                setFilterIndex(filterIndex + LOAD_COUNT);
                 const profiles = responses.map((response, i) => ({
                     user_id: nextIds[i],
                     data: response.data
                 }));
-                // console.log(profiles)
+                // console.log("More profiles recieved for: ", nextIds)
                 setNextProfiles(s => [...s, ...profiles]);
-                setRequestLock(false);
-            })
+                setIsRequesting(false);
+            });
     }
 
-    if (nextProfiles.length === 0) {
-        return <p>No results left! Please change your filters.</p>
-    }
 
-    // if (nextProfiles.length < 5 && !requestLock) {
+
+
+    // const [filteredIds, setFilteredIds] = useState([]);
+    // const [filterIndex, setFilterIndex] = useState(0);
+    // const [nextProfiles, setNextProfiles] = useState([]);
+    // const [requestLock, setRequestLock] = useState(false);
+
+    // useEffect(() => {
+    //     console.log("Got new filter results: ", filteredIds)
+    //     setFilterIndex(0);
+    //     setNextProfiles([]);
+    //     storeNextProfiles();
+    // }, [filteredIds]);
+
+    // console.log(filterIndex);
+
+    // if (nextProfiles.length <= 2 && !requestLock) {
+    //     storeNextProfiles();
+    // }
+
+    // function storeNextProfiles() {
+    //     if (filteredIds.length === 0 || filterIndex >= filteredIds.length) {console.log("Nope"); return}
+    //     const LOAD_COUNT = 3;
     //     setRequestLock(true);
-    //     tempIdGrabber().then((res) => {
-    //         const newData = res.data.map(async (id) => {
-    //             const response = await backend.get('account/fetch', {
-    //                 params: {user_id: id},
-    //                 withCredentials: true
-    //             });
-    //             return {user_id: id, data: response.data};
-    //         });
-    //         Promise.all(newData).then((data) => {
-    //             setNextProfiles(s => [...s, ...data]);
+
+    //     console.log("Index: " + filterIndex + " To: " + (filterIndex + LOAD_COUNT))
+    //     const nextIds = filteredIds.slice(filterIndex, filterIndex + LOAD_COUNT);
+    //     console.log("Next ids are: ", nextIds)
+
+    //     Promise.all(nextIds.map(id => backend.get('account/fetch', {params: {user_id: id}})))
+    //         .then((responses) => {
+    //             setFilterIndex(i => i + LOAD_COUNT);
+    //             const profiles = responses.map((response, i) => ({
+    //                 user_id: nextIds[i],
+    //                 data: response.data
+    //             }));
+    //             // console.log(profiles)
+    //             setNextProfiles(s => [...s, ...profiles]);
     //             setRequestLock(false);
     //         })
-    //     }).catch(() => console.error("WAAAH"));
+    // }
+
+    // if (nextProfiles.length === 0) {
+    //     return (
+    //         <div>
+    //             <Filter setFilterResults={setFilteredIds} />
+    //             <p>No profiles! Please change your filters.</p>
+    //         </div>
+    //     )
     // }
 
     function goToNext(decision) {
-        // console.log("Going to next");
-        // console.log("Current profiles are: ", nextProfiles)
-        // console.log(nextProfiles[0].user_id)
         backend.post('/match/matcher', {
             user1Id: currentUser.user_id,
             user2Id: nextProfiles[0].user_id,
             decision: decision
-        }).then(() => console.log("Success matching"));
+        });
         setNextProfiles(s => s.slice(1));
-        if (nextProfiles.length <= 2 && !requestLock) {
-            storeNextProfiles();
-        }
     }
 
-    if (nextProfiles.length == 0) {
-        return <p>Loading profiles</p>
+    // console.log(nextProfiles.length, " remaining loaded profiles")
+
+    if (nextProfiles.length <= 3) {
+        loadNextProfiles();
+    }
+
+    if (nextProfiles.length === 0) {
+        return (
+            <div>
+                <Filter setFilterResults={setFilterResults} />
+                <p>Out of results, please change your filters!</p>
+            </div>
+        )
     }
 
     return (
       <div>
-          <Filter />
+          <Filter setFilterResults={setFilterResults} />
           <Profile user_data={nextProfiles[0].data.data} editable={false} />
           {/* <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} /> */}
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
