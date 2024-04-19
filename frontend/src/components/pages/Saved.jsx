@@ -26,16 +26,7 @@ export default function Saved() {
     const [activeButton, setActiveButton] = useState('Roommates'); // Initially set to 'Roommates'
 
     let people = [];
-    // get matches
-    // people.push(dummyData);
-    // people.push(secondData);
     people = matchedProfiles
-
-    // useEffect(() => {
-    //     backend.get('profile', {params: {user_id: 54 /*54*/}, withCredentials: true}).then((res) => {
-    //         console.log(res.data)
-    //     })
-    // }, [])
 
     useEffect(() => {
         (async () => {
@@ -58,22 +49,30 @@ export default function Saved() {
     }, [updateDep]);
 
     function unmatch(profileId) {
-        return backend.delete('/match/remove', {params: {
-            user1Id: currentUser.user_id,
-            user2Id: profileId,
-            decision: "unsure"
-        }}).then(() => stepUpdateDep(s => s + 1));
+        backend.delete('/match/inbox-delete', { params: { user1_id: currentUser.user_id, user2_id: profileId } })
+            .then(() => {
+                updateMatchedProfiles(prevProfiles => prevProfiles.filter(profile => profile.user_id !== profileId));
+            })
+            .catch((error) => {
+                console.error("Error unmatching profiles:", error);
+            });
     }
 
-    function match(profileId) {
-        unmatch(profileId).then(() => {
-            backend.post('/match/matcher', {
+    async function match(profileId) {
+        try {
+            await unmatch(profileId);
+            await backend.post('/match/matcher', {
                 user1Id: currentUser.user_id,
                 user2Id: profileId,
                 decision: "match"
-            }).then(() => stepUpdateDep(s => s + 2))
-        })
+            });
+            stepUpdateDep(s => s + 2);
+            console.log("Match successful");
+        } catch (error) {
+            console.error("Error matching profiles:", error);
+        }
     }
+    
 
     function displayProfile(profile) {
         setSelectedProfile(profile);
@@ -137,7 +136,9 @@ export default function Saved() {
                                 </div>
                             </div>
                             <div className="flex flex-col items-end justify-end">
-                            <button className="h-[4vh] w-[2.5vw] mr-[0.5vw] bg-gold rounded-[0.5vh] mb-[0.25vh]">
+                            <button 
+                                className="h-[4vh] w-[2.5vw] mr-[0.5vw] bg-gold rounded-[0.5vh] mb-[0.25vh]"
+                                onClick={() => match(person.user_id)}>
                             <svg 
                                 fill="white" 
                                 width="3vw" 
