@@ -142,6 +142,7 @@ router.post('/mark-seen', async (req, res) => {
 
     try {
         await markUserMatchesAsSeen(userId);
+        console.log("Done");
         res.status(200).send('All matches marked as seen');
     } catch (error) {
         console.error('Failed to mark matches as seen:', error);

@@ -71,6 +71,11 @@ export default function Inbox({ user_data }) {
         fetchPictureUrls();
     }, []);
 
+    useEffect(() => {
+        console.log("HEY");
+        backend.post('/match/mark-seen', {userId: currentUser.user_id});
+    }, []);
+
     const fetchPictureUrls = async () => {
         console.log(user_id);
         try {
