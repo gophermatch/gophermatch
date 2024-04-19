@@ -58,11 +58,13 @@ export default function Saved() {
     }, [updateDep]);
 
     function unmatch(profileId) {
-        return backend.delete('/match/remove', {params: {
-            user1Id: currentUser.user_id,
-            user2Id: profileId,
-            decision: "unsure"
-        }}).then(() => stepUpdateDep(s => s + 1));
+        backend.delete('/match/inbox-delete', { params: { user1_id: currentUser.user_id, user2_id: profileId } })
+            .then(() => {
+                updateMatchedProfiles(prevProfiles => prevProfiles.filter(profile => profile.user_id !== profileId));
+            })
+            .catch((error) => {
+                console.error("Error unmatching profiles:", error);
+            });
     }
 
     function match(profileId) {
@@ -112,13 +114,13 @@ export default function Saved() {
                                         <div className="flex flex-row">
                                             <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] font-roboto font-[390]  text-maroon">{`${person.first_name} ${person.last_name}`}</p>
                                             <button 
-                                className="mr-[0.5vw]"
+                                className="mr-[0.5vw] mt-[0.5vh]"
                                 onClick={() => displayProfile(person)}>
                                 <svg version="1.1"
                                     id="svg2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="eye-open.svg" inkscape:version="0.48.4 r9939"
                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="2vw" height="2vw"
                                     viewBox="0 0 1200 1200" enable-background="new 0 0 1200 1200" xml:space="preserve"
-                                    style={{marginLeft: '1vw', marginTop: '5vh'}}>
+                                    style={{marginLeft: '1vw', marginTop: '1.1vh'}}>
                                 <sodipodi:namedview  inkscape:cy="417.05123" inkscape:cx="455.50398" inkscape:zoom="0.37249375" showgrid="false" id="namedview30" guidetolerance="10" gridtolerance="10" objecttolerance="10" borderopacity="1" bordercolor="#666666" pagecolor="#ffffff" inkscape:current-layer="svg2" inkscape:window-maximized="1" inkscape:window-y="24" inkscape:window-height="876" inkscape:window-width="1535" inkscape:pageshadow="2" inkscape:pageopacity="0" inkscape:window-x="65">
                                     </sodipodi:namedview>
                                 <path id="path6686" inkscape:connector-curvature="0" d="M779.843,599.925c0,95.331-80.664,172.612-180.169,172.612
