@@ -112,7 +112,7 @@ export default function Settings() {
             <div className="ml-10 mt-[3vh] h-1 w-[80vw] bg-maroon"></div>
             <div className="ml-10 mt-[4vh] w-[80vw] mr-[1vw] flex flex-col justify-center items-center">
                 <button
-                    className={`text-doc rounded-full w-[10vw] h-[4vh] text-xl ${editMode ? 'bg-maroon' : 'bg-green-500'}`}
+                    className={`text-offwhite rounded-full w-[10vw] h-[4vh]  text-xl ${editMode ? 'bg-maroon': 'bg-green-500'}`}
                     onClick={handleSaveChangesClick}
                     disabled={!isEdited}
                 >
