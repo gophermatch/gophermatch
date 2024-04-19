@@ -89,15 +89,22 @@ export default function ProfilePage() {
           special_text_field: answer.textField
         }));
 
-        for(let i = 0; i < editedProfile.qnaAnswers.length; i++){
-          console.log(1);
-          if(editedProfile.qnaAnswers[i].question_id == 8){
-            newRent = parseInt(editedProfile.qnaAnswers[i].special_text_field);
-            console.log(newRent);
-          } else if (editedProfile.qnaAnswers[i].question_id == 14){
-          
-          }else if (editedProfile.qnaAnswers[i].question_id == 15){
+        const monthNumbers = {};
 
+        for (let i = 58; i <= 69; i++) {
+          const monthNumber = (i - 57).toString().padStart(2, '0');
+          monthNumbers[i] = monthNumber;
+        }
+
+        for(let i = 0; i < editedProfile.qnaAnswers.length; i++){
+          if(editedProfile.qnaAnswers[i].question_id == 15){
+            newRent = parseInt(editedProfile.qnaAnswers[i].special_text_field);
+          }else if(editedProfile.qnaAnswers[i].question_id == 13){
+            move_in_date = monthNumbers[editedProfile.qnaAnswers[i].option_id];
+            console.log(move_in_date);
+          }else if(editedProfile.qnaAnswers[i].question_id == 14){
+            move_out_date = monthNumbers[editedProfile.qnaAnswers[i].option_id-12];
+            console.log(move_out_date);
           }
         }
         
