@@ -30,7 +30,7 @@ export default {
       red: 'rgb(255, 0, 0)',
       white: 'rgb(255, 255, 255)',
       dark_maroon: '#5E0000',
-      doc: 'rgb(243, 237, 220)',
+      doc: 'rgb(175, 175, 175)',
       black: 'rgb(0,0,0)',
       offwhite: '#F2EBE6',
       maroon_new: '#7D0000',

@@ -136,8 +136,8 @@ const PicUpload = () => {
 
     return (
         <div className="h-screen w-screen bg-offwhite flex justify-center text-center items-center">
-    <div className="bg-white rounded-[3vh] h-[80vh] w-[70vw] mr-[15vw] shadow-lg relative">
-        <div className="bg-maroon h-[23vh] w-full absolute top-0 left-0 rounded-tl-[3vh] rounded-tr-[3vh]"></div> 
+    <div className="bg-white border border-maroon_new rounded-[3vh] h-[80vh] w-[70vw] mr-[15vw] shadow-lg relative">
+        <div className="bg-maroon h-[23vh] w-full absolute top-0 left-0 rounded-tl-[2.8vh] rounded-tr-[2.8vh]"></div> 
         <DragDropContext onDragEnd={onDragEnd} className = ''>
             <Droppable droppableId="pictures" direction="horizontal" className = ''>
                 {(provided) => (
@@ -213,10 +213,10 @@ const PicUpload = () => {
                 <line x1="32" y1="28" x2="32" y2="52"/>
             </svg>
             <p className="text-[3vh] text-maroon">Drag and Drop or Click to Browse</p>
-            <Link to="/profile" className="w-[14%] h-[6%] mt-[3vh] bg-maroon_new rounded-[3vw] cursor-pointer flex justify-center text-center items-center"
+            <Link to="/profile" className="w-[14%] h-[6%] mt-[3vh] bg-maroon_new rounded-[3vw] hover:bg-maroon_dark cursor-pointer flex justify-center text-center items-center"
                         onClick={handleDoneClick}
                     >
-                        <span className=" text-white w-[5vw] h-[4vh] mt-[0.25vh] text-[2.25vh]">Done</span>
+                        <span className=" text-white w-[5vw] h-[4vh mt-[0.25vh] text-[2.25vh]">Done</span>
                     </Link>
         </div>
     </div>
