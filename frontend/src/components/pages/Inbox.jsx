@@ -54,11 +54,11 @@ export default function Inbox({ user_data }) {
             )}
         <div className="flex flex-col items-center text-center justify-center">
             <div className="flex flex-row">
-            <button className={`bg-${activeButton === 'Roommates' ? 'maroon' : 'dark_maroon'} h-[5vh] w-[20vw]  rounded-tl-[1vh] text-[2vh] font-light font-roboto rounded-tr-[1vh] text-${activeButton === 'Roommates' ? 'white' : 'doc'}`}
+            <button className={`bg-${activeButton === 'Roommates' ? 'maroon' : 'dark_maroon'} h-[5vh] w-[20vw]  rounded-tl-[1vh] text-[2vh] font-light font-roboto rounded-tr-[1vh] text-${activeButton === 'Roommates' ? 'white' : 'newwhite'}`}
                 onClick={() => setActiveButton('Roommates')}>
                 Roommates
             </button>
-            <button className={`bg-${activeButton === 'Subleases' ? 'maroon' : 'dark_maroon'} h-[5vh] w-[20vw]  rounded-tl-[1vh] rounded-tr-[1vh] text-[2vh] font-light font-roboto text-${activeButton === 'Subleases' ? 'white' : 'doc'}`}
+            <button className={`bg-${activeButton === 'Subleases' ? 'maroon' : 'dark_maroon'} h-[5vh] w-[20vw]  rounded-tl-[1vh] rounded-tr-[1vh] text-[2vh] font-light font-roboto text-${activeButton === 'Subleases' ? 'white' : 'newwhite'}`}
                 onClick={() => setActiveButton('Subleases')}>
                 Subleases
             </button>
