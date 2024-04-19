@@ -63,6 +63,7 @@ export default function Inbox({ user_data }) {
                 Subleases
             </button>
             </div>
+            <div className="text-newwhite"></div>
             <div className="bg-white h-[90vh] w-[40vw] items-center text-center justify-center">
             {matchedProfiles.map((person, index) => (
                 <div className="flex flex-col h-[9.5vh] w-full">
