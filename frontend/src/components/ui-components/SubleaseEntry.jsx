@@ -1,10 +1,24 @@
 import React, { useEffect, useState } from "react";
 import {DateTime} from "luxon";
+import backend from "../../backend.js";
+import currentUser from "../../currentUser.js";
 
-export default function SubleaseEntry({ sublease }) {
+export default function SubleaseEntry({ sublease, refreshFunc }) {
 
-  async function accept() {
-      //TODO: connect to backend route
+  async function save() {
+    try {
+      console.log(sublease);
+
+      const res = await backend.post("/sublease/save", {
+        user_id: currentUser.user_id, sublease_id: sublease.sublease_id,
+      });
+
+      refreshFunc();
+
+    } catch (err) {
+      // If no profiles are found in our query, don't try to load more in the future
+      console.error(err);
+    }
   }
 
   return (
@@ -42,7 +56,7 @@ export default function SubleaseEntry({ sublease }) {
       </div>
       </div>
 
-      <button className={"bg-maroon_new ml-5 w-[50px] h-[50px] bg-black text-white rounded-2xl duration-200 hover:pl-3"}>
+      <button className={"bg-maroon_new ml-5 w-[50px] h-[50px] bg-black text-white rounded-2xl duration-200 hover:pl-3"} onClick={save}>
         →
       </button>
 

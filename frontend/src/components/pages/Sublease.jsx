@@ -19,13 +19,16 @@ export default function Sublease()
   const resultsPerPage = 5;
 
   const [filter, _setFilter] = useState({
-    rent_range: "any"
+    rent_range: "any",
+    num_roommates: "any",
+    num_bedrooms: "any",
+    num_bathrooms: "any",
+    is_furnished: "any",
+    has_parking: "any",
+    has_kitchen: "any"
   });
 
   const setFilter = async (newFilter) => {
-
-    console.log(newFilter);
-
     // On filter change, clear subleases
     _setFilter(newFilter)
     if(subleases.length > 0) { setSubleases([]) }
@@ -34,27 +37,30 @@ export default function Sublease()
     setNumPages(1);
   };
 
+  const refresh = () => {
+    if(subleases.length > 0) { setSubleases([]) }
+    else { fetchSubleases(filter); }
+    setFinished(false);
+    setNumPages(1);
+  }
+
   const handleScroll = () => {
     if(loadingFinished) return;
     const { scrollTop, scrollHeight, clientHeight } = divRef.current;
     if (scrollTop + clientHeight + 20 >= scrollHeight) {
+      console.log("Scrolled to the bottom");
       setNumPages(numPages+1);
-      console.log("Scrolled to the bottom, attempting to load more: " + numPages);
     }
   };
 
   async function fetchSubleases(filt) {
 
-    console.log("Trying to fetch subleases");
-    console.log(filt);
-
     if(loadingFinished)
     {
-      console.log("Returning");
       return;
     }
 
-    try {
+    try{
       let singleRes = null;
       if (userSublease === null) {
         singleRes = await backend.get("/sublease/get", {
@@ -72,6 +78,7 @@ export default function Sublease()
       const multiRes = await backend.get("/sublease/getmultiple", {
         params:{count: resultsPerPage,
         page: numPages-1,
+          user_id: currentUser.user_id,
         filter: filt}
       });
 
@@ -116,7 +123,7 @@ export default function Sublease()
         </Link>
         {subleases.length > 0 ? subleases.map(item => (
           // Return a React element for each item in the array
-          item.user_id !== currentUser.user_id && <SubleaseEntry key={item.user_id} sublease={item}/>
+          item.user_id !== currentUser.user_id && <SubleaseEntry key={item.user_id} sublease={item} refreshFunc={refresh}/>
         )) : <br></br>}
         <br></br>
       </div>

@@ -116,7 +116,7 @@ router.delete('/delete-save', async (req, res) =>{
 
 router.get('/get-saves', async (req, res) =>{
   try {
-    const {user_id} = req.body;
+    const {user_id} = req.query;
     console.log(user_id)
     if(!user_id){
       return res.status(400).json({ error: "Missing required fields: user_id." });

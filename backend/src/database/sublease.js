@@ -59,12 +59,50 @@ export async function getSubleases(params) {
   if(rentFilters[0] === "any") { rentFilters = ["0", "1000000"]; }
   else if(rentFilters[1] === "+") { rentFilters[1] = "1000000"; }
 
+  let roommateFilter = params['filter[num_roommates]'];
+  let roommateFilters = [];
+  if(roommateFilter === "any") { roommateFilters = ["0", "1000000"]; }
+  else if(roommateFilter === "5+") { roommateFilters = ["5", "1000000"]; }
+  else {roommateFilters = [roommateFilter, roommateFilter]}
+
+  let bedroomFilter = params['filter[num_bedrooms]'];
+  let bedroomFilters = [];
+  if(bedroomFilter === "any") { bedroomFilters = ["0", "1000000"]; }
+  else if(bedroomFilter === "5+") { bedroomFilters = ["5", "1000000"]; }
+  else {bedroomFilters = [bedroomFilter, bedroomFilter]}
+
+  let bathroomFilter = params['filter[num_bathrooms]'];
+  let bathroomFilters = [];
+  if(bathroomFilter === "any") { bathroomFilters = ["0", "1000000"]; }
+  else if(bathroomFilter === "5+") { bathroomFilters = ["5", "1000000"]; }
+  else {bathroomFilters = [bathroomFilter, bathroomFilter]}
+
+  let parking = params['filter[has_parking]'];
+
+  let kitchen = params['filter[has_kitchen]'];
+
+  let furnished = params['filter[is_furnished]'];
+
+  let user_id = params.user_id;
+
   console.log(rentFilters);
 
   return new Promise((resolve, reject) => {
     const query = `SELECT *
-FROM ${tableNames.u_subleases}
+FROM ${tableNames.u_subleases} AS sub
 WHERE rent_amount BETWEEN ${rentFilters[0]} AND ${rentFilters[1]}
+AND num_roommates BETWEEN ${roommateFilters[0]} AND ${roommateFilters[1]}
+AND num_bathrooms BETWEEN ${bathroomFilters[0]} AND ${bathroomFilters[1]}
+AND num_bedrooms BETWEEN ${bedroomFilters[0]} AND ${bedroomFilters[1]}
+${parking === "any" ? "" : "AND has_parking = '" + parking + "'"}
+${kitchen === "any" ? "" : "AND has_kitchen = '" + kitchen + "'"}
+${furnished === "any" ? "" : "AND is_furnished = '" + furnished + "'"}
+AND NOT EXISTS (
+    SELECT 1
+    FROM ${tableNames.u_savelease} AS ot
+    WHERE ot.user_id = ${user_id} 
+      AND ot.sublease_id = sub.sublease_id
+  )
 ORDER BY premium DESC
 LIMIT ${params.count} OFFSET ${params.page*params.count};`;
 
