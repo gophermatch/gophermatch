@@ -62,7 +62,6 @@ const UserDataItem = function({k, value, userData, setUserData}) {
     </label>
 }
 
-
 export default function Filter(props) {
     const [isOpen, setIsOpen] = useState(false);
     const [openedDropdowns, setOpenedDropdowns] = useState({});

@@ -17,25 +17,28 @@ export default function Sidebar() {
 
     return (
         <>
-            <nav className="flex flex-col items-left items-center text-left p-10 w-full text-[3.5vh] font-comfortaa h-screen bg-maroon rounded-none shadow-md" id="nav">
-                <NavLink exact to="/" className={`object-scale-down h-[16vh] w-[16vh] hover:scale-110 active:scale-90 ${logoClicked ? 'text-white' : ''}`} onClick={handleLogoClick}>
-                    <img src="../assets/images/logo.png" className="sidebarLogo" alt="Logo" />
+            <nav className="flex flex-col items-left items-center text-left p-5 w-full text-[24px] font-roboto h-screen bg-maroon_new rounded-none shadow-md" id="nav">
+                <div className={"flex pl-[0.5vw] space-x-[1vw] w-[13vw] items-center whitespace-no-wrap"}>
+                <NavLink exact to="/" className={"w-1/4"} onClick={handleLogoClick}>
+                    <img src="../assets/images/logo.png" className="" alt="Logo" />
                 </NavLink>
-                <br></br>
+                    <p className={"w-3/4 text-[10px] sm:text-[12px] md:text-[14px] xl:text-[16px] 2xl:text-[18px] font-bold text-white"}>Welcome, {currentUser.user_data.first_name}!</p>
+                </div>
+                <div className={"mt-[3vh] w-[14vw] h-[0.1vh] bg-gold rounded-full"}></div>
                 <div className="mt-[2.5vh] relative">
                     {[
+                        ['Match', '/match'],
                         ['Profile', '/profile'],
                         ['Settings', '/settings'],
-                        ['Match', '/match'],
                         ['Inbox', '/inbox'],
                         ['Saved', '/saved'],
-                        ['Sublease', '/sublease']
+                        ['Subleases', '/sublease']
                     ].map(([label, destination]) => (
                         <NavLink
                             key={label}
                             to={destination}
-                            className={`max-h-full flex flex-col relative mb-[7.5vh] font-sans font-bold drop-shadow-lg transform scale-100 transition-transform duration-200 hover:scale-110 hover:text-gold active:scale-90 ${activePage === destination ? 'text-white text-[4vh]' : 'text-inactive_gray'}`}
-                            onClick={() => {
+                            className={`max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 ${activePage === destination ? 'text-maroon_new bg-white' : 'hover:bg-maroon_dark text-white'}`}
+                      onClick={() => {
                                 setActivePage(destination);
                                 if (label === 'Inbox') {
                                     setInboxClicked(true);
@@ -45,12 +48,11 @@ export default function Sidebar() {
                             }}
                         >
                             {label}
-                            {activePage === destination && <div className="absolute bottom-0 left-0 w-full h-1 bg-gold"></div>}
-                            <div className="absolute top-0 left-0 w-full h-full bg-maroon hover:bg-gold transition-all duration-200 opacity-0 group-hover:opacity-30"></div>
+                            {/*{activePage === destination && <div className="absolute bottom-0 left-0 w-full h-1 bg-gold"></div>}*/}
                         </NavLink>
                     ))}
 
-                    <div className="text-inactive_gray font-bold transition-transform duration-200 hover:scale-110 hover:text-gold cursor-pointer inline-flex items-center">
+                    <div className="text-white text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] font-bold w-[14vw] duration-200 rounded-2xl hover:bg-maroon_dark cursor-pointer inline-flex items-center">
                         <Logout id="logout" className="logout" /> <span className="ml-1" onClick={() => document.getElementById('logout').click()}>&#8594;</span>
                     </div>
                 </div>
