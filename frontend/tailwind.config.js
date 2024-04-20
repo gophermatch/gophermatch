@@ -26,7 +26,6 @@ export default {
       maroon: '#7D0000',
       maroon_transparent: 'rgba(118, 45, 45, 0.83)',
       offgold: '#DDB16F',
-      maroon: '#7D0000',
       red: 'rgb(255, 0, 0)',
       white: 'rgb(255, 255, 255)',
       newwhite: 'rgb(175, 175, 175)',
