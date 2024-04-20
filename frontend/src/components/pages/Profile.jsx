@@ -19,13 +19,13 @@ export default function ProfilePage() {
   const fetchProfile = async () => {
     try {
       const response = await backend.get('/profile', {
-        params: { user_id: currentUser.user_id },
+        params: { user_id: currentUser.user_id, apartment: 1 },
         withCredentials: true,
       });
-
       const profileData = response.data;
+      console.log(response.data);
       setProfile(profileData);
-      setEditedProfile({ ...profileData, qnaAnswers: profileData.qnaAnswers || {} });
+      setEditedProfile({ ...profileData, qnaAnswers: profileData.qnaAnswers || {}, apartmentData: profileData.apartmentData || {} })
     } catch (error) {
       console.error('Error fetching profile:', error);
       setError('Failed to fetch profile');
@@ -81,24 +81,42 @@ export default function ProfilePage() {
 
   const handleSaveChanges = async () => {
     try {
-      const formattedQnaAnswers = editedProfile.qnaAnswers.map(answer => ({
-        question_id: parseInt(answer.question_id, 10),
-        option_id: answer.option_id,
-        special_text_field: answer.textField
-      }));
+        let newRent, pets, num_of_roommates, furnished, num_of_bathrooms, num_of_bedrooms, move_in_date, move_out_date = null;
 
-      const payload = {
-        user_id: currentUser.user_id,
-        profile: {
-          ...editedProfile,
-          qnaAnswers: formattedQnaAnswers
-        },
-      };
+        const formattedQnaAnswers = editedProfile.qnaAnswers.map(answer => ({
+          question_id: parseInt(answer.question_id, 10),
+          option_id: answer.option_id,
+          special_text_field: answer.textField
+        }));
 
-      await backend.put('/profile', payload);
-      alert('Profile updated successfully!');
-      setProfile(editedProfile);
-      setIsEditing(false);
+        for(let i = 0; i < editedProfile.qnaAnswers.length; i++){
+          console.log(1);
+          if(editedProfile.qnaAnswers[i].question_id == 8){
+            newRent = parseInt(editedProfile.qnaAnswers[i].special_text_field);
+            console.log(newRent);
+          } else if (editedProfile.qnaAnswers[i].question_id == 14){
+          
+          }else if (editedProfile.qnaAnswers[i].question_id == 15){
+
+          }
+        }
+        
+        const payload = {
+          user_id: currentUser.user_id,
+          updating_apartment: 1,
+          profile: {
+            ...editedProfile,
+            qnaAnswers: formattedQnaAnswers
+          },
+          apartmentInfo: {
+            rent: newRent
+          }
+        };
+
+        await backend.put('/profile', payload);
+        alert('Profile updated successfully!');
+        setProfile(editedProfile);
+        setIsEditing(false);
     } catch (error) {
       console.error('Error updating profile:', error);
       setError('Failed to update profile');
@@ -136,6 +154,7 @@ export default function ProfilePage() {
         editedBio={isEditing ? editedProfile.bio : profile.bio}
         handleBioChange={handleBioChange}
         qnaAnswers={isEditing ? editedProfile.qnaAnswers : profile.qnaAnswers}
+        apartmentData={isEditing ? editedProfile.apartmentData : profile.apartmentData}
         handleQnaChange={handleQnaChange}
         handleTextChange={handleTextChange}
         dormMode={profileMode}
