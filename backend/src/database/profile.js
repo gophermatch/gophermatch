@@ -202,31 +202,39 @@ export async function updateProfile(user_id, profile) {
   export async function updateApartmentInfo(user_id, apartmentData) {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log("W")
         // Check if the entry exists using the provided buildSelectString function
         const existCheck = buildSelectString("*", "u_apartment", { user_id });
-        const existResult = await db.query(existCheck.queryString, existCheck.values);
-  
-        if (existResult.length > 0) {
-          console.log("WORKING")
-          // Update existing apartment info using the provided buildUpdateString function
-          const updateQuery = buildUpdateString("u_apartment", { user_id }, apartmentData);
-          console.log(updateQuery.queryString); // For debugging
-          await db.query(updateQuery.queryString, updateQuery.values);
-        } else {
-          // Insert new apartment info using the provided buildInsertString function
-          const insertQuery = buildInsertString("u_apartment", { user_id, ...apartmentData });
-          console.log(insertQuery.queryString); // For debugging
-          await db.query(insertQuery.queryString, insertQuery.values);
-        }
-  
-        resolve();
+        db.query(existCheck.queryString, existCheck.values, async (err, existResult) => {
+          if (err) {
+            console.error("Error checking apartment existence:", err);
+            reject(err);
+            return;
+          }
+          
+          console.log("Existence check result:", existResult);
+          if (existResult && existResult.length > 0) {
+            console.log("Updating existing apartment info");
+            // Update existing apartment info using the provided buildUpdateString function
+            const updateQuery = buildUpdateString("u_apartment", { user_id }, apartmentData);
+            console.log("Update Query:", updateQuery.queryString); // For debugging
+            await db.query(updateQuery.queryString, updateQuery.values);
+          } else {
+            console.log("Inserting new apartment info");
+            // Insert new apartment info using the provided buildInsertString function
+            const insertQuery = buildInsertString("u_apartment", { user_id, ...apartmentData });
+            console.log("Insert Query:", insertQuery.queryString); // For debugging
+            await db.query(insertQuery.queryString, insertQuery.values);
+          }
+          
+          resolve();
+        });
       } catch (error) {
-        console.error(error); // Proper error logging
+        console.error("Database operation failed:", error); // Proper error logging
         reject(error);
       }
     });
   }
+  
 
   export async function getAllUserIds() {
     return new Promise((resolve, reject) => {
