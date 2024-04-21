@@ -41,6 +41,20 @@ export default function Profile(props) {
 
   // Function to find the selected option_id for a given question_id
   const getSelectedOptionId = (questionId) => {
+    const monthNumbers = {};
+
+    for (let i = 1; i <= 12; i++) {
+      const monthNumber = i.toString().padStart(2, '0');
+      const monthIndex = 58 + i - 1;
+      monthNumbers[monthNumber] = monthIndex;
+    }
+
+    // commenting out this part until backend returns properly.
+    /* if(questionId == 13){
+      return apartmentData ? monthNumbers[apartmentData.move_in_date.slice(5,6)] : null;
+    } else if(questionId == 14){
+      return apartmentData ? monthNumbers[apartmentData.move_out_date.slice(5,6)] : null;
+    } */
     if (Array.isArray(qnaAnswers)) {
       const answer = qnaAnswers.find(ans => ans.question_id === questionId);
       return answer ? answer.option_id : null;
