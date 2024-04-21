@@ -127,7 +127,7 @@ export default function ProfilePage() {
         }
         await backend.put('/profile', payload);
         alert('Profile updated successfully!');
-        setProfile({ ...editedProfile, apartmentData: editedProfile.apartmentData || {}});
+        setProfile({ ...editedProfile, apartmentData: payload.apartmentInfo || {}});
         setIsEditing(false);
         console.log("Rent:" + profile.apartmentData.rent + ", Move in Date: " + profile.apartmentData.move_in_date);
     } catch (error) {
