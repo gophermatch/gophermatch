@@ -202,11 +202,13 @@ export async function updateProfile(user_id, profile) {
   export async function updateApartmentInfo(user_id, apartmentData) {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log("W")
         // Check if the entry exists using the provided buildSelectString function
         const existCheck = buildSelectString("*", "u_apartment", { user_id });
         const existResult = await db.query(existCheck.queryString, existCheck.values);
   
         if (existResult.length > 0) {
+          console.log("WORKING")
           // Update existing apartment info using the provided buildUpdateString function
           const updateQuery = buildUpdateString("u_apartment", { user_id }, apartmentData);
           console.log(updateQuery.queryString); // For debugging
