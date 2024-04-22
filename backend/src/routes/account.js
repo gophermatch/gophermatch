@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
 router.get('/fetch', async (req, res) => {
     let user_id = req.query.user_id;
 
-    console.log(`fetch account for user id ${user_id}`);
+    //console.log(`fetch account for user id ${user_id}`);
 
     try {
         // update the user's account info
@@ -60,7 +60,7 @@ router.get('/fetch', async (req, res) => {
 router.put('/creation/new', async (req, res) => {
     let userdata = req.body.userdata;
 
-    console.log(`put new account creation for user id ${userdata.user_id}`);
+    //console.log(`put new account creation for user id ${userdata.user_id}`);
 
     try {
         // update the user's account info
@@ -98,7 +98,7 @@ router.delete('/', AuthStatusChecker, async (req, res) => {
     }
 })
 
-router.get('/userdata', async (req, res) => {
+router.get('/userdata', AuthStatusChecker, async (req, res) => {
     try {
         const {userId} = req.body;
         if (!userId) {
@@ -112,7 +112,7 @@ router.get('/userdata', async (req, res) => {
     }
 });
 
-router.post('/update', async (req, res) => {
+router.post('/update', AuthStatusChecker, async (req, res) => {
     const { userId, ...userdata } = req.body; // Destructure userId from the request body and capture the rest as userdata
     try {
         if (!userId) throw new Error("userId is required");
@@ -123,8 +123,5 @@ router.post('/update', async (req, res) => {
         res.status(400).json({error: error.toString(), message: "Failed to update account information"});
     }
 });
-
-
-// TODO: Delete account (and maybe change password(?))
 
 export default router

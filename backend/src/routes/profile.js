@@ -11,6 +11,7 @@ import {
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
 import { azureStorageConfig } from "../env.js";
+import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 
 const upload = multer({ dest: 'uploads/' }); // Temporarily stores files in 'uploads/' directory
 const router = Router();
@@ -44,7 +45,7 @@ router.get('/', async (req, res) => {
 // Update profile
 // PUT api/profile/
 // REQUIRES the request's Content-Type to be "application/json"
-router.put('/', async (req, res) => {
+router.put('/', AuthStatusChecker, async (req, res) => {
     const user_id = req.body.user_id
     const profile = req.body.profile
     delete profile.user_id // prevent user from chaning the user_id of their profile record
@@ -104,7 +105,7 @@ router.get('/qna', async (req, res) => {
 });
 
 // Save/update QnA for a user
-router.put('/qna', async (req, res) => {
+router.put('/qna', AuthStatusChecker, async (req, res) => {
     const user_id = req.body.user_id;
     const qna = req.body.qna;
 
@@ -122,7 +123,7 @@ router.put('/qna', async (req, res) => {
     }
 });
 
-router.post('/upload-picture', upload.single('file'), async (req, res) => {
+router.post('/upload-picture', AuthStatusChecker, upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
@@ -156,7 +157,7 @@ router.post('/upload-picture', upload.single('file'), async (req, res) => {
     }
 });
 
-router.get('/user-pictures', async (req, res) => {
+router.get('/user-pictures', AuthStatusChecker, async (req, res) => {
     const user_id = req.query.user_id;
 
     if (!user_id) {
@@ -172,7 +173,7 @@ router.get('/user-pictures', async (req, res) => {
     }
 });
 
-router.delete('/remove-picture', async (req, res) => {
+router.delete('/remove-picture', AuthStatusChecker, async (req, res) => {
 
     const { user_id, pic_number } = req.query;
 

@@ -10,15 +10,18 @@ import { recordUserDecision,
     markUserMatchesAsSeen
 } from '../database/match.js';
 
+import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
+import { createErrorObj } from './routeutil.js'
+
 const router = Router()
 
 // Takes a json with the parameters user1Id, user2Id, decision
-router.post('/matcher', async (req, res) => {
+router.post('/matcher', AuthStatusChecker, async (req, res) => {
     const { user1Id, user2Id, decision } = req.body;
 
     // Basic validation
     if (!user1Id || !user2Id || !decision) {
-        return res.status(400).json({ error: "Missing required fields: user1Id, user2Id, or decision." });
+        return res.status(400).json({ error: "Missing parameteres for matcher" });
     }
 
     try {
@@ -34,14 +37,14 @@ router.post('/matcher', async (req, res) => {
 router.post('/filter-results', async (req, res) => {
     const { userdataFilters, qnaFilters } = req.body;
 
+    if(!userdataFilters || !qnaFilters){
+        return res.status(400).json({ error: "Missing parameters for filter-results"});
+    }
+
     try {
-        console.log("NEW FILTER")
         const userdataResults = await getFilterResults(userdataFilters);
-        console.log("udata",userdataResults);
         const qnaResults = await getFilterResultsQna(qnaFilters);
-        console.log("qna",qnaResults);
         const commonUserIds = userdataResults.filter(id => qnaResults.includes(id));
-        console.log("real",commonUserIds)
         res.json(commonUserIds);
     } catch (error) {
         console.error('Error getting filter results:', error);
@@ -49,10 +52,9 @@ router.post('/filter-results', async (req, res) => {
     }
 });
 
-router.get('/saved-matches', async (req, res) => {
+router.get('/saved-matches', AuthStatusChecker, async (req, res) => {
     try {
         const { userId } = req.query;
-        console.log(userId);
         if (!userId) {
             return res.status(400).send({ error: "Invalid user ID." });
         }
@@ -68,13 +70,11 @@ router.get('/saved-matches', async (req, res) => {
 
 // Delete a decision from the match table (remove a save for a user with decision unsure)
 // Takes a json with the parameters user1Id, user2Id, decision
-router.delete('/remove', async (req, res) => {
+router.delete('/remove', AuthStatusChecker, async (req, res) => {
     // Basic validation
-    const { user1Id, user2Id, decision } = req.query;
-    console.log(user1Id);
-    console.log(decision);
+    const { user1Id, user2Id, decision } = req.body;
     if (!user1Id || !user2Id || !decision) {
-        return res.status(400).json({ error: "Missing required fields: user1Id, user2Id, or decision." });
+        return res.status(400).json({ error: "Missing parameters for remove" });
     }
 
     try {
@@ -86,11 +86,16 @@ router.delete('/remove', async (req, res) => {
     }
 });
 
-router.delete('/inbox-delete', async (req, res) => {
+router.delete('/inbox-delete', AuthStatusChecker, async (req, res) => {
     // Basic validation
     const { user1_id, user2_id } = req.query;
     if (!user1_id || !user2_id ) {
-        return res.status(400).json({ error: "Missing required fields: user1_id, user2_id" });
+        return res.status(400).json({ error: "Missing parameters for inbox-delete" });
+    }
+    if(req.session.user.user_id != user1_id){
+        console.log(user1_id)
+        res.status(403).json(createErrorObj("Cannot delete another use's account"))
+        return
     }
 
     try {
@@ -103,7 +108,7 @@ router.delete('/inbox-delete', async (req, res) => {
 });
 
 // Takes a json with parameter userId and returns json with matched userids with match timestamp
-router.get('/inbox', async (req, res) => {
+router.get('/inbox', AuthStatusChecker, async (req, res) => {
     try {
         const {userId} = req.query;
         if (!userId) {
@@ -135,7 +140,6 @@ router.get('/inbox-notif', async (req, res) => {
 // Call this when a user clicks on inbox to set all unseen new matches to seen
 router.post('/mark-seen', async (req, res) => {
     const {userId} = req.body;
-    console.log(userId);
     if (!userId) {
         return res.status(400).send('User ID is required');
     }
