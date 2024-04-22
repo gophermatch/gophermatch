@@ -81,7 +81,7 @@ export default function ProfilePage() {
 
   const handleSaveChanges = async () => {
     try {
-        let newRent, pets, num_of_roommates, furnished, num_of_bathrooms, num_of_bedrooms, move_in_date, move_out_date = null;
+        let newRent, newMove_in_date, newMove_out_date = null;
 
         const formattedQnaAnswers = editedProfile.qnaAnswers.map(answer => ({
           question_id: parseInt(answer.question_id, 10),
@@ -89,15 +89,22 @@ export default function ProfilePage() {
           special_text_field: answer.textField
         }));
 
-        for(let i = 0; i < editedProfile.qnaAnswers.length; i++){
-          console.log(1);
-          if(editedProfile.qnaAnswers[i].question_id == 8){
-            newRent = parseInt(editedProfile.qnaAnswers[i].special_text_field);
-            console.log(newRent);
-          } else if (editedProfile.qnaAnswers[i].question_id == 14){
-          
-          }else if (editedProfile.qnaAnswers[i].question_id == 15){
+        const monthNumbers = {};
 
+        for (let i = 58; i <= 69; i++) {
+          const monthNumber = (i - 57).toString().padStart(2, '0');
+          monthNumbers[i] = monthNumber;
+        }
+
+        for(let i = 0; i < editedProfile.qnaAnswers.length; i++){
+          if(editedProfile.qnaAnswers[i].question_id == 15){
+            newRent = parseInt(editedProfile.qnaAnswers[i].special_text_field);
+          }else if(editedProfile.qnaAnswers[i].question_id == 13){
+            newMove_in_date = "2024-" + monthNumbers[editedProfile.qnaAnswers[i].option_id] + "-01";
+            console.log(newMove_in_date);
+          }else if(editedProfile.qnaAnswers[i].question_id == 14){
+            newMove_out_date = "2024-" + monthNumbers[editedProfile.qnaAnswers[i].option_id-12] + "-01";
+            console.log(newMove_out_date);
           }
         }
         
@@ -109,14 +116,20 @@ export default function ProfilePage() {
             qnaAnswers: formattedQnaAnswers
           },
           apartmentInfo: {
-            rent: newRent
+            rent: newRent,
+            move_in_date: newMove_in_date,
+            move_out_date: newMove_out_date
           }
         };
 
+        if (payload.apartmentInfo.rent < 100 || payload.apartmentInfo.rent > 9999){
+          throw new Error('Rent out of bounds!')
+        }
         await backend.put('/profile', payload);
         alert('Profile updated successfully!');
-        setProfile(editedProfile);
+        setProfile({ ...editedProfile, apartmentData: payload.apartmentInfo || {}});
         setIsEditing(false);
+        console.log("Rent:" + profile.apartmentData.rent + ", Move in Date: " + profile.apartmentData.move_in_date);
     } catch (error) {
       console.error('Error updating profile:', error);
       setError('Failed to update profile');

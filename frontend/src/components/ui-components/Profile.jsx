@@ -41,11 +41,21 @@ export default function Profile(props) {
 
   // Function to find the selected option_id for a given question_id
   const getSelectedOptionId = (questionId) => {
-    if(questionId == 9){
-      return apartmentData ? apartmentData.pets : null;
-    } else if(questionId == 10){
-      return apartmentData ? apartmentData.num_of_roommates : null;
-    } else if (Array.isArray(qnaAnswers)) {
+    const monthNumbers = {};
+
+    for (let i = 1; i <= 12; i++) {
+      const monthNumber = i.toString().padStart(2, '0');
+      const monthIndex = 58 + i - 1;
+      monthNumbers[monthNumber] = monthIndex;
+    }
+
+    // commenting out this part until backend returns properly.
+    /* if(questionId == 13){
+      return apartmentData ? monthNumbers[apartmentData.move_in_date.slice(5,6)] : null;
+    } else if(questionId == 14){
+      return apartmentData ? monthNumbers[apartmentData.move_out_date.slice(5,6)] : null;
+    } */
+    if (Array.isArray(qnaAnswers)) {
       const answer = qnaAnswers.find(ans => ans.question_id === questionId);
       return answer ? answer.option_id : null;
     }
@@ -53,7 +63,7 @@ export default function Profile(props) {
   };
 
   const getSelectedTextField = (questionId) => {
-    if(questionId == 8){
+    if(questionId == 15){
       return apartmentData ? apartmentData.rent : null;
     }
     return null;
@@ -138,7 +148,7 @@ export default function Profile(props) {
               {qnaItems.slice(0,6)}
             </div>
             <div className={"flex-1 flex-col flex h-[25vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
-              {qnaItems.slice(6, 12)}
+              {qnaItems.slice(9, 15)}
             </div>
             <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
