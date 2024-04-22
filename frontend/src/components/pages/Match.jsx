@@ -1,21 +1,8 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Profile from '../ui-components/Profile';
 import Filter from '../ui-components/Filter';
-import styles from '../../assets/css/match.module.css'
-import TemplateProfile from '../../TemplateProfile.json'
-import TemplateProfile2 from '../../TemplateProfile2.json'
 import backend from '../../backend';
 import currentUser from '../../currentUser';
-
-
-const tempIdGrabber = () => {
-    return new Promise((resolve) => {
-        const tempIds = [48, 47, 56, 57];
-        resolve({data: tempIds});
-    })
-};
-
-const deepClone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
 
 export default function Match() {
     const [filterResults, setFilterResults] = useState([]);
@@ -43,69 +30,35 @@ export default function Match() {
         setCurrentIndex(i => i + LOAD_COUNT);
         // console.log("Next ids are: ", nextIds);
 
-        Promise.all(nextIds.map(id => backend.get('account/fetch', {params: {user_id: id}})))
+        Promise.all([
+            ...nextIds.map(id => backend.get('account/fetch', {params: {user_id: id}})),
+            ...nextIds.map(id => backend.get('/profile', {params: {user_id: id}}))])
             .then((responses) => {
-                const profiles = responses.map((response, i) => ({
+
+                console.log(responses);
+
+                const accountResponses = responses.slice(0, nextIds.length);
+                const profileResponses = responses.slice(nextIds.length);
+
+                const profiles = accountResponses.map((response, i) => ({
                     user_id: nextIds[i],
-                    data: response.data
+                    account_data: response.data.data
                 }));
-                // console.log("More profiles recieved for: ", nextIds)
+
+                profileResponses.forEach((response, i) => {
+                    const profileIndex = nextIds.findIndex(id => id === response.data.user_id);
+                    if (profileIndex !== -1) {
+                        profiles[profileIndex].profile_data = response.data;
+                    }
+                });
+
+                console.log("More profiles recieved for: ", nextIds);
+                console.log(profiles);
+
                 setNextProfiles(s => [...s, ...profiles]);
                 setIsRequesting(false);
             });
     }
-
-
-
-
-    // const [filteredIds, setFilteredIds] = useState([]);
-    // const [filterIndex, setFilterIndex] = useState(0);
-    // const [nextProfiles, setNextProfiles] = useState([]);
-    // const [requestLock, setRequestLock] = useState(false);
-
-    // useEffect(() => {
-    //     console.log("Got new filter results: ", filteredIds)
-    //     setFilterIndex(0);
-    //     setNextProfiles([]);
-    //     storeNextProfiles();
-    // }, [filteredIds]);
-
-    // console.log(filterIndex);
-
-    // if (nextProfiles.length <= 2 && !requestLock) {
-    //     storeNextProfiles();
-    // }
-
-    // function storeNextProfiles() {
-    //     if (filteredIds.length === 0 || filterIndex >= filteredIds.length) {console.log("Nope"); return}
-    //     const LOAD_COUNT = 3;
-    //     setRequestLock(true);
-
-    //     console.log("Index: " + filterIndex + " To: " + (filterIndex + LOAD_COUNT))
-    //     const nextIds = filteredIds.slice(filterIndex, filterIndex + LOAD_COUNT);
-    //     console.log("Next ids are: ", nextIds)
-
-    //     Promise.all(nextIds.map(id => backend.get('account/fetch', {params: {user_id: id}})))
-    //         .then((responses) => {
-    //             setFilterIndex(i => i + LOAD_COUNT);
-    //             const profiles = responses.map((response, i) => ({
-    //                 user_id: nextIds[i],
-    //                 data: response.data
-    //             }));
-    //             // console.log(profiles)
-    //             setNextProfiles(s => [...s, ...profiles]);
-    //             setRequestLock(false);
-    //         })
-    // }
-
-    // if (nextProfiles.length === 0) {
-    //     return (
-    //         <div>
-    //             <Filter setFilterResults={setFilteredIds} />
-    //             <p>No profiles! Please change your filters.</p>
-    //         </div>
-    //     )
-    // }
 
     function goToNext(decision) {
         backend.post('/match/matcher', {
@@ -115,8 +68,6 @@ export default function Match() {
         });
         setNextProfiles(s => s.slice(1));
     }
-
-    // console.log(nextProfiles.length, " remaining loaded profiles")
 
     if (nextProfiles.length <= 3) {
         loadNextProfiles();
@@ -134,8 +85,7 @@ export default function Match() {
     return (
       <div>
           <Filter setFilterResults={setFilterResults} />
-          <Profile user_data={nextProfiles[0].data.data} editable={false} />
-          {/* <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} /> */}
+          <Profile user_data={nextProfiles[0]?.account_data} qnaAnswers={nextProfiles[0]?.profile_data?.qnaAnswers} editedBio={nextProfiles[0]?.profile_data?.bio}  editable={false} />
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
               <button onClick={() => goToNext("reject")}
                       className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
