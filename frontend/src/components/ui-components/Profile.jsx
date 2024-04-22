@@ -49,12 +49,18 @@ export default function Profile(props) {
       monthNumbers[monthNumber] = monthIndex;
     }
 
-    // commenting out this part until backend returns properly.
-    /* if(questionId == 13){
-      return apartmentData ? monthNumbers[apartmentData.move_in_date.slice(5,6)] : null;
+    if(questionId == 13){
+      const moveIn = apartmentData ? apartmentData.move_in_date : null;
+      if(moveIn != null && !editable){
+        return apartmentData ? monthNumbers[moveIn.slice(5,7)] : null;
+      }
     } else if(questionId == 14){
-      return apartmentData ? monthNumbers[apartmentData.move_out_date.slice(5,6)] : null;
-    } */
+      const moveOut = apartmentData ? apartmentData.move_out_date : null;
+      if(moveOut != null && !editable){
+        return apartmentData ? monthNumbers[moveOut.slice(5,7)]+12 : null;
+      }
+    }
+
     if (Array.isArray(qnaAnswers)) {
       const answer = qnaAnswers.find(ans => ans.question_id === questionId);
       return answer ? answer.option_id : null;
@@ -148,7 +154,7 @@ export default function Profile(props) {
               {qnaItems.slice(0,6)}
             </div>
             <div className={"flex-1 flex-col flex h-[25vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
-              {qnaItems.slice(9, 15)}
+              {qnaItems.slice(7, 15)}
             </div>
             <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>

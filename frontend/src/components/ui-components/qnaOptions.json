@@ -140,7 +140,7 @@
     },
     {
       "id": 12,
-      "question": "Number of Bedrooms??",
+      "question": "Number of Bedrooms?",
       "options": [
         {"option_id": 52, "text": "5"},
         {"option_id": 53, "text": "4"},
