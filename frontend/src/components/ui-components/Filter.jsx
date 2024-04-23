@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import backend from '../../backend';
 import qnaOptions from './qnaOptions.json';
+import currentUser from "../../currentUser.js";
 
 const defaultUserdata = {
     gender: {},
@@ -79,7 +80,7 @@ export default function Filter({setFilterResults}) {
     const [userData, setUserData] = useState(defaultUserdata);
 
     function requestFilterResults() {
-        backend.post('/match/filter-results', {userData, filters}, {withCredentials: true}).then((res) => {
+        backend.post('/match/filter-results', {user_id: currentUser.user_id, userData, filters}, {withCredentials: true}).then((res) => {
             setFilterResults(res.data)
             console.log("Filtered profiles: ", res.data);
         });

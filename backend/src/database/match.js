@@ -2,6 +2,8 @@
 import { db , tableNames} from './db.js'; // Your database connection setup
 import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
 import qnaOptions from '../../../frontend/src/components/ui-components/qnaOptions.json' assert { type: 'json' };
+import { getUserData } from "./account.js";
+import { getProfile } from "./profile.js";
 
 export async function recordUserDecision(user1Id, user2Id, decision) {
     try {
@@ -111,7 +113,28 @@ export async function getFilterResults(filters) {
       });
     });
   }
-  
+
+export async function getInteractedProfiles(user_id){
+  return new Promise((resolve, reject) => {
+    const { queryString, values } = buildSelectString("match_user_id", tableNames.u_matches, {
+      user_id: user_id
+    });
+
+    // Execute the query to find saved matches.
+    db.query(queryString, values, (err, rows) => {
+      if (err) {
+        // Log and reject the promise if there's an error.
+        console.error("Error fetching user IDs from database:", err);
+        reject(err);
+        return;
+      }
+
+      // Extract user_id from each row and return an array of user_ids.
+      const saveIds = rows.map(row => row.match_user_id);
+      resolve(saveIds);
+    });
+  });
+}
 
   export async function getFilterResultsQna(optionIds) {
     return new Promise((resolve, reject) => {
@@ -157,6 +180,26 @@ export async function getFilterResults(filters) {
         resolve(userIds);
       });
     });
+  }
+
+  export async function getProfileInfoMultiple(user_ids)
+  {
+    const profilePromises = user_ids.map(userId => getProfile(userId));
+    const userDataPromises = user_ids.map(userId => getUserData(userId));
+
+    const profileDataResults = await Promise.all(profilePromises);
+    const userDataResults = await Promise.all(userDataPromises);
+
+    // Combine account data and user data
+    const profileInfo = user_ids.map((user_id, index) => {
+      return {
+        user_id: user_id,
+        profile_data: profileDataResults[index],
+        user_data: userDataResults[index]
+      };
+    });
+
+    return profileInfo;
   }
 
 // Function to retrieve all user IDs that a specified user has marked as 'unsure'.
