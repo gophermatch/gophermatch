@@ -30,6 +30,7 @@ export default function Inbox({ user_data }) {
             }
             try {
                 const subleaseRes = await backend.get('/sublease/get-saves', {params: {user_id: currentUser.user_id}});
+                console.log("Got saved subleases: ", subleaseRes.data);
                 updateMatchedSubleases(subleaseRes.data);
             } catch (error) {
                 console.error("Failed fetching subleases: ", error)
@@ -131,9 +132,10 @@ export default function Inbox({ user_data }) {
                         <div className="flex flex-row w-full">
                                 {/* <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw]"></img> */}
                                 <div className=" flex flex-col w-full text-start justify-start">
-                                    <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] w-[30vw] font-roboto font-[390]  text-maroon">{/*person.user_name*/"My name is: Kane est"}</p>
-                                    <div className="flex flex-row">
-                                        <p className="ml-[1vw] text-[2vh] font-[200] text-black">{/*person.contact*/"Phone numba: 234902"}</p>
+                                    <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] w-[30vw] font-roboto font-[390]  text-maroon">{person.name}</p>
+                                    <div className="flex flex-col">
+                                        <p className="ml-[1vw] text-[2vh] font-[200] text-black">Contact: {person.contact}</p>
+                                        <p className="ml-[1vw] text-[2vh] font-[200] text-black">Building: {person.building_name}</p>
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-end justify-end">
