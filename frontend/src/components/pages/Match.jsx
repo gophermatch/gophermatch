@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, createRef, Component } from 'react';
 import Profile from '../ui-components/Profile';
 import Filter from '../ui-components/Filter';
 import styles from '../../assets/css/match.module.css'
@@ -23,7 +23,8 @@ export default function Match() {
     const [filters, setFilters] = useState(null);
     const [nextProfiles, setNextProfiles] = useState([]);
     const [requestLock, setRequestLock] = useState(false);
-
+    const [profileMode, setProfileMode] = useState(0);
+    
     useEffect(() => {
         // console.log("Getting new ids")
         tempIdGrabber().then((res) => {
@@ -102,9 +103,9 @@ export default function Match() {
     return (
       <div>
           <Filter />
-          <Profile user_data={nextProfiles[0].data.data} editable={false} />
+          <Profile user_data={nextProfiles[0].data.data} dormMode={profileMode} editable={false} />
           {/* <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} /> */}
-          <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
+          <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-[1vw]">
               <button onClick={() => goToNext("reject")}
                       className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
                   <p className={"text-gold"}>X</p>
@@ -116,6 +117,15 @@ export default function Match() {
                   <p className={"text-maroon_new"}>&#10003;</p>
               </button>
           </div>
+
+          <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
+            <button onClick={() => setProfileMode(0)}
+                className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">Dorm</button>
+            <button onClick={() => setProfileMode(2)}
+                className="w-[8vh] h-[8vh] bg-offwhite border-black border-[1px] rounded-full text-center align-middle text-black font-bold hover:bg-slate-300 shadow-md">Both</button>
+            <button onClick={() => setProfileMode(1)}
+                className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">Apt.</button>
+        </div>
       </div>
     );
 }

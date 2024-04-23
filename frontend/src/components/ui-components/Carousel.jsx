@@ -54,8 +54,8 @@ export default function Carousel(props) {
         <div className={styles.container}>
             <div className="flex justify-center items-center">
                 {isHovering && <img src="../../assets/images/imageicon.png" className="absolute scale-[0.1]" />}
-                <div id="imageWrapper" className="w-[100%] h-[100%] overflow-hidden rounded-[1vw] aspect-square">
-                    <img src={props.pictureUrls[position]} className="w-full h-full object-cover border-[0.33vw] border-maroon_new rounded-[1vw]" onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay} />
+                <div id="imageWrapper" className="border-[0.33vw] w-[17.5vw] h-[31vh] overflow-hidden rounded-[1vw] border-maroon_new aspect-square">
+                    <img src={props.pictureUrls[position]} className="w-full h-full object-cover rounded-[1vw]" onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay} />
                 </div>
             </div>
             {carouselLen > 1 && dotSection}

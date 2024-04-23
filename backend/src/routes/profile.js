@@ -4,9 +4,10 @@ import fs from 'fs';
 import { createErrorObj } from './routeutil.js'
 import {
     getProfile,
+    getApartmentProfile,
     updateProfile,
     savePictureUrl,
-    retrievePictureUrls, createBio, removePicture
+    retrievePictureUrls, createBio, removePicture, updateApartmentInfo
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -20,6 +21,7 @@ export default router
 // GET api/profile/
 router.get('/', async (req, res) => {
     const user_id = req.query.user_id;
+    const apartment = req.query.apartment;
 
     if (!user_id) {
         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
@@ -29,9 +31,13 @@ router.get('/', async (req, res) => {
     // Validate user_id if needed
 
     try {
-        const profile = await getProfile(user_id);
-
-        res.status(200).json(profile);
+        if(apartment == 0){
+            const profile = await getProfile(user_id);
+            res.status(200).json(profile);
+        } else {
+            const profile = await getApartmentProfile(user_id);
+            res.status(200).json(profile);
+        }
     } catch (error) {
         console.error("Error fetching profile:", error);
         res.status(500).json(createErrorObj("Failed to fetch profile. Please try again later."));
@@ -47,6 +53,7 @@ router.get('/', async (req, res) => {
 router.put('/', async (req, res) => {
     const user_id = req.body.user_id
     const profile = req.body.profile
+    const updatingApartment = req.body.updating_apartment
     delete profile.user_id // prevent user from chaning the user_id of their profile record
 
     if (!user_id || !profile) {
@@ -68,6 +75,11 @@ router.put('/', async (req, res) => {
 
     try {
         await updateProfile(user_id, profile)
+        console.log("went to apent")
+        if(updatingApartment == 1){
+            await updateApartmentInfo(user_id, req.body.apartmentInfo)
+            console.log("went to apartment")
+        }
         res.status(200).json({message: "Profile updated!"})
     } catch(e) {
         console.error(e)
