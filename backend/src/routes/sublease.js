@@ -100,9 +100,7 @@ router.post('/save', async (req, res) =>{
 
 router.delete('/delete-save', async (req, res) =>{
   try {
-    const {user_id, sublease_id} = req.body;
-    console.log(user_id)
-    console.log(sublease_id)
+    const {user_id, sublease_id} = req.query;
     if(!user_id || !sublease_id){
       return res.status(400).json({ error: "Missing required fields: user_id, sublease_id." });
     }

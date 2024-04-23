@@ -173,7 +173,7 @@ export async function deleteSavedSublease(user_id, sublease_id) {
 export async function getSavedSubleases(user_id) {
   return new Promise((resolve, reject) => {
     db.query(`
-      SELECT u_subleases.building_name, u_userdata.first_name, u_userdata.last_name, contact_email, contact_phone, contact_snapchat, contact_instagram
+      SELECT u_savelease.sublease_id, u_subleases.building_name, u_userdata.first_name, u_userdata.last_name, contact_email, contact_phone, contact_snapchat, contact_instagram
       FROM (u_savelease
       INNER JOIN u_subleases ON u_savelease.sublease_id = u_subleases.sublease_id AND u_savelease.user_id = ${user_id}) 
       INNER JOIN u_userdata ON u_userdata.user_id = u_subleases.user_id
@@ -184,6 +184,7 @@ export async function getSavedSubleases(user_id) {
         const data = rows.map(row => {
           // probably do some logic here to determine contact method and stuff
           return {
+            sublease_id: row.sublease_id,
             building_name: row.building_name,
             name: `${row.first_name} ${row.last_name}`,
             contact: row.contact_email || row.contact_phone || row.contact_snapchat || row.contact_instagram || "No contact provided"

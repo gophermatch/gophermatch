@@ -30,7 +30,7 @@ export default function Inbox({ user_data }) {
             }
             try {
                 const subleaseRes = await backend.get('/sublease/get-saves', {params: {user_id: currentUser.user_id}});
-                console.log("Got saved subleases: ", subleaseRes.data);
+                // console.log("Got saved subleases: ", subleaseRes.data);
                 updateMatchedSubleases(subleaseRes.data);
             } catch (error) {
                 console.error("Failed fetching subleases: ", error)
@@ -48,6 +48,13 @@ export default function Inbox({ user_data }) {
             .catch((error) => {
                 console.error("Error unmatching profiles:", error);
             });
+    }
+
+    function deleteSublease(sublease_id) {
+        backend.delete('/sublease/delete-save', {params: {
+            user_id: currentUser.user_id,
+            sublease_id: sublease_id
+        }})
     }
 
     function displayProfile(profile) {
@@ -162,7 +169,7 @@ export default function Inbox({ user_data }) {
                                 </button>
                                 <button 
                                 className={`h-[4vh] w-[2.5vw] mr-[0.5vw] bg-${activeButton === 'Roommates' ? 'maroon' : 'maroon'} rounded-[0.5vh]`}
-                                onClick={() => unmatch(person.user_id)}>
+                                onClick={() => deleteSublease(person.sublease_id)}>
                                     <svg 
                                     fill="white" 
                                     width="3vw" 
