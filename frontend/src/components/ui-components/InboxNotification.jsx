@@ -26,35 +26,32 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
         return () => clearInterval(intervalId);
     }, []);
 
-    const markMatchesAsSeen = async () => {
-        try {
-            await backend.post('/match/mark-seen', { userId: currentUser.user_id });
+    useEffect(() => {
+        // If inbox is clicked and there are unseen matches, set unseenMatches to 0
+        if (inboxClicked) {
             setUnseenMatches(0);
-            setInboxClicked(true); // Set inboxClicked to true
-        } catch (error) {
-            console.error('Failed to mark matches as seen:', error);
         }
-    };
+    }, [inboxClicked, unseenMatches]);
 
     return (
-        <div style={{ position: 'relative', minHeight: '20px', minWidth: '20px' }}>
+        <div style={{ position: 'relative', /*minHeight: '20px', minWidth: '20px' */ }}>
             {!inboxClicked && unseenMatches > 0 && (
                 <div
-                    onClick={markMatchesAsSeen}
                     style={{
                         position: 'absolute',
-                        top: '-1700%', // Adjust position for better visibility
-                        right: '105px',
+                        top: '-32.3vh', // Adjust position for better visibility
+                        right: '4.4vw',
                         backgroundColor: 'gold', // Use a more visible color
-                        borderRadius: '50%',
-                        width: '30px', // Increase size for better visibility
-                        height: '30px',
+                        borderRadius: '2vh',
+                        width: '2vw', // Increase size for better visibility
+                        height: '3.25vh',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         color: 'black',
-                        fontSize: '12px',
-                        fontWeight: 'bold',
+                        fontSize: '1.85vh',
+                        opacity: 0.75,
+                        //fontWeight: 'bold',
                     }}
                 >
                     {unseenMatches}
@@ -65,3 +62,4 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
 };
 
 export default InboxNotification;
+

@@ -150,17 +150,6 @@ export default function ProfilePage() {
 
   return (
     <div>
-      {isEditing && (
-        <div className={"flex justify-center m-auto w-[20vw] space-x-[5vw]"}>
-          <button className={"absolute mt-[4vh] text-[2.3vh] text-white h-[4vh] w-[6.5vw] rounded-[4vh] mr-[10vw] bg-maroon_new"} onClick={handleSaveChanges}>Save</button>
-          <button className={"absolute mt-[4vh] text-[2.3vh] h-[4vh] w-[6.5vw] rounded-[4vh] mr-[0vw] bg-inactive_gray"} onClick={toggleEditMode}>Cancel</button>
-        </div>
-      )}
-      {!isEditing && (
-        <div className={"w-[10vh] m-auto"}>
-          <button className={"absolute mt-[3.5vh] text-[2.3vh] text-white h-[4vh] w-[6vw] rounded-[4vh] bg-maroon_new hover:bg-maroon"} onClick={toggleEditMode}>Edit</button>
-        </div>
-      )}
       <Profile
         user_data={currentUser.user_data}
         editable={isEditing}
@@ -178,6 +167,23 @@ export default function ProfilePage() {
         <button onClick={() => setProfileMode(1)}
           className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">Apt.</button>
       </div>
+      {!isEditing && (
+        <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center">
+          <button className="text-white text-[2.5vh] ml-[15vw] h-[5vh] w-[6vw] mb-[6vh] bg-maroon_new hover:bg-maroon rounded-full" onClick={toggleEditMode}>
+            Edit
+          </button>
+        </div>
+      )}
+      {isEditing && (
+        <div className="fixed bottom-0 left-0 right-0 flex justify-center">
+          <button className="text-white text-[2.5vh] h-[5vh] w-[8vw] ml-[14vw] mb-[6vh] bg-maroon_new hover:bg-maroon rounded-full mr-4" onClick={handleSaveChanges}>
+            Save
+          </button>
+          <button className="text-[2.5vh] h-[5vh] w-[8vw] bg-inactive_gray mb-[5vh] rounded-full" onClick={toggleEditMode}>
+            Cancel
+          </button>
+        </div>
+      )}
     </div>
-  );
+  );  
 }

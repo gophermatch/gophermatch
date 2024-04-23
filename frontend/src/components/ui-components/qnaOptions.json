@@ -9,6 +9,7 @@
       "isTextField": false,
       "isDateField": false
     },
+  
     {
       "id": 2,
       "question": "Year?",
@@ -68,7 +69,7 @@
       "isDateField": false
     },
     {
-      "id": 6,
+      "id": 3,
       "question": "Room Activity?",
       "options": [
         {"option_id": 29, "text": "Empty"},
@@ -79,7 +80,7 @@
       "isDateField": false
     },
     {
-      "id": 7,
+      "id": 4,
       "question": "Alcohol?",
       "options": [
         {"option_id": 32, "text": "Yes"},

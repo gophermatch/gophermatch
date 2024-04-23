@@ -3,7 +3,7 @@ import currentUser from '../../currentUser';
 import backend from '../../backend';
 import qnaOptions from './qnaOptions.json';
 
-export default function Filter() {
+export default function Filter({user_id_setter}) {
     const [shouldShowIcon, setShowIcon] = useState(true);
     const [shouldShowUI, setShowUI] = useState(false);
 
@@ -45,6 +45,8 @@ export default function Filter() {
             const response = await backend.post('/match/filter-results', { userdataFilters, qnaFilters }, {
                 withCredentials: true, // If you need to send cookies with the request for session management
             });
+
+            user_id_setter(response.data);
 
             if (response.data && Array.isArray(response.data) && response.data.length > 0) {
                 console.log('Filters applied, user IDs:', response.data); // Assuming the backend returns an array of user_ids

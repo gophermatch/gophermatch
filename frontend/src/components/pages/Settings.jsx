@@ -101,7 +101,7 @@ export default function Settings() {
 
     const colleges = ['CSE', 'CBS', 'Carlson', 'Design', 'CEHD', 'CFANS', 'Nursing', 'Other']
     const gradYear = ['2025', '2026', '2027', '2028', '2029', 'Other']
-    const gender = ['Male', 'Female', 'Non-binary', 'Prefer Not to Say', 'Other']
+    const gender = ['Male', 'Female', 'Non-binary', 'Other']
     const housePref = ['Apartments', 'Dorms', 'Both']
 
     return (
@@ -109,8 +109,8 @@ export default function Settings() {
             <h1 className="ml-[3vw] mt-[5vh] font-lora text-4xl text-maroon">
                 {editMode ? 'Edit Profile' : 'Settings'}
             </h1>
-            <div className="ml-[3vw] mt-[4vh] h-1 w-[80vw] bg-maroon"></div>
-            <div className="mt-[4vh] w-[80vw] mr-[5vw] flex flex-col justify-center items-center">
+            <div className="ml-10 mt-[3vh] h-1 w-[80vw] bg-maroon"></div>
+            <div className="ml-10 mt-[4vh] w-[80vw] mr-[1vw] flex flex-col justify-center items-center">
                 <button
                     className={`text-doc rounded-full w-[10vw] h-[4vh] text-[1vw] ${editMode ? 'bg-maroon' : 'bg-green-500'}`}
                     onClick={handleSaveChangesClick}
