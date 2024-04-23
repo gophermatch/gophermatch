@@ -23,12 +23,14 @@ export default function Match() {
         //setFilterResults(s => s.slice(1));
     }
 
-    if (filterResults.length === 0) {
+    if (currentIndex >= filterResults.length) {
         return (
-            <div>
-                <Filter setFilterResults={setFilterResults} />
-                <p>Out of results, please change your filters!</p>
+          <div className={"h-full"}>
+              <Filter setFilterResults={setFilterResults} />
+            <div className={"flex h-full justify-center items-center"}>
+                <p className={"text-center"}>Out of results, please change your filters!</p>
             </div>
+          </div>
         )
     }
 
