@@ -91,18 +91,18 @@ export default function ProfilePage() {
 
         const monthNumbers = {};
 
-        for (let i = 58; i <= 69; i++) {
-          const monthNumber = (i - 57).toString().padStart(2, '0');
+        for (let i = 96; i <= 107; i++) {
+          const monthNumber = (i - 95).toString().padStart(2, '0');
           monthNumbers[i] = monthNumber;
         }
 
         for(let i = 0; i < editedProfile.qnaAnswers.length; i++){
-          if(editedProfile.qnaAnswers[i].question_id == 15){
+          if(editedProfile.qnaAnswers[i].question_id == 16){
             newRent = parseInt(editedProfile.qnaAnswers[i].special_text_field);
-          }else if(editedProfile.qnaAnswers[i].question_id == 13){
+          }else if(editedProfile.qnaAnswers[i].question_id == 14){
             newMove_in_date = "2024-" + monthNumbers[editedProfile.qnaAnswers[i].option_id] + "-01";
             console.log(newMove_in_date);
-          }else if(editedProfile.qnaAnswers[i].question_id == 14){
+          }else if(editedProfile.qnaAnswers[i].question_id == 15){
             newMove_out_date = "2024-" + monthNumbers[editedProfile.qnaAnswers[i].option_id-12] + "-01";
             console.log(newMove_out_date);
           }
@@ -161,7 +161,7 @@ export default function ProfilePage() {
         handleTextChange={handleTextChange}
         dormMode={profileMode}
       />
-      <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
+      <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw] z-10">
         <button onClick={() => setProfileMode(0)}
           className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">Dorm</button>
         <button onClick={() => setProfileMode(1)}
