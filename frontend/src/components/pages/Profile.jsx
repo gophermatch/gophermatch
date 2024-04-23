@@ -161,7 +161,7 @@ export default function ProfilePage() {
         handleTextChange={handleTextChange}
         dormMode={profileMode}
       />
-      <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
+      <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw] z-10">
         <button onClick={() => setProfileMode(0)}
           className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">Dorm</button>
         <button onClick={() => setProfileMode(1)}
