@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\" ",
-    "install": "concurrently \"cd backend && npm install\" \"cd frontend && npm install\" "
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "install": "concurrently \"cd backend && npm install\" \"cd frontend && npm install\"",
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "heroku-postbuild": "npm run build:frontend"
   },
   "author": "",
   "license": "ISC",

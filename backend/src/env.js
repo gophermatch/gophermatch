@@ -1,7 +1,7 @@
 import 'dotenv/config.js'       // load .env file into to the object process.env
 
 // export all the env variables used in the backend
-export const port = process.env.PORT
+export const port = process.env.PORT 
 
 export const db = {
     host: process.env.DB_HOST,
