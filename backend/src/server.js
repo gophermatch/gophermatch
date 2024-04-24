@@ -1,3 +1,4 @@
+import 'dotenv/config.js'
 import express from "express";
 import { json, urlencoded } from "express";
 import session from "express-session";
@@ -38,13 +39,18 @@ server.use(session({
 
 server.use(cors({
     // process.env.NODE_ENV === 'production' ? 'https://cribby.me' : 
-    origin:'http://localhost:8080',
+    origin: process.env.NODE_ENV === 'production' ? 'https://gopher-match-970e05644fb9.herokuapp.com' : 'http://localhost:8080',
     credentials: true
 }));
+if(process.env.NODE_ENV === 'production'){
+    console.log("PRODUCTION IS ON")
+}
 
 server.use('/api', router);
 
-const httpServer = server.listen(port, () => console.log(`gophermatch is listening on port ${port}`));
+const PORT = process.env.PORT || 3000;
+
+const httpServer = server.listen(PORT, () => console.log(`gophermatch is listening on port ${PORT}`));
 
 let handleShutdown = () => {
     console.log('Process termination signal received');
