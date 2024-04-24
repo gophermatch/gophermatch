@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_URL = process.env.APP_API_URL || 'http://localhost:3000/api';
-
+console.log("_____________API URL",API_URL)
 const backend = axios.create({
     baseURL: API_URL,
     timeout: 5000,
