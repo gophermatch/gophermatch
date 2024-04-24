@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const API_URL = process.env.APP_API_URL || 'http://localhost:3000/api';
+
 const backend = axios.create({
-    baseURL: "http://localhost:3000/api",
+    baseURL: API_URL,
     timeout: 5000,
     withCredentials: true,
     // tells browser to send cookie-id recieved by the server from the same origin
