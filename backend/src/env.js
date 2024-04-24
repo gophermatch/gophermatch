@@ -15,6 +15,8 @@ export const session = {
     secret: process.env.SESSION_SECRET
 }
 
+export const apiURL = process.env.APP_API_URL
+
 export const azureStorageConfig = {
     connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
 };

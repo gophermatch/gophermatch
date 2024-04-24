@@ -1,7 +1,7 @@
 import axios from 'axios';
-import 'dotenv/config.js'
+import apiURL from './env.js'
 
-const API_URL = process.env.APP_API_URL || 'http://localhost:3000/api';
+const API_URL = apiURL || 'http://localhost:3000/api';
 console.log("_____________API URL",API_URL)
 const backend = axios.create({
     baseURL: API_URL,
