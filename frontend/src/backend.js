@@ -1,4 +1,5 @@
 import axios from 'axios';
+import 'dotenv/config.js'
 
 const API_URL = process.env.APP_API_URL || 'http://localhost:3000/api';
 console.log("_____________API URL",API_URL)
