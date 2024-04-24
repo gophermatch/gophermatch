@@ -37,7 +37,8 @@ server.use(session({
 }));
 
 server.use(cors({
-    origin: process.env.NODE_ENV === 'production' ? 'https://cribby.me' : 'http://localhost:8080',
+    // process.env.NODE_ENV === 'production' ? 'https://cribby.me' : 
+    origin:'http://localhost:8080',
     credentials: true
 }));
 
