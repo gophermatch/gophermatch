@@ -1,6 +1,7 @@
 import kanye from '../../assets/images/kanye.png';
 import { useEffect, useState } from 'react';
 import Profile from '../ui-components/Profile.jsx';
+import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
 import backend from '../../backend.js';
 import currentUser from '../../currentUser.js';
 
@@ -8,6 +9,7 @@ export default function Inbox({ user_data }) {
     const [matchedProfiles, updateMatchedProfiles] = useState([]);
     const [matchedSubleases, updateMatchedSubleases] = useState([]);
     const [selectedProfile, setSelectedProfile] = useState(null);
+    const [selectedSublease, setSelectedSublease] = useState(null);
     const [activeButton, setActiveButton] = useState('Roommates'); // Initially set to 'Roommates'
 
     useEffect(() => {
@@ -30,7 +32,6 @@ export default function Inbox({ user_data }) {
             }
             try {
                 const subleaseRes = await backend.get('/sublease/get-saves', {params: {user_id: currentUser.user_id}});
-                // console.log("Got saved subleases: ", subleaseRes.data);
                 updateMatchedSubleases(subleaseRes.data);
             } catch (error) {
                 console.error("Failed fetching subleases: ", error)
@@ -61,6 +62,14 @@ export default function Inbox({ user_data }) {
         setSelectedProfile(profile);
     }
 
+    function displaySublease(sublease) {
+        console.log(sublease)
+        backend.get('/sublease/get', {params: {user_id: sublease.user_id}}).then((res) => {
+            setSelectedSublease(res.data)
+            console.log("GOt: ", res.data)
+        })
+    }
+
     return (
         <div className="p-8">
             {selectedProfile && (
@@ -69,7 +78,13 @@ export default function Inbox({ user_data }) {
                     <button onClick={() => setSelectedProfile(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
                 </div>
             )}
-        <div className="flex flex-col items-center text-center justify-center">
+            {selectedSublease && (
+                <div>
+                    <SubleaseEntry sublease={selectedSublease} refreshFunc={() => {}} />
+                    <button onClick={() => setSelectedSublease(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
+                </div>
+            )}
+        {!(selectedProfile || selectedSublease) && <div className="flex flex-col items-center text-center justify-center">
             <div className="flex flex-row">
             <button className={`bg-${activeButton === 'Roommates' ? 'maroon' : 'dark_maroon'} h-[5vh] w-[20vw]  rounded-tl-[1vh] text-[2vh] font-light font-roboto rounded-tr-[1vh] text-${activeButton === 'Roommates' ? 'white' : 'newwhite'}`}
                 onClick={() => setActiveButton('Roommates')}>
@@ -148,7 +163,7 @@ export default function Inbox({ user_data }) {
                                 <div className="flex flex-col items-end justify-end">
                                 <button 
                                     className="mr-[0.5vw]"
-                                    onClick={() => displayProfile(person)}>
+                                    onClick={() => displaySublease(person)}>
                                     <svg version="1.1"
                                         id="svg2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="eye-open.svg" inkscape:version="0.48.4 r9939"
                                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="2.5vw" height="2.5vw"
@@ -186,7 +201,7 @@ export default function Inbox({ user_data }) {
                     </div>
                 ))}
                 </div>
-            </div>
+            </div>}
         </div>
     );
 }
