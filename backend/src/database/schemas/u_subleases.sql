@@ -1,5 +1,6 @@
 CREATE TABLE u_subleases (
-    user_id INT PRIMARY KEY,
+    sublease_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNIQUE,
     building_name VARCHAR(100),
     building_address VARCHAR(200),
     num_bathrooms INT,
@@ -16,5 +17,5 @@ CREATE TABLE u_subleases (
     has_gym BOOLEAN,
     sublease_start_date DATE,
     sublease_end_date DATE,
-    UNIQUE (user_id)
+    premium BOOLEAN
 );

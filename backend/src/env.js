@@ -20,3 +20,5 @@ export const azureStorageConfig = {
 };
 
 export const sendgridApiKey = process.env.SENDGRID_API_KEY;
+
+export const stripeSecretKey = process.env.STRIPE_SECRET_KEY;

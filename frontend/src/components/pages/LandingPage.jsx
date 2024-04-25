@@ -14,10 +14,10 @@ const LandingPage = () => {
           </div>
         </div>
         <div className="flex justify-end items-center">
-          <Link to="/landing/go-to-login" className="text-doc text-[2.75vh] mr-[1.7vw] mb-[1vh] hover:text-gold">
+          <Link to="/landing/go-to-login" className="text-offwhite text-[2.75vh] mr-[1.7vw] mb-[1vh] hover:text-gold">
             Login
           </Link>
-          <Link to="/landing/go-to-signup" className="text-doc text-[2.75vh] mr-[1.5vw] mb-[1vh] hover:text-gold">
+          <Link to="/landing/go-to-signup" className="text-offwhite text-[2.75vh] mr-[1.5vw] mb-[1vh] hover:text-gold">
             Signup
           </Link>
         </div>
