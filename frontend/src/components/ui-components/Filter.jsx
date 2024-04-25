@@ -1,129 +1,247 @@
-import React, { useState } from 'react';
-import currentUser from '../../currentUser';
+import React, { useEffect, useState } from 'react';
 import backend from '../../backend';
 import qnaOptions from './qnaOptions.json';
+import currentUser from "../../currentUser.js";
 
-export default function Filter({user_id_setter}) {
-    const [shouldShowIcon, setShowIcon] = useState(true);
-    const [shouldShowUI, setShowUI] = useState(false);
+const defaultUserdata = {
+    gender: {},
+    college: {},
+    graduating_year: {}
+}
 
-    function expandFilterUI() {
-        setShowIcon(!shouldShowIcon);
-        setShowUI(!shouldShowUI);
+const deepCloneArr = (items) => items.map(item => Array.isArray(item) ? deepCloneArr(item) : item);
+const deepCloneObj = (items) => {
+    const finalObj = {};
+    for (let key of Object.keys(items)) {
+        finalObj[key] = typeof items[key] !== "object" ? items[key] : deepCloneObj(items[key]);
+    }
+    return finalObj;
+}
+
+function toggleObjectItem(obj, item) {
+    obj = {...obj}
+    if (item in obj) {
+        delete obj[item];
+    } else {
+        obj[item] = true;
+    }
+    return obj;
+}
+
+function getIdFromOptionText(questionId, optionText) {
+
+    const question = qnaOptions.find(v => v.id === questionId);
+
+    if(question) {
+        const option = question.options.find(item => item.text === optionText);
+
+        if (option) {
+            return option.option_id;
+        }
     }
 
-    const handleApplyFilters = async () => {
-        // Collect the selected options for userdata filters
-        const userdataFilters = {
-            gender: document.getElementById('gender').value,
-            college: document.getElementById('college').value,
-            graduating_year: document.getElementById('graduating_year').value,
-        };
+    return null;
+}
 
-        // Prepare the qnaFilters payload by finding the selected option_ids
-        const qnaFilterSelections = {
-            'Building?': document.getElementById('Building?').value,
-            'Alcohol?': document.getElementById('Alcohol?').value,
-            'Substances?': document.getElementById('Substances?').value,
-            'Room Activity?': document.getElementById('Room Activity?').value,
-        };
+function getOptionTextFromId(id) {
+    for (const question of qnaOptions) {
+        if(!question.options) continue;
+        const option = question.options.find(item => item.option_id === id)
+        if (option) return option.text
+    }
+}
 
-        const qnaFilters = Object.entries(qnaFilterSelections).reduce((acc, [questionText, selectedOptionText]) => {
-            if (selectedOptionText) {
-                const question = qnaOptions.find(q => q.question === questionText);
-                if (question) {
-                    const option = question.options.find(o => o.text === selectedOptionText);
-                    if (option) acc.push(option.option_id);
-                }
-            }
-            return acc;
-        }, []);
-        console.log(qnaFilters);
+const NormalFilterItem = function({optionId, filters, setFilters}) {
+    return <label className="block hover:bg-[#EBE1BA]"><input type="checkbox" name={optionId} checked={filters.includes(optionId)} onChange={(e) => setFilters(s => e.target.checked ? [...s.filter(v => v!== optionId), optionId] : s.filter(v => v!== optionId))} /> {getOptionTextFromId(optionId)}</label>
+}
+const UserDataItem = function({k, value, userData, setUserData}) {
+    return <label className="block hover:bg-[#EBE1BA]">
+            <input
+                type="checkbox"
+                checked={value in userData[k]}
+                name={value}
+                onChange={(e) => setUserData((prevData) => {
+                    prevData = deepCloneObj(prevData);
+                    if (e.target.checked) {
+                        prevData[k][value] = true;
+                    } else {
+                        delete prevData[k][value];
+                    }
+                    return prevData
+                })}
+            />
+            {value}
+    </label>
+}
 
-        try {
-            // Adjust the backend call as necessary to handle the two payloads
-            const response = await backend.post('/match/filter-results', { userdataFilters, qnaFilters }, {
-                withCredentials: true, // If you need to send cookies with the request for session management
-            });
+export default function Filter({setFilterResults}) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [openedDropdowns, setOpenedDropdowns] = useState({});
+    const [filters, setFilters] = useState([]);
+    const [userData, setUserData] = useState(defaultUserdata);
 
-            user_id_setter(response.data);
+    function requestFilterResults() {
+        backend.post('/match/filter-results', {user_id: currentUser.user_id, userData, filters}, {withCredentials: true}).then((res) => {
+            setFilterResults(res.data)
+            console.log("Filtered profiles: ", res.data);
+        });
+    }
 
-            if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-                console.log('Filters applied, user IDs:', response.data); // Assuming the backend returns an array of user_ids
-            } else {
-                console.log('No matching users found.');
-            }
-        } catch (error) {
-            console.error('Error applying filters:', error);
-        }
-
-        expandFilterUI();
-    };
+    useEffect(requestFilterResults, []);
 
     return(
-        <>
-            {shouldShowIcon && <div className="flex absolute right-[37.5vw]">
-                <img className="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filterdropdown.png" onClick={expandFilterUI}></img>
-            </div>}
-
-        {shouldShowUI && <div class = "flex absolute bg-maroon w-[80vw] h-[12.5vh] left-[3%] rounded-b-3xl items-center justify-center">
-            <div class = "flex space-x-[0.5vw] text-black text-[1vw] font-lora border-5 items-center">
-                <select name="gender" id="gender" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Non-Binary">Non-Binary</option>
-                </select>
-                <select name="college" id="college" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">College</option>
-                    <option value="CLA">College of Liberal Arts</option>
-                    <option value="CSE">College of Science and Engineering</option>
-                    <option value="CSOM">Carlson School of Management</option>
-                    <option value="CBS">College of Biological Sciences</option>
-                    <option value="CDES">College of Design</option>
-                    <option value="CEHD">College of Education And Human Development</option>
-                    <option value="CFANS">College of Food, Agricultural, and Natural Resource Sciences</option>
-                    <option value="SN">School of Nursing</option>
-                </select>
-                <select name="graduating_year" id="graduating_year" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Grad. Year</option>
-                    <option value="2028">2028</option>
-                    <option value="2027">2027</option>
-                    <option value="2026">2026</option>
-                    <option value="2025">2025</option>
-                </select>
-                <select name="building" id="Building?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Building</option>
-                    <option value="Comstock">Comstock</option>
-                    <option value="Pioneer">Pioneer</option>
-                    <option value="Frontier">Frontier</option>
-                    <option value="Territorial">Territorial</option>
-                    <option value="Centennial">Centennial</option>
-                    <option value="17th">17th Avenue</option>
-                    <option value="Sanford">Sanford</option>
-                    <option value="Middlebrook">Middlebrook</option>
-                    <option value="Bailey">Bailey</option>
-                </select>
-                <select name="alcohol" id="Alcohol?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Alcohol Use</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-                <select name="substances" id="Substances?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Substances</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-                <select name="openroom" id="Room Activity?" class = "bg-[#DED7D7] w-[10vw] h-[6vh] rounded-lg px-[1.5vh] py-[1vh] shadow-xl">
-                    <option value="">Open Room</option>
-                    <option value="Empty">No One</option>
-                    <option value="Couple">A Couple Friends</option>
-                    <option value="Party">Party</option>
-                </select>
-                <img class = "bg-[#FFCC33] w-[6vh] h-[6vh] rounded-full object-scale-down px-[0.8vh] py-[0.8vh]" src="../assets/images/filtercheck.png" onClick={handleApplyFilters}></img>
+        <div>
+            <div
+              className={`flex absolute bg-dark_maroon h-[6vh] w-[80vw] left-[3%] rounded-b-xl items-center justify-center transition-transform duration-500 ${isOpen ? "translate-y-[0vh]" : "translate-y-[-6vh]"}`}>
+                <div
+                  className="flex space-x-[0.5vw] text-black font-normal text-[1.1vw] font-inconsolata border-5 items-center">
+                    <div className="relative">
+                        <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Gender"))}
+                                className="bg-white w-[9.4vw] h-[4.5vh] rounded-xl px-[1.5vw] py-[1vh] hover:bg-gold hover:text-white">Gender
+                        </button>
+                        <div
+                          className={`${openedDropdowns["Gender"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                            <UserDataItem userData={userData} k="gender" value="Male" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="gender" value="Female" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="gender" value="Non-Binary"
+                                          setUserData={setUserData} />
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "College"))}
+                                className="bg-white w-[9.4vw] h-[4.5vh] rounded-xl px-[1.5vw] py-[1vh] hover:bg-gold hover:text-white">College
+                        </button>
+                        <div
+                          className={`${openedDropdowns["College"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                            <UserDataItem userData={userData} k="college" value="Carlson" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="CBS" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="Design" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="CEHD" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="CFANS" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="CLA" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="CSE" setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="college" value="Nursing" setUserData={setUserData} />
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Grad. Year"))}
+                                className="bg-white w-[9.4vw] h-[4.5vh] rounded-xl px-[1.5vw] py-[1vh] hover:bg-gold hover:text-white">Grad.
+                            Year
+                        </button>
+                        <div
+                          className={`${openedDropdowns["Grad. Year"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                            <UserDataItem userData={userData} k="graduating_year" value="Freshman"
+                                          setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="Sophomore"
+                                          setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="Junior"
+                                          setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="Senior"
+                                          setUserData={setUserData} />
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Building"))}
+                                className="bg-white w-[9.4vw] h-[4.5vh] rounded-xl px-[1.5vw] py-[1vh] hover:bg-gold hover:text-white">Building
+                        </button>
+                        <div
+                          className={`${openedDropdowns["Building"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                            <NormalFilterItem optionId={getIdFromOptionText(5, "17th")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(5, "Bailey")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(5, "Centennial")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(5, "Comstock")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(5, "Frontier")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(5, "Middlebrook")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(5, "Pioneer")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(5, "Sanford")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(5, "Territorial")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(5, "Yudof")} filters={filters}
+                                              setFilters={setFilters} />
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Alcohol Use"))}
+                                className="bg-white w-[9.4vw] h-[4.5vh] rounded-xl px-[1.5vw] py-[1vh] hover:bg-gold hover:text-white">Alcohol
+                            Use
+                        </button>
+                        <div
+                          className={`${openedDropdowns["Alcohol Use"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                            <NormalFilterItem optionId={getIdFromOptionText(7, "Yes")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(7, "No")} filters={filters}
+                                              setFilters={setFilters} />
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Substances"))}
+                                className="bg-white w-[9.4vw] h-[4.5vh] rounded-xl px-[1.5vw] py-[1vh] hover:bg-gold hover:text-white">Substances
+                        </button>
+                        <div
+                          className={`${openedDropdowns["Substances"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                            <NormalFilterItem optionId={getIdFromOptionText(1, "Yes")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(1, "No")} filters={filters}
+                                              setFilters={setFilters} />
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Room Use"))}
+                                className="bg-white w-[9.4vw] h-[4.5vh] rounded-xl px-[1.5vw] py-[1vh] hover:bg-gold hover:text-white">Room
+                            Use
+                        </button>
+                        <div
+                          className={`${openedDropdowns["Room Use"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                            <NormalFilterItem optionId={getIdFromOptionText(3, "Empty")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(3, "Friends")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(3, "Party")} filters={filters}
+                                              setFilters={setFilters} />
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Room Use"))}
+                                className="bg-white w-[9.4vw] h-[4.5vh] rounded-xl px-[1.5vw] py-[1vh] hover:bg-gold hover:text-white">Room
+                            Use
+                        </button>
+                        <div
+                          className={`${openedDropdowns["Room Use"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
+                            <NormalFilterItem optionId={getIdFromOptionText(3, "Empty")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(3, "Friends")} filters={filters}
+                                              setFilters={setFilters} />
+                            <NormalFilterItem optionId={getIdFromOptionText(3, "Party")} filters={filters}
+                                              setFilters={setFilters} />
+                        </div>
+                    </div>
+                </div>
+                <div className="flex justify-between space-x-[0.7vw] w-[9.4vw] h-[4.5vh]">
+                    <button onClick={requestFilterResults}
+                            className="flex-1 p-[5px] bg-maroon_new hover:bg-gold rounded-md text-sm"><img
+                      className="w-full h-full object-contain" alt="checkmark"
+                      src={"../assets/images/checkmark.png"}></img></button>
+                    <button onClick={() => {
+                        setFilters([]);
+                        setUserData(defaultUserdata);
+                    }} className="flex-1 p-[5px] bg-maroon_new hover:bg-gold rounded-md text-sm"><img
+                      className="w-full h-full object-contain"
+                      alt="checkmark"
+                      src={"../assets/images/Reset.png"}></img>
+                    </button>
+                </div>
             </div>
-        </div>}
-        </>
+            <img onClick={() => setIsOpen(isOpen => !isOpen)}
+                 src={`../assets/images/${isOpen ? "dropup" : "dropdown"}.png`}
+                 className={`absolute ${isOpen ? "top-[13vh]" : "top-0"} right-[10vh] ml-auto mr-auto w-[7vh] h-[7vh]`} />
+        </div>
     );
-
 }
