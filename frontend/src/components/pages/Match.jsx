@@ -25,7 +25,8 @@ export default function Match() {
 
     if (currentIndex >= filterResults.length) {
         return (
-          <div className={"h-full"}>
+          <div className={"h-full" +
+            ""}>
               <Filter setFilterResults={setFilterResults} />
             <div className={"flex h-full justify-center items-center"}>
                 <p className={"text-center"}>Out of results, please change your filters!</p>

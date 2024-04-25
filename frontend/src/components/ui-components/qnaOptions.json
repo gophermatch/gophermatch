@@ -5,40 +5,239 @@
       "options": [
         {"option_id": 1, "text": "Yes"},
         {"option_id": 2, "text": "No"}
-      ]
+      ],
+      "isTextField": false,
+      "isDateField": false
     },
     {
       "id": 2,
-      "question": "Building?",
+      "question": "Year?",
       "options": [
-        {"option_id": 3, "text": "17th"},
-        {"option_id": 4, "text": "Bailey"},
-        {"option_id": 5, "text": "Centennial"},
-        {"option_id": 6, "text": "Comstock"},
-        {"option_id": 7, "text": "Frontier"},
-        {"option_id": 8, "text": "Middlebrook"},
-        {"option_id": 9, "text": "Pioneer"},
-        {"option_id": 10, "text": "Sanford"},
-        {"option_id": 11, "text": "Territorial"},
-        {"option_id": 12, "text": "Yudof"},
-        {"option_id": 13, "text": "Any"}
-      ]
+        {"option_id": 3, "text": "Freshman"},
+        {"option_id": 4, "text": "Sophomore"},
+        {"option_id": 5, "text": "Junior"},
+        {"option_id": 6, "text": "Senior"}
+      ],
+      "isTextField": false,
+      "isDateField": false
     },
     {
       "id": 3,
-      "question": "Room Activity?",
+      "question": "Gender?",
       "options": [
-        {"option_id": 14, "text": "Empty"},
-        {"option_id": 15, "text": "Friends"},
-        {"option_id": 16, "text": "Party"}
-      ]
+        {"option_id": 7, "text": "Male"},
+        {"option_id": 8, "text": "Female"},
+        {"option_id": 9, "text": "Non-Binary"}
+      ],
+      "isTextField": false,
+      "isDateField": false
     },
     {
       "id": 4,
+      "question": "College?",
+      "options": [
+        {"option_id": 10, "text": "Carlson"},
+        {"option_id": 11, "text": "CBS"},
+        {"option_id": 12, "text": "Design"},
+        {"option_id": 13, "text": "CEHD"},
+        {"option_id": 14, "text": "CFANS"},
+        {"option_id": 15, "text": "CLA"},
+        {"option_id": 16, "text": "CSE"},
+        {"option_id": 17, "text": "Nursing"}
+      ],
+      "isTextField": false,
+      "isDateField": false
+    },
+    {
+      "id": 5,
+      "question": "Building?",
+      "options": [
+        {"option_id": 18, "text": "17th"},
+        {"option_id": 19, "text": "Bailey"},
+        {"option_id": 20, "text": "Centennial"},
+        {"option_id": 21, "text": "Comstock"},
+        {"option_id": 22, "text": "Frontier"},
+        {"option_id": 23, "text": "Middlebrook"},
+        {"option_id": 24, "text": "Pioneer"},
+        {"option_id": 25, "text": "Sanford"},
+        {"option_id": 26, "text": "Territorial"},
+        {"option_id": 27, "text": "Yudof"},
+        {"option_id": 28, "text": "Any"}
+      ],
+      "isTextField": false,
+      "isDateField": false
+    },
+    {
+      "id": 6,
+      "question": "Room Activity?",
+      "options": [
+        {"option_id": 29, "text": "Empty"},
+        {"option_id": 30, "text": "Friends"},
+        {"option_id": 31, "text": "Party"}
+      ],
+      "isTextField": false,
+      "isDateField": false
+    },
+    {
+      "id": 7,
       "question": "Alcohol?",
       "options": [
-        {"option_id": 17, "text": "Yes"},
-        {"option_id": 18, "text": "No"}
-      ]
+        {"option_id": 32, "text": "Yes"},
+        {"option_id": 33, "text": "No"}
+      ],
+      "isTextField": false,
+      "isDateField": false
+    },
+    {
+      "id": 8,
+      "question": "Pets?",
+      "options": [
+        {"option_id": 34, "text": "Cat"},
+        {"option_id": 35, "text": "Dog"},
+        {"option_id": 36, "text": "Other"},
+        {"option_id": 37, "text": "None but yes"},
+        {"option_id": 38, "text": "None and no"}
+      ],
+      "isTextField": false,
+      "isDateField": false
+    },
+    {
+      "id": 9,
+      "question": "Number of Roommates?",
+      "options": [
+        {"option_id": 39, "text": "5+"},
+        {"option_id": 40, "text": "4"},
+        {"option_id": 41, "text": "3"},
+        {"option_id": 42, "text": "2"},
+        {"option_id": 43, "text": "1"}
+      ],
+      "isTextField": false,
+      "isDateField": false
+    },
+    {
+      "id": 10,
+      "question": "Furnished?",
+      "options": [
+        {"option_id": 44, "text": "Yes"},
+        {"option_id": 45, "text": "No"},
+        {"option_id": 46, "text": "Any"}
+      ],
+      "isTextField": false,
+      "isDateField": false
+    },
+    {
+      "id": 11,
+      "question": "Number of Bathrooms?",
+      "options": [
+        {"option_id": 47, "text": "4"},
+        {"option_id": 48, "text": "3"},
+        {"option_id": 49, "text": "2"},
+        {"option_id": 50, "text": "1"},
+        {"option_id": 51, "text": "Any"}
+      ],
+      "isTextField": false,
+      "isDateField": false
+    },
+    {
+      "id": 12,
+      "question": "Number of Bedrooms?",
+      "options": [
+        {"option_id": 52, "text": "5"},
+        {"option_id": 53, "text": "4"},
+        {"option_id": 54, "text": "3"},
+        {"option_id": 55, "text": "2"},
+        {"option_id": 56, "text": "1"},
+        {"option_id": 57, "text": "Any"}
+      ],
+      "isTextField": false,
+      "isDateField": false
+    },
+    {
+    "id": 13,
+      "question": "What Apartment/House?",
+      "options": [
+        {"option_id": 59, "text": "Any"},
+        {"option_id": 61, "text": "House"},
+        {"option_id": 62, "text": "The Marshall"},
+        {"option_id": 63, "text": "The Pavillion on Berry"},
+        {"option_id": 64, "text": "Como Student Community Cooperative"},
+        {"option_id": 65, "text": "Bierman Place"},
+        {"option_id": 66, "text": "The Bridges Dinkytown"},
+        {"option_id": 67, "text": "The Knoll Dinkytown"},
+        {"option_id": 68, "text": "University Commons"},
+        {"option_id": 69, "text": "University Village"},
+        {"option_id": 70, "text": "FloCo Fusion"},
+        {"option_id": 71, "text": "The Station on Washington"},
+        {"option_id": 72, "text": "Uncommon Dinkytown"},
+        {"option_id": 73, "text": "Doyle"},
+        {"option_id": 74, "text": "The Rail"},
+        {"option_id": 75, "text": "700 on Washington Apartments"},
+        {"option_id": 76, "text": "Solhaus Apartments"},
+        {"option_id": 77, "text": "The Hub"},
+        {"option_id": 78, "text": "WaHu Apartments"},
+        {"option_id": 79, "text": "Yugo Minneapolis Edge on Oak"},
+        {"option_id": 80, "text": "GrandMarc Seven Corners"},
+        {"option_id": 81, "text": "Stadium Village Flats"},
+        {"option_id": 82, "text": "Varsity Apartments"},
+        {"option_id": 83, "text": "Venue at Dinkytown"},
+        {"option_id": 84, "text": "Identity Apartments"},
+        {"option_id": 85, "text": "Gould Apartments"},
+        {"option_id": 86, "text": "Radius Apartments"},
+        {"option_id": 87, "text": "Fieldhouse Dinkytown"},
+        {"option_id": 88, "text": "Elmwood Apartments"},
+        {"option_id": 89, "text": "The Arrow Apartments"},
+        {"option_id": 90, "text": "624 Huron"},
+        {"option_id": 93, "text": "The Quad on Delaware"},
+        {"option_id": 94, "text": "Max Apartments"},
+        {"option_id": 95, "text": "Other"}
+      ],
+      "isTextField": false,
+      "isDateField": false
+    },
+    {
+      "id": 14,
+      "question": "Move in Date?",
+      "options": [
+        {"option_id": 96, "text": "January"},
+        {"option_id": 97, "text": "February"},
+        {"option_id": 98, "text": "March"},
+        {"option_id": 99, "text": "April"},
+        {"option_id": 100, "text": "May"},
+        {"option_id": 101, "text": "June"},
+        {"option_id": 102, "text": "July"},
+        {"option_id": 103, "text": "August"},
+        {"option_id": 104, "text": "September"},
+        {"option_id": 105, "text": "October"},
+        {"option_id": 106, "text": "November"},
+        {"option_id": 107, "text": "December"}
+      ],
+      "isTextField": false,
+      "isDateField": true
+    },
+    {
+      "id": 15,
+      "question": "Move out Date?",
+      "options": [
+        {"option_id": 108, "text": "January"},
+        {"option_id": 109, "text": "February"},
+        {"option_id": 110, "text": "March"},
+        {"option_id": 111, "text": "April"},
+        {"option_id": 112, "text": "May"},
+        {"option_id": 113, "text": "June"},
+        {"option_id": 114, "text": "July"},
+        {"option_id": 115, "text": "August"},
+        {"option_id": 116, "text": "September"},
+        {"option_id": 117, "text": "October"},
+        {"option_id": 118, "text": "November"},
+        {"option_id": 119, "text": "December"}
+      ],
+      "isTextField": false,
+      "isDateField": true
+    },
+    {
+      "id": 16,
+      "question": "Rent?",
+      "isTextField": true,
+      "isDateField": false
     }
   ]
