@@ -23,7 +23,8 @@ export const tableNames = {
     u_userdata: "u_userdata",
     u_subleases: "u_subleases",
     u_savelease: "u_savelease",
-
+    u_apartment: "u_apartment",
+  
     // Lookup tables
     locations: "locations",
     questions: "questions",

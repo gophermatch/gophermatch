@@ -50,7 +50,72 @@ export async function getProfile(user_id) {
   });
 }
 
+//pulls profile for apartment
+export async function getApartmentProfile(user_id) {
+  return new Promise((resolve, reject) => {
+      // Fetching the user's profile
+      const profilePromise = new Promise((resolveProfile) => {
+          const qr = buildSelectString("*", tableNames.u_bios, { user_id });
 
+          db.query(qr.queryString, qr.values, (err, rows) => {
+              if (err) {
+                  resolveProfile({}); // Don't return a bio if not found
+                  return;
+              }
+
+              const profile = queryRowsToArray(rows);
+              if (profile.length === 1) {
+                  resolveProfile(profile[0]);
+              } else {
+                  // No profile found or multiple profiles found, return an empty profile
+                  resolveProfile({});
+              }
+          });
+      });
+
+      // Fetching the user's QnA answers
+      const qnaPromise = new Promise((resolveQnA) => {
+          const qnaQr = buildSelectString("*", tableNames.u_qna, { user_id });
+
+          db.query(qnaQr.queryString, qnaQr.values, (err, rows) => {
+              if (err) {
+                  resolveQnA([]); // Default empty QnA answers
+                  return;
+              }
+
+              const qnaAnswers = rows.map(row => ({ question_id: row.question_id, option_id: row.option_id }));
+              resolveQnA(qnaAnswers);
+          });
+      });
+
+      // Fetching the user's apartment data
+      const apartmentPromise = new Promise((resolveApartment) => {
+          const apartmentQr = buildSelectString("*", tableNames.u_apartment, { user_id });
+
+          db.query(apartmentQr.queryString, apartmentQr.values, (err, rows) => {
+              if (err) {
+                  resolveApartment({}); // Default empty apartment data if not found
+                  return;
+              }
+
+              const apartmentData = queryRowsToArray(rows);
+              if (apartmentData.length === 1) {
+                  resolveApartment(apartmentData[0]);
+              } else {
+                  // No apartment data found or multiple entries found, return an empty object
+                  resolveApartment({});
+              }
+          });
+      });
+
+      // Combining profile data, QnA answers, and apartment data
+      Promise.all([profilePromise, qnaPromise, apartmentPromise])
+          .then(([profile, qnaAnswers, apartmentData]) => {
+              resolve({ ...profile, qnaAnswers, apartmentData });
+          })
+          .catch(error => reject(error));
+  });
+}
 
 
 
@@ -132,6 +197,44 @@ export async function updateProfile(user_id, profile) {
       }
     });
   }
+
+  //meant to update all Apartment specific QNA
+  export async function updateApartmentInfo(user_id, apartmentData) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        // Check if the entry exists using the provided buildSelectString function
+        const existCheck = buildSelectString("*", "u_apartment", { user_id });
+        db.query(existCheck.queryString, existCheck.values, async (err, existResult) => {
+          if (err) {
+            console.error("Error checking apartment existence:", err);
+            reject(err);
+            return;
+          }
+          
+          console.log("Existence check result:", existResult);
+          if (existResult && existResult.length > 0) {
+            console.log("Updating existing apartment info");
+            // Update existing apartment info using the provided buildUpdateString function
+            const updateQuery = buildUpdateString("u_apartment", { user_id }, apartmentData);
+            console.log("Update Query:", updateQuery.queryString); // For debugging
+            await db.query(updateQuery.queryString, updateQuery.values);
+          } else {
+            console.log("Inserting new apartment info");
+            // Insert new apartment info using the provided buildInsertString function
+            const insertQuery = buildInsertString("u_apartment", { user_id, ...apartmentData });
+            console.log("Insert Query:", insertQuery.queryString); // For debugging
+            await db.query(insertQuery.queryString, insertQuery.values);
+          }
+          
+          resolve();
+        });
+      } catch (error) {
+        console.error("Database operation failed:", error); // Proper error logging
+        reject(error);
+      }
+    });
+  }
+  
 
   export async function getAllUserIds() {
     return new Promise((resolve, reject) => {
