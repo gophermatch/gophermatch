@@ -39,7 +39,7 @@ server.use(session({
 
 server.use(cors({
     // process.env.NODE_ENV === 'production' ? 'https://cribby.me' : 
-    origin: process.env.NODE_ENV === 'production' ? 'https://gopher-match-970e05644fb9.herokuapp.com' : 'http://localhost:8080',
+    origin: process.env.NODE_ENV === 'production' ? 'https://cribby.me' : 'http://localhost:8080',
     credentials: true
 }));
 if(process.env.NODE_ENV === 'production'){
