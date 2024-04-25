@@ -7,7 +7,7 @@ import currentUser from '../../currentUser';
 export default function Match() {
     const [filterResults, setFilterResults] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-
+  
     useEffect(() => {
         setCurrentIndex(0);
         setFilterResults([]);
@@ -51,6 +51,15 @@ export default function Match() {
                   <p className={"text-maroon_new"}>&#10003;</p>
               </button>
           </div>
+
+          <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
+            <button onClick={() => setProfileMode(0)}
+                className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">Dorm</button>
+            <button onClick={() => setProfileMode(2)}
+                className="w-[8vh] h-[8vh] bg-offwhite border-black border-[1px] rounded-full text-center align-middle text-black font-bold hover:bg-slate-300 shadow-md">Both</button>
+            <button onClick={() => setProfileMode(1)}
+                className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">Apt.</button>
+        </div>
       </div>
     );
 }
