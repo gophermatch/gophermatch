@@ -27,7 +27,8 @@ server.get('*', (req, res) => {
 server.use(json());
 server.use(urlencoded({ extended: true }));
 
-const cookieAge = 1000 * 60 * 60 * 24 * 7; // 7 days
+const cookieAge = 3600000; // 7 days
+
 server.use(session({
     secret: envSession.secret,
     resave: false,
