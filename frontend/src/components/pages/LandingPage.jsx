@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../../assets/css/signin.module.css';
+import logo from '../../assets/images/logo.png';
 
 const LandingPage = () => {
 
@@ -10,7 +11,7 @@ const LandingPage = () => {
         <div className="flex items-center">
           <div className="flex items-start h-[7vh]">
             <p className="text-offwhite font-lora mt-[.4vh] ml-[0.52vw] text-[3.5vh]">GopherMatch</p>
-            <img src="/assets/images/logo.png" alt="Description of the image" className="w-[2.75vw] mt-[0.5vh] ml-[0.5vw] items-start" />
+            <img src={logo} alt="Description of the image" className="w-[2.75vw] mt-[0.5vh] ml-[0.5vw] items-start" />
           </div>
         </div>
         <div className="flex justify-end items-center">

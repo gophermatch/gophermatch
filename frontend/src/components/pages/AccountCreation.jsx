@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import AccountTextField from "../ui-components/AccountTextField.jsx";
 import {DateTime} from "luxon";
 
+import arrowLeft from "../../assets/images/ArrowLeft.png";
+import arrowRight from "../../assets/images/ArrowRight.png";
+
 export default function AccountCreation() {
 
     const [pageNum, setPageNumber] = useState(1);
@@ -238,7 +241,7 @@ export default function AccountCreation() {
                       className="absolute bottom-[5vh] left-0 right-0 m-auto w-1/3 pb-5 items-center flex flex-row justify-between">
                       <button tabIndex={pageNum === 1 ? -1 : 0} onClick={goToPreviousPage}
                               className={`transition duration-500 ${pageNum === 1 ? "opacity-0 pointer-events-none" : ""}`}>
-                          <img src="../../assets/images/ArrowLeft.png" alt="Button"
+                          <img src={arrowLeft} alt="Button"
                                className="w-5 h-5 hover:drop-shadow-md"/>
                       </button>
                       <div
@@ -255,7 +258,7 @@ export default function AccountCreation() {
                           className={`w-3 h-3 rounded-full transition duration-500 ${pageNum === 6 ? 'bg-maroon_new scale-110' : 'bg-inactive_gray'}`}></div>
                       <button tabIndex={pageNum === 6 ? -1 : 0} onClick={goToNextPage}
                               className={`transition duration-500 ${pageNum === 6 ? 'opacity-0 pointer-events-none' : ''}`}>
-                          <img src="../../assets/images/ArrowRight.png" alt="Button"
+                          <img src={arrowRight} alt="Button"
                                className="w-5 h-5 hover:drop-shadow-md"/>
                       </button>
                   </div>
