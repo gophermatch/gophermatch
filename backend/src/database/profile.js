@@ -54,59 +54,10 @@ export async function getProfile(user_id) {
 export async function getApartmentProfile(user_id) {
   return new Promise((resolve, reject) => {
       // Fetching the user's profile
-      const profilePromise = new Promise((resolveProfile) => {
-          const qr = buildSelectString("*", tableNames.u_bios, { user_id });
-
-          db.query(qr.queryString, qr.values, (err, rows) => {
-              if (err) {
-                  resolveProfile({}); // Don't return a bio if not found
-                  return;
-              }
-
-              const profile = queryRowsToArray(rows);
-              if (profile.length === 1) {
-                  resolveProfile(profile[0]);
-              } else {
-                  // No profile found or multiple profiles found, return an empty profile
-                  resolveProfile({});
-              }
-          });
-      });
-
-      // Fetching the user's QnA answers
-      const qnaPromise = new Promise((resolveQnA) => {
-          const qnaQr = buildSelectString("*", tableNames.u_qna, { user_id });
-
-          db.query(qnaQr.queryString, qnaQr.values, (err, rows) => {
-              if (err) {
-                  resolveQnA([]); // Default empty QnA answers
-                  return;
-              }
-
-              const qnaAnswers = rows.map(row => ({ question_id: row.question_id, option_id: row.option_id }));
-              resolveQnA(qnaAnswers);
-          });
-      });
+      const profilePromise = getProfile();
 
       // Fetching the user's apartment data
-      const apartmentPromise = new Promise((resolveApartment) => {
-          const apartmentQr = buildSelectString("*", tableNames.u_apartment, { user_id });
-
-          db.query(apartmentQr.queryString, apartmentQr.values, (err, rows) => {
-              if (err) {
-                  resolveApartment({}); // Default empty apartment data if not found
-                  return;
-              }
-
-              const apartmentData = queryRowsToArray(rows);
-              if (apartmentData.length === 1) {
-                  resolveApartment(apartmentData[0]);
-              } else {
-                  // No apartment data found or multiple entries found, return an empty object
-                  resolveApartment({});
-              }
-          });
-      });
+      const apartmentPromise = getApartmentData(user_id);
 
       // Combining profile data, QnA answers, and apartment data
       Promise.all([profilePromise, qnaPromise, apartmentPromise])
@@ -117,7 +68,26 @@ export async function getApartmentProfile(user_id) {
   });
 }
 
+export async function getApartmentData(user_id){
+  return new Promise((resolveApartment) => {
+    const apartmentQr = buildSelectString("*", tableNames.u_apartment, { user_id });
 
+    db.query(apartmentQr.queryString, apartmentQr.values, (err, rows) => {
+      if (err) {
+        resolveApartment({}); // Default empty apartment data if not found
+        return;
+      }
+
+      const apartmentData = queryRowsToArray(rows);
+      if (apartmentData.length === 1) {
+        resolveApartment(apartmentData[0]);
+      } else {
+        // No apartment data found or multiple entries found, return an empty object
+        resolveApartment({});
+      }
+    });
+  });
+}
 
 // Creates and stores a profile in DB
 // second argument (profile obj) is optional

@@ -7,6 +7,8 @@ import currentUser from '../../currentUser';
 export default function Match() {
     const [filterResults, setFilterResults] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    const [profileMode, setProfileMode] = useState(0);
   
     useEffect(() => {
         setCurrentIndex(0);
@@ -38,7 +40,7 @@ export default function Match() {
     return (
       <div>
           <Filter setFilterResults={setFilterResults} />
-          <Profile user_data={filterResults[currentIndex]?.user_data} qnaAnswers={filterResults[currentIndex]?.profile_data?.qnaAnswers} editedBio={filterResults[currentIndex]?.profile_data?.bio}  editable={false} />
+          <Profile user_data={filterResults[currentIndex]?.user_data} qnaAnswers={filterResults[currentIndex]?.profile_data?.qnaAnswers} editedBio={filterResults[currentIndex]?.profile_data?.bio} editable={false} dormMode={profileMode}/>
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
               <button onClick={() => goToNext("reject")}
                       className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
