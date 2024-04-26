@@ -8,7 +8,7 @@ import {
     getFilterResults,
     getFilterResultsQna,
     getUserUnseenMatches,
-    markUserMatchesAsSeen, getProfileInfoMultiple, getInteractedProfiles
+    markUserMatchesAsSeen, getProfileInfoMultiple, getInteractedProfiles, unrejectAll
 } from "../database/match.js";
 
 const router = Router()
@@ -28,6 +28,23 @@ router.post('/matcher', async (req, res) => {
     } catch (error) {
         console.error('Error processing match:', error);
         res.status(500).json({ error: "Failed to process match decision." });
+    }
+});
+
+router.post('/unrejectall', async (req, res) => {
+    const { user_id } = req.body;
+
+    // Basic validation
+    if (!user_id) {
+        return res.status(400).json({ error: "Missing required field user_id" });
+    }
+
+    try {
+        const result = await unrejectAll(user_id);
+        res.json(result);
+    } catch (error) {
+        console.error('Error unrejecting:', error);
+        res.status(500).json({ error: "Failed to unreject." });
     }
 });
 

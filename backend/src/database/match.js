@@ -36,6 +36,22 @@ export async function recordUserDecision(user1Id, user2Id, decision) {
     }
 }
 
+export async function unrejectAll(user_id) {
+  try {
+    const unrejectQuery = `
+            DELETE FROM ${tableNames.u_matches}
+            WHERE user_id = ${user_id} AND match_status = 'reject';
+        `;
+
+    // Execute the query with provided user ID.
+    await db.query(unrejectQuery);
+
+  } catch (error) {
+    console.error('Error in unrejectAll:', error);
+    throw new Error('Failed to unrejectAll');
+  }
+}
+
 // Function to check if two users have mutually liked each other.
 async function checkMatch(user1Id, user2Id) {
     return new Promise((resolve, reject) => {
