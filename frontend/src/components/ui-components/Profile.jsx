@@ -11,7 +11,7 @@ import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
 import sliderStyles from '../../assets/css/slider.module.css';
 
-export default function Profile({ user_data, editable, handleBioChange, handleQnaChange, qnaAnswers, editedBio }) {
+export default function Profile({ user_data, editable, handleBioChange, handleQnaChange, qnaAnswers, editedBio, apartmentData, dormMode }) {
 
   const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
   const [sliderValue, setSliderValue] = useState({ min: 80, max: 144 });

@@ -9,7 +9,6 @@ export default function ProfilePage() {
   const [editedProfile, setEditedProfile] = useState(null);
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [profileMode, setProfileMode] = useState(0);
 
   useEffect(() => {
