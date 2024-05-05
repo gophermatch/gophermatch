@@ -160,25 +160,31 @@ export default function ProfilePage() {
         handleTextChange={handleTextChange}
         dormMode={profileMode}
       />
-      <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw] z-10">
-        <button onClick={() => setProfileMode(0)}
-          className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">Dorm</button>
-        <button onClick={() => setProfileMode(1)}
-          className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">Apt.</button>
-      </div>
       {!isEditing && (
-        <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center">
-          <button className="text-white text-[2.5vh] ml-[15vw] h-[5vh] w-[6vw] mb-[6vh] bg-maroon_new hover:bg-maroon rounded-full" onClick={toggleEditMode}>
-            Edit
-          </button>
-        </div>
-      )}
+      <span className="absolute right-[10vw] top-[15vh] scale-90 hover:scale-110 transition-transform">
+              <button onClick={toggleEditMode}>
+                <svg 
+                fill="black" 
+                width="6vw" 
+                height="7vh"
+                viewBox="0 0 24 24" 
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M2,21H8a1,1,0,0,0,0-2H3.071A7.011,7.011,0,0,1,10,13a5.044,5.044,0,1,0-3.377-1.337A9.01,9.01,0,0,0,1,20,1,1,0,0,0,2,21ZM10,5A3,3,0,1,1,7,8,3,3,0,0,1,10,5ZM20.207,9.293a1,1,0,0,0-1.414,0l-6.25,6.25a1.011,1.011,0,0,0-.241.391l-1.25,3.75A1,1,0,0,0,12,21a1.014,1.014,0,0,0,.316-.051l3.75-1.25a1,1,0,0,0,.391-.242l6.25-6.25a1,1,0,0,0,0-1.414Zm-5,8.583-1.629.543.543-1.629L19.5,11.414,20.586,12.5Z"/></svg>
+              </button>
+            </span>
+        )}
+      <div className="absolute top-[2.75vh] ml-[40vw] space-x-[1vw] text-[1vw] z-10">
+        <button onClick={() => setProfileMode(0)}
+          className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-maroon_dark shadow-md">Dorm</button>
+        <button onClick={() => setProfileMode(1)}
+          className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md hover:bg-offgold">Apt.</button>
+      </div>
       {isEditing && (
         <div className="fixed bottom-0 left-0 right-0 flex justify-center">
-          <button className="text-white text-[2.5vh] h-[5vh] w-[8vw] ml-[14vw] mb-[6vh] bg-maroon_new hover:bg-maroon rounded-full mr-4" onClick={handleSaveChanges}>
+          <button className="text-white text-[2.5vh] h-[5vh] w-[8vw] ml-[14vw] mb-[6vh] bg-maroon_new hover:bg-maroon rounded-full mr-4 hover:bg-maroon_dark" onClick={handleSaveChanges}>
             Save
           </button>
-          <button className="text-[2.5vh] h-[5vh] w-[8vw] bg-inactive_gray mb-[5vh] rounded-full" onClick={toggleEditMode}>
+          <button className="text-[2.5vh] h-[5vh] w-[8vw] bg-inactive_gray mb-[5vh] rounded-full hover:bg-gray" onClick={toggleEditMode}>
             Cancel
           </button>
         </div>

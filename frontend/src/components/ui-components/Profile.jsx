@@ -15,6 +15,7 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
 
   const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
   const [sliderValue, setSliderValue] = useState({ min: 80, max: 144 });
+  const [isEditing, setIsEditing] = useState(false);
 
   const formatTime = (value) => {
     const hours = Math.floor(value / 4);
@@ -100,8 +101,8 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
   };
 
   const qnaItems = qnaData.map((item, index) => (
-    <div key={item.id} className={`flex w-full pl-5 pr-5 border-b ${index !== qnaData.length - 1 ? 'mb-[0.1vh]' : ''} ${index === 0 ? 'mt-[0.25vh]' : ''} ${index === 3 ? 'mt-[0.25vh]' : ''} ${index===6 ? 'border-b-0' : ''} ${index===2 ? 'border-b-0' : ''}`} style={{ minHeight: '1vh' }}>
-      <p className="flex-[1vh] flex items-center" style={{ lineHeight: '2' }}>{item.question}</p>
+    <div key={item.id} className={`flex w-full pl-[0.75vw] pr-[1vw] border-b ${index !== qnaData.length - 1 ? 'mb-[0.1vh]' : ''} ${index === 0 ? 'mt-[0.25vh]' : ''} ${index === 3 ? 'mt-[0.25vh]' : ''} ${index===6 ? 'border-b-0' : ''} ${index===2 ? 'border-b-0' : ''}`} style={{ minHeight: '1vh' }}>
+      <p className="flex-[1vh] flex items-center" style={{ lineHeight: '1.875' }}>{item.question}</p>
       {editable && item.isTextField ? (
         <input
           type="text"
@@ -123,30 +124,38 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
           ))}
         </select>
       ) : ( null)}
-      {(!editable && !item.isTextField) && <p className="truncate whitespace-nowrap">
+      {(!editable && !item.isTextField) && <p className="truncate whitespace-nowrap mt-[0.4vh]">
           {item.options.find(o => o.option_id === getSelectedOptionId(item.id))?.text || 'N/A'}
         </p>}
       {(!editable && item.isTextField) && <p className="truncate whitespace-nowrap">
         {getSelectedTextField(item.id)}
       </p>}
     </div>
-  ));         
+  ));
+  
+  const toggleEditMode = () => {
+    if (isEditing) {
+      setEditedProfile(profile);
+    }
+    setIsEditing(prev => !prev);
+  };
 
   return (
     <>
       <div className={`m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
-        <div className={"w-full flex flex-col  h-[70vh] mb-[6vh] bg-white rounded-3xl overflow-hidden"}>
+        <div className={"w-full flex flex-col h-[70vh] mb-[4vh] bg-white rounded-3xl overflow-hidden"}>
           <div className={"flex h-[35vh] "}>
-            <div className={"w-[18vw] h-[18vh] bg-white rounded-3xl mt-[4vh] ml-[3vh]"}>
+            <div className={"w-[20vw] h-[20vh] bg-white rounded-3xl mt-[4vh] ml-[1vh]"}>
               <Carousel pictureUrls={pictureUrls} editable={editable}></Carousel>
             </div>
             <div className={"flex-grow flex flex-col bg-white"}>
               <div className={"h-[3vh]"}>
-              <p className={"text-[1.22vw] mt-[6vh] inline-block"}>
-                <span className="font-bold ml-[1.3vw] text-[1.7vw]">{user_data?.first_name} {user_data?.last_name}:</span> {user_data?.gender.charAt(0).toUpperCase() + user_data?.gender.slice(1)}, {user_data?.major} Major, {user_data?.college.toUpperCase()} Class of {user_data?.graduating_year}
+              <p className={"text-[1.22vw] ml-[1.3vw] mt-[3vh] inline-block flex flex-col"}>
+                <span className="font-bold text-[1.7vw]">{user_data?.first_name} {user_data?.last_name}</span>
+                <span>{user_data?.major} Major</span>
               </p>
               </div>
-              <div className={"flex-grow rounded-3xl w-[41.5vw] ml-[1.5vw] mt-[8vh] mb-[-0.48vh] border-2 border-maroon_new overflow"}>
+              <div className={"flex-grow rounded-2xl w-[41vw] ml-[1.5vw] mt-[9vh] mb-[-0.48vh] border-2 border-maroon_new overflow"}>
                 <p className={"w-full h-full"}>
                   {editable ? (
                             <textarea
@@ -163,12 +172,25 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
             </div>
           </div>
           <div className={`${dormMode === 0 ? "block" : "hidden"} flex flex-grow`}>
-            <div className={"flex-1 flex-col h-[25vh] m-[5%] mt-[6vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[2vh]"}>
+            <div className={"flex-1 flex-col h-[25vh] m-[3%] mt-[6vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[2vh]"}>
               {qnaItems.slice(0,1)}
               {qnaItems.slice(4,7)}
+              <div className="bg-maroon h-[0.125vh] w-full"></div>
+              <div className="flex flex-row mt-[0.5vh]">
+                <span className="ml-[0.75vw]">Gender:</span>
+                <span className="flex items-end ml-auto mr-[0.75vw]">{user_data?.gender.charAt(0).toUpperCase() + user_data?.gender.slice(1)}</span>
+              </div>
+              <div className="bg-maroon h-[0.125vh] w-full mt-[0.25vh]"></div>
+              <div className="flex flex-row mt-[0.5vh]">
+                <span className="ml-[0.75vw]">Graduating Class:</span>
+                <span className="flex items-end ml-auto mr-[0.75vw]">
+                  {['Carlson', 'Nursing', 'Design'].includes(user_data?.college)
+                    ? user_data?.college.charAt(0).toUpperCase() + user_data?.college.slice(1)
+                    : user_data?.college.toUpperCase()} '{user_data?.graduating_year ? user_data?.graduating_year.toString().slice(-2) : ''}
+                </span>
+              </div>
             </div>
-            <div className={"flex-1 flex-col flex h-[25vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
-              
+            <div className={"flex-1 flex-col flex h-[18vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
             </div>
             <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
@@ -186,7 +208,7 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
             </div>
           </div>
-          <div className="absolute bottom-[19vh] left-[13vw] w-[20%]">
+          <div className="absolute bottom-[19.5vh] left-[33vw] w-[20%]">
           <span className="ml-[5vw]">Sleep Schedule</span>
 
             <InputRange
