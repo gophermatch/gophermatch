@@ -21,7 +21,7 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
 
         fetchUnseenMatches();
 
-        const intervalId = setInterval(fetchUnseenMatches, 5000);
+        const intervalId = setInterval(fetchUnseenMatches, 300000); // update every 5 minutes
     
         return () => clearInterval(intervalId);
     }, []);
