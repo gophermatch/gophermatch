@@ -87,7 +87,7 @@ export default function Saved() {
                 </div>
             )}
         <div className="flex flex-col items-center justify-center">
-            <div className="h-[5vh] w-[47vw] bg-maroon rounded-tr-[0.5vh] rounded-tl-[0.5vh] flex items-center justify-center">
+            <div className="h-[5vh] w-[47vw] mt-[1vh] bg-maroon rounded-tr-[0.5vh] rounded-tl-[0.5vh] flex items-center justify-center">
                 <svg 
                     width="4vw" 
                     height="4vh" 
@@ -103,14 +103,14 @@ export default function Saved() {
             {people.map((person, index) => (
                 <div className="flex flex-col h-[11vh] w-full">
                 <div className="flex" key={index}>
-                    <div className="flex flex-row w-full" onClick={() => displayProfile(person)}>
-                            <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw]"></img>
+                    <div className="flex flex-row w-full">
+                            <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" onClick={() => displayProfile(person)}></img>
                             <div className=" flex flex-col w-full text-start justify-start">
                                 <div className="flex flex-row">
-                                <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] font-roboto font-[390]  text-maroon">{`${person.first_name} ${person.last_name}`}</p>
+                                    <button className="text-[2.5vh] mt-[1.5vh] ml-[1vw] font-roboto font-[390]  text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
                                 </div>
                                 <div className="flex flex-row">
-                                    <p className="ml-[1vw] text-[2vh] font-[200] text-black">{person.major} Major, Class of {person.graduating_year}</p>
+                                    <button className="ml-[1vw] text-[2vh] font-[200] text-black" onClick={() => displayProfile(person)}>{person.major} Major, Class of {person.graduating_year}</button>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end justify-end">
@@ -128,7 +128,7 @@ export default function Saved() {
                             </svg>
                             </button>
                             <button
-                                className="hover:text-maroon font-thin mr-[1.1vw] text-[2.125vh]"
+                                className="hover:text-maroon text-inactive_gray mr-[1.1vw] text-[2.125vh]"
                                 onClick={() => unmatch(person.user_id)}>
                                 X
                             </button>

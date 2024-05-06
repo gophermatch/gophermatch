@@ -72,7 +72,13 @@ export default function Inbox({ user_data }) {
 
     return (
         <div className="p-8">
-            
+            {selectedProfile && (
+                <div className="ml-[7vw]" style={{ width: '80%', height: '40%' }}>
+                    <Profile user_data={selectedProfile} editable={false} />
+                    <button onClick={() => setSelectedProfile(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
+                </div>
+            )}
+        <div className="p-8">
             <div className="flex flex-col items-center text-center justify-center">
                 <div className="flex flex-row bg-maroon h-[5vh] mt-[1vh] w-[47vw] rounded-tl-[0.5vh] rounded-tr-[0.5vh]">
                     <svg 
@@ -91,13 +97,13 @@ export default function Inbox({ user_data }) {
                         <div className="flex flex-col h-[9.5vh] w-full" key={index}>
                             <div className="flex" key={index}>
                                 <div className="flex flex-row w-full">
-                                    <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw]" alt="Profile" onClick={() => displayProfile(person)}></img>
+                                    <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" alt="Profile" onClick={() => displayProfile(person)}></img>
                                     <div className="flex flex-col w-full text-start items-start justify-start">
-                                        <button className="text-[2.5vh] mt-[0.75vh] w-[30vw] ml-[1vw] font-roboto font-light text-start text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
+                                        <button className="text-[2.5vh] mt-[0.75vh] w-auto ml-[1vw] font-roboto font-light text-start text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
                                         <button className="text-[2vh] font-thin ml-[1vw]" onClick={() => displayProfile(person)}>{person.contact_phone}</button>
                                     </div>
                                     <div className="w-full text-right">
-                                        <button className="text-[2.5vh] text-inactive_gray hover:text-gold w-[4vw] mr-[1vw] mt-[2.5vh]" onClick={() => unmatch(person.user_id)}>X</button>
+                                        <button className="text-[2.5vh] text-inactive_gray hover:text-maroon w-[4vw] mr-[1vw] mt-[2.5vh]" onClick={() => unmatch(person.user_id)}>X</button>
                                     </div>
                                 </div>
                             </div>
@@ -127,5 +133,6 @@ export default function Inbox({ user_data }) {
                 </div>
             </div>
         </div>
+    </div>
     );
 }
