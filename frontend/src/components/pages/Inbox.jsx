@@ -1,74 +1,42 @@
-import kanye from '../../assets/images/kanye.png'
-import TemplateProfile from '../../TemplateProfile.json'
-import backend from '../../backend.js'
-import { useEffect, useState } from 'react'
-import Profile from '../ui-components/Profile.jsx'
-import currentUser from '../../currentUser.js'
-import { Link } from 'react-router-dom'
-
-const dummyData = {
-    id: 865728,
-    firstName: "Someone",
-    lastName: "Special",
-    college: "cse"
-}
-
-const secondData = {
-    id: 54125,
-    firstName: "Kanye",
-    lastName: "Western",
-    college: "cfams"
-}
-
-function isOnProfilePopup(node) {
-    let parent = node.parentNode;
-    while (parent) {
-        if (parent === document.getElementById("inbox-profile-popup")) {
-            return true;
-        }
-        parent = parent.parentNode
-    }
-    return false;
-}
+import kanye from '../../assets/images/kanye.png';
+import { useEffect, useState } from 'react';
+import Profile from '../ui-components/Profile.jsx';
+import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
+import backend from '../../backend.js';
+import currentUser from '../../currentUser.js';
 
 export default function Inbox({ user_data }) {
-    const [openProfile, setOpenProfile] = useState(false);
     const [matchedProfiles, updateMatchedProfiles] = useState([]);
-    const [updateDep, stepUpdateDep] = useState(1);
-    const [matches, updateMatches] = useState([]); // {matchId: userid, timestamp: ???}[]
-    const [pictureUrls, setPictureUrls] = useState([]);
+    const [matchedSubleases, updateMatchedSubleases] = useState([]);
     const [selectedProfile, setSelectedProfile] = useState(null);
-    const [showPopup, setShowPopup] = useState(false);
-
-    let people = [];
-    people = matchedProfiles;
-
-    function selectProfile(profile, event) {
-        const clickedBox = event.target.getBoundingClientRect();
-        setSelectedProfile({...profile, clickedBox, showShortBox: true, showAdditionalInfo: true});
-    } 
-        
+    const [selectedSublease, setSelectedSublease] = useState(null);
+    const [activeButton, setActiveButton] = useState('Roommates'); // Initially set to 'Roommates'
 
     useEffect(() => {
         (async () => {
-            const matchesRes = await backend.get('/match/inbox', {params: {userId: currentUser.user_id}});
+            try {
+                const matchesRes = await backend.get('/match/inbox', { params: { userId: currentUser.user_id } });
+                const profilePromises = matchesRes.data.map(({ matchId, timestamp }) => Promise.all([
+                    backend.get('/profile', { params: { user_id: matchId } }),
+                    backend.get('account/fetch', { params: { user_id: matchId }, withCredentials: true })
+                ]));
 
-            const profilePromises = matchesRes.data.map(({matchId, timestamp}) => Promise.all([
-                backend.get('/profile', {params: {user_id: matchId}}),
-                backend.get('account/fetch', {params: {user_id: matchId}, withCredentials: true})
-            ]));
-
-            Promise.all(profilePromises).then((promiseResults) => {
-                const translatedData = promiseResults.map(([profileRes, accountRes]) => {
-                    return {...profileRes.data, ...accountRes.data.data};
+                Promise.all(profilePromises).then((promiseResults) => {
+                    const translatedData = promiseResults.map(([profileRes, accountRes]) => {
+                        return { ...profileRes.data, ...accountRes.data.data };
+                    });
+                    updateMatchedProfiles(translatedData);
                 });
-                updateMatchedProfiles(translatedData);
-            });
+            } catch (error) {
+                console.error("Error fetching matched profiles:", error);
+            }
+            try {
+                const subleaseRes = await backend.get('/sublease/get-saves', {params: {user_id: currentUser.user_id}});
+                updateMatchedSubleases(subleaseRes.data);
+            } catch (error) {
+                console.error("Failed fetching subleases: ", error)
+            }
         })();
-    }, [updateDep]);
-
-    useEffect(() => {
-        fetchPictureUrls();
     }, []);
 
     useEffect(() => {
@@ -97,122 +65,169 @@ export default function Inbox({ user_data }) {
         }
     };
     
-    
+    // backend.get('/sublease/get-saves', {params: {user_id: 47}}).then(res => console.log(res))
 
     function unmatch(profileId) {
-        backend.delete('/match/inbox-delete', {params: {
-            user1_id: currentUser.user_id,
-            user2_id: profileId
-        }}).then(() => {
-            updateMatchedProfiles(prevProfiles => prevProfiles.filter(profile => profile.user_id !== profileId));
-        });
+        backend.delete('/match/inbox-delete', { params: { user1_id: currentUser.user_id, user2_id: profileId } })
+            .then(() => {
+                updateMatchedProfiles(prevProfiles => prevProfiles.filter(profile => profile.user_id !== profileId));
+            })
+            .catch((error) => {
+                console.error("Error unmatching profiles:", error);
+            });
     }
 
-    function displayProfile(id) {
-        setOpenProfile(true); //todo: request an actual profile and update state from data
+    function deleteSublease(sublease_id) {
+        backend.delete('/sublease/delete-save', {params: {
+            user_id: currentUser.user_id,
+            sublease_id: sublease_id
+        }})
     }
 
-    const profilePopup = selectedProfile && selectedProfile.clickedBox && (
-        <>
-            {selectedProfile.showShortBox && (
-                <div
-                    id='inbox-profile-popup'
-                    className="fixed inset-0 flex justify-center items-center"
-                    onClick={() => setSelectedProfile(null)}
-                >
-                    <div
-                        className="bg-white rounded-md border-[0.25vh] ml-[1vw] border-maroon p-[1vw] h-[14vh] w-[59vw] flex"
-                        style={{
-                            position: 'absolute',
-                            top: `${selectedProfile.clickedBox.top}px`,
-                            left: `17.61vw`,
-                        }}
-                    >
-                        <img src={selectedProfile.profileURL || kanye} alt="Profile" className="rounded-md w-[7vw] h-[12vh] mt-[-1vh]"></img>
-                        <div className="flex flex-col text-maroon text-[2vh] ml-[3vw] mt-[-1vh]">
-                            <div className="flex flex-row">
-                                <p className="text-maroon text-[2vh] ml-[3vw]">Email:</p>
-                                <p className="ml-[7vw]">{selectedProfile.contact_email}</p>
-                            </div>
-                            <div className="flex flex-row">
-                                <p className="text-maroon text-[2vh] ml-[3vw]">Phone Number: </p>
-                                <p className="ml-[2vw]">{selectedProfile.contact_phone}</p>
-                            </div>
-                            <div className="flex flex-row">
-                                <p className="text-maroon text-[2vh] ml-[3vw]">Snapchat: </p>
-                                <p className="ml-[4.9vw]">{selectedProfile.contact_snapchat}</p>
-                            </div>
-                            <div className="flex flex-row">
-                                <p className="text-maroon text-[2vh] ml-[3vw]">Instagram: </p>
-                                <p className="ml-[4.6vw]">{selectedProfile.contact_instagram}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </>
-    );
-    
-    const WhiteBoxPopup = ({ onClick }) => {
-        return (
-          <div
-            className="fixed inset-0 flex justify-center items-center"
-            onClick={onClick}
-            style={{ backgroundColor: 'offwhite' }}
-          >
-            <div
-              className="bg-white rounded-md p-8"
-              style={{ width: '60vw', height: '60vh' }}
-            ></div>
-          </div>
-        );
-      };
+    function displayProfile(profile) {
+        setSelectedProfile(profile);
+    }
+
+    function displaySublease(sublease) {
+        console.log(sublease)
+        backend.get('/sublease/get', {params: {user_id: sublease.user_id}}).then((res) => {
+            setSelectedSublease(res.data)
+            console.log("GOt: ", res.data)
+        })
+    }
 
     return (
         <div className="p-8">
-        {profilePopup}
-        <h1 className="text-center text-[4vw] text-maroon mb-[5vh]">Matches</h1>
-        {people.map((person, index) => (
-            <div className="flex" key={index}>
-                <div className="flex flex-col" key={index}>
-                <Link to="/showMatch" className="bg-white rounded-md border-[0.25vh] border-maroon p-[1vw] ml-[0.5vw] h-[14vh] m-[2vh] w-[59vw] flex cursor-pointer">
-                    {/* Content of the link */}
-                
-                        <img src={person.profileURL || kanye} className="rounded-md w-[7vw] h-[12vh] mt-[-1vh]"></img>
-                        <div className="flex flex-1 text-center justify-center pt-[1.5vh]">
-                            <p className="text-maroon text-center text-[4vh] inline-block">{`${person.first_name} ${person.last_name}`}</p>
-                            <div className="h-[8vh] w-[5vw] inline-flex object-scale-down hover:scale-110 active:scale-90 justify-center items-center">
-                                {/* <svg width="8vw" height="8vh" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
-                                    <g id="Group_718" data-name="Group 718" transform="translate(-50.5 -150.5)">
-                                        <path id="Path_1496" data-name="Path 1496" d="M74.5,176.5h-5v-2h3.9l-6.9-6,1-2,7,6.1v-3.1h2v5A2.006,2.006,0,0,1,74.5,176.5Zm0-22.1-7,6.1-1-2,6.9-6H69.5v-2h5a2.006,2.006,0,0,1,2,2v5h-2Zm-17,20.1v2h-5a2.006,2.006,0,0,1-2-2v-5h2v3.1l7-6.1,1,2-6.9,6Zm2-14-7-6.1v3.1h-2v-5a2.006,2.006,0,0,1,2-2h5v2H53.6l6.9,6Z" fill="black" className=""/>
-                                    </g>
-                                </svg> */}
-                            </div>  
-                        </div>
-                        </Link>
-                    </div>
-                    <button 
-                        className="h-[14vh] w-[8vw] mt-[2vh] bg-offgold bordef border-black rounded-[1.5vh] ml-[1vw]"
-                        onClick={(e) => selectProfile(person, e)}>
-                        <div style={{pointerEvents: 'none'}}>
-                            <svg width="10vw" height="10vh" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mt-[1vh] ml-[-1vw]">
-                                <g id="ic-contact-message">
-                                    <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5px" d="M19.89,3.25H4.11a2,2,0,0,0-2,2v9.06a2,2,0,0,0,2,2H5.75l2.31,4a.85.85,0,0,0,1.48,0l2.32-4h8a2,2,0,0,0,2-2V5.25A2,2,0,0,0,19.89,3.25Z"/>
-                                    <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5px" x1="5.01" y1="7.86" x2="11.01" y2="7.86"/>
-                                    <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5px" x1="5.01" y1="11.86" x2="18.01" y2="11.86"/>
-                                </g>
-                            </svg>
-                        </div>
-                    </button>
-                    <button className="h-[14vh] w-[8vw] mt-[2vh] ml-[2vw] bg-maroon_transparent rounded-[1.5vh]"
-                        onClick={() => unmatch(person.user_id)}>
-                            <div style={{pointerEvents: 'none'}}>
-                                <svg fill="black" width="10vw" height="10vh" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mt-[1.5vh] ml-[-1vw]"><path d="M1,20a1,1,0,0,0,1,1h8a1,1,0,0,0,0-2H3.071A7.011,7.011,0,0,1,10,13a5.044,5.044,0,1,0-3.377-1.337A9.01,9.01,0,0,0,1,20ZM10,5A3,3,0,1,1,7,8,3,3,0,0,1,10,5Zm12.707,9.707L20.414,17l2.293,2.293a1,1,0,1,1-1.414,1.414L19,18.414l-2.293,2.293a1,1,0,0,1-1.414-1.414L17.586,17l-2.293-2.293a1,1,0,0,1,1.414-1.414L19,15.586l2.293-2.293a1,1,0,0,1,1.414,1.414Z"/></svg>
-                            </div>
-                    </button>
+            {selectedProfile && (
+                <div className="ml-[7vw]" style={{ width: '80%', height: '40%' }}>
+                    <Profile user_data={selectedProfile} editable={false} />
+                    <button onClick={() => setSelectedProfile(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
                 </div>
-            ))}
+            )}
+            {selectedSublease && (
+                <div>
+                    <SubleaseEntry sublease={selectedSublease} refreshFunc={() => {}} />
+                    <button onClick={() => setSelectedSublease(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
+                </div>
+            )}
+        {!(selectedProfile || selectedSublease) && <div className="flex flex-col items-center text-center justify-center">
+            <div className="flex flex-row">
+            <button className={`bg-${activeButton === 'Roommates' ? 'maroon' : 'dark_maroon'} h-[5vh] w-[20vw]  rounded-tl-[1vh] text-[2vh] font-light font-roboto rounded-tr-[1vh] text-${activeButton === 'Roommates' ? 'white' : 'newwhite'}`}
+                onClick={() => setActiveButton('Roommates')}>
+                Roommates
+            </button>
+            <button className={`bg-${activeButton === 'Subleases' ? 'maroon' : 'dark_maroon'} h-[5vh] w-[20vw]  rounded-tl-[1vh] rounded-tr-[1vh] text-[2vh] font-light font-roboto text-${activeButton === 'Subleases' ? 'white' : 'newwhite'}`}
+                onClick={() => setActiveButton('Subleases')}>
+                Subleases
+            </button>
+            </div>
+            <div className="text-newwhite"></div>
+            <div className="bg-white h-[90vh] w-[40vw] items-center text-center justify-center">
+                {activeButton === "Roommates" && matchedProfiles.map((person, index) => (
+                    <div className="flex flex-col h-[9.5vh] w-full">
+                        <div className="flex" key={index}>
+                            <div className="flex flex-row w-full">
+                                    <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw]"></img>
+                                    <div className=" flex flex-col w-full text-start justify-start">
+                                        <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] w-[30vw] font-roboto font-[390]  text-maroon">{`${person.first_name} ${person.last_name}`}</p>
+                                        <div className="flex flex-row">
+                                            <p className="ml-[1vw] text-[2vh] font-[200] text-black">{person.contact_phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col items-end justify-end">
+                                    <button 
+                                        className="mr-[0.5vw]"
+                                        onClick={() => displayProfile(person)}>
+                                        <svg version="1.1"
+                                            id="svg2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="eye-open.svg" inkscape:version="0.48.4 r9939"
+                                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="2.5vw" height="2.5vw"
+                                            viewBox="0 0 1200 1200" enable-background="new 0 0 1200 1200" xml:space="preserve">
+                                        <sodipodi:namedview  inkscape:cy="417.05123" inkscape:cx="455.50398" inkscape:zoom="0.37249375" showgrid="false" id="namedview30" guidetolerance="10" gridtolerance="10" objecttolerance="10" borderopacity="1" bordercolor="#666666" pagecolor="#ffffff" inkscape:current-layer="svg2" inkscape:window-maximized="1" inkscape:window-y="24" inkscape:window-height="876" inkscape:window-width="1535" inkscape:pageshadow="2" inkscape:pageopacity="0" inkscape:window-x="65">
+                                            </sodipodi:namedview>
+                                        <path id="path6686" inkscape:connector-curvature="0" d="M779.843,599.925c0,95.331-80.664,172.612-180.169,172.612
+                                            c-99.504,0-180.168-77.281-180.168-172.612c0-95.332,80.664-172.612,180.168-172.612
+                                            C699.179,427.312,779.843,504.594,779.843,599.925z M600,240.521c-103.025,0.457-209.814,25.538-310.904,73.557
+                                            c-75.058,37.122-148.206,89.496-211.702,154.141C46.208,501.218,6.431,549,0,599.981c0.76,44.161,48.13,98.669,77.394,131.763
+                                            c59.543,62.106,130.786,113.018,211.702,154.179c94.271,45.751,198.616,72.092,310.904,73.557
+                                            c103.123-0.464,209.888-25.834,310.866-73.557c75.058-37.122,148.243-89.534,211.74-154.179
+                                            c31.185-32.999,70.962-80.782,77.394-131.763c-0.76-44.161-48.13-98.671-77.394-131.764
+                                            c-59.543-62.106-130.824-112.979-211.74-154.141C816.644,268.36,712.042,242.2,600,240.521z M599.924,329.769
+                                            c156.119,0,282.675,120.994,282.675,270.251c0,149.256-126.556,270.25-282.675,270.25S317.249,749.275,317.249,600.02
+                                            C317.249,450.763,443.805,329.769,599.924,329.769L599.924,329.769z"/>
+                                        </svg>
+                                    </button>
+                                    <button 
+                                    className={`h-[4vh] w-[2.5vw] mr-[0.5vw] bg-${activeButton === 'Roommates' ? 'maroon' : 'maroon'} rounded-[0.5vh]`}
+                                    onClick={() => unmatch(person.user_id)}>
+                                        <svg 
+                                        fill="white" 
+                                        width="3vw" 
+                                        height="3vh" 
+                                        viewBox="0 0 24 24" 
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        style={{marginLeft: "-0.2vw"}}
+                                        ><path d="M1,20a1,1,0,0,0,1,1h8a1,1,0,0,0,0-2H3.071A7.011,7.011,0,0,1,10,13a5.044,5.044,0,1,0-3.377-1.337A9.01,9.01,0,0,0,1,20ZM10,5A3,3,0,1,1,7,8,3,3,0,0,1,10,5Zm12.707,9.707L20.414,17l2.293,2.293a1,1,0,1,1-1.414,1.414L19,18.414l-2.293,2.293a1,1,0,0,1-1.414-1.414L17.586,17l-2.293-2.293a1,1,0,0,1,1.414-1.414L19,15.586l2.293-2.293a1,1,0,0,1,1.414,1.414Z"/></svg>
+                                    </button>
+                                </div>
+                                </div>
+                            </div>
+                            <div className="w-full h-[0.125vh] bg-black mt-[0.5vh]"></div>
+                        </div>
+                ))}
+                {activeButton === "Subleases" && matchedSubleases.map((person, index) => (
+                    <div className="flex flex-col h-[9.5vh] w-full">
+                    <div className="flex" key={index}>
+                        <div className="flex flex-row w-full">
+                                {/* <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw]"></img> */}
+                                <div className=" flex flex-col w-full text-start justify-start">
+                                    <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] w-[30vw] font-roboto font-[390]  text-maroon">{person.name}</p>
+                                    <div className="flex flex-col">
+                                        <p className="ml-[1vw] text-[2vh] font-[200] text-black">Contact: {person.contact}</p>
+                                        <p className="ml-[1vw] text-[2vh] font-[200] text-black">Building: {person.building_name}</p>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col items-end justify-end">
+                                <button 
+                                    className="mr-[0.5vw]"
+                                    onClick={() => displaySublease(person)}>
+                                    <svg version="1.1"
+                                        id="svg2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="eye-open.svg" inkscape:version="0.48.4 r9939"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="2.5vw" height="2.5vw"
+                                        viewBox="0 0 1200 1200" enable-background="new 0 0 1200 1200" xml:space="preserve">
+                                    <sodipodi:namedview  inkscape:cy="417.05123" inkscape:cx="455.50398" inkscape:zoom="0.37249375" showgrid="false" id="namedview30" guidetolerance="10" gridtolerance="10" objecttolerance="10" borderopacity="1" bordercolor="#666666" pagecolor="#ffffff" inkscape:current-layer="svg2" inkscape:window-maximized="1" inkscape:window-y="24" inkscape:window-height="876" inkscape:window-width="1535" inkscape:pageshadow="2" inkscape:pageopacity="0" inkscape:window-x="65">
+                                        </sodipodi:namedview>
+                                    <path id="path6686" inkscape:connector-curvature="0" d="M779.843,599.925c0,95.331-80.664,172.612-180.169,172.612
+                                        c-99.504,0-180.168-77.281-180.168-172.612c0-95.332,80.664-172.612,180.168-172.612
+                                        C699.179,427.312,779.843,504.594,779.843,599.925z M600,240.521c-103.025,0.457-209.814,25.538-310.904,73.557
+                                        c-75.058,37.122-148.206,89.496-211.702,154.141C46.208,501.218,6.431,549,0,599.981c0.76,44.161,48.13,98.669,77.394,131.763
+                                        c59.543,62.106,130.786,113.018,211.702,154.179c94.271,45.751,198.616,72.092,310.904,73.557
+                                        c103.123-0.464,209.888-25.834,310.866-73.557c75.058-37.122,148.243-89.534,211.74-154.179
+                                        c31.185-32.999,70.962-80.782,77.394-131.763c-0.76-44.161-48.13-98.671-77.394-131.764
+                                        c-59.543-62.106-130.824-112.979-211.74-154.141C816.644,268.36,712.042,242.2,600,240.521z M599.924,329.769
+                                        c156.119,0,282.675,120.994,282.675,270.251c0,149.256-126.556,270.25-282.675,270.25S317.249,749.275,317.249,600.02
+                                        C317.249,450.763,443.805,329.769,599.924,329.769L599.924,329.769z"/>
+                                    </svg>
+                                </button>
+                                <button 
+                                className={`h-[4vh] w-[2.5vw] mr-[0.5vw] bg-${activeButton === 'Roommates' ? 'maroon' : 'maroon'} rounded-[0.5vh]`}
+                                onClick={() => deleteSublease(person.sublease_id)}>
+                                    <svg 
+                                    fill="white" 
+                                    width="3vw" 
+                                    height="3vh" 
+                                    viewBox="0 0 24 24" 
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    style={{marginLeft: "-0.2vw"}}
+                                    ><path d="M1,20a1,1,0,0,0,1,1h8a1,1,0,0,0,0-2H3.071A7.011,7.011,0,0,1,10,13a5.044,5.044,0,1,0-3.377-1.337A9.01,9.01,0,0,0,1,20ZM10,5A3,3,0,1,1,7,8,3,3,0,0,1,10,5Zm12.707,9.707L20.414,17l2.293,2.293a1,1,0,1,1-1.414,1.414L19,18.414l-2.293,2.293a1,1,0,0,1-1.414-1.414L17.586,17l-2.293-2.293a1,1,0,0,1,1.414-1.414L19,15.586l2.293-2.293a1,1,0,0,1,1.414,1.414Z"/></svg>
+                                </button>
+                            </div>
+                            </div>
+                        </div>
+                        <div className="w-full h-[0.125vh] bg-black mt-[0.5vh]"></div>
+                    </div>
+                ))}
+                </div>
+            </div>}
         </div>
     );
-    
 }

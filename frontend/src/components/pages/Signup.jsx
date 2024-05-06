@@ -145,7 +145,7 @@ export default function Signup() {
         <div className="bg-offwhite w-screen h-screen">
             <div className="bg-maroon_new h-[3.75rem] space-x-4 mt-auto">
                 <div className="flex justify-start items-start w-full">
-                    <Link to="/landing" className="text-doc font-lora text-3xl ml-2 mt-2">GopherMatch</Link>
+                    <Link to="/landing" className="text-offwhite font-lora text-3xl ml-2 mt-2">GopherMatch</Link>
                 </div>
                 <div className="flex flex-col font-lora text-maroon_new mt-10 text-center items-center">
                     { !showOtpInput && (
@@ -163,7 +163,7 @@ export default function Signup() {
                                 <div>
                                     <input className="mt-[1.5rem]" placeholder="Re-enter Password" type="password" value={password2} onChange={(event) => setPassword2(event.target.value)} onKeyUp={enterKeyPress} />
                                 </div>
-                                <button className="bg-maroon_new hover:bg-login text-doc font-bold py-2 w-[11.5rem] rounded mt-12" onClick={onSignupAttempt}>Sign up</button>
+                                <button className="bg-maroon_new hover:bg-login text-offwhite font-bold py-2 w-[11.5rem] rounded mt-12" onClick={onSignupAttempt}>Sign up</button>
                                 <div className="mt-[2rem] text-lg flex text-maroon_new items-center">
                                     <p>Already have an account?</p>
                                     &nbsp;
@@ -191,7 +191,7 @@ export default function Signup() {
                                         </div>
                                     ))}
                                 </div>
-                                <button className="bg-maroon_new hover:bg-login text-doc text-xl font-bold py-2 w-[14rem] rounded mt-[6rem]" onClick={onVerifyOtp}>Verify Account</button>
+                                <button className="bg-maroon_new hover:bg-login text-offwhite text-xl font-bold py-2 w-[14rem] rounded mt-[6rem]" onClick={onVerifyOtp}>Verify Account</button>
                             </div>
                         )}
                         <div className={'${styles.login_failure}, text-xl mt-12'}>{signupErr}</div>

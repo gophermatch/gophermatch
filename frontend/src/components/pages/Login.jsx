@@ -98,7 +98,7 @@ export default function Login() {
                         </p>
                     )}
                 <div className="flex items-center justify-center mt-[2vh]">
-                    <button onClick={onLoginAttempt} className="bg-maroon_new hover:bg-login text-doc font-bold h-[5vh] w-[12vw] rounded mt-[4vh] text-[2.3vh]">Login</button>
+                    <button onClick={onLoginAttempt} className="bg-maroon_new hover:bg-login text-offwhite font-bold h-[5vh] w-[12vw] rounded mt-[4vh] text-[2.3vh]">Login</button>
                 </div>
                 <div>{loginErr}</div>
                 <div className='flex items-center justify-center text-maroon_new mt-[4vh]'>

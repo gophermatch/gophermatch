@@ -20,6 +20,7 @@ import Landing from './components/pages/LandingPage.jsx'
 import Saved from './components/pages/Saved.jsx'
 import PicUpload from './components/pages/PicUpload.jsx'
 import Sublease from './components/pages/Sublease.jsx'
+import Payment from './components/pages/Payment.jsx'
 import SubleaseCreation from "./components/pages/SubleaseCreation.jsx";
 import showMatch from './components/pages/ShowMatch.jsx'
 
@@ -133,6 +134,10 @@ const router = createBrowserRouter([
                 element: <Profile />,
                 loader: unauthPageRedirect
             },{
+              path: "payment",
+              element: <Payment />,
+              loader: unauthPageRedirect
+          },{
                 path: "settings",
                 element: <Settings />,
                 loader: unauthPageRedirect

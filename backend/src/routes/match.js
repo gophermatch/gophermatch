@@ -1,14 +1,15 @@
 import { Router } from 'express';
-import { recordUserDecision, 
-    deleteMatchDecision, 
-    getSavedMatches, 
-    retrieveUserMatches, 
+import {
+    recordUserDecision,
+    deleteMatchDecision,
+    getSavedMatches,
+    retrieveUserMatches,
     deleteInboxMatch,
-    getFilterResults, 
+    getFilterResults,
     getFilterResultsQna,
     getUserUnseenMatches,
-    markUserMatchesAsSeen
-} from '../database/match.js';
+    markUserMatchesAsSeen, getProfileInfoMultiple, getInteractedProfiles, unrejectAll
+} from "../database/match.js";
 
 const router = Router()
 
@@ -30,19 +31,38 @@ router.post('/matcher', async (req, res) => {
     }
 });
 
+router.post('/unrejectall', async (req, res) => {
+    const { user_id } = req.body;
 
-router.post('/filter-results', async (req, res) => {
-    const { userdataFilters, qnaFilters } = req.body;
+    // Basic validation
+    if (!user_id) {
+        return res.status(400).json({ error: "Missing required field user_id" });
+    }
 
     try {
-        console.log("NEW FILTER")
-        const userdataResults = await getFilterResults(userdataFilters);
-        console.log("udata",userdataResults);
-        const qnaResults = await getFilterResultsQna(qnaFilters);
-        console.log("qna",qnaResults);
-        const commonUserIds = userdataResults.filter(id => qnaResults.includes(id));
-        console.log("real",commonUserIds)
-        res.json(commonUserIds);
+        const result = await unrejectAll(user_id);
+        res.json(result);
+    } catch (error) {
+        console.error('Error unrejecting:', error);
+        res.status(500).json({ error: "Failed to unreject." });
+    }
+});
+
+
+router.post('/filter-results', async (req, res) => {
+    const { user_id, userData, filters } = req.body;
+
+    try {        
+        const userdataResults = await getFilterResults(userData);
+
+        const qnaResults = await getFilterResultsQna(filters);
+
+        const interactedProfiles = await getInteractedProfiles(user_id);
+
+        const commonUserIds = userdataResults.filter(id => qnaResults.includes(id) && !interactedProfiles.includes(id) && id !== user_id);
+
+        const profileData = await getProfileInfoMultiple(commonUserIds);
+        res.json(profileData);
     } catch (error) {
         console.error('Error getting filter results:', error);
         res.status(500).json({ error: "Failed to get filter results." });

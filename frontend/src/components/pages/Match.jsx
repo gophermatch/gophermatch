@@ -1,109 +1,61 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import Profile from '../ui-components/Profile';
 import Filter from '../ui-components/Filter';
-import styles from '../../assets/css/match.module.css'
-import TemplateProfile from '../../TemplateProfile.json'
-import TemplateProfile2 from '../../TemplateProfile2.json'
 import backend from '../../backend';
 import currentUser from '../../currentUser';
 
-
-const tempIdGrabber = () => {
-    return new Promise((resolve) => {
-        const tempIds = [48, 47, 56, 57];
-        resolve({data: tempIds});
-    })
-};
-
-const deepClone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
-
 export default function Match() {
-    const [filteredIds, setFilteredIds] = useState([]);
-    const [filterIndex, setFilterIndex] = useState(0);
-    const [filters, setFilters] = useState(null);
-    const [nextProfiles, setNextProfiles] = useState([]);
-    const [requestLock, setRequestLock] = useState(false);
 
+    const [filterResults, setFilterResults] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const [profileMode, setProfileMode] = useState(0);
+  
     useEffect(() => {
-        // console.log("Getting new ids")
-        tempIdGrabber().then((res) => {
-            setFilteredIds(res.data); //todo: use filters in backend query here
-            setFilterIndex(0);
-            setNextProfiles([]);
-        })
-    }, [filters]);
-
-    useEffect(storeNextProfiles, [filteredIds]);
-
-    function storeNextProfiles() {
-        if (filteredIds.length === 0) return;
-        // console.log("Getting next profiles")
-        const LOAD_COUNT = 3;
-        setRequestLock(true);
-
-        // console.log("Filtered ids now are: ", filteredIds)
-        // console.log("Index: " + filterIndex + " To: " + (filterIndex + LOAD_COUNT))
-        const nextIds = filteredIds.slice(filterIndex, filterIndex + LOAD_COUNT);
-        // console.log("Next ids are: ", nextIds)
-
-        Promise.all(nextIds.map(id => backend.get('account/fetch', {params: {user_id: id}})))
-            .then((responses) => {
-                setFilterIndex(filterIndex + LOAD_COUNT);
-                const profiles = responses.map((response, i) => ({
-                    user_id: nextIds[i],
-                    data: response.data
-                }));
-                // console.log(profiles)
-                setNextProfiles(s => [...s, ...profiles]);
-                setRequestLock(false);
-            })
-    }
-
-    if (nextProfiles.length === 0) {
-        return <p>No results left! Please change your filters.</p>
-    }
-
-    // if (nextProfiles.length < 5 && !requestLock) {
-    //     setRequestLock(true);
-    //     tempIdGrabber().then((res) => {
-    //         const newData = res.data.map(async (id) => {
-    //             const response = await backend.get('account/fetch', {
-    //                 params: {user_id: id},
-    //                 withCredentials: true
-    //             });
-    //             return {user_id: id, data: response.data};
-    //         });
-    //         Promise.all(newData).then((data) => {
-    //             setNextProfiles(s => [...s, ...data]);
-    //             setRequestLock(false);
-    //         })
-    //     }).catch(() => console.error("WAAAH"));
-    // }
+        setCurrentIndex(0);
+        setFilterResults([]);
+    }, []);
 
     function goToNext(decision) {
-        // console.log("Going to next");
-        // console.log("Current profiles are: ", nextProfiles)
-        // console.log(nextProfiles[0].user_id)
         backend.post('/match/matcher', {
             user1Id: currentUser.user_id,
-            user2Id: nextProfiles[0].user_id,
+            user2Id: filterResults[currentIndex].user_id,
             decision: decision
-        }).then(() => console.log("Success matching"));
-        setNextProfiles(s => s.slice(1));
-        if (nextProfiles.length <= 2 && !requestLock) {
-            storeNextProfiles();
-        }
+        });
+        setCurrentIndex(currentIndex+1);
     }
 
-    if (nextProfiles.length == 0) {
-        return <p>Loading profiles</p>
+    async function showRejectedMatches()
+    {
+      const response = await backend.post('/match/unrejectall', {
+        user_id: currentUser.user_id
+      });
+
+      console.log(response);
+
+      setCurrentIndex(0);
+      setFilterResults([]);
+    }
+
+    if (currentIndex >= filterResults.length) {
+        return (
+          <div className={"h-full" +
+            ""}>
+              <Filter setFilterResults={setFilterResults} />
+            <div className={"flex h-full justify-center items-center"}>
+              <div className={"flex flex-col"}>
+                <p className={"text-center"}>Out of results, please change your filters or</p>
+                <button className={"mt-[5px] text-center bg-maroon_dark rounded-2xl px-[10px] py-[5px] text-white duration-500 hover:bg-maroon_new"} onClick={showRejectedMatches}>Start from the beginning</button>
+              </div>
+              </div>
+          </div>
+        )
     }
 
     return (
       <div>
-          <Filter />
-          <Profile user_data={nextProfiles[0].data.data} editable={false} />
-          {/* <Profile user_data={currentUser.user_data} data={nextProfiles[0].data} editable={false} /> */}
+          <Filter setFilterResults={setFilterResults}/>
+          <Profile user_data={filterResults[currentIndex]?.user_data} qnaAnswers={filterResults[currentIndex]?.profile_data?.qnaAnswers} editedBio={filterResults[currentIndex]?.profile_data?.bio} editable={false} dormMode={profileMode}/>
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
               <button onClick={() => goToNext("reject")}
                       className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
@@ -116,6 +68,15 @@ export default function Match() {
                   <p className={"text-maroon_new"}>&#10003;</p>
               </button>
           </div>
+
+          <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
+            <button onClick={() => setProfileMode(0)}
+                className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">Dorm</button>
+            <button onClick={() => setProfileMode(2)}
+                className="w-[8vh] h-[8vh] bg-offwhite border-black border-[1px] rounded-full text-center align-middle text-black font-bold hover:bg-slate-300 shadow-md">Both</button>
+            <button onClick={() => setProfileMode(1)}
+                className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">Apt.</button>
+        </div>
       </div>
     );
 }

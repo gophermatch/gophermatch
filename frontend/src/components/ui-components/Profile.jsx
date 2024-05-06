@@ -11,10 +11,8 @@ import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
 import sliderStyles from '../../assets/css/slider.module.css';
 
-export default function Profile(props) {
+export default function Profile({ user_data, editable, handleBioChange, handleQnaChange, qnaAnswers, editedBio, apartmentData, dormMode }) {
 
-  const { profile_data, user_data, editable, handleBioChange, handleQnaChange, qnaAnswers } = props;
-  let pictures = [kanye, other, kanye];
   const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
   const [sliderValue, setSliderValue] = useState({ min: 80, max: 144 });
 
@@ -42,7 +40,7 @@ export default function Profile(props) {
 
   useEffect(() => {
     fetchPictureUrls();
-  }, []);
+  }, [user_data]);
 
   const fetchPictureUrls = async () => {
     try {
@@ -67,6 +65,26 @@ export default function Profile(props) {
 
   // Function to find the selected option_id for a given question_id
   const getSelectedOptionId = (questionId) => {
+    const monthNumbers = {};
+
+    for (let i = 1; i <= 12; i++) {
+      const monthNumber = i.toString().padStart(2, '0');
+      const monthIndex = 96 + i - 1;
+      monthNumbers[monthNumber] = monthIndex;
+    }
+
+    if(questionId == 14){
+      const moveIn = apartmentData ? apartmentData.move_in_date : null;
+      if(moveIn != null && !editable){
+        return apartmentData ? monthNumbers[moveIn.slice(5,7)] : null;
+      }
+    } else if(questionId == 15){
+      const moveOut = apartmentData ? apartmentData.move_out_date : null;
+      if(moveOut != null && !editable){
+        return apartmentData ? monthNumbers[moveOut.slice(5,7)]+12 : null;
+      }
+    }
+
     if (Array.isArray(qnaAnswers)) {
       const answer = qnaAnswers.find(ans => ans.question_id === questionId);
       return answer ? answer.option_id : null;
@@ -74,10 +92,25 @@ export default function Profile(props) {
     return null;
   };
 
+  const getSelectedTextField = (questionId) => {
+    if(questionId == 16){
+      return apartmentData ? apartmentData.rent : null;
+    }
+    return null;
+  };
+
   const qnaItems = qnaData.map((item, index) => (
-    <div key={item.id} className={`flex w-full pl-5 pr-5 border-b ${index !== qnaData.length - 1 ? 'mb-[0.75vh]' : ''} ${index === 0 ? 'mt-2' : ''} ${index === 2 ? 'mt-1' : ''} ${index===3 ? 'border-b-0' : ''}`} style={{ minHeight: '1rem' }}>
-      <p className="flex-1 flex items-center" style={{ lineHeight: '1.65' }}>{item.question}</p>
-      {editable ? (
+    <div key={item.id} className={`flex w-full pl-5 pr-5 border-b ${index !== qnaData.length - 1 ? 'mb-[0.1vh]' : ''} ${index === 0 ? 'mt-[0.25vh]' : ''} ${index === 3 ? 'mt-[0.25vh]' : ''} ${index===6 ? 'border-b-0' : ''} ${index===2 ? 'border-b-0' : ''}`} style={{ minHeight: '1vh' }}>
+      <p className="flex-[1vh] flex items-center" style={{ lineHeight: '2' }}>{item.question}</p>
+      {editable && item.isTextField ? (
+        <input
+          type="text"
+          className="text-right"
+          // write function below
+          onChange={(event) => handleTextChange(event, item.id)}
+        />
+      ) : null}
+      {editable && !item.isTextField ? (
         <select
           className={"text-right"}
           value={getSelectedOptionId(item.id) || ''}
@@ -89,25 +122,28 @@ export default function Profile(props) {
             </option>
           ))}
         </select>
-      ) : (
-        <p className="truncate whitespace-nowrap">
+      ) : ( null)}
+      {(!editable && !item.isTextField) && <p className="truncate whitespace-nowrap">
           {item.options.find(o => o.option_id === getSelectedOptionId(item.id))?.text || 'N/A'}
-        </p>
-      )}
+        </p>}
+      {(!editable && item.isTextField) && <p className="truncate whitespace-nowrap">
+        {getSelectedTextField(item.id)}
+      </p>}
     </div>
   ));         
 
   return (
-      <div className={"m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new"}>
+    <>
+      <div className={`m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
         <div className={"w-full flex flex-col  h-[70vh] mb-[6vh] bg-white rounded-3xl overflow-hidden"}>
           <div className={"flex h-[35vh] "}>
-            <div className={"w-[18vw] h-[20vh] bg-white rounded-3xl mt-[4vh] ml-[3vh]"}>
+            <div className={"w-[18vw] h-[18vh] bg-white rounded-3xl mt-[4vh] ml-[3vh]"}>
               <Carousel pictureUrls={pictureUrls} editable={editable}></Carousel>
             </div>
             <div className={"flex-grow flex flex-col bg-white"}>
               <div className={"h-[3vh]"}>
               <p className={"text-[1.22vw] mt-[6vh] inline-block"}>
-                <span className="font-bold ml-[1.3vw] text-[1.7vw]">{props.user_data.first_name} {props.user_data.last_name}:</span> {props.user_data.gender.charAt(0).toUpperCase() + props.user_data.gender.slice(1)}, {props.user_data.major} Major, {props.user_data.college.toUpperCase()} Class of {props.user_data.graduating_year}
+                <span className="font-bold ml-[1.3vw] text-[1.7vw]">{user_data?.first_name} {user_data?.last_name}:</span> {user_data?.gender.charAt(0).toUpperCase() + user_data?.gender.slice(1)}, {user_data?.major} Major, {user_data?.college.toUpperCase()} Class of {user_data?.graduating_year}
               </p>
               </div>
               <div className={"flex-grow rounded-3xl w-[41.5vw] ml-[1.5vw] mt-[8vh] mb-[-0.48vh] border-2 border-maroon_new overflow"}>
@@ -115,24 +151,38 @@ export default function Profile(props) {
                   {editable ? (
                             <textarea
                             className={`${styles.bioTextArea} ${editable ? 'w-full h-full' : ''}`}
-                            value={props.editedBio || ''}
+                            value={editedBio || ''}
                               onChange={handleBioChange}
                               placeholder="Edit Bio"
                             />
                           ) : (
-                            <p className={`${styles.bioTextArea}`}>{props.editedBio}</p>
+                            <p className={`${styles.bioTextArea}`}>{editedBio}</p>
                             )}
                 </p>
               </div>
             </div>
           </div>
-          <div className={"flex flex-grow"}>
-            <div className={"flex-1 flex-col h-[18.5vh] w-[20vw] mt-[7vh] ml-[2vw] rounded-3xl border-2 border-maroon_new overflow-hidden text-[1.2vw]"}>
-              {qnaItems.slice(0,5)}
+          <div className={`${dormMode === 0 ? "block" : "hidden"} flex flex-grow`}>
+            <div className={"flex-1 flex-col h-[25vh] m-[5%] mt-[6vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[2vh]"}>
+              {qnaItems.slice(0,1)}
+              {qnaItems.slice(4,7)}
             </div>
-            <div className={"flex-1 flex-col flex h-[31.5vh] mt-[2vh] mr-[3vw] ml-[3vw] rounded-3xl border-2 overflow-hidden text-[1.2vw]"}>
+            <div className={"flex-1 flex-col flex h-[25vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
+              
             </div>
-            <div className={"flex-1 mx-0 mb-0 pt-[1vh] h-[31.5vh] mt-[2vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[1.2vw]"}>
+            <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
+              <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
+            </div>
+          </div>
+          <div className={`${dormMode === 1 || dormMode === 2 ? "block" : "hidden"} flex flex-grow`}>
+            <div className={"flex-1 flex-col h-[25vh] m-[5%] mt-[6vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[2vh]"}>
+              {qnaItems.slice(0,1)}
+              {qnaItems.slice(6,11)}
+            </div>
+            <div className={"flex-1 flex-col flex h-[25vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
+              {qnaItems.slice(11, 16)}
+            </div>
+            <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
             </div>
           </div>
@@ -160,5 +210,6 @@ export default function Profile(props) {
           </div>
         </div>
       </div>
+    </>
   );
 }
