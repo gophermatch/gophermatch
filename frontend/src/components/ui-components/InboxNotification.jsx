@@ -39,9 +39,11 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
                 <div
                     style={{
                         position: 'absolute',
-                        top: '-61.5vh', // Adjust position for better visibility
-                        right: '7.4vw',
                         backgroundColor: 'gold', // Use a more visible color
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-80%, -100%)', // Center horizontally and vertically
+                        //border: '2px solid black',
                         borderRadius: '2vh',
                         width: '2vw', // Increase size for better visibility
                         height: '3.25vh',
@@ -50,7 +52,7 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
                         justifyContent: 'center',
                         color: 'black',
                         fontSize: '1.85vh',
-                        opacity: 0.75,
+                        opacity: 0.7,
                         //fontWeight: 'bold',
                     }}
                 >
@@ -58,7 +60,7 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
                 </div>
             )}
         </div>
-    );
+    );    
 };
 
 export default InboxNotification;
