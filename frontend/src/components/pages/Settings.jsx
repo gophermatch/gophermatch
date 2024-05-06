@@ -106,7 +106,7 @@ export default function Settings() {
 
     return (
         <div className="flex flex-col h-screen w-screen font-comfortaa bg-offwhite">
-            <h1 className="ml-[3vw] mt-[5vh] font-lora text-4xl text-maroon">
+            <h1 className="ml-[3vw] mt-[5vh] font-lora text-[3vw] text-maroon">
                 {editMode ? 'Edit Profile' : 'Settings'}
             </h1>
             <div className="ml-10 mt-[3vh] h-1 w-[80vw] bg-maroon"></div>
@@ -119,14 +119,14 @@ export default function Settings() {
                     Save Changes
                 </button>
             </div>
-            <div className="flex flex-col w-full justify-center items-center text-maroon text-xl font-comfortaa">
+            <div className="flex flex-col w-full justify-center items-center text-maroon text-[1vw] font-comfortaa">
                 <div className="flex flex-wrap w-[50vw] mr-[12vw] justify-center">
                     {userInfo.map(([key, value], index) => (
-                        <div key={index} className="font-comfortaa text-2xl mt-[1vh] justify-between flex flex-col w-[12.5vw] mr-[3vw]">
+                        <div key={index} className="font-comfortaa text-[2vw] mt-[1vh] justify-between flex flex-col w-[12.5vw] mr-[3vw]">
                             <div className="flex justify-start items-center">
                                 <p className="text-base mt-[3vh]">{getLabel(key)}</p>
                             </div>
-                            <div className="flex justify-start items-center text-black text-xl">
+                            <div className="flex justify-start items-center text-black text-[1.5vw]">
                                 {key === 'college' ? (
                                     <select
                                         value={editValues[key]}

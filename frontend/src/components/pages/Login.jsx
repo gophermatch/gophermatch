@@ -64,9 +64,9 @@ export default function Login() {
         <div>
         <div className="bg-maroon_new h-[7vh] space-x-4 mt-auto">
             <div className="flex justify-start items-start w-full">
-                <Link to="/landing" className="text-offwhite font-lora text-3xl ml-2 mt-2">GopherMatch</Link>
+                <Link to="/landing" className="text-offwhite font-lora text-[4vh] ml-[1vw] mt-[1vh]">GopherMatch</Link>
             </div>
-        </div>
+        </div>  
         <div className="bg-offwhite w-screen h-screen flex flex-col font-lora">
             <div className="flex flex-col justify-center items-center w-screen text-maroon">
                 <h1 className="text-maroon_new font-lora text-[9vh] mt-[10vh]">Login</h1>
@@ -81,7 +81,7 @@ export default function Login() {
                         onKeyUp={enterKeyPress}
                     />
                 </div>
-                <div className="flex items-center justify-center text-[1.9vh] mt-5">
+                <div className="flex items-center justify-center text-[1.9vh] mt-[3vh]">
                     <input 
                         type="password" 
                         value={password} 

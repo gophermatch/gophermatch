@@ -143,28 +143,28 @@ export default function Signup() {
             
     return (
         <div className="bg-offwhite w-screen h-screen">
-            <div className="bg-maroon_new h-[3.75rem] space-x-4 mt-auto">
+            <div className="bg-maroon_new h-[7vh] space-x-4 mt-auto">
                 <div className="flex justify-start items-start w-full">
-                    <Link to="/landing" className="text-offwhite font-lora text-3xl ml-2 mt-2">GopherMatch</Link>
+                    <Link to="/landing" className="text-offwhite font-lora text-[4vh] ml-[1vw] mt-[1vh]">GopherMatch</Link>
                 </div>
-                <div className="flex flex-col font-lora text-maroon_new mt-10 text-center items-center">
+                <div className="flex flex-col font-lora text-maroon_new text-center items-center">
                     { !showOtpInput && (
-                        <h1 className="font-lora text-[4rem] mt-[4rem]">Sign Up</h1>
+                        <h1 className="font-lora text-[9vh] mt-[10vh]">Sign Up</h1>
                     )}
-                    <div className="font-lora">
+                    <div className="font-lora text-[1.9vh]">
                         {!showOtpInput && (
                             <>
                                 <div>
-                                    <input className="mt-[2.5rem]" placeholder="Email" type="text" value={email} onChange={(event) => setEmail(event.target.value)} autoFocus onKeyUp={enterKeyPress} />
+                                    <input className="pl-[0.5vw] mt-[5vh] w-[12vw]" placeholder="Email" type="text" value={email} onChange={(event) => setEmail(event.target.value)} autoFocus onKeyUp={enterKeyPress} />
                                 </div>
                                 <div>
-                                    <input className="mt-[1.5rem]" placeholder="Password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} onKeyUp={enterKeyPress} />
+                                    <input className="pl-[0.5vw] mt-[3vh] w-[12vw]" placeholder="Password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} onKeyUp={enterKeyPress} />
                                 </div>
                                 <div>
-                                    <input className="mt-[1.5rem]" placeholder="Re-enter Password" type="password" value={password2} onChange={(event) => setPassword2(event.target.value)} onKeyUp={enterKeyPress} />
+                                    <input className="pl-[0.5vw] mt-[3vh] w-[12vw]" placeholder="Re-enter Password" type="password" value={password2} onChange={(event) => setPassword2(event.target.value)} onKeyUp={enterKeyPress} />
                                 </div>
-                                <button className="bg-maroon_new hover:bg-login text-offwhite font-bold py-2 w-[11.5rem] rounded mt-12" onClick={onSignupAttempt}>Sign up</button>
-                                <div className="mt-[2rem] text-lg flex text-maroon_new items-center">
+                                <button className="bg-maroon_new hover:bg-login text-offwhite font-bold h-[5vh] w-[12vw] rounded mt-[4vh] text-[2.3vh]" onClick={onSignupAttempt}>Sign up</button>
+                                <div className="mt-[2rem] text-[1.5vw] flex text-maroon_new items-center">
                                     <p>Already have an account?</p>
                                     &nbsp;
                                     <Link className="hover:text-gold" to="/login"> Log in</Link>
