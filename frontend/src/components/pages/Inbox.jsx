@@ -74,7 +74,7 @@ export default function Inbox({ user_data }) {
         <div className="p-8">
             
             <div className="flex flex-col items-center text-center justify-center">
-                <div className="flex flex-row bg-maroon h-[5vh] w-[40vw] rounded-tl-[1vh] rounded-tr-[1vh]">
+                <div className="flex flex-row bg-maroon h-[5vh] mt-[1vh] w-[47vw] rounded-tl-[0.5vh] rounded-tr-[0.5vh]">
                     <svg 
                         viewBox="0 0 48 48" 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -83,8 +83,7 @@ export default function Inbox({ user_data }) {
                         <path className="cls-1" d="M6.47,10.71a2,2,0,0,0-2,2h0V35.32a2,2,0,0,0,2,2H41.53a2,2,0,0,0,2-2h0V12.68a2,2,0,0,0-2-2H6.47Zm33.21,3.82L24,26.07,8.32,14.53"/>
                     </svg>
                 </div>
-                <div className="text-white"></div>
-                <div className="bg-white h-[90vh] w-[40vw] items-center text-center justify-center">
+                <div className="bg-white h-[87vh] w-[47vw] rounded-br-[0.5vh] rounded-bl-[0.5vh] items-center text-center justify-center">
                     <div className="flex text-start justify-start font-medium">
                         <span className="text-maroon text-start text-[2vh] ml-[0.5vw] mt-[2vh] mb-[1vh] font-roboto justify-start">Roommates</span>
                     </div>
@@ -92,17 +91,13 @@ export default function Inbox({ user_data }) {
                         <div className="flex flex-col h-[9.5vh] w-full" key={index}>
                             <div className="flex" key={index}>
                                 <div className="flex flex-row w-full">
-                                    <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw]" alt="Profile"></img>
-                                    <div className="flex flex-col w-full text-start justify-start">
-                                        <p className="text-[2.5vh] ml-[1vw] mt-[0.75vh] w-[30vw] font-roboto font-[390]  text-maroon">{`${person.first_name} ${person.last_name}`}</p>
-                                        <p className="text-[2vh] font-thin ml-[1vw]">{person.contact_phone}</p>
-                                        <div className="flex flex-row">
-                                            <p className="ml-[1vw] text-xs text-left text-[1.5vh] w-[25vw] font-roboto font-light">{person.email}</p>
-                                        </div>
+                                    <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw]" alt="Profile" onClick={() => displayProfile(person)}></img>
+                                    <div className="flex flex-col w-full text-start items-start justify-start">
+                                        <button className="text-[2.5vh] mt-[0.75vh] w-[30vw] ml-[1vw] font-roboto font-light text-start text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
+                                        <button className="text-[2vh] font-thin ml-[1vw]" onClick={() => displayProfile(person)}>{person.contact_phone}</button>
                                     </div>
                                     <div className="w-full text-right">
-                                        <button className="text-[1.5vh] bg-white hover:bg-red-500 hover:text-white w-[4vw] h-[2.5vh] rounded-lg mr-[1vw] mt-[1.5vh] border-2 border-maroon" onClick={() => displayProfile(person)}>View</button>
-                                        <button className="text-[1.5vh] bg-white hover:bg-red-500 hover:text-white w-[4vw] h-[2.5vh] rounded-lg mr-[1vw] mt-[1.5vh] border-2 border-maroon" onClick={() => unmatch(person.user_id)}>Unmatch</button>
+                                        <button className="text-[2.5vh] text-inactive_gray hover:text-gold w-[4vw] mr-[1vw] mt-[2.5vh]" onClick={() => unmatch(person.user_id)}>X</button>
                                     </div>
                                 </div>
                             </div>
