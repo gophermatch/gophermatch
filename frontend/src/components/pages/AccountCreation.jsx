@@ -119,7 +119,7 @@ export default function AccountCreation() {
                     href="https://fonts.googleapis.com/css2?family=Lora:wght@500&display=swap"></link>
               <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
               <div className="w-1/2 h-1/2 text-center m-auto overflow-x-clip relative">
-                  <p className={`text-maroon_new block font-lora text-5xl font-semibold text-center`}>
+                  <p className={`text-maroon_new block font-lora text-[5vh] font-semibold text-center`}>
                       Welcome to Gophermatch!</p>
                   <div
                       className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition duration-1000 ${pageNum === 1 ? '' : 'translate-x-[-160%] pointer-events-none'}`}>
@@ -134,13 +134,13 @@ export default function AccountCreation() {
                   </div>
 
                   <div
-                      className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition duration-1000 ${pageNum === 2 ? '' : (pageNum < 2 ? 'translate-x-[160%]' : 'translate-x-[-160%]')}`}>
-                      <AccountTextField isDate={true} maxLength={8} topMargin="12" visPageNum={2} curPageNum={pageNum}
+                      className={`absolute left-0 right-0 flex flex-col w-1/2 mt-[5vh] m-auto transition duration-1000 ${pageNum === 2 ? '' : (pageNum < 2 ? 'translate-x-[160%]' : 'translate-x-[-160%]')}`}>
+                      <AccountTextField isDate={true} maxLength={8} topMargin="6" visPageNum={2} curPageNum={pageNum}
                                         enterKeyPress={enterKeyPress}
                                         fieldValue={dob} valueSetter={setDOB} placeholder="MM/DD/YY"></AccountTextField>
                       <select tabIndex={pageNum === 2 ? 2 : -1} onKeyUp={enterKeyPress} value={gender}
                               onChange={handleGenderChange}
-                              className="text-maroon_new w-90 rounded-md mt-6 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
+                              className="text-maroon_new w-90 rounded-md mt-[5vh] p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
                           <option value="">Select your gender</option>
                           <option value="male">Male</option>
                           <option value="female">Female</option>
@@ -149,7 +149,7 @@ export default function AccountCreation() {
                   </div>
 
                   <div
-                      className={`absolute left-0 right-0 mt-[5rem] flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 3 ? 'translate-x-0' : (pageNum < 3 ? 'translate-x-[160%] pointer-events-none' : '-translate-x-[160%] pointer-events-none')}`}>
+                      className={`absolute left-0 right-0 mt-[5vh] flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 3 ? 'translate-x-0' : (pageNum < 3 ? 'translate-x-[160%] pointer-events-none' : '-translate-x-[160%] pointer-events-none')}`}>
                       <AccountTextField maxLength={255} visPageNum={3} curPageNum={pageNum}
                                         enterKeyPress={enterKeyPress}
                                         fieldValue={hometown} valueSetter={setHometown}
@@ -160,7 +160,7 @@ export default function AccountCreation() {
                       className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 4 ? "translate-x-0" : (pageNum < 4 ? "translate-x-[160%] pointer-events-none" : "-translate-x-[160%] pointer-events-none")}`}>
                       <select tabIndex={pageNum === 4 ? 1 : -1} onKeyUp={enterKeyPress} value={college}
                               onChange={handleCollegeChange}
-                              className="text-maroon_new w-90 rounded-md mt-12 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
+                              className="text-maroon_new w-90 rounded-md mt-[7vh] p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
                           <option value="">Select your college</option>
                           <option value="cse">CSE</option>
                           <option value="cbs">CBS</option>
@@ -185,7 +185,7 @@ export default function AccountCreation() {
                       className={`absolute left-0 right-0 flex flex-col w-1/2 m-auto transition duration-1000 ${pageNum === 5 ? '' : (pageNum < 5 ? 'translate-x-[160%]' : 'translate-x-[-160%]')}`}>
                       <select tabIndex={pageNum === 5 ? 1 : -1} onKeyUp={enterKeyPress} value={housingPreference}
                               onChange={handleHousingChange}
-                              className="text-maroon_new w-90 rounded-md mt-12 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
+                              className="text-maroon_new w-90 rounded-md mt-[5vh] p-[2vh] shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
                           <option value="">What housing are you searching for?</option>
                           <option value="apartments">Apartments</option>
                           <option value="dorms">Dorms</option>
@@ -194,7 +194,7 @@ export default function AccountCreation() {
 
                       <select tabIndex={pageNum === 5 ? 1 : -1} onKeyUp={enterKeyPress} value={referral}
                               onChange={handleReferralChange}
-                              className="text-maroon_new w-90 rounded-md mt-6 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
+                              className="text-maroon_new w-90 rounded-md mt-[5vh] p-[2vh] shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black">
                           <option value="">How did you hear about us?</option>
                           <option value="word-of-mouth">Word of mouth</option>
                           <option value="email">E-mail promotion</option>
@@ -206,11 +206,11 @@ export default function AccountCreation() {
                   </div>
 
                   <div
-                      className={`absolute left-0 right-0 flex-col w-1/2 m-auto transition duration-1000 ${pageNum === 6 ? "translate-x-0" : "translate-x-[160%]"}`}>
-                      <p className={'mt-12'}>
+                      className={`absolute left-0 right-0 flex-col w-1/2 mx-auto text-center text-[1vw] transition duration-1000 ${pageNum === 6 ? "translate-x-0" : "translate-x-[160%]"}`}>
+                      <p className={'mt-[3vh] text-[2vh]'}>
                           Please provide one or more ways for matched roommates to contact you.
                       </p>
-                      <div className={'flex space-x-4'}>
+                      <div className={'flex space-x-[1vw]'}>
                           <div className={'flex flex-col'}>
                               <AccountTextField topMargin="6" visPageNum={6} curPageNum={pageNum}
                                                 enterKeyPress={enterKeyPress}
@@ -235,7 +235,7 @@ export default function AccountCreation() {
                   </div>
 
                   <div
-                      className="absolute bottom-[5vh] left-0 right-0 m-auto w-1/3 pb-5 items-center flex flex-row justify-between">
+                      className="absolute top-[50vh] left-0 right-0 m-auto w-1/3 pb-5 items-center flex flex-row justify-between">
                       <button tabIndex={pageNum === 1 ? -1 : 0} onClick={goToPreviousPage}
                               className={`transition duration-500 ${pageNum === 1 ? "opacity-0 pointer-events-none" : ""}`}>
                           <img src="../../assets/images/ArrowLeft.png" alt="Button"
@@ -261,7 +261,7 @@ export default function AccountCreation() {
                   </div>
 
                   <button tabIndex={pageNum === 6 ? 0 : -1} onClick={submit}
-                          className={`rounded-lg p-2 text-white font-inter absolute bottom-0 left-0 right-0 m-auto w-1/5 transition duration-500 ${pageNum === 6 ? (validateFields() ? 'bg-maroon_new opacity-100' : 'bg-inactive_gray pointer-events-none opacity-80') : 'opacity-0'}`}>Submit
+                          className={`rounded-lg p-[2vh] text-white font-inter absolute top-[40vh] left-0 right-0 m-auto w-1/5 transition duration-500 ${pageNum === 6 ? (validateFields() ? 'bg-maroon_new opacity-100' : 'bg-inactive_gray pointer-events-none opacity-80') : 'opacity-0'}`}>Submit
                   </button>
               </div>
           </nav>
