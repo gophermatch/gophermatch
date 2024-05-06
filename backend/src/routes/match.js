@@ -52,7 +52,6 @@ router.post('/filter-results', async (req, res) => {
 router.get('/saved-matches', async (req, res) => {
     try {
         const { userId } = req.query;
-        console.log(userId);
         if (!userId) {
             return res.status(400).send({ error: "Invalid user ID." });
         }
@@ -71,8 +70,6 @@ router.get('/saved-matches', async (req, res) => {
 router.delete('/remove', async (req, res) => {
     // Basic validation
     const { user1Id, user2Id, decision } = req.query;
-    console.log(user1Id);
-    console.log(decision);
     if (!user1Id || !user2Id || !decision) {
         return res.status(400).json({ error: "Missing required fields: user1Id, user2Id, or decision." });
     }
@@ -141,7 +138,6 @@ router.post('/mark-seen', async (req, res) => {
 
     try {
         await markUserMatchesAsSeen(userId);
-        console.log("Done");
         res.status(200).send('All matches marked as seen');
     } catch (error) {
         console.error('Failed to mark matches as seen:', error);
