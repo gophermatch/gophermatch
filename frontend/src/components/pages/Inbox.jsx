@@ -72,12 +72,10 @@ export default function Inbox({ user_data }) {
     }, []);
 
     useEffect(() => {
-        console.log("HEY");
         backend.post('/match/mark-seen', {userId: currentUser.user_id});
     }, []);
 
     const fetchPictureUrls = async () => {
-        console.log(user_id);
         try {
             if (!user_id) {
                 console.error("User ID is missing");
