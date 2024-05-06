@@ -164,7 +164,7 @@ export default function ProfilePage() {
       <span className="absolute right-[10vw] top-[15vh] scale-90 hover:scale-110 transition-transform">
               <button onClick={toggleEditMode}>
                 <svg 
-                fill="black" 
+                fill="maroon" 
                 width="6vw" 
                 height="7vh"
                 viewBox="0 0 24 24" 
