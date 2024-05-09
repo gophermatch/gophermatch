@@ -72,7 +72,6 @@ router.post('/filter-results', async (req, res) => {
 router.get('/saved-matches', async (req, res) => {
     try {
         const { userId } = req.query;
-        console.log(userId);
         if (!userId) {
             return res.status(400).send({ error: "Invalid user ID." });
         }
@@ -91,8 +90,6 @@ router.get('/saved-matches', async (req, res) => {
 router.delete('/remove', async (req, res) => {
     // Basic validation
     const { user1Id, user2Id, decision } = req.query;
-    console.log(user1Id);
-    console.log(decision);
     if (!user1Id || !user2Id || !decision) {
         return res.status(400).json({ error: "Missing required fields: user1Id, user2Id, or decision." });
     }
@@ -155,7 +152,6 @@ router.get('/inbox-notif', async (req, res) => {
 // Call this when a user clicks on inbox to set all unseen new matches to seen
 router.post('/mark-seen', async (req, res) => {
     const {userId} = req.body;
-    console.log(userId);
     if (!userId) {
         return res.status(400).send('User ID is required');
     }

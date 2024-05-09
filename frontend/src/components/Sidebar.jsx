@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import Logout from './Logout';
 import InboxNotification from './ui-components/InboxNotification';
@@ -8,12 +8,22 @@ export default function Sidebar() {
     const [activePage, setActivePage] = useState('/match');
     const [logoClicked, setLogoClicked] = useState(false);
     const [inboxClicked, setInboxClicked] = useState(false);
+    const inboxRef = useRef(null); // Ref for the Inbox NavLink
+    const [notificationPosition, setNotificationPosition] = useState({ top: 0, left: 0 });
 
     const handleLogoClick = () => {
         setLogoClicked(true);
         setActivePage('/match');
         setInboxClicked(false);
     };
+
+    // Update notification position when inboxRef changes
+    useEffect(() => {
+        if (inboxRef.current) {
+            const { offsetTop, offsetLeft } = inboxRef.current;
+            setNotificationPosition({ top: offsetTop, left: offsetLeft + inboxRef.current.offsetWidth });
+        }
+    }, [inboxRef.current]);
 
     return (
         <>
@@ -37,8 +47,9 @@ export default function Sidebar() {
                         <NavLink
                             key={label}
                             to={destination}
+                            id={label === 'Inbox' ? 'inbox-navlink' : null} // Assign ID to Inbox NavLink
                             className={`max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 ${activePage === destination ? 'text-maroon_new bg-white' : 'hover:bg-maroon_dark text-white'}`}
-                      onClick={() => {
+                            onClick={() => {
                                 setActivePage(destination);
                                 if (label === 'Inbox') {
                                     setInboxClicked(true);
@@ -46,9 +57,13 @@ export default function Sidebar() {
                                     setInboxClicked(false);
                                 }
                             }}
+                            ref={label === 'Inbox' ? inboxRef : null} // Assign ref only to the Inbox NavLink
                         >
                             {label}
                             {/*{activePage === destination && <div className="absolute bottom-0 left-0 w-full h-1 bg-gold"></div>}*/}
+                            {
+                                label === 'Inbox' && <InboxNotification inboxClicked={inboxClicked} />
+                            }
                         </NavLink>
                     ))}
 
@@ -57,7 +72,6 @@ export default function Sidebar() {
                     </div>
                 </div>
             </nav>
-            <InboxNotification inboxClicked={inboxClicked} />
         </>
     );
 }
