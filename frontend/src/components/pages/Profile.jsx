@@ -189,12 +189,12 @@ export default function ProfilePage() {
                   viewBox="0 0 64 64" 
                   xmlns="http://www.w3.org/2000/svg" 
                   fill="none"
-                  className="hover:stroke-gold mr-[1vw]" 
+                  className="hover:stroke-gold mr-[1vw] scale-90 hover:scale-125 transition-transform" 
                   stroke="maroon"><polyline points="12 28 28 44 52 20"/>
                   </svg>
 
           </button>
-          <button className="text-[5vh] mb-[1vh] text-gold font-thin hover:text-maroon" onClick={toggleEditMode}>
+          <button className="text-[5vh] mb-[1vh] text-gold font-thin hover:text-maroon scale-90 hover:scale-125 transition-transform" onClick={toggleEditMode}>
             x
           </button>
         </div>
