@@ -21,7 +21,7 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
 
         fetchUnseenMatches();
 
-        const intervalId = setInterval(fetchUnseenMatches, 5000);
+        const intervalId = setInterval(fetchUnseenMatches, 300000); // update every 5 minutes
     
         return () => clearInterval(intervalId);
     }, []);
@@ -39,9 +39,11 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
                 <div
                     style={{
                         position: 'absolute',
-                        top: '-32.3vh', // Adjust position for better visibility
-                        right: '4.4vw',
                         backgroundColor: 'gold', // Use a more visible color
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-80%, -100%)', // Center horizontally and vertically
+                        //border: '2px solid black',
                         borderRadius: '2vh',
                         width: '2vw', // Increase size for better visibility
                         height: '3.25vh',
@@ -50,7 +52,7 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
                         justifyContent: 'center',
                         color: 'black',
                         fontSize: '1.85vh',
-                        opacity: 0.75,
+                        opacity: 0.7,
                         //fontWeight: 'bold',
                     }}
                 >
@@ -58,7 +60,7 @@ const InboxNotification = ({ inboxClicked, setInboxClicked }) => {
                 </div>
             )}
         </div>
-    );
+    );    
 };
 
 export default InboxNotification;

@@ -39,6 +39,32 @@ export default function Inbox({ user_data }) {
         })();
     }, []);
 
+    useEffect(() => {
+        backend.post('/match/mark-seen', {userId: currentUser.user_id});
+    }, []);
+
+    const fetchPictureUrls = async () => {
+        try {
+            if (!user_id) {
+                console.error("User ID is missing");
+                return;
+            }
+    
+            const response = await backend.get("/profile/user-pictures", {
+                params: {user_id: user_id},
+                withCredentials: true,
+            });
+            if (response && response.data) {
+                console.log("Picture URLs:", response.data.pictureUrls);
+                setPictureUrls(response.data.pictureUrls);
+            } else {
+                console.error("Failed to fetch picture URLs");
+            }
+        } catch (error) {
+            console.error("Error fetching picture URLs:", error);
+        }
+    };
+    
     // backend.get('/sublease/get-saves', {params: {user_id: 47}}).then(res => console.log(res))
 
     function unmatch(profileId) {
