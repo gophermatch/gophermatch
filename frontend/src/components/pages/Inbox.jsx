@@ -80,7 +80,7 @@ export default function Inbox({ user_data }) {
             )}
         <div className="p-8">
             <div className="flex flex-col items-center text-center justify-center">
-                <div className="flex flex-row bg-maroon h-[5vh] mt-[1vh] w-[47vw] rounded-tl-[0.5vh] rounded-tr-[0.5vh]">
+                <div className="flex flex-row bg-maroon h-[5vh] mt-[-2.8vh] w-[47vw] rounded-tl-[0.5vh] rounded-tr-[0.5vh]">
                     <svg 
                         viewBox="0 0 48 48" 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -89,7 +89,7 @@ export default function Inbox({ user_data }) {
                         <path className="cls-1" d="M6.47,10.71a2,2,0,0,0-2,2h0V35.32a2,2,0,0,0,2,2H41.53a2,2,0,0,0,2-2h0V12.68a2,2,0,0,0-2-2H6.47Zm33.21,3.82L24,26.07,8.32,14.53"/>
                     </svg>
                 </div>
-                <div className="bg-white h-[87vh] w-[47vw] rounded-br-[0.5vh] rounded-bl-[0.5vh] items-center text-center justify-center">
+                <div className="bg-white h-[87vh] w-[47vw] rounded-br-[0.5vh] mb-[2vh] rounded-bl-[0.5vh] items-center text-center justify-center">
                     <div className="flex text-start justify-start font-medium">
                         <span className="text-maroon text-start text-[2vh] ml-[0.5vw] mt-[2vh] mb-[1vh] font-roboto justify-start">Roommates</span>
                     </div>
