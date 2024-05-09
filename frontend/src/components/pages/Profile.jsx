@@ -181,30 +181,21 @@ export default function ProfilePage() {
           className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md hover:bg-offgold">Apt.</button>
       </div>
       {isEditing && (
-        <div className="fixed bottom-0 left-0 right-0 flex justify-center">
-          <button>
+        <div className="fixed top-[12vh] right-[20vh] flex justify-center">
+          <button onClick={handleSaveChanges}>
           <svg 
-    width="3vw" 
-    height="3vh" 
-    viewBox="0 0 24 24" 
-    fill="none"
-    stroke="maroon"
-    className="hover:stroke-gold"
-    onClick={handleSaveChanges} 
-    xmlns="http://www.w3.org/2000/svg">
-    <style>
-        {`
-            .hover\:stroke-gold:hover {
-                stroke: gold;
-            }
-        `}
-    </style>
-    <path d="M3 12L9 18L21 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-</svg>
+                  width="3vw" 
+                  height="6vh" 
+                  viewBox="0 0 64 64" 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  fill="none"
+                  className="hover:stroke-gold mr-[1vw]" 
+                  stroke="maroon"><polyline points="12 28 28 44 52 20"/>
+                  </svg>
 
           </button>
-          <button className="text-[2.5vh] h-[5vh] w-[8vw] bg-inactive_gray mb-[5vh] rounded-full hover:bg-gray" onClick={toggleEditMode}>
-            Cancel
+          <button className="text-[5vh] mb-[1vh] text-gold font-thin hover:text-maroon" onClick={toggleEditMode}>
+            x
           </button>
         </div>
       )}

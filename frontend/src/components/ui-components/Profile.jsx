@@ -176,21 +176,31 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
               {qnaItems.slice(0,1)}
               {qnaItems.slice(4,7)}
               <div className="bg-maroon h-[0.125vh] w-full"></div>
+            </div>
+            <div className={"flex-1 flex-col flex h-[16.5vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
               <div className="flex flex-row mt-[0.5vh]">
                 <span className="ml-[0.75vw]">Gender:</span>
                 <span className="flex items-end ml-auto mr-[0.75vw]">{user_data?.gender.charAt(0).toUpperCase() + user_data?.gender.slice(1)}</span>
               </div>
               <div className="bg-maroon h-[0.125vh] w-full mt-[0.25vh]"></div>
-              <div className="flex flex-row mt-[0.5vh]">
-                <span className="ml-[0.75vw]">Graduating Class:</span>
-                <span className="flex items-end ml-auto mr-[0.75vw]">
-                  {['Carlson', 'Nursing', 'Design'].includes(user_data?.college)
-                    ? user_data?.college.charAt(0).toUpperCase() + user_data?.college.slice(1)
-                    : user_data?.college.toUpperCase()} '{user_data?.graduating_year ? user_data?.graduating_year.toString().slice(-2) : ''}
-                </span>
+                <div className="flex flex-row mt-[0.5vh]">
+                  <span className="ml-[0.75vw]">College:</span>
+                  <span className="flex items-end ml-auto mr-[0.75vw]">
+                   {['Carlson', 'Nursing', 'Design'].includes(user_data?.college)
+                     ? user_data?.college.charAt(0).toUpperCase() + user_data?.college.slice(1)
+                     : user_data?.college.toUpperCase()}
+                  </span>
               </div>
-            </div>
-            <div className={"flex-1 flex-col flex h-[18vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
+              <div className="bg-maroon h-[0.125vh] w-full mt-[0.25vh]"></div>
+              <div className="flex flex-row mt-[0.5vh]">
+                <span className="ml-[0.75vw]">Graduation Year:</span>
+                <span className="flex items-end ml-auto mr-[0.75vw]">{user_data.graduating_year}</span>
+              </div>
+              <div className="bg-maroon h-[0.125vh] w-full mt-[0.25vh]"></div>
+              <div className="flex flex-row mt-[0.5vh]">
+                <span className="ml-[0.75vw]">Hometown: </span>
+                <span className="flex items-end ml-auto mr-[0.75vw]">{user_data.hometown}</span>
+              </div>
             </div>
             <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
