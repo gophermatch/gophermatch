@@ -58,7 +58,7 @@ export default function Carousel({ editable, pictureUrls }) {
             <div className="flex justify-center items-center">
                 {isHovering && <img src="../../assets/images/imageicon.png" className="absolute scale-[0.1]" />}
                 <div id="imageWrapper" className="w-[80%] h-[80%] overflow-hidden rounded-[1vw] aspect-square">
-                    <img src={pictureUrls[position]} className="w-full h-full object-cover border-[3px] border-maroon_new rounded-[1vw]" onClick={gotoUpload} onMouseEnter={showOverlay} onMouseLeave={showOverlay} />
+                    <img src={pictureUrls[position]} className={"w-full h-full object-cover border-[3px] border-maroon_new rounded-[1vw] " + (isEditing ? styles.blur : '')} onClick={gotoUpload} />
                 </div>
             </div>
             {carouselLen > 1 && dotSection}
