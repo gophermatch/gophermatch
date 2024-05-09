@@ -184,15 +184,24 @@ export default function ProfilePage() {
         <div className="fixed bottom-0 left-0 right-0 flex justify-center">
           <button>
           <svg 
-            width="3vw" 
-            height="3vh" 
-            viewBox="0 0 24 24" 
-            fill="none"
-            stroke="maroon"
-            onClick={handleSaveChanges} 
-            xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 12L9 18L21 6" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+    width="3vw" 
+    height="3vh" 
+    viewBox="0 0 24 24" 
+    fill="none"
+    stroke="maroon"
+    className="hover:stroke-gold"
+    onClick={handleSaveChanges} 
+    xmlns="http://www.w3.org/2000/svg">
+    <style>
+        {`
+            .hover\:stroke-gold:hover {
+                stroke: gold;
+            }
+        `}
+    </style>
+    <path d="M3 12L9 18L21 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+
           </button>
           <button className="text-[2.5vh] h-[5vh] w-[8vw] bg-inactive_gray mb-[5vh] rounded-full hover:bg-gray" onClick={toggleEditMode}>
             Cancel
