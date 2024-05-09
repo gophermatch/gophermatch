@@ -172,10 +172,9 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
             </div>
           </div>
           <div className={`${dormMode === 0 ? "block" : "hidden"} flex flex-grow`}>
-            <div className={"flex-1 flex-col h-[25vh] m-[3%] mt-[6vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[2vh]"}>
+            <div className={"flex-1 flex-col h-[16.5vh] m-[3%] mt-[6vh] ml-[2vw] mb-[0%] rounded-3xl border-2 border-maroon_new overflow-hidden text-[2vh]"}>
               {qnaItems.slice(0,1)}
               {qnaItems.slice(4,7)}
-              <div className="bg-maroon h-[0.125vh] w-full"></div>
             </div>
             <div className={"flex-1 flex-col flex h-[16.5vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
               <div className="flex flex-row mt-[0.5vh]">
@@ -218,8 +217,8 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
             </div>
           </div>
-          <div className="absolute bottom-[19.5vh] left-[33vw] w-[20%]">
-          <span className="ml-[5vw]">Sleep Schedule</span>
+          <div className="absolute bottom-[19.5vh] left-[19vw] w-[30%]">
+          <span className="ml-[8.75vw] text-[2.25vh]">Sleep Schedule</span>
 
             <InputRange
               draggableTrack
