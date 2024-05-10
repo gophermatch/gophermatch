@@ -125,7 +125,7 @@ router.post('/update', async (req, res) => {
 });
 
 router.put('/insert-topfive', async (req, res) => {
-    const {user_id, question, input1, input2, input3, input4, input5} = req.body;
+    const {user_id, question, input1, input2, input3, input4, input5} = req.query;
     if (!user_id || !question || !input1){
         return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
     }
@@ -139,7 +139,7 @@ router.put('/insert-topfive', async (req, res) => {
 });
 
 router.get('/get-topfive', async (req, res) => {
-    const {user_id} = req.body;
+    const {user_id} = req.query;
     if (!user_id){
         return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
     }
