@@ -165,32 +165,4 @@ router.post('/mark-seen', async (req, res) => {
     }
 });
 
-router.put('/insert-topfive', async (req, res) => {
-    const {user_id, option_id, input} = req.query;
-    if (!user_id || !option_id || !input){
-        return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
-    }
-
-    try {
-        await insertTopFive(user_id, option_id, input);
-        return res.status(200).json({ message: "Inserted an option for top five" });
-    } catch (error) {
-        return res.status(500).json(createErrorObj("Failed to insert option for top five."));
-    }
-});
-
-router.get('/get-topfive-option', async (req, res) => {
-    const {user_id, option_id} = req.query;
-    if (!user_id || !option_id){
-        return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
-    }
-
-    try {
-        const optInput = await insertTopFive(user_id, option_id, input);
-        return res.json(optInput);
-    } catch (error) {
-        return res.status(500).json(createErrorObj("Failed to get option for top five."));
-    }
-});
-
 export default router;

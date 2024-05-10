@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { Router } from 'express';
-import { createUser, deleteUser, getUserData, updateAccountInfo } from "../database/account.js";
+import { createUser, deleteUser, getUserData, updateAccountInfo, insertTopFive, getTopFive } from "../database/account.js";
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
 import { createBio } from '../database/profile.js';
@@ -124,6 +124,33 @@ router.post('/update', async (req, res) => {
     }
 });
 
+router.put('/insert-topfive', async (req, res) => {
+    const {user_id, question, input1, input2, input3, input4, input5} = req.body;
+    if (!user_id || !question || !input1){
+        return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
+    }
+
+    try {
+        await insertTopFive(user_id, question, input1, input2, input3, input4, input5);
+        return res.status(200).json({ message: "Inserted an option for top five" });
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to insert option for top five."));
+    }
+});
+
+router.get('/get-topfive', async (req, res) => {
+    const {user_id} = req.body;
+    if (!user_id){
+        return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
+    }
+
+    try {
+        const optInput = await getTopFive(user_id);
+        return res.json(optInput);
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to get top five."));
+    }
+});
 
 // TODO: Delete account (and maybe change password(?))
 
