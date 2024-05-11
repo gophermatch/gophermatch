@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { Router } from 'express';
-import { createUser, deleteUser, getUserData, updateAccountInfo } from "../database/account.js";
+import { createUser, deleteUser, getUserData, insertAccountInfo, updateAccountInfo } from "../database/account.js";
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
 import { createBio } from '../database/profile.js';
@@ -62,7 +62,23 @@ router.put('/creation/new', async (req, res) => {
 
     console.log(`put new account creation for user id ${userdata.user_id}`);
 
+    // Fetch account data to see if it exists in the DB or not
+    try{
+        let data = await getUserData(userdata.user_id);
+
+        if(data == null){
+            console.log("inserting");
+            await insertAccountInfo(userdata)
+            res.status(200).json({message: "User account data inserted!"})
+            return;
+        }
+    }catch(e){
+        console.error(e)
+        res.status(400).json(createErrorObj(e))
+    }
+
     try {
+        console.log("updating");
         // update the user's account info
         await updateAccountInfo(userdata)
         res.status(200).json({message: "User account data updated!"})

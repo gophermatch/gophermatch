@@ -10,18 +10,30 @@ export default function Match() {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const [profileMode, setProfileMode] = useState(0);
-  
-    useEffect(() => {
-        setCurrentIndex(0);
-        setFilterResults([]);
-    }, []);
 
-    function goToNext(decision) {
-        backend.post('/match/matcher', {
+    const [filters, setFilters] = useState([]);
+    const [userData, setUserData] = useState({});
+    
+    useEffect(() => {
+      setCurrentIndex(0);
+      setFilterResults([]);
+      appendFilterResults();
+    }, [filters, userData]);
+
+    async function goToNext(decision) {
+        await backend.post('/match/matcher', {
             user1Id: currentUser.user_id,
             user2Id: filterResults[currentIndex].user_id,
             decision: decision
         });
+
+        if(currentIndex+1 >= filterResults.length){
+          console.log("ran out of results, appending more");
+          await appendFilterResults()
+          setCurrentIndex(0);
+          return;
+        }
+
         setCurrentIndex(currentIndex+1);
     }
 
@@ -33,15 +45,21 @@ export default function Match() {
 
       console.log(response);
 
-      setCurrentIndex(0);
-      setFilterResults([]);
+      await appendFilterResults();
     }
+
+  async function appendFilterResults() {
+    await backend.post('/match/filter-results', {user_id: currentUser.user_id, userData, filters, amount:3}, {withCredentials: true}).then((res) => {
+      setFilterResults(res.data);
+      console.log("Filtered profiles: ", res.data);
+    });
+  }
 
     if (currentIndex >= filterResults.length) {
         return (
           <div className={"h-full" +
             ""}>
-              <Filter setFilterResults={setFilterResults} />
+              <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={profileMode}/>
             <div className={"flex h-full justify-center items-center"}>
               <div className={"flex flex-col"}>
                 <p className={"text-center"}>Out of results, please change your filters or</p>
@@ -54,7 +72,7 @@ export default function Match() {
 
     return (
       <div>
-          <Filter setFilterResults={setFilterResults}/>
+          <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={profileMode}/>
           <Profile user_data={filterResults[currentIndex]?.user_data} qnaAnswers={filterResults[currentIndex]?.profile_data?.qnaAnswers} editedBio={filterResults[currentIndex]?.profile_data?.bio} editable={false} dormMode={profileMode}/>
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
               <button onClick={() => goToNext("reject")}
