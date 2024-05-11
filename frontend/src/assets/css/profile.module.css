@@ -39,10 +39,10 @@
     border-width: 0px;
     border-color: maroon;
     resize: none;
-    height: 50%; /* Adjust as needed */
+    height: 100%; /* Adjust as needed */
     width: 50%; /* Adjust as needed */
     font-weight: normal;
-    border-radius: 1.5vw;
+    border-radius: 0.9vw;
     margin-bottom: 0;
 }
 
@@ -106,3 +106,13 @@
 .name {
     font-size: 24px;
 }
+
+.hover\:scale-110 {
+    transition: transform 0.3s ease; /* Adjust the duration (0.3s) as needed */
+  }
+  
+  .transform {
+    transform-origin: center;
+  }
+  
+  
