@@ -20,7 +20,6 @@ export default function Settings() {
                 const filteredData = Object.entries(data).filter(([key, value]) => key !== 'user_id' && key !== 'hear_about_us' && key !== 'date_of_birth');
                 setUserInfo(filteredData);
                 setEditValues(Object.fromEntries(filteredData.map(([key, value]) => [key, value])));
-                console.log(userInfo);
                 return data;
             } else {
                 console.log('Error fetching user data');
@@ -37,9 +36,9 @@ export default function Settings() {
     const getLabel = (key) => {
         switch (key) {
             case 'first_name':
-                return 'First name'
+                return 'First Name'
             case 'last_name':
-                return 'Last name';
+                return 'Last Name';
             case 'date_of_birth':
                 return 'Date of Birth';
             case 'hometown':
@@ -66,16 +65,15 @@ export default function Settings() {
                 return key;
         }
     }
+
     const saveUserInfo = async () => {
         try {
-            console.log('In try block')
             const response = await backend.post('/account/update', {
                 userId: userID,
                 ...editValues,
             });
             console.log('Account information successfully updated')
-        }
-        catch (error) {
+        } catch (error) {
             console.log('Error saving user data:', error)
         }
     }
@@ -85,7 +83,7 @@ export default function Settings() {
             ...prevValues,
             [key]: value
         }));
-        setIsEdited(true);
+        setIsEdited(true); // Set isEdited to true whenever a field is changed
     };
 
     const handleSaveChangesClick = async () => {
@@ -105,26 +103,16 @@ export default function Settings() {
     const housePref = ['Apartments', 'Dorms', 'Both']
 
     return (
-        <div className="flex flex-col h-screen w-screen font-comfortaa bg-offwhite">
-            <h1 className="ml-[3vw] mt-[5vh] font-lora text-4xl text-maroon">
-                {editMode ? 'Edit Profile' : 'Settings'}
+        <div className="flex flex-col h-screen w-screen font-roboto bg-offwhite">
+            <h1 className="ml-[3vw] mt-[5vh] font-roboto text-center font-medium mr-[18vw] justify-center text-4xl text-settings">
+                Settings
             </h1>
-            <div className="ml-10 mt-[3vh] h-1 w-[80vw] bg-maroon"></div>
-            <div className="ml-10 mt-[4vh] w-[80vw] mr-[1vw] flex flex-col justify-center items-center">
-                <button
-                    className={`text-doc rounded-full w-[10vw] h-[4vh] text-[1vw] ${editMode ? 'bg-maroon' : 'bg-green-500'}`}
-                    onClick={handleSaveChangesClick}
-                    disabled={!isEdited}
-                >
-                    Save Changes
-                </button>
-            </div>
-            <div className="flex flex-col w-full justify-center items-center text-maroon text-xl font-comfortaa">
-                <div className="flex flex-wrap w-[50vw] mr-[12vw] justify-center">
+            <div className="flex flex-col w-full justify-center items-center text-settings text-xl font-comfortaa">
+                <div className="grid grid-cols-2 gap-4 mt-[3vh] mr-[10vw]">
                     {userInfo.map(([key, value], index) => (
-                        <div key={index} className="font-comfortaa text-2xl mt-[1vh] justify-between flex flex-col w-[12.5vw] mr-[3vw]">
+                        <div key={index} className="font-comfortaa pr-[2vw] text-2xl mt-[1vh]">
                             <div className="flex justify-start items-center">
-                                <p className="text-base mt-[3vh]">{getLabel(key)}</p>
+                                <p className="text-base">{getLabel(key)}</p>
                             </div>
                             <div className="flex justify-start items-center text-black text-xl">
                                 {key === 'college' ? (
@@ -132,7 +120,7 @@ export default function Settings() {
                                         value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
-                                        className="bg-gray-200 p-[1vh] rounded-md w-full"
+                                        className="bg-gray-200 p-[1vh] rounded-[1vh] w-full"
                                     >
                                         {colleges.map((college, index) => (
                                             <option key={index} value={college}>{college}</option>
@@ -143,7 +131,7 @@ export default function Settings() {
                                         value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
-                                        className="bg-gray-200 p-[1vh] rounded-md w-full"
+                                        className="bg-gray-200 p-[1vh] rounded-[1vh] w-full"
                                     >
                                         {gradYear.map((year, index) => (
                                             <option key={index} value={year}>{year}</option>
@@ -154,7 +142,7 @@ export default function Settings() {
                                         value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
-                                        className="bg-gray-200 p-[1vh] rounded-md w-full"
+                                        className="bg-gray-200 p-[1vh] rounded-[1vh] w-full"
                                     >
                                         {gender.map((gender, index) => (
                                             <option key={index} value={gender}>{gender}</option>
@@ -165,7 +153,7 @@ export default function Settings() {
                                         value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
-                                        className="bg-gray-200 p-[1vh] rounded-md w-full"
+                                        className="bg-gray-200 p-[1vh] rounded-[1vh] w-full"
                                     >
                                         {housePref.map((pref, index) => (
                                             <option key={index} value={pref}>{pref}</option>
@@ -177,15 +165,23 @@ export default function Settings() {
                                         value={editValues[key]}
                                         onChange={(e) => handleInputChange(key, e.target.value)}
                                         onClick={() => handleEditClick(key)}
-                                        className="bg-gray-200 p-[1vh] rounded-md w-full"
+                                        className="bg-gray-200 p-[1vh] rounded-[1vh] w-full"
                                         />
                                     )}
                                 </div>
                             </div>
                         ))}
-                    </div>
                 </div>
             </div>
-        );
-    }
-    
+            <div className="ml-10 mt-[8vh] w-[80vw] mr-[1vw] flex flex-col justify-center items-center">
+                <button
+                    className={`text-white rounded-[1vh] w-[10vw] h-[5vh] text-[1.25vw] ${isEdited ? 'bg-settings hover:bg-dark_maroon' : 'bg-inactive_gray'}`}
+                    onClick={handleSaveChangesClick}
+                    disabled={!isEdited}
+                >
+                    Apply
+                </button>
+            </div>
+        </div>
+    );
+}
