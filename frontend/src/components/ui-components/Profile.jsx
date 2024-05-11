@@ -217,7 +217,7 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
             </div>
           </div>
-          <div className="absolute bottom-[19.5vh] left-[19vw] w-[30%]">
+          <div className="absolute bottom-[17.5vh] left-[19vw] w-[30%]">
           <span className="ml-[8.75vw] text-[2.25vh]">Sleep Schedule</span>
 
             <InputRange
@@ -235,8 +235,8 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
               }}
               />
             <div className="flex justify-between">
-              <span>{formatTime(sliderValue.min)}</span>
-              <span>{formatTime(sliderValue.max)}</span>
+              <span className="text-[2.25vh]">{formatTime(sliderValue.min)}</span>
+              <span className="text-[2.25vh]">{formatTime(sliderValue.max)}</span>
             </div>
           </div>
         </div>
