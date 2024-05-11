@@ -125,7 +125,8 @@ router.post('/update', async (req, res) => {
 });
 
 router.put('/insert-topfive', async (req, res) => {
-    const {user_id, question, input1, input2, input3, input4, input5} = req.query;
+    const {user_id, question, input1, input2, input3, input4, input5} = req.body;
+    console.log("id: ", user_id, " question: ", question, " input1: ", input1)
     if (!user_id || !question || !input1){
         return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
     }

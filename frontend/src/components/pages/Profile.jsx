@@ -10,8 +10,14 @@ export default function ProfilePage() {
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [profileMode, setProfileMode] = useState(0);
+  const [top5, setTop5] = useState(['', '', '', '', '']);
+  const [top5Question, setTop5Question] = useState('Top 5 cakes');
 
   useEffect(() => {
+    backend.get('/account/get-topfive', {params: {user_id: currentUser.user_id}}).then((res) => {
+      console.log("Top 5 results are: ", res.data)
+      // setTop5(res.data)
+    })
     fetchProfile();
   }, []);
 
@@ -79,6 +85,15 @@ export default function ProfilePage() {
   };
 
   const handleSaveChanges = async () => {
+    backend.put('/account/insert-topfive', {
+      user_id: currentUser.user_id,
+      question: top5Question,
+      input1: top5[0],
+      input2: top5[1],
+      input3: top5[2],
+      input4: top5[3],
+      input5: top5[4]
+    }).then(res => console.log("Success saving top5: ", res))
     try {
         let newRent, newMove_in_date, newMove_out_date = null;
 
@@ -124,6 +139,7 @@ export default function ProfilePage() {
         if (payload.apartmentInfo.rent < 100 || payload.apartmentInfo.rent > 9999){
           throw new Error('Rent out of bounds!')
         }
+        backend.put('/profile')
         await backend.put('/profile', payload);
         alert('Profile updated successfully!');
         setProfile({ ...editedProfile, apartmentData: payload.apartmentInfo || {}});
@@ -158,6 +174,10 @@ export default function ProfilePage() {
         apartmentData={isEditing ? editedProfile.apartmentData : profile.apartmentData}
         handleQnaChange={handleQnaChange}
         handleTextChange={handleTextChange}
+        top5={top5}
+        setTop5={setTop5}
+        top5Question={top5Question}
+        setTop5Question={setTop5Question}
         dormMode={profileMode}
       />
       <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw] z-10">

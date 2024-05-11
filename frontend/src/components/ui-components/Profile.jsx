@@ -11,7 +11,7 @@ import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
 import sliderStyles from '../../assets/css/slider.module.css';
 
-export default function Profile({ user_data, editable, handleBioChange, handleQnaChange, qnaAnswers, editedBio, apartmentData, dormMode }) {
+export default function Profile({ user_data, editable, handleBioChange, handleQnaChange, qnaAnswers, editedBio, apartmentData, dormMode, top5, setTop5, top5Question, setTop5Question }) {
 
   const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
   const [sliderValue, setSliderValue] = useState({ min: 80, max: 144 });
@@ -49,9 +49,6 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
         withCredentials: true,
       });
       if (response) {
-
-        console.log(response);
-
         const data = response.data;
 
         setPictureUrls(data.pictureUrls)
@@ -171,7 +168,7 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
               
             </div>
             <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
-              <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
+              <TopFive question={top5Question} updateQuestion={setTop5Question} rankings={top5} update={setTop5} editing={editable}></TopFive>
             </div>
           </div>
           <div className={`${dormMode === 1 || dormMode === 2 ? "block" : "hidden"} flex flex-grow`}>
@@ -182,9 +179,9 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
             <div className={"flex-1 flex-col flex h-[25vh] mt-[6vh] mr-[3vw] ml-0 mb-0 rounded-3xl border-2 overflow-hidden text-[2vh]"}>
               {qnaItems.slice(11, 16)}
             </div>
-            <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
+            {/* <div className={"flex-1 m-[1vw] mx-0 mb-0 pt-[1vh] h-[25vh] mt-[6vh] mr-[2vw] rounded-3xl border-2 border-maroon_new text-[2vh]"}>
               <TopFive question={"My Top 5 Superheroes"} rankings={["Ironman", "Batman", "Spiderman", "Black Widow", "Captain America"]} editing={editable}></TopFive>
-            </div>
+            </div> */}
           </div>
           <div className="absolute bottom-[19vh] left-[13vw] w-[20%]">
           <span className="ml-[5vw]">Sleep Schedule</span>
