@@ -36,12 +36,13 @@ export default function Saved() {
 
             const profilePromises = matchesRes.data.map((matchId) => Promise.all([
                 backend.get('/profile', {params: {user_id: matchId}}),
-                backend.get('account/fetch', {params: {user_id: matchId}, withCredentials: true})
+                backend.get('account/fetch', {params: {user_id: matchId}, withCredentials: true}),
+                backend.get("/profile/user-pictures", {params: {user_id: matchId}})
             ]));
 
             Promise.all(profilePromises).then((promiseResults) => {
-                const translatedData = promiseResults.map(([profileRes, accountRes]) => {
-                    return {...profileRes.data, ...accountRes.data.data}
+                const translatedData = promiseResults.map(([profileRes, accountRes, picsRes]) => {
+                    return {...profileRes.data, ...accountRes.data.data, pics: picsRes.data.pictureUrls}
                 })
                 updateMatchedProfiles(translatedData);
             });
@@ -104,7 +105,7 @@ export default function Saved() {
                 <div className="flex flex-col h-[11vh] w-full">
                 <div className="flex" key={index}>
                     <div className="flex flex-row w-full">
-                            <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" onClick={() => displayProfile(person)}></img>
+                            <img src={person.pics[0] || kanye} className="rounded-full h-[8vh] w-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" onClick={() => displayProfile(person)}></img>
                             <div className=" flex flex-col w-full text-start justify-start">
                                 <div className="flex flex-row">
                                     <button className="text-[2.5vh] mt-[1.5vh] ml-[1vw] font-roboto font-[390]  text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
