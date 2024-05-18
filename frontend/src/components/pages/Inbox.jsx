@@ -18,12 +18,13 @@ export default function Inbox({ user_data }) {
                 const matchesRes = await backend.get('/match/inbox', { params: { userId: currentUser.user_id } });
                 const profilePromises = matchesRes.data.map(({ matchId, timestamp }) => Promise.all([
                     backend.get('/profile', { params: { user_id: matchId } }),
-                    backend.get('account/fetch', { params: { user_id: matchId }, withCredentials: true })
+                    backend.get('account/fetch', { params: { user_id: matchId }, withCredentials: true }),
+                    backend.get('/profile/user-pictures', {params: {user_id: matchId}})
                 ]));
 
                 Promise.all(profilePromises).then((promiseResults) => {
-                    const translatedData = promiseResults.map(([profileRes, accountRes]) => {
-                        return { ...profileRes.data, ...accountRes.data.data };
+                    const translatedData = promiseResults.map(([profileRes, accountRes, picsRes]) => {
+                        return { ...profileRes.data, ...accountRes.data.data, pics: picsRes.data.pictureUrls };
                     });
                     updateMatchedProfiles(translatedData);
                 });
@@ -123,7 +124,7 @@ export default function Inbox({ user_data }) {
                         <div className="flex flex-col h-[9.5vh] w-full" key={index}>
                             <div className="flex" key={index}>
                                 <div className="flex flex-row w-full">
-                                    <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" alt="Profile" onClick={() => displayProfile(person)}></img>
+                                    <img src={person.pics[0] || kanye} className="rounded-full h-[8vh] w-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" alt="Profile" onClick={() => displayProfile(person)}></img>
                                     <div className="flex flex-col w-full text-start items-start justify-start">
                                         <button className="text-[2.5vh] mt-[0.75vh] w-auto ml-[1vw] font-roboto font-light text-start text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
                                         <button className="text-[2vh] font-thin ml-[1vw]" onClick={() => displayProfile(person)}>{person.contact_phone}</button>
