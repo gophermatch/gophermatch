@@ -83,7 +83,7 @@ export default function Saved() {
         <div className="p-8">
             {selectedProfile && (
                 <div className="ml-[7vw]" style={{ width: '80%', height: '40%' }}>
-                    <Profile user_data={selectedProfile} editable={false} />
+                    <Profile user_data={selectedProfile} editedBio={selectedProfile.bio} qnaAnswers={selectedProfile.qnaAnswers} dormMode={1} editable={false} />
                     <button onClick={() => setSelectedProfile(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
                 </div>
             )}

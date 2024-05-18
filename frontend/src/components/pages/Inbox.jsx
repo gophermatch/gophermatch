@@ -24,6 +24,9 @@ export default function Inbox({ user_data }) {
 
                 Promise.all(profilePromises).then((promiseResults) => {
                     const translatedData = promiseResults.map(([profileRes, accountRes, picsRes]) => {
+                        console.log("Account info is: ", accountRes.data.data)
+                        console.log("Profile info is: ", profileRes.data)
+                        console.log("qna answers are: ", profileRes.data.qnaAnswers)
                         return { ...profileRes.data, ...accountRes.data.data, pics: picsRes.data.pictureUrls };
                     });
                     updateMatchedProfiles(translatedData);
@@ -101,7 +104,7 @@ export default function Inbox({ user_data }) {
         <div className="p-8">
             {selectedProfile && (
                 <div className="ml-[7vw]" style={{ width: '80%', height: '40%' }}>
-                    <Profile user_data={selectedProfile} editable={false} />
+                    <Profile user_data={selectedProfile} editedBio={selectedProfile.bio} qnaAnswers={selectedProfile.qnaAnswers} dormMode={1} editable={false} />
                     <button onClick={() => setSelectedProfile(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
                 </div>
             )}
