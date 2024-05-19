@@ -15,8 +15,16 @@ export default function ProfilePage() {
 
   useEffect(() => {
     backend.get('/account/get-topfive', {params: {user_id: currentUser.user_id}}).then((res) => {
-      console.log("Top 5 results are: ", res.data)
-      // setTop5(res.data)
+      const top5Inputs = [
+        res.data.input1,
+        res.data.input2,
+        res.data.input3,
+        res.data.input4,
+        res.data.input5
+      ];
+      const top5Question = res.data.question;
+      setTop5(top5Inputs);
+      setTop5Question(top5Question);
     })
     fetchProfile();
   }, []);
@@ -85,6 +93,14 @@ export default function ProfilePage() {
   };
 
   const handleSaveChanges = async () => {
+    console.log(currentUser.user_id);
+    console.log(top5Question);
+    console.log(top5[0]);
+    console.log(top5[1]);
+    console.log(top5[2]);
+    console.log(top5[3]);
+    console.log(top5[4]);
+
     backend.put('/account/insert-topfive', {
       user_id: currentUser.user_id,
       question: top5Question,

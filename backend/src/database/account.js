@@ -117,7 +117,6 @@ export async function updateAccountInfo(userdata, userId){
 
 export async function insertTopFive(user_id, question, input1, input2, input3, input4, input5){
     try {
-        // First, check if the record exists
         const query = `
             INSERT INTO ${tableNames.u_topfive} (user_id, question, input1, input2, input3, input4, input5)
             VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -138,6 +137,7 @@ export async function insertTopFive(user_id, question, input1, input2, input3, i
 
 export async function getTopFive(user_id){
     return new Promise((resolve, reject) => {
+        console.log(user_id);
         const query = `SELECT question, input1, input2, input3, input4, input5 FROM ${tableNames.u_topfive} WHERE user_id = ?`;
 
         db.query(query, [user_id], (err, results) => {
@@ -148,8 +148,10 @@ export async function getTopFive(user_id){
             }
 
             if (results.length > 0) {
+                console.log("bruh")
                 resolve(results[0]); // resolve with the first row of the results
             } else {
+                console.log("what")
                 resolve(null); // resolve with null if no results
             }
         });
