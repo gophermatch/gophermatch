@@ -14,7 +14,7 @@ export default function ProfilePage() {
   const [top5Question, setTop5Question] = useState('Top 5 cakes');
 
   useEffect(() => {
-    backend.get('/account/get-topfive', {params: {user_id: currentUser.user_id}}).then((res) => {
+    backend.get('/profile/get-topfive', {params: {user_id: currentUser.user_id}}).then((res) => {
       const top5Inputs = [
         res.data.input1,
         res.data.input2,
@@ -101,7 +101,7 @@ export default function ProfilePage() {
     console.log(top5[3]);
     console.log(top5[4]);
 
-    backend.put('/account/insert-topfive', {
+    backend.put('/profile/insert-topfive', {
       user_id: currentUser.user_id,
       question: top5Question,
       input1: top5[0],
