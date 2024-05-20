@@ -48,6 +48,16 @@ export default function Saved() {
         })();
     }, [updateDep]);
 
+    function removeSave(profileId) {
+        backend.delete('/match/remove', { params: { user1Id: currentUser.user_id, user2Id: profileId, decision: "unsure" } })
+            .then(() => {
+                updateMatchedProfiles(prevProfiles => prevProfiles.filter(profile => profile.user_id !== profileId));
+            })
+            .catch((error) => {
+                console.error("Error removing a save:", error);
+            });
+    }
+
     function unmatch(profileId) {
         backend.delete('/match/inbox-delete', { params: { user1_id: currentUser.user_id, user2_id: profileId } })
             .then(() => {
@@ -129,7 +139,7 @@ export default function Saved() {
                             </button>
                             <button
                                 className="hover:text-maroon text-inactive_gray mr-[1.1vw] text-[2.125vh]"
-                                onClick={() => unmatch(person.user_id)}>
+                                onClick={() => removeSave(person.user_id)}>
                                 X
                             </button>
                         </div>
