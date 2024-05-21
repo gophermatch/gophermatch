@@ -276,7 +276,7 @@ export async function deleteInboxMatch(user1Id, user2Id) {
         await db.query(queryString, values);
         deleteMatchDecision(user1Id, user2Id, "match");
         // Log the successful deletion.
-        console.log(`Deleted inbox match for user1_id=${user1Id} and user2_id=${user2Id}.`);
+        // console.log(`Deleted inbox match for user1_id=${user1Id} and user2_id=${user2Id}.`);
 
     } catch (error) {
         // Log and throw an error if the deletion fails.
