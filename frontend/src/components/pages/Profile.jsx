@@ -10,6 +10,7 @@ export default function ProfilePage() {
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [profileMode, setProfileMode] = useState(0);
+  const [selectedButton, setSelectedButton] = useState('dorm');
 
   useEffect(() => {
     fetchProfile();
@@ -139,6 +140,11 @@ export default function ProfilePage() {
     setIsEditing(true);
   };
 
+  const handleButtonClick = (mode) => {
+    setProfileMode(mode);
+    setSelectedButton(mode === 0 ? 'dorm' : 'apartment');
+  };
+
   if (error) {
     return <p>{error}</p>;
   }
@@ -161,39 +167,41 @@ export default function ProfilePage() {
         dormMode={profileMode}
       />
       {!isEditing && (
-      <span className="absolute right-[10vw] top-[15vh] scale-90 hover:scale-110 transition-transform">
+      <span className="absolute right-[9vw] top-[15vh] scale-90 hover:scale-110 transition-transform">
       <button onClick={toggleEditMode}>
-        <svg 
-          fill="none" 
-          stroke="maroon" 
-          strokeWidth="1" // Set the stroke width to 1 unit
-          //strokeLinecap="round" 
-         //strokeLinejoin="round" 
-          className="w-[6vw] h-[7vh]" 
-          viewBox="0 0 24 24" 
-          xmlns="http://www.w3.org/2000/svg"
-        >
-<path 
-  d="M2,21H8a1,1,0,0,0,0-2H3.071A7.011,7.011,0,0,1,10,13a5.044,5.044,0,1,0-3.377-1.337A9.01,9.01,0,0,0,1,20,1,1,0,0,0,2,21ZM20.207,9.293a1,1,0,0,0-1.414,0l-6.25,6.25a1.011,1.011,0,0,0-.241.391l-1.25,3.75A1,1,0,0,0,12,21a1.014,1.014,0,0,0,.316-.051l3.75-1.25a1,1,0,0,0,.391-.242l6.25-6.25a1,1,0,0,0,0-1.414Zm-5,8.583-1.629.543.543-1.629L19.5,11.414,20.586,12.5Z"
-/>
+        <svg width="8vw" height="8vh" viewBox="0 0 24 24" stroke="maroon" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21.2799 6.40005L11.7399 15.94C10.7899 16.89 7.96987 17.33 7.33987 16.7C6.70987 16.07 7.13987 13.25 8.08987 12.3L17.6399 2.75002C17.8754 2.49308 18.1605 2.28654 18.4781 2.14284C18.7956 1.99914 19.139 1.92124 19.4875 1.9139C19.8359 1.90657 20.1823 1.96991 20.5056 2.10012C20.8289 2.23033 21.1225 2.42473 21.3686 2.67153C21.6147 2.91833 21.8083 3.21243 21.9376 3.53609C22.0669 3.85976 22.1294 4.20626 22.1211 4.55471C22.1128 4.90316 22.0339 5.24635 21.8894 5.5635C21.7448 5.88065 21.5375 6.16524 21.2799 6.40005V6.40005Z" stroke="black" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11 4H6C4.93913 4 3.92178 4.42142 3.17163 5.17157C2.42149 5.92172 2 6.93913 2 8V18C2 19.0609 2.42149 20.0783 3.17163 20.8284C3.92178 21.5786 4.93913 22 6 22H17C19.21 22 20 20.2 20 18V13" stroke="maroon" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
     </span>
     
     
         )}
-      <div className="absolute top-[2.75vh] ml-[40vw] space-x-[1vw] text-[1vw] z-10">
-        <button onClick={() => setProfileMode(0)}
-          className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-maroon_dark shadow-md">Dorm</button>
-        <button onClick={() => setProfileMode(1)}
-          className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md hover:bg-offgold">Apt.</button>
-      </div>
+      <div className="absolute top-[9vh] ml-[11vw] text-[1vw] z-10">
+  <button
+    onClick={() => handleButtonClick(0)}
+    className={`w-[16vh] rounded-tl-[1vh] rounded-tr-[1vh] text-center align-middle font-bold shadow-md ${
+      selectedButton === 'dorm' ? 'bg-maroon_new text-white h-[4.25vh] mb-[0.25vh]' : 'bg-maroon_dark text-inactive_gray hover:bg-maroon_transparent h-[4vh]'
+    }`}
+  >
+    Dorm
+  </button>
+  <button
+    onClick={() => handleButtonClick(1)}
+    className={`w-[16vh] rounded-tl-[1vh] rounded-tr-[1vh] text-center align-middle font-bold shadow-md ${
+      selectedButton === 'apartment' ? 'bg-maroon_new text-white h-[4.25vh] mb-[0.25vh]' : 'bg-maroon_dark text-inactive_gray hover:bg-maroon_transparent h-[4vh]'
+    }`}
+  >
+    Apartment
+  </button>
+</div>
       {isEditing && (
         <div className="fixed top-[12vh] right-[20vh] flex justify-center">
           <button onClick={handleSaveChanges}>
           <svg 
-                  width="3vw" 
-                  height="6vh" 
+                  width="5vw" 
+                  height="12vh" 
                   viewBox="0 0 64 64" 
                   xmlns="http://www.w3.org/2000/svg" 
                   fill="none"
@@ -202,7 +210,7 @@ export default function ProfilePage() {
                   </svg>
 
           </button>
-          <button className="text-[5vh] mb-[1vh] text-gold font-thin hover:text-maroon scale-90 hover:scale-125 transition-transform" onClick={toggleEditMode}>
+          <button className="text-[7vh] mb-[1vh] text-gold font-thin hover:text-maroon scale-90 hover:scale-125 transition-transform" onClick={toggleEditMode}>
             x
           </button>
         </div>
