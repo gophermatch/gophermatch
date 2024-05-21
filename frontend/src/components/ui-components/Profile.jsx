@@ -145,17 +145,17 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
       <div className={`m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
         <div className={"w-full flex flex-col h-[70vh] mb-[4vh] bg-white rounded-3xl overflow-hidden"}>
           <div className={"flex h-[35vh] "}>
-            <div className={"w-[23vw] h-[23vh] bg-white rounded-3xl mt-[4vh] ml-[-1.6vh]"}>
+            <div className={"w-[24vw] h-[24vh] bg-white rounded-3xl mt-[4vh] ml-[-1.6vh]"}>
               <Carousel pictureUrls={pictureUrls} editable={editable}></Carousel>
             </div>
             <div className={"flex-grow flex flex-col bg-white"}>
               <div className={"h-[3vh]"}>
-              <p className={"text-[1.22vw] ml-[0.125vw] mt-[3vh] inline-block flex flex-col"}>
+              <p className={"text-[1.22vw] ml-[-0.625vw] mt-[3vh] inline-block flex flex-col"}>
                 <span className="font-bold text-[1.7vw]">{user_data?.first_name} {user_data?.last_name}</span>
                 <span>{user_data?.major} Major</span>
               </p>
               </div>
-              <div className={"flex-grow rounded-2xl w-[41vw] ml-[vw] mt-[9vh] mb-[-0.48vh] border-2 border-maroon_new overflow"}>
+              <div className={"flex-grow rounded-2xl w-[40.5vw] ml-[-0.5vw] mt-[9vh] mb-[1.5vh] border-2 border-maroon_new overflow"}>
                 <p className={"w-full h-full"}>
                   {editable ? (
                             <textarea
