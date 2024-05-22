@@ -64,6 +64,7 @@ export default function Settings() {
         setEditMode(false);
         setIsEdited(false);
         saveUserInfo();
+        navigate('/match')
     }
 
     
