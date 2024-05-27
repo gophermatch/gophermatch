@@ -18,12 +18,16 @@ export default function Inbox({ user_data }) {
                 const matchesRes = await backend.get('/match/inbox', { params: { userId: currentUser.user_id } });
                 const profilePromises = matchesRes.data.map(({ matchId, timestamp }) => Promise.all([
                     backend.get('/profile', { params: { user_id: matchId } }),
-                    backend.get('account/fetch', { params: { user_id: matchId }, withCredentials: true })
+                    backend.get('account/fetch', { params: { user_id: matchId }, withCredentials: true }),
+                    backend.get('/profile/user-pictures', {params: {user_id: matchId}})
                 ]));
 
                 Promise.all(profilePromises).then((promiseResults) => {
-                    const translatedData = promiseResults.map(([profileRes, accountRes]) => {
-                        return { ...profileRes.data, ...accountRes.data.data };
+                    const translatedData = promiseResults.map(([profileRes, accountRes, picsRes]) => {
+                        console.log("Account info is: ", accountRes.data.data)
+                        console.log("Profile info is: ", profileRes.data)
+                        console.log("qna answers are: ", profileRes.data.qnaAnswers)
+                        return { ...profileRes.data, ...accountRes.data.data, pics: picsRes.data.pictureUrls };
                     });
                     updateMatchedProfiles(translatedData);
                 });
@@ -111,7 +115,7 @@ export default function Inbox({ user_data }) {
         <div className="p-8">
             {selectedProfile && (
                 <div className="ml-[7vw]" style={{ width: '80%', height: '40%' }}>
-                    <Profile user_data={selectedProfile} editable={false} />
+                    <Profile user_data={selectedProfile} editedBio={selectedProfile.bio} qnaAnswers={selectedProfile.qnaAnswers} dormMode={1} editable={false} />
                     <button onClick={() => setSelectedProfile(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
                 </div>
             )}
@@ -126,22 +130,17 @@ export default function Inbox({ user_data }) {
                             <path className="cls-1" d="M6.47,10.71a2,2,0,0,0-2,2h0V35.32a2,2,0,0,0,2,2H41.53a2,2,0,0,0,2-2h0V12.68a2,2,0,0,0-2-2H6.47Zm33.21,3.82L24,26.07,8.32,14.53" />
                         </svg>
                     </div>
-                    <div className="bg-white h-[87vh] w-[47vw] rounded-br-[0.5vh] mb-[2vh] rounded-bl-[0.5vh] items-center text-center justify-center">
-                        <div className="flex text-start justify-start font-medium">
-                            <span className="text-maroon text-start text-[2vh] ml-[0.5vw] mt-[2vh] mb-[1vh] font-roboto justify-start">Roommates</span>
-                        </div>
-                        {matchedProfiles.map((person, index) => (
-                            <div className="flex flex-col h-[9.5vh] w-full" key={index}>
-                                <div className="flex" key={index}>
-                                    <div className="flex flex-row w-full">
-                                        <img src={person.profileURL || kanye} className="rounded-full h-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" alt="Profile" onClick={() => displayProfile(person)} />
-                                        <div className="flex flex-col w-full text-start items-start justify-start">
-                                            <button className="text-[2.5vh] mt-[0.75vh] w-auto ml-[1vw] font-roboto font-light text-start text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
-                                            <button className="text-[2vh] font-thin ml-[1vw]" onClick={() => displayProfile(person)}>{formatPhoneNumber(person.contact_phone)}</button>
-                                        </div>
-                                        <div className="w-full text-right">
-                                            <button className="text-[2.5vh] text-inactive_gray hover:text-maroon w-[4vw] mr-[1vw] mt-[2.5vh]" onClick={() => unmatch(person.user_id)}>X</button>
-                                        </div>
+                    {matchedProfiles.map((person, index) => (
+                        <div className="flex flex-col h-[9.5vh] w-full" key={index}>
+                            <div className="flex" key={index}>
+                                <div className="flex flex-row w-full">
+                                    <img src={person.pics[0] || kanye} className="rounded-full h-[8vh] w-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" alt="Profile" onClick={() => displayProfile(person)}></img>
+                                    <div className="flex flex-col w-full text-start items-start justify-start">
+                                        <button className="text-[2.5vh] mt-[0.75vh] w-auto ml-[1vw] font-roboto font-light text-start text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
+                                        <button className="text-[2vh] font-thin ml-[1vw]" onClick={() => displayProfile(person)}>{person.contact_phone}</button>
+                                    </div>
+                                    <div className="w-full text-right">
+                                        <button className="text-[2.5vh] text-inactive_gray hover:text-maroon w-[4vw] mr-[1vw] mt-[2.5vh]" onClick={() => unmatch(person.user_id)}>X</button>
                                     </div>
                                 </div>
                             </div>
