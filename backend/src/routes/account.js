@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
 router.get('/fetch', async (req, res) => {
     let user_id = req.query.user_id;
 
-    console.log(`fetch account for user id ${user_id}`);
+    //console.log(`fetch account for user id ${user_id}`);
 
     try {
         // update the user's account info

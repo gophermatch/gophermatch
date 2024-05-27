@@ -256,7 +256,7 @@ export async function deleteMatchDecision(userId, matchUserId, decision) {
         // Execute the query to delete the specified decision.
         await db.query(queryString, values);
         // Log the successful deletion.
-        console.log(`Deleted decision '${decision}' for user_id=${userId} and match_user_id=${matchUserId}.`);
+        // console.log(`Deleted decision '${decision}' for user_id=${userId} and match_user_id=${matchUserId}.`);
 
     } catch (error) {
         // Log and throw an error if the deletion fails.
@@ -278,7 +278,7 @@ export async function deleteInboxMatch(user1Id, user2Id) {
         await db.query(queryString, values);
         deleteMatchDecision(user1Id, user2Id, "match");
         // Log the successful deletion.
-        console.log(`Deleted inbox match for user1_id=${user1Id} and user2_id=${user2Id}.`);
+        // console.log(`Deleted inbox match for user1_id=${user1Id} and user2_id=${user2Id}.`);
 
     } catch (error) {
         // Log and throw an error if the deletion fails.
