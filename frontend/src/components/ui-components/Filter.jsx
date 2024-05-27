@@ -84,6 +84,10 @@ export default function Filter({setFiltersExternal, setUserDataExternal, profile
         setUserDataExternal(userData);
     }
 
+    const collapseAll = () => {
+        setOpenedDropdowns([]);
+    }
+
     return(
         <div>
             <div
@@ -125,13 +129,17 @@ export default function Filter({setFiltersExternal, setUserDataExternal, profile
                         </button>
                         <div
                           className={`${openedDropdowns["Grad. Year"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                            <UserDataItem userData={userData} k="graduating_year" value="Freshman"
+                            <UserDataItem userData={userData} k="graduating_year" value="2025"
                                           setUserData={setUserData} />
-                            <UserDataItem userData={userData} k="graduating_year" value="Sophomore"
+                            <UserDataItem userData={userData} k="graduating_year" value="2026"
                                           setUserData={setUserData} />
-                            <UserDataItem userData={userData} k="graduating_year" value="Junior"
+                            <UserDataItem userData={userData} k="graduating_year" value="2027"
                                           setUserData={setUserData} />
-                            <UserDataItem userData={userData} k="graduating_year" value="Senior"
+                            <UserDataItem userData={userData} k="graduating_year" value="2028"
+                                          setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="2029"
+                                          setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="2030"
                                           setUserData={setUserData} />
                         </div>
                     </div>
@@ -204,14 +212,18 @@ export default function Filter({setFiltersExternal, setUserDataExternal, profile
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-between space-x-[0.7vw] w-[9.4vw] h-[4.5vh]">
-                    <button onClick={updateExternals}
+                <div className="flex justify-between ml-[0.5vw] space-x-[0.7vw] w-[9.4vw] h-[4.5vh]">
+                    <button onClick={() => {
+                        updateExternals();
+                        collapseAll();
+                    }}
                             className="flex-1 p-[5px] bg-maroon_new hover:bg-gold rounded-md text-sm"><img
                       className="w-full h-full object-contain" alt="checkmark"
                       src={"../assets/images/checkmark.png"}></img></button>
                     <button onClick={() => {
                         setFilters([]);
                         setUserData(defaultUserdata);
+                        collapseAll();
                     }} className="flex-1 p-[5px] bg-maroon_new hover:bg-gold rounded-md text-sm"><img
                       className="w-full h-full object-contain"
                       alt="checkmark"
@@ -219,9 +231,15 @@ export default function Filter({setFiltersExternal, setUserDataExternal, profile
                     </button>
                 </div>
             </div>
-            <img onClick={() => setIsOpen(isOpen => !isOpen)}
+            <img onClick={() => {
+                if(isOpen){
+                    collapseAll();
+                }
+
+              setIsOpen(isOpen => !isOpen);
+            }}
                  src={`../assets/images/${isOpen ? "dropup" : "dropdown"}.png`}
-                 className={`absolute ${isOpen ? "top-[13vh]" : "top-0"} right-[10vh] ml-auto mr-auto w-[7vh] h-[7vh]`} />
+                 className={`absolute duration-[400ms] ${isOpen ? "top-[5.5vh]" : "top-0"} right-[10vh] ml-auto mr-auto w-[7vh] h-[7vh]`} />
         </div>
     );
 }

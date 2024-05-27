@@ -169,12 +169,14 @@ export async function getInteractedProfiles(user_id){
   
       // Map option IDs to their respective questions using the qnaOptions data
       const questionIdToOptionIds = qnaOptions.reduce((acc, q) => {
-        q.options.forEach(opt => {
-          if (optionIds.includes(opt.option_id)) {
-            if (!acc[q.id]) acc[q.id] = [];
-            acc[q.id].push(opt.option_id);
-          }
-        });
+        if (q.options && Array.isArray(q.options)) {
+          q.options.forEach(opt => {
+            if (optionIds.includes(opt.option_id)) {
+              if (!acc[q.id]) acc[q.id] = [];
+              acc[q.id].push(opt.option_id);
+            }
+          });
+        }
         return acc;
       }, {});
   
