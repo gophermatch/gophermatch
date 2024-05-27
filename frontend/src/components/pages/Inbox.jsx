@@ -176,6 +176,5 @@ export default function Inbox({ user_data }) {
                     </div>
                 </div>
             </div>
-        </div>
     );
 }
