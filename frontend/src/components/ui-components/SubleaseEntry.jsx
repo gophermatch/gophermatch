@@ -23,7 +23,7 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
 
   return (
     <div
-      className={"mt-[3vh] h-[30vh] w-[70vw] flex items-center"}>
+      className={"mt-[3vh] ml-[7.5vw] h-[30vh] w-[75vw] flex items-center"}>
       <div className={"font-profile font-bold p-0 text-maroon_new h-full w-[90%] bg-cream"}>
       <div className={`h-[33%] relative top-[-1vh] w-full ${sublease.premium ? 'bg-gold': 'bg-maroon_new'}`}>
         <p className={"flex justify-between text-white text-[1.5vw] w-full ml-[1vw] mt-[1vh]"}>
@@ -57,14 +57,10 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
         <span className="font-light">{sublease.has_gym ? "Yes" : "No"}</span>
         <span>Roommates</span>
         <span className="font-light">{sublease.num_roommates}</span>
-        <div className="absolute top-[-2.5vh] right-[-14.5vw]">${sublease.rent_amount} per month</div>
-        <button className="absolute top-[11vh] right-[-14.5vw] text-white bg-maroon_new rounded-lg w-[6vw] font-roboto">Contact</button>
+        <div className="absolute top-[-2.5vh] right-[-16vw]">${sublease.rent_amount} per month</div>
+        <button className="absolute top-[11vh] right-[-16vw] text-white bg-maroon_new rounded-lg w-[6vw] font-roboto" onClick={save}>Contact</button>
       </div>
       </div>
-
-      <button className={"bg-maroon_new ml-5 w-[50px] h-[50px] bg-black text-white rounded-2xl duration-200 hover:pl-3"} onClick={save}>
-        →
-      </button>
 
     </div>
   )
