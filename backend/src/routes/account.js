@@ -140,7 +140,6 @@ router.post('/update', async (req, res) => {
     }
 });
 
-
 // TODO: Delete account (and maybe change password(?))
 
 export default router

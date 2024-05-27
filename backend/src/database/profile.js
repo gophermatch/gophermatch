@@ -348,3 +348,55 @@ export async function retrievePictureUrls(user_id) {
         throw new Error('Failed to remove picture');
       }
   }
+
+  export async function insertTopFive(user_id, question, input1, input2, input3, input4, input5){
+    try {
+        // First, check if the record exists
+        console.log(user_id);
+        console.log(question);
+        console.log(input1);
+        console.log(input2);
+        console.log(input3);
+        console.log(input4);
+        console.log(input5);
+        const query = `
+            INSERT INTO ${tableNames.u_topfive} (user_id, question, input1, input2, input3, input4, input5)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+            question = VALUES(question),
+            input1 = VALUES(input1),
+            input2 = VALUES(input2),
+            input3 = VALUES(input3),
+            input4 = VALUES(input4),
+            input5 = VALUES(input5);
+        `;
+        await db.query(query, [user_id, question, input1, input2, input3, input4, input5]);
+    } catch (err) {
+        console.log("error happened");
+        console.error('Error in insertTopFive:', err);
+        throw err;
+    }
+  }
+
+export async function getTopFive(user_id){
+    return new Promise((resolve, reject) => {
+        console.log(user_id);
+        const query = `SELECT question, input1, input2, input3, input4, input5 FROM ${tableNames.u_topfive} WHERE user_id = ?`;
+
+        db.query(query, [user_id], (err, results) => {
+            if (err) {
+                console.error("Error getting top five", err);
+                reject(err);
+                return;
+            }
+
+            if (results.length > 0) {
+                console.log("bruh")
+                resolve(results[0]); // resolve with the first row of the results
+            } else {
+                console.log("what")
+                resolve(null); // resolve with null if no results
+            }
+        });
+    });
+}

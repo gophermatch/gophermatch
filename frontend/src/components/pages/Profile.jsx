@@ -10,9 +10,23 @@ export default function ProfilePage() {
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [profileMode, setProfileMode] = useState(0);
+  const [top5, setTop5] = useState(['', '', '', '', '']);
+  const [top5Question, setTop5Question] = useState('Top 5 cakes');
   const [selectedButton, setSelectedButton] = useState('dorm');
 
   useEffect(() => {
+    backend.get('/profile/get-topfive', {params: {user_id: currentUser.user_id}}).then((res) => {
+      const top5Inputs = [
+        res.data.input1,
+        res.data.input2,
+        res.data.input3,
+        res.data.input4,
+        res.data.input5
+      ];
+      const top5Question = res.data.question;
+      setTop5(top5Inputs);
+      setTop5Question(top5Question);
+    })
     fetchProfile();
   }, []);
 
@@ -80,6 +94,23 @@ export default function ProfilePage() {
   };
 
   const handleSaveChanges = async () => {
+    console.log(currentUser.user_id);
+    console.log(top5Question);
+    console.log(top5[0]);
+    console.log(top5[1]);
+    console.log(top5[2]);
+    console.log(top5[3]);
+    console.log(top5[4]);
+
+    backend.put('/profile/insert-topfive', {
+      user_id: currentUser.user_id,
+      question: top5Question,
+      input1: top5[0],
+      input2: top5[1],
+      input3: top5[2],
+      input4: top5[3],
+      input5: top5[4]
+    }).then(res => console.log("Success saving top5: ", res))
     try {
         let newRent, newMove_in_date, newMove_out_date = null;
 
@@ -125,6 +156,7 @@ export default function ProfilePage() {
         if (payload.apartmentInfo.rent < 100 || payload.apartmentInfo.rent > 9999){
           throw new Error('Rent out of bounds!')
         }
+        backend.put('/profile')
         await backend.put('/profile', payload);
         alert('Profile updated successfully!');
         setProfile({ ...editedProfile, apartmentData: payload.apartmentInfo || {}});
@@ -164,6 +196,10 @@ export default function ProfilePage() {
         apartmentData={isEditing ? editedProfile.apartmentData : profile.apartmentData}
         handleQnaChange={handleQnaChange}
         handleTextChange={handleTextChange}
+        top5={top5}
+        setTop5={setTop5}
+        top5Question={top5Question}
+        setTop5Question={setTop5Question}
         dormMode={profileMode}
       />
       {!isEditing && (

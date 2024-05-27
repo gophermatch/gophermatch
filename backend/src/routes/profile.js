@@ -7,7 +7,8 @@ import {
     getApartmentProfile,
     updateProfile,
     savePictureUrl,
-    retrievePictureUrls, createBio, removePicture, updateApartmentInfo
+    retrievePictureUrls, createBio, removePicture, updateApartmentInfo,
+    insertTopFive, getTopFive
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -15,8 +16,6 @@ import { azureStorageConfig } from "../env.js";
 
 const upload = multer({ dest: 'uploads/' }); // Temporarily stores files in 'uploads/' directory
 const router = Router();
-
-export default router
 
 // GET api/profile/
 router.get('/', async (req, res) => {
@@ -54,7 +53,8 @@ router.put('/', async (req, res) => {
     const user_id = req.body.user_id
     const profile = req.body.profile
     const updatingApartment = req.body.updating_apartment
-    delete profile.user_id // prevent user from chaning the user_id of their profile record
+    //delete profile.user_id // prevent user from chaning the user_id of their profile record
+    // Note: commented out because it wasn't letting insert top 5 work
 
     if (!user_id || !profile) {
         res.status(400).json(createErrorObj("Must specify the user_id and profile object to update the profile!"))
@@ -206,3 +206,34 @@ router.delete('/remove-picture', async (req, res) => {
         return res.status(500).json(createErrorObj("Failed to remove picture. Please try again later."));
     }
 });
+
+router.put('/insert-topfive', async (req, res) => {
+    const {user_id, question, input1, input2, input3, input4, input5} = req.body;
+    console.log("id: ", user_id, " question: ", question, " input1: ", input1)
+    if (!user_id || !question || !input1){
+        return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
+    }
+
+    try {
+        await insertTopFive(user_id, question, input1, input2, input3, input4, input5);
+        return res.status(200).json({ message: "Inserted an option for top five" });
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to insert option for top five."));
+    }
+});
+
+router.get('/get-topfive', async (req, res) => {
+    const {user_id} = req.query;
+    if (!user_id){
+        return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
+    }
+
+    try {
+        const optInput = await getTopFive(user_id);
+        return res.json(optInput);
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to get top five."));
+    }
+});
+
+export default router
