@@ -12,6 +12,7 @@ export default function ProfilePage() {
   const [profileMode, setProfileMode] = useState(0);
   const [top5, setTop5] = useState(['', '', '', '', '']);
   const [top5Question, setTop5Question] = useState('Top 5 cakes');
+  const [selectedButton, setSelectedButton] = useState('dorm');
 
   useEffect(() => {
     backend.get('/profile/get-topfive', {params: {user_id: currentUser.user_id}}).then((res) => {
@@ -171,6 +172,11 @@ export default function ProfilePage() {
     setIsEditing(true);
   };
 
+  const handleButtonClick = (mode) => {
+    setProfileMode(mode);
+    setSelectedButton(mode === 0 ? 'dorm' : 'apartment');
+  };
+
   if (error) {
     return <p>{error}</p>;
   }
@@ -196,26 +202,52 @@ export default function ProfilePage() {
         setTop5Question={setTop5Question}
         dormMode={profileMode}
       />
-      <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw] z-10">
-        <button onClick={() => setProfileMode(0)}
-          className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">Dorm</button>
-        <button onClick={() => setProfileMode(1)}
-          className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">Apt.</button>
-      </div>
       {!isEditing && (
-        <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center">
-          <button className="text-white text-[2.5vh] ml-[15vw] h-[5vh] w-[6vw] mb-[6vh] bg-maroon_new hover:bg-maroon rounded-full" onClick={toggleEditMode}>
-            Edit
-          </button>
-        </div>
-      )}
+      <span className="absolute right-[9vw] top-[15vh] scale-90 hover:scale-110 transition-transform">
+      <button onClick={toggleEditMode}>
+        <svg width="8vw" height="8vh" viewBox="0 0 24 24" stroke="maroon" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21.2799 6.40005L11.7399 15.94C10.7899 16.89 7.96987 17.33 7.33987 16.7C6.70987 16.07 7.13987 13.25 8.08987 12.3L17.6399 2.75002C17.8754 2.49308 18.1605 2.28654 18.4781 2.14284C18.7956 1.99914 19.139 1.92124 19.4875 1.9139C19.8359 1.90657 20.1823 1.96991 20.5056 2.10012C20.8289 2.23033 21.1225 2.42473 21.3686 2.67153C21.6147 2.91833 21.8083 3.21243 21.9376 3.53609C22.0669 3.85976 22.1294 4.20626 22.1211 4.55471C22.1128 4.90316 22.0339 5.24635 21.8894 5.5635C21.7448 5.88065 21.5375 6.16524 21.2799 6.40005V6.40005Z" stroke="black" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11 4H6C4.93913 4 3.92178 4.42142 3.17163 5.17157C2.42149 5.92172 2 6.93913 2 8V18C2 19.0609 2.42149 20.0783 3.17163 20.8284C3.92178 21.5786 4.93913 22 6 22H17C19.21 22 20 20.2 20 18V13" stroke="maroon" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </span>
+    
+    
+        )}
+      <div className="absolute top-[9vh] ml-[11vw] text-[1vw] z-10">
+  <button
+    onClick={() => handleButtonClick(0)}
+    className={`w-[16vh] rounded-tl-[1vh] rounded-tr-[1vh] text-center align-middle font-bold shadow-md ${
+      selectedButton === 'dorm' ? 'bg-maroon_new text-white h-[4.25vh] mb-[0.25vh]' : 'bg-maroon_dark text-inactive_gray hover:bg-maroon_transparent h-[4vh]'
+    }`}
+  >
+    Dorm
+  </button>
+  <button
+    onClick={() => handleButtonClick(1)}
+    className={`w-[16vh] rounded-tl-[1vh] rounded-tr-[1vh] text-center align-middle font-bold shadow-md ${
+      selectedButton === 'apartment' ? 'bg-maroon_new text-white h-[4.25vh] mb-[0.25vh]' : 'bg-maroon_dark text-inactive_gray hover:bg-maroon_transparent h-[4vh]'
+    }`}
+  >
+    Apartment
+  </button>
+</div>
       {isEditing && (
-        <div className="fixed bottom-0 left-0 right-0 flex justify-center">
-          <button className="text-white text-[2.5vh] h-[5vh] w-[8vw] ml-[14vw] mb-[6vh] bg-maroon_new hover:bg-maroon rounded-full mr-4" onClick={handleSaveChanges}>
-            Save
+        <div className="fixed top-[12vh] right-[20vh] flex justify-center">
+          <button onClick={handleSaveChanges}>
+          <svg 
+                  width="5vw" 
+                  height="12vh" 
+                  viewBox="0 0 64 64" 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  fill="none"
+                  className="hover:stroke-gold mr-[1vw] scale-90 hover:scale-125 transition-transform" 
+                  stroke="maroon"><polyline points="12 28 28 44 52 20"/>
+                  </svg>
+
           </button>
-          <button className="text-[2.5vh] h-[5vh] w-[8vw] bg-inactive_gray mb-[5vh] rounded-full" onClick={toggleEditMode}>
-            Cancel
+          <button className="text-[7vh] mb-[1vh] text-gold font-thin hover:text-maroon scale-90 hover:scale-125 transition-transform" onClick={toggleEditMode}>
+            x
           </button>
         </div>
       )}

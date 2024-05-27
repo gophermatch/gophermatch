@@ -115,3 +115,29 @@ export async function updateAccountInfo(userdata, userId){
     });
 }
 
+export async function insertAccountInfo(userdata, userId){
+    console.log(userdata);
+    const filteredNewVals = Object.entries(userdata).reduce((acc, [key, value]) => {
+        if(value !== '') acc[key] = value;
+        return acc;
+    }, {});
+
+    if (Object.keys(filteredNewVals).length === 0) {
+        console.log("No valid data provided for insert.");
+        return Promise.resolve("No update performed due to lack of valid data.");
+    }
+
+    const updateQuery = buildInsertString(tableNames.u_userdata, filteredNewVals);
+    console.log("query: " + updateQuery.queryString);
+
+    return new Promise((resolve, reject) => {
+        db.query(updateQuery.queryString, updateQuery.values,
+          (err, res) => {
+              if (err) {
+                  reject(err);
+                  return;
+              }
+              resolve(res);
+          })
+    });
+}

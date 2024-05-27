@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import backend from '../../backend';
 import qnaOptions from './qnaOptions.json';
-import currentUser from "../../currentUser.js";
 
 const defaultUserdata = {
     gender: {},
@@ -74,20 +72,21 @@ const UserDataItem = function({k, value, userData, setUserData}) {
     </label>
 }
 
-export default function Filter({setFilterResults}) {
+export default function Filter({setFiltersExternal, setUserDataExternal, profileMode}) {
     const [isOpen, setIsOpen] = useState(false);
     const [openedDropdowns, setOpenedDropdowns] = useState({});
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState(defaultUserdata);
 
-    function requestFilterResults() {
-        backend.post('/match/filter-results', {user_id: currentUser.user_id, userData, filters}, {withCredentials: true}).then((res) => {
-            setFilterResults(res.data)
-            console.log("Filtered profiles: ", res.data);
-        });
+    // Pass filters and userData to the parent component (Match.jsx)
+    const updateExternals = () => {
+        setFiltersExternal(filters);
+        setUserDataExternal(userData);
     }
 
-    useEffect(requestFilterResults, []);
+    const collapseAll = () => {
+        setOpenedDropdowns([]);
+    }
 
     return(
         <div>
@@ -130,13 +129,17 @@ export default function Filter({setFilterResults}) {
                         </button>
                         <div
                           className={`${openedDropdowns["Grad. Year"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                            <UserDataItem userData={userData} k="graduating_year" value="Freshman"
+                            <UserDataItem userData={userData} k="graduating_year" value="2025"
                                           setUserData={setUserData} />
-                            <UserDataItem userData={userData} k="graduating_year" value="Sophomore"
+                            <UserDataItem userData={userData} k="graduating_year" value="2026"
                                           setUserData={setUserData} />
-                            <UserDataItem userData={userData} k="graduating_year" value="Junior"
+                            <UserDataItem userData={userData} k="graduating_year" value="2027"
                                           setUserData={setUserData} />
-                            <UserDataItem userData={userData} k="graduating_year" value="Senior"
+                            <UserDataItem userData={userData} k="graduating_year" value="2028"
+                                          setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="2029"
+                                          setUserData={setUserData} />
+                            <UserDataItem userData={userData} k="graduating_year" value="2030"
                                           setUserData={setUserData} />
                         </div>
                     </div>
@@ -200,38 +203,27 @@ export default function Filter({setFilterResults}) {
                         </button>
                         <div
                           className={`${openedDropdowns["Room Use"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                            <NormalFilterItem optionId={getIdFromOptionText(3, "Empty")} filters={filters}
+                            <NormalFilterItem optionId={getIdFromOptionText(6, "Empty")} filters={filters}
                                               setFilters={setFilters} />
-                            <NormalFilterItem optionId={getIdFromOptionText(3, "Friends")} filters={filters}
+                            <NormalFilterItem optionId={getIdFromOptionText(6, "Friends")} filters={filters}
                                               setFilters={setFilters} />
-                            <NormalFilterItem optionId={getIdFromOptionText(3, "Party")} filters={filters}
-                                              setFilters={setFilters} />
-                        </div>
-                    </div>
-                    <div className="relative">
-                        <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Room Use"))}
-                                className="bg-white w-[9.4vw] h-[4.5vh] rounded-xl px-[1.5vw] py-[1vh] hover:bg-gold hover:text-white">Room
-                            Use
-                        </button>
-                        <div
-                          className={`${openedDropdowns["Room Use"] ? "block" : "hidden"} absolute bg-white border-[0.5px] border-black mt-2 rounded-lg left-0 right-0 overflow-hidden p-[5px]`}>
-                            <NormalFilterItem optionId={getIdFromOptionText(3, "Empty")} filters={filters}
-                                              setFilters={setFilters} />
-                            <NormalFilterItem optionId={getIdFromOptionText(3, "Friends")} filters={filters}
-                                              setFilters={setFilters} />
-                            <NormalFilterItem optionId={getIdFromOptionText(3, "Party")} filters={filters}
+                            <NormalFilterItem optionId={getIdFromOptionText(6, "Party")} filters={filters}
                                               setFilters={setFilters} />
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-between space-x-[0.7vw] w-[9.4vw] h-[4.5vh]">
-                    <button onClick={requestFilterResults}
+                <div className="flex justify-between ml-[0.5vw] space-x-[0.7vw] w-[9.4vw] h-[4.5vh]">
+                    <button onClick={() => {
+                        updateExternals();
+                        collapseAll();
+                    }}
                             className="flex-1 p-[5px] bg-maroon_new hover:bg-gold rounded-md text-sm"><img
                       className="w-full h-full object-contain" alt="checkmark"
                       src={"../assets/images/checkmark.png"}></img></button>
                     <button onClick={() => {
                         setFilters([]);
                         setUserData(defaultUserdata);
+                        collapseAll();
                     }} className="flex-1 p-[5px] bg-maroon_new hover:bg-gold rounded-md text-sm"><img
                       className="w-full h-full object-contain"
                       alt="checkmark"
@@ -239,9 +231,15 @@ export default function Filter({setFilterResults}) {
                     </button>
                 </div>
             </div>
-            <img onClick={() => setIsOpen(isOpen => !isOpen)}
+            <img onClick={() => {
+                if(isOpen){
+                    collapseAll();
+                }
+
+              setIsOpen(isOpen => !isOpen);
+            }}
                  src={`../assets/images/${isOpen ? "dropup" : "dropdown"}.png`}
-                 className={`absolute ${isOpen ? "top-[13vh]" : "top-0"} right-[10vh] ml-auto mr-auto w-[7vh] h-[7vh]`} />
+                 className={`absolute duration-[400ms] ${isOpen ? "top-[5.5vh]" : "top-0"} right-[10vh] ml-auto mr-auto w-[7vh] h-[7vh]`} />
         </div>
     );
 }
