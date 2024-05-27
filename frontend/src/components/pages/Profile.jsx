@@ -37,7 +37,6 @@ export default function ProfilePage() {
         withCredentials: true,
       });
       const profileData = response.data;
-      console.log(response.data);
       setProfile(profileData);
       setEditedProfile({ ...profileData, qnaAnswers: profileData.qnaAnswers || {}, apartmentData: profileData.apartmentData || {} })
     } catch (error) {
@@ -94,14 +93,6 @@ export default function ProfilePage() {
   };
 
   const handleSaveChanges = async () => {
-    console.log(currentUser.user_id);
-    console.log(top5Question);
-    console.log(top5[0]);
-    console.log(top5[1]);
-    console.log(top5[2]);
-    console.log(top5[3]);
-    console.log(top5[4]);
-
     backend.put('/profile/insert-topfive', {
       user_id: currentUser.user_id,
       question: top5Question,
