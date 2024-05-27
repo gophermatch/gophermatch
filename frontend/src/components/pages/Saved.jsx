@@ -128,7 +128,7 @@ export default function Saved() {
                             </svg>
                             </button>
                             <button
-                                className="hover:text-maroon text-inactive_gray mr-[1.1vw] text-[2.125vh]"
+                                className="hover:text-maroon text-inactive_gray mr-[1.1vw] text-[2.125vh] font-extralight"
                                 onClick={() => unmatch(person.user_id)}>
                                 X
                             </button>
