@@ -144,6 +144,7 @@ export default function Inbox({ user_data }) {
                                     </div>
                                 </div>
                             </div>
+                        </div>
                         ))}
                         <div className="flex text-start justify-start font-medium">
                             <span className="text-maroon text-start text-[2vh] ml-[0.5vw] mt-[2vh] mb-[1vh] font-roboto justify-start">Subleases</span>
