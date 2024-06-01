@@ -7,7 +7,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Layout from "./components/Layout.jsx"
 import Match from "./components/pages/Match.jsx"
-import Profile from "./components/pages/Profile.jsx"
+import Profile from "./components/pages/ProfilePage.jsx"
 import Settings from "./components/pages/Settings.jsx"
 import Inbox from "./components/pages/Inbox.jsx";
 import Login from "./components/pages/Login.jsx"

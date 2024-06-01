@@ -2,7 +2,7 @@ import kanye from '../../assets/images/kanye.png'
 import TemplateProfile from '../../TemplateProfile.json'
 import backend from '../../backend.js'
 import { useEffect, useState } from 'react'
-import Profile from '../ui-components/Profile.jsx'
+import { ProfileCard } from '../ui-components/ProfileCard'
 import currentUser from '../../currentUser.js'
 import { Link } from 'react-router-dom'
 
@@ -93,7 +93,7 @@ export default function Saved() {
         <div className="p-8">
             {selectedProfile && (
                 <div className="ml-[7vw]" style={{ width: '80%', height: '40%' }}>
-                    <Profile user_data={selectedProfile} editedBio={selectedProfile.bio} qnaAnswers={selectedProfile.qnaAnswers} dormMode={1} editable={false} />
+                    <ProfileCard user_data={selectedProfile} editedBio={selectedProfile.bio} qnaAnswers={selectedProfile.qnaAnswers} dormMode={1} editable={false} />
                     <button onClick={() => setSelectedProfile(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
                 </div>
             )}

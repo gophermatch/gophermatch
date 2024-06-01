@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Profile from '../ui-components/Profile';
+import { ProfileCard} from '../ui-components/ProfileCard';
 import currentUser from '../../currentUser';
 import backend from '../../backend';
 import { Link } from "react-router-dom";
@@ -187,7 +187,7 @@ export default function ProfilePage() {
 
   return (
     <div>
-      <Profile
+      <ProfileCard
         user_data={currentUser.user_data}
         editable={isEditing}
         editedBio={isEditing ? editedProfile.bio : profile.bio}

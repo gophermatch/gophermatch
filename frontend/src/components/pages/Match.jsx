@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Profile from '../ui-components/Profile';
+import { ProfileCard } from '../ui-components/ProfileCard';
 import Filter from '../ui-components/Filter';
 import backend from '../../backend';
 import currentUser from '../../currentUser';
@@ -73,7 +73,7 @@ export default function Match() {
     return (
       <div>
           <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={profileMode}/>
-          <Profile
+          <ProfileCard
             user_data={filterResults[currentIndex]?.user_data}
             qnaAnswers={filterResults[currentIndex]?.profile_data?.qnaAnswers}
             editedBio={filterResults[currentIndex]?.profile_data?.bio}
