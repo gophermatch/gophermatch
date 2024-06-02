@@ -25,21 +25,43 @@ export function ProfileCard({
 }) {
   return (
     <div className={`m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
-      <div className={"w-full flex flex-col h-[70vh] mb-[4vh] bg-white rounded-3xl overflow-hidden"}>
-        <div className={"flex p-[4vh] h-full w-full gap-[3vh]"}>
-          <div className="w-[30vh] h-full border-solid border-2 border-red">
+      <div className={"w-full flex flex-col h-[70vh] mb-[4vh] bg-white rounded-lg overflow-hidden"}>
+        <div className={"flex p-[4vh] h-full w-full gap-[2vh]"}>
+          <div className="w-[30vh] h-full rounded-lg border-solid border-2 border-maroon">
             {/* Carousel */}
+            Carousel here
           </div>
-          <div className="flex flex-col gap-[3vh] grow">
-            <div className="grow border-solid border-2 border-maroon">
-              {/* Name, bio */}
-            </div>
-            <div className="flex grow gap-[3vh]">
-              <div className="grow-[3] border-solid border-2 border-gold">
-                {/* Apt/Dorm */}
+          <div className="flex flex-col gap-[2vh] grow">
+            <div className="flex grow-[2] flex-col gap-[2vh]">
+              <div className={"flex grow-[2] border-dotted border-2 border-black"}>
+                {/* Name */}
+                Name and major here
               </div>
-              <div className="grow-[2] border-solid border-2 border-gold">
-                {/* Qna */}
+              <div className={"flex rounded-lg grow-[5] border-solid border-2 border-maroon"}>
+                {/* Bio */}
+                Bio here
+              </div>
+            </div>
+            <div className="flex grow-[3] gap-[2vh]">
+              <div className="grow-[2] flex flex-col gap-[2vh]">
+              <div className={"flex grow-[5] rounded-lg border-solid border-2 border-maroon"}>
+                    {/* Apt/Dorm */}
+                Apt/dorm info here
+                  </div>
+                  <div className={"flex grow-[3] rounded-lg border-solid border-2 border-maroon"}>
+                    {/* QNA */}
+                    Qna here
+                  </div>
+                </div>
+              <div className="grow-[2] flex flex-col gap-[2vh]">
+                <div className={"flex grow-[3] rounded-lg border-solid border-2 border-maroon"}>
+                  {/* Poll */}
+                  Poll here
+                </div>
+                <div className={"flex grow-[1] rounded-lg border-solid border-2 border-maroon"}>
+                  {/* Sleep schedule */}
+                  Sleep sched here
+                </div>
               </div>
             </div>
           </div>
