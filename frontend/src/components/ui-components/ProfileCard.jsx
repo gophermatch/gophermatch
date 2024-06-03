@@ -24,15 +24,15 @@ export function ProfileCard({
   aptOrDormData,
 }) {
   return (
-    <div className={`m-auto w-[65vw] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
-      <div className={"w-full flex flex-col h-[70vh] mb-[4vh] bg-white rounded-lg overflow-hidden"}>
-        <div className={"flex p-[4vh] h-full w-full gap-[2vh]"}>
+    <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
+      <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
+        <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
           <div className="w-[30vh] h-full rounded-lg border-solid border-2 border-maroon">
             {/* Carousel */}
             Carousel here
           </div>
-          <div className="flex flex-col gap-[2vh] grow">
-            <div className="flex grow-[2] flex-col gap-[2vh]">
+          <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
+            <div className="flex grow-[2] flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className={"flex grow-[2] border-dotted border-2 border-black"}>
                 {/* Name */}
                 Name and major here
@@ -42,8 +42,8 @@ export function ProfileCard({
                 Bio here
               </div>
             </div>
-            <div className="flex grow-[3] gap-[2vh]">
-              <div className="grow-[2] flex flex-col gap-[2vh]">
+            <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
+              <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className={"flex grow-[5] rounded-lg border-solid border-2 border-maroon"}>
                     {/* Apt/Dorm */}
                 Apt/dorm info here
@@ -53,7 +53,7 @@ export function ProfileCard({
                     Qna here
                   </div>
                 </div>
-              <div className="grow-[2] flex flex-col gap-[2vh]">
+              <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[3] rounded-lg border-solid border-2 border-maroon"}>
                   {/* Poll */}
                   Poll here
