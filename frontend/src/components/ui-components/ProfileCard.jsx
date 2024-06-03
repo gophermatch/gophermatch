@@ -15,6 +15,8 @@ type aptOrDormData = {
   tags: string[]
 }
 */
+import ApartmentInfo from "./ProfileCardContent/ApartmentInfo.jsx";
+
 export function ProfileCard({
   name,
   major,
@@ -27,7 +29,7 @@ export function ProfileCard({
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
       <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
-          <div className="w-[30vh] h-full rounded-lg border-solid border-2 border-maroon">
+          <div className="w-[30vh] h-full rounded-lg border-solid border-2 border-maroon min-w-[25%]">
             {/* Carousel */}
             Carousel here
           </div>
@@ -43,10 +45,10 @@ export function ProfileCard({
               </div>
             </div>
             <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-              <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-              <div className={"flex grow-[5] rounded-lg border-solid border-2 border-maroon"}>
+              <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[50%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
+              <div className={"flex grow-[5] overflow-y-auto overflow-x-hidden max-h-40"}>
                     {/* Apt/Dorm */}
-                Apt/dorm info here
+                  <ApartmentInfo/>
                   </div>
                   <div className={"flex grow-[3] rounded-lg border-solid border-2 border-maroon"}>
                     {/* QNA */}
