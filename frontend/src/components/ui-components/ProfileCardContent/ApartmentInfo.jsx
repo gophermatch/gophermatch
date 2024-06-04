@@ -1,7 +1,7 @@
 import React from "react";
 import ApartmentTag from "./ApartmentTag.jsx";
 
-export default function ApartmentInfo() {
+export default function ApartmentInfo({qnaInfo}) {
   return (
     <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-xl font-roboto_slab font-medium"}>
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
@@ -23,31 +23,17 @@ export default function ApartmentInfo() {
           </div>
         </div>
         {/*Bottom panel with tags*/}
-        <div className={"flex w-full p-2 max-h-[80%] grow-[0] flex-wrap gap-1 overflow-y-scroll"}>
+        <div className={"flex w-full p-2 max-h-[80%] grow-[0] flex-wrap gap-1 overflow-y-scroll"} style={{
+          WebkitOverflowScrolling: 'touch',
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          },
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar': {
+            width: '0'
+          }
+        }}>
           <ApartmentTag text="Gym" />
-          <ApartmentTag text="Needs Parking" />
-          <ApartmentTag text="Laundry" />
-          <ApartmentTag text="Pet(s)" />
-          <ApartmentTag text="Fully Furnished" />
-          <ApartmentTag text="Dinkytown" />
-          <ApartmentTag text="Stadium Village" />
-          <ApartmentTag text="Marcy-Holmes" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Needs Parking" />
-          <ApartmentTag text="Laundry" />
-          <ApartmentTag text="Pet(s)" />
-          <ApartmentTag text="Fully Furnished" />
-          <ApartmentTag text="Dinkytown" />
-          <ApartmentTag text="Stadium Village" />
-          <ApartmentTag text="Marcy-Holmes" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Needs Parking" />
-          <ApartmentTag text="Laundry" />
-          <ApartmentTag text="Pet(s)" />
-          <ApartmentTag text="Fully Furnished" />
-          <ApartmentTag text="Dinkytown" />
-          <ApartmentTag text="Stadium Village" />
-          <ApartmentTag text="Marcy-Holmes" />
         </div>
       </div>
     </div>
