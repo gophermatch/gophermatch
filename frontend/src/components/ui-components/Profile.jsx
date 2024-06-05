@@ -147,7 +147,7 @@ export default function Profile({ user_data, editable, handleBioChange, handleQn
               <Carousel pictureUrls={pictureUrls} editable={editable}></Carousel>
             </div>
             <div className={"flex-grow flex flex-col bg-white"}>
-              <BioBox editable={editable} editedBio={editedBio} handleBioChange={handleBioChange}/>
+              <BioBox user_data={user_data} editable={editable} editedBio={editedBio} handleBioChange={handleBioChange}/>
             </div>
           </div>
           <div className={`${dormMode === 0 ? "block" : "hidden"} flex flex-grow`}>
