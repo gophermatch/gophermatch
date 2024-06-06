@@ -16,6 +16,8 @@ type aptOrDormData = {
 }
 */
 import ApartmentInfo from "./ProfileCardContent/ApartmentInfo.jsx";
+import Carousel from './ProfileCardContent/Carousel.jsx';
+import React, { useEffect, useState } from "react";
 
 export function ProfileCard({
                               user_data,
@@ -32,13 +34,36 @@ export function ProfileCard({
                               setTop5Question,
                               dormMode
                             }) {
+
+  const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
+  useEffect(() => {
+    fetchPictureUrls();
+  }, [user_data]);
+
+  const fetchPictureUrls = async () => {
+    try {
+      const response = await backend.get("/profile/user-pictures", {
+        params: {user_id: user_data.user_id},
+        withCredentials: true,
+      });
+      if (response) {
+        const data = response.data;
+
+        setPictureUrls(data.pictureUrls)
+      } else {
+        throw new Error("Failed to fetch picture URLs");
+      }
+    } catch (error) {
+      console.error("Error fetching picture URLs:", error);
+    }
+  };
+
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
       <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
           <div className="w-[30vh] h-full rounded-lg border-solid border-2 border-maroon min-w-[25%]">
-            {/* Carousel */}
-            Carousel here
+              <Carousel className="w-full h-[60vh]" pictureUrls={pictureUrls} editable={editable}></Carousel>
           </div>
           <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
             <div className="flex grow-[2] flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">

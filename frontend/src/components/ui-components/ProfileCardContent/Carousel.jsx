@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../assets/css/carousel.module.css';
+import styles from '../../../assets/css/carousel.module.css';
 
 export default function Carousel({ editable, pictureUrls }) {
     const [position, setPosition] = useState(0);
