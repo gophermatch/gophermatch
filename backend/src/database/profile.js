@@ -59,7 +59,7 @@ GROUP BY
     u_generaldata.sleep_time;
 `;
 
-          db.query(qr.queryString, (err, rows) => {
+          db.query(qr, (err, rows) => {
               if (err) {
                   resolveProfile({}); // Don't return a bio if not found
                   return;
