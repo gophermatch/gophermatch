@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ApartmentTag from "./ApartmentTag.jsx";
 
-export default function ApartmentInfo({qnaInfo}) {
+export default function ApartmentInfo({qnaAnswers, apartmentData}) {
+  useEffect(() => {
+    console.log(qnaAnswers);
+    console.log(apartmentData)
+  }, []);
+
   return (
     <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-xl font-roboto_slab font-medium"}>
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
         {/*Top header panel with apt name*/}
         <div className={"flex grow-[1]"}>
-          Looking to live in Fieldhouse
+          Looking to live in {qnaAnswers[13]}
         </div>
         {/*Middle info panel with apt info*/}
         <div className={"flex grow-[1] w-full justify-center items-center flex-col font-[350]"}>

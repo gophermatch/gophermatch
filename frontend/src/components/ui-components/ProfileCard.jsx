@@ -55,7 +55,7 @@ export function ProfileCard({
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className={"flex grow-[5] overflow-y-auto overflow-x-hidden max-h-40"}>
                   {/* Apt/Dorm */}
-                  <ApartmentInfo/>
+                  <ApartmentInfo qnaAnswers={qnaAnswers} apartmentData={apartmentData}/>
                   </div>
                   <div className={"flex grow-[3] rounded-lg border-solid border-2 border-maroon"}>
                     {/* QNA */}
