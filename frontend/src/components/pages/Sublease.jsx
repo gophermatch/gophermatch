@@ -118,7 +118,7 @@ export default function Sublease()
         }
       }}>
 
-        <Link to={"/createsublease"} color="primary" className={"flex flex-1 w-[70vw] mt-[4vh] h-[10vh] m-auto bg-white text-lg text-black transition-transform duration-500 scale-[98%] hover:scale-100"}>
+        <Link to={"/createsublease"} color="primary" className={"rounded-md flex flex-1 w-[70vw] mt-[4vh] h-[7vh] m-auto bg-white text-lg text-black transition-transform duration-500 scale-[96%] hover:scale-[98%]"}>
           <p className={"m-auto"}>{userSublease==null ? "Add your sublease" : "Edit your sublease"}</p>
         </Link>
         {subleases.length > 0 ? subleases.map(item => (

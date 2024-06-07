@@ -1,0 +1,6 @@
+CREATE TABLE u_generaldata (
+    user_id INT UNIQUE,
+    wakeup_time INT DEFAULT 80,
+    sleep_time INT DEFAULT 144,
+    PRIMARY KEY (user_id)
+);

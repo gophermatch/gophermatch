@@ -3,14 +3,63 @@ import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateStri
 import{generateBlobSasUrl} from '../blobService.js'
 
 
-// Returns bio of given user_id
+// Returns profile data of given user_id
 export async function getProfile(user_id) {
-  return new Promise((resolve, reject) => {
-      // Fetching the user's profile
-      const profilePromise = new Promise((resolveProfile) => {
-          const qr = buildSelectString("*", tableNames.u_bios, { user_id });
+  return new Promise((resolveProfile) => {
+          const qr = `
+SELECT 
+    u_userdata.user_id,
+    u_userdata.first_name,
+    u_userdata.last_name,
+    u_userdata.major,
+    u_userdata.graduating_year,
+    u_bios.bio,
+    JSON_ARRAY(u_apartment.rent, u_apartment.move_in_date, u_apartment.move_out_date) AS apartment_data,
+    GROUP_CONCAT(DISTINCT CONCAT(u_tags.tag_id, ':', u_tags.tag_value) ORDER BY u_tags.tag_id SEPARATOR ', ') AS tags,
+    u_pollquestions.question_text AS poll_question,
+    JSON_ARRAY(qna.qna_data) AS qna,
+    JSON_ARRAY(u_generaldata.wakeup_time, u_generaldata.sleep_time) AS sleep_schedule
+FROM 
+    u_userdata
+LEFT JOIN 
+    u_bios ON u_userdata.user_id = u_bios.user_id
+LEFT JOIN 
+    u_apartment ON u_userdata.user_id = u_apartment.user_id
+LEFT JOIN 
+    u_tags ON u_userdata.user_id = u_tags.user_id
+LEFT JOIN 
+    u_pollquestions ON u_userdata.user_id = u_pollquestions.user_id
+LEFT JOIN 
+    u_polloptions ON u_userdata.user_id = u_polloptions.user_id
+LEFT JOIN 
+    (
+        SELECT 
+            user_id,
+            JSON_ARRAYAGG(JSON_OBJECT('question_id', question_id, 'option_id', option_id)) AS qna_data
+        FROM 
+            u_qna
+        GROUP BY 
+            user_id
+    ) AS qna ON u_userdata.user_id = qna.user_id
+LEFT JOIN 
+    u_generaldata ON u_userdata.user_id = u_generaldata.user_id
+WHERE
+    u_userdata.user_id = ${user_id}
+GROUP BY 
+    u_userdata.user_id,
+    u_userdata.first_name,
+    u_userdata.last_name,
+    u_userdata.major,
+    u_userdata.graduating_year,
+    u_bios.bio,
+    u_apartment.rent,
+    u_apartment.move_in_date,
+    u_apartment.move_out_date,
+    u_generaldata.wakeup_time,
+    u_generaldata.sleep_time;
+`;
 
-          db.query(qr.queryString, qr.values, (err, rows) => {
+          db.query(qr.queryString, (err, rows) => {
               if (err) {
                   resolveProfile({}); // Don't return a bio if not found
                   return;
@@ -25,117 +74,6 @@ export async function getProfile(user_id) {
               }
           });
       });
-
-      // Fetching the user's QnA answers
-      const qnaPromise = new Promise((resolveQnA) => {
-          const qnaQr = buildSelectString("*", tableNames.u_qna, { user_id });
-
-          db.query(qnaQr.queryString, qnaQr.values, (err, rows) => {
-              if (err) {
-                  resolveQnA([]); // Default empty QnA answers
-                  return;
-              }
-
-              const qnaAnswers = rows.map(row => ({ question_id: row.question_id, option_id: row.option_id }));
-              resolveQnA(qnaAnswers);
-          });
-      });
-
-      // Combining profile data and QnA answers
-      Promise.all([profilePromise, qnaPromise])
-          .then(([profile, qnaAnswers]) => {
-              resolve({ ...profile, qnaAnswers });
-          })
-          .catch(error => reject(error));
-  });
-}
-
-//pulls profile for apartment
-export async function getApartmentProfile(user_id) {
-  return new Promise((resolve, reject) => {
-    // Fetching the user's profile
-    const profilePromise = new Promise((resolveProfile) => {
-      const qr = buildSelectString("*", tableNames.u_bios, { user_id });
-
-      db.query(qr.queryString, qr.values, (err, rows) => {
-        if (err) {
-          resolveProfile({}); // Don't return a bio if not found
-          return;
-        }
-
-        const profile = queryRowsToArray(rows);
-        if (profile.length === 1) {
-          resolveProfile(profile[0]);
-        } else {
-          // No profile found or multiple profiles found, return an empty profile
-          resolveProfile({});
-        }
-      });
-    });
-
-    // Fetching the user's QnA answers
-    const qnaPromise = new Promise((resolveQnA) => {
-      const qnaQr = buildSelectString("*", tableNames.u_qna, { user_id });
-
-      db.query(qnaQr.queryString, qnaQr.values, (err, rows) => {
-        if (err) {
-          resolveQnA([]); // Default empty QnA answers
-          return;
-        }
-
-        const qnaAnswers = rows.map(row => ({ question_id: row.question_id, option_id: row.option_id }));
-        resolveQnA(qnaAnswers);
-      });
-    });
-
-    // Fetching the user's apartment data
-    const apartmentPromise = new Promise((resolveApartment) => {
-      const apartmentQr = buildSelectString("*", tableNames.u_apartment, { user_id });
-
-      db.query(apartmentQr.queryString, apartmentQr.values, (err, rows) => {
-        if (err) {
-          resolveApartment({}); // Default empty apartment data if not found
-          return;
-        }
-
-        const apartmentData = queryRowsToArray(rows);
-        if (apartmentData.length === 1) {
-          resolveApartment(apartmentData[0]);
-        } else {
-          // No apartment data found or multiple entries found, return an empty object
-          resolveApartment({});
-        }
-      });
-    });
-
-    // Combining profile data, QnA answers, and apartment data
-    Promise.all([profilePromise, qnaPromise, apartmentPromise])
-      .then(([profile, qnaAnswers, apartmentData]) => {
-        resolve({ ...profile, qnaAnswers, apartmentData });
-      })
-      .catch(error => reject(error));
-  });
-}
-
-export async function getApartmentData(user_id){
-  return new Promise((resolveApartment) => {
-    const apartmentQr = buildSelectString("*", tableNames.u_apartment, { user_id });
-
-    db.query(apartmentQr.queryString, apartmentQr.values, (err, rows) => {
-      if (err) {
-        resolveApartment({}); // Default empty apartment data if not found
-        return;
-      }
-
-      const apartmentData = queryRowsToArray(rows);
-      if (apartmentData.length === 1) {
-        resolveApartment(apartmentData[0]);
-      } else {
-        // No apartment data found or multiple entries found, return an empty object
-        resolveApartment({});
-      }
-    });
-  });
 }
 
 // Creates and stores a profile in DB
