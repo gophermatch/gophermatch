@@ -1,8 +1,18 @@
 import { useState } from "react";
+import NameAndBio from "./ProfileCardContent/NameAndBio";
+import Top5Dorms from "./ProfileCardContent/Top5Dorms";
+import ApartmentInfo from "./ProfileCardContent/ApartmentInfo";
+import Qna from "./ProfileCardContent/Qna";
+import Poll from "./ProfileCardContent/Poll";
+import SleepSchedule from "./ProfileCardContent/SleepSchedule";
 
 /*
 interface qna {
   [question: string]: [answer: string]
+}
+interface pollData {
+  question: string
+  answers: { answer: string, votes: number }[]
 }
 interface dormData {
   type: "dorm"
@@ -24,8 +34,8 @@ interface profileData {
   pictureUrls: string[]
   qna: qna,
   sleepSchedule: { start: number, end: number }
-  aptData: aptData
-  dormData: dormData
+  pollData: pollData
+  aptOrDormData: aptData | dormData
 }
 */
 export function ProfileCard({
@@ -35,8 +45,8 @@ export function ProfileCard({
   pictureUrls,
   qna,
   sleepSchedule,
-  aptData,
-  dormData,
+  pollData,
+  aptOrDormData,
 }) {
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
@@ -46,35 +56,24 @@ export function ProfileCard({
             {/* Carousel */}
           </div>
           <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
-            <div className="flex grow-[2] flex-col">
-              <div className={"flex grow-[2] border-dashed border-2 border-black"}>
-                {/* Name */}
-                Name and major here
-              </div>
-              <div className={"flex grow-[5] border-dashed border-2 border-maroon"}>
-                {/* Bio */}
-                Bio here
-              </div>
+            <div className="flex grow-[2] flex-col border-dashed border-2 border-maroon">
+              <NameAndBio name={name} major={major} bio={bio} />
             </div>
             <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
-                  {/* Apt/Dorm */}
-                  {/* <ApartmentInfo qnaAnswers={qnaAnswers} apartmentData={apartmentData}/> */}
+                  {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo aptData={aptOrDormData}/>}
                 </div>
                   <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
-                    {/* QNA */}
-                    Qna here
+                    <Qna qna={qna} />
                   </div>
                 </div>
               <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
-                  {/* Poll */}
-                  Poll here
+                  <Poll pollData={pollData} />
                 </div>
                 <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
-                  {/* Sleep schedule */}
-                  Sleep sched here
+                  <SleepSchedule sleepSchedule={sleepSchedule} />
                 </div>
               </div>
             </div>
@@ -84,14 +83,6 @@ export function ProfileCard({
     </div>
   )
 }
-
-
-
-
-
-
-
-
 
 
 

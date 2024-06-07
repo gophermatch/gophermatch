@@ -2,6 +2,10 @@
 interface qna {
   [question: string]: [answer: string]
 }
+interface pollData {
+  question: string
+  answers: { answer: string, votes: number }[]
+}
 interface dormData {
   type: "dorm"
   top5Dorms: string[]
@@ -22,8 +26,8 @@ interface profileData {
   pictureUrls: string[]
   qna: qna,
   sleepSchedule: { start: number, end: number }
-  aptData: aptData
-  dormData: dormData
+  pollData: pollData
+  aptOrDormData: aptData | dormData
 }
 */
 export function EditProfileCard({
@@ -36,7 +40,7 @@ export function EditProfileCard({
   aptData,
   dormData,
 }) {
-  return (
+  return ( // TODO
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
       <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
