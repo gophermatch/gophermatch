@@ -5,7 +5,6 @@ import backend from '../../backend';
 import currentUser from '../../currentUser';
 
 export default function Match() {
-
     const [filterResults, setFilterResults] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
 

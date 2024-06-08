@@ -4,7 +4,6 @@ import fs from 'fs';
 import { createErrorObj } from './routeutil.js'
 import {
     getProfile,
-    getApartmentProfile,
     updateProfile,
     savePictureUrl,
     retrievePictureUrls, createBio, removePicture, updateApartmentInfo,
@@ -20,7 +19,6 @@ const router = Router();
 // GET api/profile/
 router.get('/', async (req, res) => {
     const user_id = req.query.user_id;
-    const apartment = req.query.apartment;
 
     if (!user_id) {
         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
@@ -30,13 +28,8 @@ router.get('/', async (req, res) => {
     // Validate user_id if needed
 
     try {
-        if(apartment == 0){
-            const profile = await getProfile(user_id);
-            res.status(200).json(profile);
-        } else {
-            const profile = await getApartmentProfile(user_id);
-            res.status(200).json(profile);
-        }
+        const profile = await getProfile(user_id);
+        res.status(200).json(profile);
     } catch (error) {
         console.error("Error fetching profile:", error);
         res.status(500).json(createErrorObj("Failed to fetch profile. Please try again later."));

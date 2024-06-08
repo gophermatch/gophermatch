@@ -7,7 +7,6 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Layout from "./components/Layout.jsx"
 import Match from "./components/pages/Match.jsx"
-import Profile from "./components/pages/ProfilePage.jsx"
 import Settings from "./components/pages/Settings.jsx"
 import Inbox from "./components/pages/Inbox.jsx";
 import Login from "./components/pages/Login.jsx"
@@ -23,6 +22,7 @@ import Sublease from './components/pages/Sublease.jsx'
 import Payment from './components/pages/Payment.jsx'
 import SubleaseCreation from "./components/pages/SubleaseCreation.jsx";
 import showMatch from './components/pages/ShowMatch.jsx'
+import ProfilePage from './components/pages/ProfilePage.jsx'
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
@@ -131,7 +131,7 @@ const router = createBrowserRouter([
                 loader: unauthPageRedirect
             },{
                 path: "profile",
-                element: <Profile />,
+                element: <ProfilePage />,
                 loader: unauthPageRedirect
             },{
               path: "payment",

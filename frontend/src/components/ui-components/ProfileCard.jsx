@@ -1,100 +1,79 @@
+import { useState } from "react";
+import NameAndBio from "./ProfileCardContent/NameAndBio";
+import Top5Dorms from "./ProfileCardContent/Top5Dorms";
+import ApartmentInfo from "./ProfileCardContent/ApartmentInfo";
+import Qna from "./ProfileCardContent/Qna";
+import Poll from "./ProfileCardContent/Poll";
+import SleepSchedule from "./ProfileCardContent/SleepSchedule";
 
 /*
-type qnaAnswers = {
-  question: string,
-  answer: string
-}[]
-
-type aptOrDormData = {
-  top5: string[]
-} | {
-  aptName?: string,
-  bed: number,
-  bath: number,
-  monthlyRent: number,
-  tags: string[]
+interface qna {
+  [question: string]: [answer: string]
+}
+interface pollData {
+  question: string
+  answers: { answer: string, votes: number }[]
+}
+interface dormData {
+  type: "dorm"
+  top5Dorms: string[]
+  ...maybe other dorm data later
+}
+interface aptData {
+  type: "apartment"
+  aptName:? string
+  beds: number
+  baths: number
+  monthlyRent: { min: number, max: number }
+  tags: { tag: string, enabled: boolean }
+}
+interface profileData {
+  name: string
+  major: string
+  bio: string
+  pictureUrls: string[]
+  qna: qna,
+  sleepSchedule: { start: number, end: number }
+  pollData: pollData
+  aptOrDormData: aptData | dormData
 }
 */
-import ApartmentInfo from "./ProfileCardContent/ApartmentInfo.jsx";
-import Carousel from './ProfileCardContent/Carousel.jsx';
-import React, { useEffect, useState } from "react";
-
 export function ProfileCard({
-                              user_data,
-                              editable,
-                              editedBio,
-                              handleBioChange,
-                              qnaAnswers,
-                              apartmentData,
-                              handleQnaChange,
-                              handleTextChange,
-                              top5,
-                              setTop5,
-                              top5Question,
-                              setTop5Question,
-                              dormMode
-                            }) {
-
-  const [pictureUrls, setPictureUrls] = useState(["", "", ""]);
-  useEffect(() => {
-    fetchPictureUrls();
-  }, [user_data]);
-
-  const fetchPictureUrls = async () => {
-    try {
-      const response = await backend.get("/profile/user-pictures", {
-        params: {user_id: user_data.user_id},
-        withCredentials: true,
-      });
-      if (response) {
-        const data = response.data;
-
-        setPictureUrls(data.pictureUrls)
-      } else {
-        throw new Error("Failed to fetch picture URLs");
-      }
-    } catch (error) {
-      console.error("Error fetching picture URLs:", error);
-    }
-  };
-
+  name,
+  major,
+  bio,
+  pictureUrls,
+  qna,
+  sleepSchedule,
+  pollData,
+  aptOrDormData,
+}) {
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
       <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
-          <div className="w-[30vh] h-full rounded-lg border-solid border-2 border-maroon min-w-[25%]">
-              <Carousel className="w-full h-[60vh]" pictureUrls={pictureUrls} editable={editable}></Carousel>
+          <div className="w-[30vh] h-full border-dashed border-2 border-maroon min-w-[25%]">
+            {/* Carousel */}
           </div>
           <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
-            <div className="flex grow-[2] flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-              <div className={"flex grow-[2] border-dotted border-2 border-black"}>
-                {/* Name */}
-                Name and major here
-              </div>
-              <div className={"flex rounded-lg grow-[5] border-solid border-2 border-maroon"}>
-                {/* Bio */}
-                Bio here
-              </div>
+            <div className="flex grow-[2] flex-col border-dashed border-2 border-maroon">
+              <NameAndBio name={name} major={major} bio={bio} />
             </div>
             <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-              <div className={"flex grow-[5] overflow-y-auto overflow-x-hidden max-h-40"}>
-                  {/* Apt/Dorm */}
-                  <ApartmentInfo/>
-                  </div>
-                  <div className={"flex grow-[3] rounded-lg border-solid border-2 border-maroon"}>
-                    {/* QNA */}
-                    Qna here
+                <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
+                  {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo aptData={aptOrDormData}/>}
+                </div>
+                  <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
+                    <Qna qna={qna} />
                   </div>
                 </div>
               <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-                <div className={"flex grow-[3] rounded-lg border-solid border-2 border-maroon"}>
-                  {/* Poll */}
-                  Poll here
+                <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
+                  <Poll pollData={pollData} />
                 </div>
-                <div className={"flex grow-[1] rounded-lg border-solid border-2 border-maroon"}>
-                  {/* Sleep schedule */}
-                  Sleep sched here
+                <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
+                  <SleepSchedule sleepSchedule={sleepSchedule} />
                 </div>
               </div>
             </div>
@@ -104,14 +83,6 @@ export function ProfileCard({
     </div>
   )
 }
-
-
-
-
-
-
-
-
 
 
 
