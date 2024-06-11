@@ -1,22 +1,32 @@
 import multer from 'multer';
 import { Router } from 'express';
 import fs from 'fs';
-import { createErrorObj } from './routeutil.js'
+import { createErrorObj } from './routeutil.js';
 import {
     getProfile,
     updateProfile,
     savePictureUrl,
-    retrievePictureUrls, createBio, removePicture, updateApartmentInfo,
-    insertTopFive, getTopFive
+    retrievePictureUrls,
+    createBio,
+    removePicture,
+    updateApartmentInfo,
+    insertTopFive,
+    getTopFive
 } from "../database/profile.js";
-import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
-import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
+import { uploadFileToBlobStorage, generateBlobSasUrl } from '../blobService.js';
+import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js';
 import { azureStorageConfig } from "../env.js";
 
-const upload = multer({ dest: 'uploads/' }); // Temporarily stores files in 'uploads/' directory
+const upload = multer({ dest: 'uploads/' });
 const router = Router();
 
-// GET api/profile/
+/**
+ * Retrieves a user's profile by user ID.
+ * 
+ * @route GET /api/profile/
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 router.get('/', async (req, res) => {
     const user_id = req.query.user_id;
 
@@ -25,62 +35,61 @@ router.get('/', async (req, res) => {
         return;
     }
 
-    // Validate user_id if needed
-
     try {
         const profile = await getProfile(user_id);
         res.status(200).json(profile);
     } catch (error) {
         console.error("Error fetching profile:", error);
         res.status(500).json(createErrorObj("Failed to fetch profile. Please try again later."));
-        // Log the detailed error for backend debugging:
-        // Log error using your preferred logging mechanism (console.log, Winston, etc.)
     }
 });
 
-
-// Update profile
-// PUT api/profile/
-// REQUIRES the request's Content-Type to be "application/json"
+/**
+ * Updates a user's profile.
+ * 
+ * @route PUT /api/profile/
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 router.put('/', async (req, res) => {
-    const user_id = req.body.user_id
-    const profile = req.body.profile
-    const updatingApartment = req.body.updating_apartment
-    //delete profile.user_id // prevent user from chaning the user_id of their profile record
-    // Note: commented out because it wasn't letting insert top 5 work
+    const user_id = req.body.user_id;
+    const profile = req.body.profile;
+    const updatingApartment = req.body.updating_apartment;
 
     if (!user_id || !profile) {
-        res.status(400).json(createErrorObj("Must specify the user_id and profile object to update the profile!"))
-        return
+        res.status(400).json(createErrorObj("Must specify the user_id and profile object to update the profile!"));
+        return;
     }
 
-    // If the user is updating a profile that's not their own
     if (user_id !== req.session.user.user_id) {
-        res.status(400).json(createErrorObj("Cannot update someone else's profile!"))
-        return
+        res.status(400).json(createErrorObj("Cannot update someone else's profile!"));
+        return;
     }
 
-    // Check if profile object is empty
     if (Object.keys(profile).length == 0) {
-        res.status(400).json(createErrorObj("Must provide some new values to update! (To delete a value, use the value null)"))
-        return
+        res.status(400).json(createErrorObj("Must provide some new values to update! (To delete a value, use the value null)"));
+        return;
     }
 
     try {
-        await updateProfile(user_id, profile)
-        console.log("went to apent")
-        if(updatingApartment == 1){
-            await updateApartmentInfo(user_id, req.body.apartmentInfo)
-            console.log("went to apartment")
+        await updateProfile(user_id, profile);
+        if (updatingApartment == 1) {
+            await updateApartmentInfo(user_id, req.body.apartmentInfo);
         }
-        res.status(200).json({message: "Profile updated!"})
-    } catch(e) {
-        console.error(e)
-        res.status(400).json(createErrorObj(e))
+        res.status(200).json({ message: "Profile updated!" });
+    } catch (e) {
+        console.error(e);
+        res.status(400).json(createErrorObj(e));
     }
-})
+});
 
-
+/**
+ * Retrieves all user IDs.
+ * 
+ * @route GET /api/profile/all-user-ids
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 router.get('/all-user-ids', async (req, res) => {
     try {
         const userIds = await getAllUserIds();
@@ -91,6 +100,13 @@ router.get('/all-user-ids', async (req, res) => {
     }
 });
 
+/**
+ * Retrieves QnA for a user by user ID.
+ * 
+ * @route GET /api/profile/qna
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 router.get('/qna', async (req, res) => {
     const user_id = req.query.user_id;
 
@@ -108,7 +124,13 @@ router.get('/qna', async (req, res) => {
     }
 });
 
-// Save/update QnA for a user
+/**
+ * Saves or updates QnA for a user.
+ * 
+ * @route PUT /api/profile/qna
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 router.put('/qna', async (req, res) => {
     const user_id = req.body.user_id;
     const qna = req.body.qna;
@@ -127,6 +149,13 @@ router.put('/qna', async (req, res) => {
     }
 });
 
+/**
+ * Uploads a picture for a user.
+ * 
+ * @route POST /api/profile/upload-picture
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 router.post('/upload-picture', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
@@ -137,7 +166,6 @@ router.post('/upload-picture', upload.single('file'), async (req, res) => {
     }
 
     try {
-        // Upload file to blob storage
         const stream = fs.createReadStream(req.file.path);
         const streamLength = req.file.size;
         const blobName = `user-${user_id}-uploaded-${Date.now()}`;
@@ -145,13 +173,10 @@ router.post('/upload-picture', upload.single('file'), async (req, res) => {
 
         await uploadFileToBlobStorage(blobName, stream, streamLength);
 
-        // Save picture URL to database
         const result = await savePictureUrl(user_id, pictureUrl, pic_number);
 
-        // Send success response
         res.status(200).json({ message: 'File uploaded successfully', pictureUrl });
 
-        // Optionally, delete the file after upload to save space
         fs.unlink(req.file.path, (err) => {
             if (err) console.error("Error deleting file:", err);
         });
@@ -161,6 +186,13 @@ router.post('/upload-picture', upload.single('file'), async (req, res) => {
     }
 });
 
+/**
+ * Retrieves picture URLs for a user by user ID.
+ * 
+ * @route GET /api/profile/user-pictures
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 router.get('/user-pictures', async (req, res) => {
     const user_id = req.query.user_id;
 
@@ -177,11 +209,15 @@ router.get('/user-pictures', async (req, res) => {
     }
 });
 
+/**
+ * Removes a picture for a user.
+ * 
+ * @route DELETE /api/profile/remove-picture
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 router.delete('/remove-picture', async (req, res) => {
-
     const { user_id, pic_number } = req.query;
-
-    console.log("removing picture" + user_id + ", " + pic_number);
 
     if (!user_id) {
         return res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
@@ -200,10 +236,17 @@ router.delete('/remove-picture', async (req, res) => {
     }
 });
 
+/**
+ * Inserts or updates the top five responses for a given user.
+ * 
+ * @route PUT /api/profile/insert-topfive
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 router.put('/insert-topfive', async (req, res) => {
-    const {user_id, question, input1, input2, input3, input4, input5} = req.body;
-    console.log("id: ", user_id, " question: ", question, " input1: ", input1)
-    if (!user_id || !question || !input1){
+    const { user_id, question, input1, input2, input3, input4, input5 } = req.body;
+
+    if (!user_id || !question || !input1) {
         return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
     }
 
@@ -215,9 +258,17 @@ router.put('/insert-topfive', async (req, res) => {
     }
 });
 
+/**
+ * Retrieves the top five responses for a given user.
+ * 
+ * @route GET /api/profile/get-topfive
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 router.get('/get-topfive', async (req, res) => {
-    const {user_id} = req.query;
-    if (!user_id){
+    const { user_id } = req.query;
+
+    if (!user_id) {
         return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
     }
 
@@ -229,4 +280,4 @@ router.get('/get-topfive', async (req, res) => {
     }
 });
 
-export default router
+export default router;
