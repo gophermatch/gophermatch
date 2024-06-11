@@ -1,6 +1,6 @@
 import kanye from '../../assets/images/kanye.png';
 import { useEffect, useState } from 'react';
-import Profile from '../ui-components/Profile.jsx';
+import { ProfileCard } from '../ui-components/ProfileCard';
 import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
 import backend from '../../backend.js';
 import currentUser from '../../currentUser.js';
@@ -115,7 +115,7 @@ export default function Inbox({ user_data }) {
         <div className="p-8">
             {selectedProfile && (
                 <div className="ml-[7vw]" style={{ width: '80%', height: '40%' }}>
-                    <Profile user_data={selectedProfile} editedBio={selectedProfile.bio} qnaAnswers={selectedProfile.qnaAnswers} dormMode={1} editable={false} />
+                    <ProfileCard user_data={selectedProfile} editedBio={selectedProfile.bio} qnaAnswers={selectedProfile.qnaAnswers} dormMode={1} editable={false} />
                     <button onClick={() => setSelectedProfile(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
                 </div>
             )}

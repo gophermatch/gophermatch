@@ -50,7 +50,8 @@ export default {
       lora: ['Lora', 'serif'],
       inter: ['Inter', 'serif'],
       profile: ['Inconsolata', 'serif'],
-      roboto: ['Roboto', 'serif']
+      roboto: ['Roboto', 'serif'],
+      roboto_slab: ['Roboto Slab', 'serif']
     },
   },
   plugins: [],
