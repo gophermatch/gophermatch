@@ -1,302 +1,320 @@
-import { db, tableNames } from './db.js'
-import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
-import{generateBlobSasUrl} from '../blobService.js'
+import { db, tableNames } from './db.js';
+import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js';
+import { generateBlobSasUrl } from '../blobService.js';
 
-
-// Returns profile data of given user_id
+/**
+ * Retrieves the profile data of a given user by user ID.
+ * 
+ * @param {number} user_id - The ID of the user whose profile data is to be retrieved.
+ * @returns {Promise<Object>} - A promise that resolves to the user's profile data, or an empty object if not found.
+ */
 export async function getProfile(user_id) {
-  return new Promise((resolveProfile) => {
-          const qr = `
-SELECT 
-    u_userdata.user_id,
-    u_userdata.first_name,
-    u_userdata.last_name,
-    u_userdata.major,
-    u_userdata.graduating_year,
-    u_bios.bio,
-    JSON_ARRAY(u_apartment.rent, u_apartment.move_in_date, u_apartment.move_out_date) AS apartment_data,
-    GROUP_CONCAT(DISTINCT CONCAT(u_tags.tag_id, ':', u_tags.tag_value) ORDER BY u_tags.tag_id SEPARATOR ', ') AS tags,
-    u_pollquestions.question_text AS poll_question,
-    JSON_ARRAY(qna.qna_data) AS qna,
-    JSON_ARRAY(u_generaldata.wakeup_time, u_generaldata.sleep_time) AS sleep_schedule
-FROM 
-    u_userdata
-LEFT JOIN 
-    u_bios ON u_userdata.user_id = u_bios.user_id
-LEFT JOIN 
-    u_apartment ON u_userdata.user_id = u_apartment.user_id
-LEFT JOIN 
-    u_tags ON u_userdata.user_id = u_tags.user_id
-LEFT JOIN 
-    u_pollquestions ON u_userdata.user_id = u_pollquestions.user_id
-LEFT JOIN 
-    u_polloptions ON u_userdata.user_id = u_polloptions.user_id
-LEFT JOIN 
-    (
+    return new Promise((resolveProfile) => {
+        const qr = `
         SELECT 
-            user_id,
-            JSON_ARRAYAGG(JSON_OBJECT('question_id', question_id, 'option_id', option_id)) AS qna_data
+            u_userdata.user_id,
+            u_userdata.first_name,
+            u_userdata.last_name,
+            u_userdata.major,
+            u_userdata.graduating_year,
+            u_bios.bio,
+            JSON_ARRAY(u_apartment.rent, u_apartment.move_in_date, u_apartment.move_out_date) AS apartment_data,
+            GROUP_CONCAT(DISTINCT CONCAT(u_tags.tag_id, ':', u_tags.tag_value) ORDER BY u_tags.tag_id SEPARATOR ', ') AS tags,
+            u_pollquestions.question_text AS poll_question,
+            JSON_ARRAY(qna.qna_data) AS qna,
+            JSON_ARRAY(u_generaldata.wakeup_time, u_generaldata.sleep_time) AS sleep_schedule
         FROM 
-            u_qna
+            u_userdata
+        LEFT JOIN 
+            u_bios ON u_userdata.user_id = u_bios.user_id
+        LEFT JOIN 
+            u_apartment ON u_userdata.user_id = u_apartment.user_id
+        LEFT JOIN 
+            u_tags ON u_userdata.user_id = u_tags.user_id
+        LEFT JOIN 
+            u_pollquestions ON u_userdata.user_id = u_pollquestions.user_id
+        LEFT JOIN 
+            u_polloptions ON u_userdata.user_id = u_polloptions.user_id
+        LEFT JOIN 
+            (
+                SELECT 
+                    user_id,
+                    JSON_ARRAYAGG(JSON_OBJECT('question_id', question_id, 'option_id', option_id)) AS qna_data
+                FROM 
+                    u_qna
+                GROUP BY 
+                    user_id
+            ) AS qna ON u_userdata.user_id = qna.user_id
+        LEFT JOIN 
+            u_generaldata ON u_userdata.user_id = u_generaldata.user_id
+        WHERE
+            u_userdata.user_id = ${user_id}
         GROUP BY 
-            user_id
-    ) AS qna ON u_userdata.user_id = qna.user_id
-LEFT JOIN 
-    u_generaldata ON u_userdata.user_id = u_generaldata.user_id
-WHERE
-    u_userdata.user_id = ${user_id}
-GROUP BY 
-    u_userdata.user_id,
-    u_userdata.first_name,
-    u_userdata.last_name,
-    u_userdata.major,
-    u_userdata.graduating_year,
-    u_bios.bio,
-    u_apartment.rent,
-    u_apartment.move_in_date,
-    u_apartment.move_out_date,
-    u_generaldata.wakeup_time,
-    u_generaldata.sleep_time;
-`;
+            u_userdata.user_id,
+            u_userdata.first_name,
+            u_userdata.last_name,
+            u_userdata.major,
+            u_userdata.graduating_year,
+            u_bios.bio,
+            u_apartment.rent,
+            u_apartment.move_in_date,
+            u_apartment.move_out_date,
+            u_generaldata.wakeup_time,
+            u_generaldata.sleep_time;
+        `;
 
-          db.query(qr, (err, rows) => {
-              if (err) {
-                  resolveProfile({}); // Don't return a bio if not found
-                  return;
-              }
+        db.query(qr, (err, rows) => {
+            if (err) {
+                resolveProfile({});
+                return;
+            }
 
-              const profile = queryRowsToArray(rows);
-              if (profile.length === 1) {
-                  resolveProfile(profile[0]);
-              } else {
-                  // No profile found or multiple profiles found, return an empty profile
-                  resolveProfile({});
-              }
-          });
-      });
+            const profile = queryRowsToArray(rows);
+            if (profile.length === 1) {
+                resolveProfile(profile[0]);
+            } else {
+                resolveProfile({});
+            }
+        });
+    });
 }
 
-// Creates and stores a profile in DB
-// second argument (profile obj) is optional
-export async function createBio(user_id, profile) {
-    if (!profile) profile = {}
+/**
+ * Creates and stores a profile in the database.
+ * 
+ * @param {number} user_id - The ID of the user whose profile is to be created.
+ * @param {Object} profile - The profile data to be stored.
+ * @returns {Promise<Object>} - A promise that resolves to the created profile object, or rejects with an error.
+ */
+export async function createBio(user_id, profile = {}) {
     return new Promise((resolve, reject) => {
-        const qr = buildInsertString(tableNames.u_bios, {user_id, ...profile})
+        const qr = buildInsertString(tableNames.u_bios, { user_id, ...profile });
 
         db.query(qr.queryString, qr.values, (err, res) => {
             if (err) {
-                if (err.code === "ER_DUP_ENTRY") reject("Profile already exists")
-                else reject(err)
-                return
+                if (err.code === "ER_DUP_ENTRY") reject("Profile already exists");
+                else reject(err);
+                return;
             }
             if (res.affectedRows != 1) {
-                reject({})
+                reject({});
             } else {
-                // res.insertId exists iff exactly one row is inserted
-                resolve({user_id: res.insertId, ...profile})
+                resolve({ user_id: res.insertId, ...profile });
             }
-        })
-    })
+        });
+    });
 }
 
-// updates the stored profile
-// database/profile.js
-
-// ... Other imports and functions
-
+/**
+ * Updates the profile of a given user.
+ * 
+ * @param {number} user_id - The ID of the user whose profile is to be updated.
+ * @param {Object} profile - The new profile data to update.
+ * @returns {Promise<void>} - A promise that resolves when the profile is updated, or rejects with an error.
+ */
 export async function updateProfile(user_id, profile) {
     return new Promise(async (resolve, reject) => {
-      const { qnaAnswers, ...profileData } = profile;
-  
-      try {
-         if (Object.keys(profileData).length > 0) {
-        const updateQuery = buildUpdateString(tableNames.u_bios, { user_id }, profileData);
-        console.log(updateQuery);
-        await db.query(updateQuery.queryString, updateQuery.values);
-      }
-  
-        for (const { question_id, option_id } of qnaAnswers) {
-          // Fetch the existing answer
-          const existingAnswerPromise = new Promise((resolveQuery, rejectQuery) => {
-            const qr = buildSelectString("*", tableNames.u_qna, { user_id, question_id });
-            db.query(qr.queryString, qr.values, (err, rows) => {
-              if (err) {
-                rejectQuery(err);
-              } else {
-                resolveQuery(rows);
-              }
-            });
-          });
-  
-          let existingAnswer;
-          try {
-            existingAnswer = await existingAnswerPromise;
-          } catch (error) {
+        const { qnaAnswers, ...profileData } = profile;
+
+        try {
+            if (Object.keys(profileData).length > 0) {
+                const updateQuery = buildUpdateString(tableNames.u_bios, { user_id }, profileData);
+                console.log(updateQuery);
+                await db.query(updateQuery.queryString, updateQuery.values);
+            }
+
+            for (const { question_id, option_id } of qnaAnswers) {
+                const existingAnswerPromise = new Promise((resolveQuery, rejectQuery) => {
+                    const qr = buildSelectString("*", tableNames.u_qna, { user_id, question_id });
+                    db.query(qr.queryString, qr.values, (err, rows) => {
+                        if (err) {
+                            rejectQuery(err);
+                        } else {
+                            resolveQuery(rows);
+                        }
+                    });
+                });
+
+                let existingAnswer;
+                try {
+                    existingAnswer = await existingAnswerPromise;
+                } catch (error) {
+                    reject(error);
+                    return;
+                }
+
+                let qnaUpdateQuery;
+                if (existingAnswer && existingAnswer.length > 0) {
+                    qnaUpdateQuery = buildUpdateString(tableNames.u_qna, { user_id, question_id }, { option_id });
+                } else {
+                    qnaUpdateQuery = buildInsertString(tableNames.u_qna, { user_id, question_id, option_id });
+                }
+
+                await db.query(qnaUpdateQuery.queryString, qnaUpdateQuery.values);
+            }
+
+            resolve();
+        } catch (error) {
             reject(error);
-            return;
-          }
-  
-          let qnaUpdateQuery;
-          if (existingAnswer && existingAnswer.length > 0) {
-            // Update existing answer
-            qnaUpdateQuery = buildUpdateString(tableNames.u_qna, { user_id, question_id }, { option_id });
-          } else {
-            // Insert new answer
-            qnaUpdateQuery = buildInsertString(tableNames.u_qna, { user_id, question_id, option_id });
-          }
-  
-          await db.query(qnaUpdateQuery.queryString, qnaUpdateQuery.values);
         }
-  
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
     });
-  }
+}
 
-  //meant to update all Apartment specific QNA
-  export async function updateApartmentInfo(user_id, apartmentData) {
+/**
+ * Updates the apartment-specific Q&A data for a given user.
+ * 
+ * @param {number} user_id - The ID of the user whose apartment data is to be updated.
+ * @param {Object} apartmentData - The new apartment data to update.
+ * @returns {Promise<void>} - A promise that resolves when the apartment data is updated, or rejects with an error.
+ */
+export async function updateApartmentInfo(user_id, apartmentData) {
     return new Promise(async (resolve, reject) => {
-      try {
-        // Check if the entry exists using the provided buildSelectString function
-        const existCheck = buildSelectString("*", "u_apartment", { user_id });
-        db.query(existCheck.queryString, existCheck.values, async (err, existResult) => {
-          if (err) {
-            console.error("Error checking apartment existence:", err);
-            reject(err);
-            return;
-          }
-          
-          console.log("Existence check result:", existResult);
-          if (existResult && existResult.length > 0) {
-            console.log("Updating existing apartment info");
-            // Update existing apartment info using the provided buildUpdateString function
-            const updateQuery = buildUpdateString("u_apartment", { user_id }, apartmentData);
-            console.log("Update Query:", updateQuery.queryString); // For debugging
-            await db.query(updateQuery.queryString, updateQuery.values);
-          } else {
-            console.log("Inserting new apartment info");
-            // Insert new apartment info using the provided buildInsertString function
-            const insertQuery = buildInsertString("u_apartment", { user_id, ...apartmentData });
-            console.log("Insert Query:", insertQuery.queryString); // For debugging
-            await db.query(insertQuery.queryString, insertQuery.values);
-          }
-          
-          resolve();
-        });
-      } catch (error) {
-        console.error("Database operation failed:", error); // Proper error logging
-        reject(error);
-      }
-    });
-  }
-  
+        try {
+            const existCheck = buildSelectString("*", "u_apartment", { user_id });
+            db.query(existCheck.queryString, existCheck.values, async (err, existResult) => {
+                if (err) {
+                    console.error("Error checking apartment existence:", err);
+                    reject(err);
+                    return;
+                }
 
-  export async function getAllUserIds() {
+                if (existResult && existResult.length > 0) {
+                    const updateQuery = buildUpdateString("u_apartment", { user_id }, apartmentData);
+                    await db.query(updateQuery.queryString, updateQuery.values);
+                } else {
+                    const insertQuery = buildInsertString("u_apartment", { user_id, ...apartmentData });
+                    await db.query(insertQuery.queryString, insertQuery.values);
+                }
+
+                resolve();
+            });
+        } catch (error) {
+            console.error("Database operation failed:", error);
+            reject(error);
+        }
+    });
+}
+
+/**
+ * Retrieves all user IDs from the database.
+ * 
+ * @returns {Promise<Array>} - A promise that resolves to an array of user IDs.
+ */
+export async function getAllUserIds() {
     return new Promise((resolve, reject) => {
-        // Assuming 'user_id' is the column name in your 'users' table that holds the user IDs
         const qr = buildSelectString("user_id", tableNames.users, {});
-  
+
         db.query(qr.queryString, qr.values, (err, rows) => {
             if (err) {
                 console.error("Error fetching user IDs from database:", err);
                 reject(err);
                 return;
             }
-  
-            // Extract user_id from each row and return an array of user_ids
+
             const userIds = rows.map(row => row.user_id);
             resolve(userIds);
         });
     });
-  }
-  
-  export async function savePictureUrl(user_id, pictureUrl, pic_number) {
+}
+
+/**
+ * Saves the picture URL for a user.
+ * 
+ * @param {number} user_id - The ID of the user.
+ * @param {string} pictureUrl - The URL of the picture to be saved.
+ * @param {number} pic_number - The picture number for the user.
+ * @returns {Promise<Object>} - A promise that resolves when the picture URL is saved, or rejects with an error.
+ */
+export async function savePictureUrl(user_id, pictureUrl, pic_number) {
     return new Promise((resolve, reject) => {
-        // Adjust the query to include pic_number in the INSERT statement
-        // and ensure the ON DUPLICATE KEY UPDATE clause updates the picture_url for the existing pic_number for the user.
         const qr = `INSERT INTO u_pictures (user_id, picture_url, pic_number) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE picture_url = VALUES(picture_url);`;
-        
-        // Adjust the parameters to include pic_number
+
         db.query(qr, [user_id, pictureUrl, pic_number], (err, result) => {
             if (err) {
                 console.error("Error saving picture URL to database:", err);
                 reject(err);
-                return ;
+                return;
             }
             resolve(result);
         });
     });
 }
 
-// Function to get all picture URLs for a user
-
+/**
+ * Retrieves all picture URLs for a given user.
+ * 
+ * @param {number} user_id - The ID of the user.
+ * @returns {Promise<Array>} - A promise that resolves to an array of SAS URLs for the user's pictures.
+ */
 export async function retrievePictureUrls(user_id) {
-  return new Promise((resolve, reject) => {
-    const queryString = `SELECT picture_url, pic_number FROM ${tableNames.u_pictures} WHERE user_id = ?`;
+    return new Promise((resolve, reject) => {
+        const queryString = `SELECT picture_url, pic_number FROM ${tableNames.u_pictures} WHERE user_id = ?`;
 
-    db.query(queryString, [user_id], (err, rows) => {
-      if (err) {
-        console.error("Error fetching picture URLs from database:", err);
-        reject(err);
-        return;
-      }
+        db.query(queryString, [user_id], (err, rows) => {
+            if (err) {
+                console.error("Error fetching picture URLs from database:", err);
+                reject(err);
+                return;
+            }
 
-      // Map through each row to extract the blob name and generate a SAS URL
-      const sasUrlPromises = rows.map(row => {
-        // Extract the blob name from the picture_url
-        const urlParts = row.picture_url.split('/');
-        const blobName = urlParts[urlParts.length - 1]; // Gets the last part of the URL
+            const sasUrlPromises = rows.map(row => {
+                const urlParts = row.picture_url.split('/');
+                const blobName = urlParts[urlParts.length - 1];
+                return generateBlobSasUrl(blobName);
+            });
 
-        return generateBlobSasUrl(blobName); // Use the extracted blob name
-      });
-
-      Promise.all(sasUrlPromises)
-        .then(sasUrls => resolve(sasUrls))
-        .catch(error => reject(error));
+            Promise.all(sasUrlPromises)
+                .then(sasUrls => resolve(sasUrls))
+                .catch(error => reject(error));
+        });
     });
-  });
 }
 
-  export async function removePicture(user_id, pic_number) {
-      try {
+/**
+ * Removes a picture for a given user and reorders the remaining pictures.
+ * 
+ * @param {number} user_id - The ID of the user.
+ * @param {number} pic_number - The picture number to be removed.
+ * @returns {Promise<void>} - A promise that resolves when the picture is removed and reordered, or rejects with an error.
+ */
+export async function removePicture(user_id, pic_number) {
+    try {
         const { queryString, values } = buildDeleteString(tableNames.u_pictures, {
-          user_id: user_id,
-          pic_number: pic_number
+            user_id: user_id,
+            pic_number: pic_number
         });
 
-        // Execute the query to delete the specified decision.
         await db.query(queryString, values);
 
         await db.query('UPDATE u_pictures SET pic_number = pic_number - 1 WHERE user_id = ? AND pic_number > ?', [user_id, pic_number], (error, results) => {
-          if (error) {
-            console.error('Error reordering pictures:', error);
-          } else {
-            console.log("Successfully reordered pictures");
-          }
+            if (error) {
+                console.error('Error reordering pictures:', error);
+            } else {
+                console.log("Successfully reordered pictures");
+            }
         });
 
-        // Log the successful deletion.
         console.log(`Deleted picture ${pic_number} for user_id=${user_id}.`);
-
-      } catch (error) {
-        // Log and throw an error if the deletion fails.
+    } catch (error) {
         console.error('Error in removePicture:', error);
         throw new Error('Failed to remove picture');
-      }
-  }
+    }
+}
 
-  export async function insertTopFive(user_id, question, input1, input2, input3, input4, input5){
+/**
+ * Inserts or updates the top five responses for a given user.
+ * 
+ * @param {number} user_id - The ID of the user.
+ * @param {string} question - The question for the top five.
+ * @param {string} input1 - The first input.
+ * @param {string} input2 - The second input.
+ * @param {string} input3 - The third input.
+ * @param {string} input4 - The fourth input.
+ * @param {string} input5 - The fifth input.
+ * @returns {Promise<void>} - A promise that resolves when the top five responses are inserted or updated, or rejects with an error.
+ */
+export async function insertTopFive(user_id, question, input1, input2, input3, input4, input5) {
     try {
-        // First, check if the record exists
-        console.log(user_id);
-        console.log(question);
-        console.log(input1);
-        console.log(input2);
-        console.log(input3);
-        console.log(input4);
-        console.log(input5);
         const query = `
             INSERT INTO ${tableNames.u_topfive} (user_id, question, input1, input2, input3, input4, input5)
             VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -314,9 +332,15 @@ export async function retrievePictureUrls(user_id) {
         console.error('Error in insertTopFive:', err);
         throw err;
     }
-  }
+}
 
-export async function getTopFive(user_id){
+/**
+ * Retrieves the top five responses for a given user.
+ * 
+ * @param {number} user_id - The ID of the user.
+ * @returns {Promise<Object|null>} - A promise that resolves to the top five responses, or null if not found.
+ */
+export async function getTopFive(user_id) {
     return new Promise((resolve, reject) => {
         console.log(user_id);
         const query = `SELECT question, input1, input2, input3, input4, input5 FROM ${tableNames.u_topfive} WHERE user_id = ?`;
@@ -329,11 +353,11 @@ export async function getTopFive(user_id){
             }
 
             if (results.length > 0) {
-                console.log("bruh")
-                resolve(results[0]); // resolve with the first row of the results
+                console.log("bruh");
+                resolve(results[0]);
             } else {
-                console.log("what")
-                resolve(null); // resolve with null if no results
+                console.log("what");
+                resolve(null);
             }
         });
     });
