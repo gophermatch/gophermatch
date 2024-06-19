@@ -31,7 +31,7 @@ export default function Top5Dorms({top5Dorms, setTop5Dorms}) {
 
         if (offset > 35 && dormIndex < TEMP_DATA.top5Dorms.length - 1) { // lowered down a position
             [TEMP_DATA.top5Dorms[dormIndex], TEMP_DATA.top5Dorms[dormIndex + 1]] = [TEMP_DATA.top5Dorms[dormIndex + 1], TEMP_DATA.top5Dorms[dormIndex]];
-            setHoldBase(v => v - offset)
+            setHoldBase(v => v + offset)
             setHoldPos(mousePos)
             console.log("Passed down")
         }
@@ -53,7 +53,8 @@ export default function Top5Dorms({top5Dorms, setTop5Dorms}) {
                         const basePosition = 35 * i;
                         return (
                             <div
-                                className={`bg-maroon leading-[30px] pl-[5px] rounded-md text-white select-none absolute`}
+                                key={dorm}
+                                className={`bg-maroon w-full leading-[30px] pl-[5px] rounded-md text-white select-none absolute ${!isHeld && 'transition-all'}`}
                                 style={{
                                     // top: `${35*i + (offset && heldDorm === dorm ? offset : 0)}px`,
                                     top: isHeld ? holdBase + offset : basePosition,
