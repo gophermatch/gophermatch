@@ -76,6 +76,7 @@ export default function Match() {
             user_data={filterResults[currentIndex]?.user_data}
             qnaAnswers={filterResults[currentIndex]?.profile_data?.qnaAnswers}
             editedBio={filterResults[currentIndex]?.profile_data?.bio}
+            pictureUrls={JSON.parse(filterResults[currentIndex]?.profile_data?.pictures)}
             editable={false}
             dormMode={profileMode}
             top5={['', '', '', '', '']}
