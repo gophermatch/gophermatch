@@ -6,12 +6,22 @@ import { createErrorObj } from './routeutil.js'
 
 const router = Router()
 
+router.get('/check-session', async (req, res) => {
+    if (req.session.user) {
+        res.json({ loggedIn: true, user: req.session.user});
+      } else {
+        res.json({ loggedIn: false });
+      }
+})
+
 // Login
 // Requires the request body to contain email and password (json)
 // Responds with status 400 if login failed (along an error message), otherwise status 200
 // On successful login, sets a session corresponding with the user
 router.put('/', async (req, res) => {
     let email = req.body.email
+
+    // If session exists, password will be ignored since we are already logged in
     let password = req.body.password
 
     // Check if request includes email and password
@@ -20,22 +30,27 @@ router.put('/', async (req, res) => {
         return
     }
 
-    // User already logged in
-    // Prevent user from loggin in again (perhaps with a different account) at the same time
-    if (req.session.user) {
-        res.status(400).json(createErrorObj("Already logged in!"))
+    // User already logged in under a different e-mail
+    // Prevent user from logging in again with a different account at the same time
+    if (req.session.user && req.session.user.email != email) {
+        res.status(400).json(createErrorObj("Already logged in with a different user!"))
         return
     }
 
-    // If user is already signed in, we update their session object in case their password has changed
+    // Even if user is already signed in, we update their session object in case their password has changed
     try {
         const user = await getUser(email)
+
+        if(!req.session.user)
+        {
 
         // Check if password matches with the hashed password
         const match = await bcrypt.compare(password, user.hashpass);
         if (!match) {
             res.status(400).json(createErrorObj("Email or password is incorrect"))
             return
+        }
+
         }
 
         const userWithoutPass = loginUser(req, user)
