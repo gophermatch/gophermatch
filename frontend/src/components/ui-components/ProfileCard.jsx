@@ -63,10 +63,10 @@ export function ProfileCard({
             </div>
             <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-                <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
+                <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-[60%]"}>
                   {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo aptData={aptOrDormData}/>}
                 </div>
-                  <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
+                  <div className={"flex grow-[3] overflow-y-auto overflow-x-hidden max-h-40"}>
                     <Qna qna={qna} />
                   </div>
                 </div>
