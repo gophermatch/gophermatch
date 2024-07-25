@@ -1,11 +1,32 @@
 import React, { useEffect } from "react";
 import ApartmentTag from "./ApartmentTag.jsx";
 
-export default function ApartmentInfo({aptData}) {
-  // useEffect(() => {
-  //   console.log(qnaAnswers);
-  //   console.log(apartmentData)
-  // }, []);
+export default function ApartmentInfo(aptData, editing) {
+  useEffect(() => {
+    console.log(aptData);
+  }, []);
+
+  const testTags = [
+    { id: 1, name: 'Gym' },
+    { id: 2, name: 'Pet' },
+    { id: 3, name: 'Public Transport' },
+    { id: 4, name: 'Pool' },
+    { id: 5, name: 'Balcony' },
+  ];
+
+  const testTagValues = [
+    { id: 1, value: true },
+    { id: 2, value: true },
+    { id: 3, value: true },
+    { id: 4, value: true },
+    { id: 5, value: false },
+  ];
+
+  const onToggleTag = (id) => {
+    const i = testTags.findIndex(tag => tag.id == id);
+
+    tagValues[i].value = !tagValues[i].value;
+  }
 
   return (
     <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-xl font-roboto_slab font-medium"}>
@@ -29,34 +50,7 @@ export default function ApartmentInfo({aptData}) {
         </div>
         {/*Bottom panel with tags*/}
         <div className={"flex w-[98%] p-2 max-h-[80%] grow-[0] flex-wrap gap-1 overflow-y-scroll custom-scrollbar"}>
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
-          <ApartmentTag text="Gym" />
+          {testTags.map(tag => <ApartmentTag value = {testTagValues.find(t => t.id == tag.id).value} id={tag.id} text={tag.name} editing={true} toggleFunction={onToggleTag} />)}
         </div>
       </div>
     </div>
