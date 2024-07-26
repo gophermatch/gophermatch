@@ -8,7 +8,8 @@ import {
     savePictureUrl,
     retrievePictureUrls, createBio, removePicture, updateApartmentInfo,
     insertTopFive, getTopFive,
-    getGeneralData, setGeneralData
+    getGeneralData, setGeneralData,
+    updateUserTags, getUserSelectedTags, getAllTagIds
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -247,6 +248,7 @@ router.get('/get-gendata', async (req, res) => {
 
 
 // sets/updates a all fields in u_generaldata given a user_id and data. Example I use in postman route:
+// Any fields not included in data are filled with default values
 /*
     {
     "user_id": 56,
@@ -267,9 +269,49 @@ router.post('/set-gendata', async (req, res) => {
 
     try {
         const results = await setGeneralData(user_id, data);
-        return res.json({ message: "Data updated successfully", results });
+        return res.json({ message: "Data updated successfully"});
     } catch (error) {
         return res.status(500).json(createErrorObj("Failed to set general data."));
+    }
+});
+
+router.post('/update-user-tags', async (req, res) => {
+    const { user_id, tag_ids } = req.body;
+    if (!user_id || !Array.isArray(tag_ids)) {
+        return res.status(400).json({ error: 'Missing or invalid parameters' });
+    }
+
+    try {
+        await updateUserTags(user_id, tag_ids);
+        res.json({ message: 'User tags updated successfully' });
+    } catch (error) {
+        console.error('Error updating user tags:', error);
+        res.status(500).json({ error: 'Failed to update user tags' });
+    }
+});
+
+router.get('/user-selected-tags', async (req, res) => {
+    const { user_id } = req.query;
+    if (!user_id) {
+        return res.status(400).json({ error: 'Missing user_id parameter' });
+    }
+
+    try {
+        const tagIds = await getUserSelectedTags(user_id);
+        res.json({ user_id, tag_ids: tagIds });
+    } catch (error) {
+        console.error('Error getting user selected tags:', error);
+        res.status(500).json({ error: 'Failed to get user selected tags' });
+    }
+});
+
+router.get('/all-tag-ids', async (req, res) => {
+    try {
+        const tagIds = await getAllTagIds();
+        res.json({ tag_ids: tagIds });
+    } catch (error) {
+        console.error('Error getting all tag ids:', error);
+        res.status(500).json({ error: 'Failed to get all tag ids' });
     }
 });
 

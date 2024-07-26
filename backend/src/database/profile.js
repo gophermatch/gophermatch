@@ -340,10 +340,8 @@ export async function getTopFive(user_id){
             }
 
             if (results.length > 0) {
-                console.log("bruh")
                 resolve(results[0]); // resolve with the first row of the results
             } else {
-                console.log("what")
                 resolve(null); // resolve with null if no results
             }
         });
@@ -435,3 +433,68 @@ function performUpdate(user_id, data, resolve, reject) {
   });
 }
 
+export async function updateUserTags(user_id, selected_tag_ids) {
+  return new Promise((resolve, reject) => {
+      // Remove existing tags for the user
+      const deleteQuery = `DELETE FROM ${tableNames.u_tags} WHERE user_id = ?`;
+      
+      db.query(deleteQuery, [user_id], (deleteErr) => {
+          if (deleteErr) {
+              console.error("Error deleting user tags", deleteErr);
+              reject(deleteErr);
+              return;
+          }
+
+          // Add new selected tags
+          if (selected_tag_ids.length > 0) {
+              const values = selected_tag_ids.map(tag_id => [user_id, tag_id, true]);
+              const insertQuery = `INSERT INTO ${tableNames.u_tags} (user_id, tag_id, tag_value) VALUES ?`;
+              
+              db.query(insertQuery, [values], (insertErr) => {
+                  if (insertErr) {
+                      console.error("Error inserting user tags", insertErr);
+                      reject(insertErr);
+                      return;
+                  }
+                  resolve();
+              });
+          } else {
+              resolve();
+          }
+      });
+  });
+}
+
+export async function getUserSelectedTags(user_id) {
+  return new Promise((resolve, reject) => {
+      const query = `SELECT tag_id FROM ${tableNames.u_tags} WHERE user_id = ? AND tag_value = TRUE`;
+
+      db.query(query, [user_id], (err, results) => {
+          if (err) {
+              console.error("Error getting user selected tags", err);
+              reject(err);
+              return;
+          }
+
+          const tagIds = results.map(row => row.tag_id);
+          resolve(tagIds);
+      });
+  });
+}
+
+export async function getAllTagIds() {
+  return new Promise((resolve, reject) => {
+      const query = `SELECT tag_id FROM ${tableNames.tags}`;
+
+      db.query(query, (err, results) => {
+          if (err) {
+              console.error("Error getting all tag ids", err);
+              reject(err);
+              return;
+          }
+
+          const tagIds = results.map(row => row.tag_id);
+          resolve(tagIds);
+      });
+  });
+}
