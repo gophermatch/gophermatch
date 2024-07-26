@@ -9,7 +9,7 @@ import {
     retrievePictureUrls, createBio, removePicture, updateApartmentInfo,
     insertTopFive, getTopFive,
     getGeneralData, setGeneralData,
-    updateUserTags, getUserSelectedTags, getAllTagIds
+    updateUserTags, getUserSelectedTags, getAllTags
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -251,15 +251,15 @@ router.get('/get-gendata', async (req, res) => {
 // Any fields not included in data are filled with default values
 /*
     {
-    "user_id": 56,
-    "data": {
-        "wakeup_time": 90,
-        "sleep_time": 150,
-        "substances": "Yes",
-        "room_activity": "Party"
-        // add other fields as needed
+        "user_id": 56,
+        "data": {
+            "wakeup_time": 90,
+            "sleep_time": 150,
+            "substances": "Yes",
+            "room_activity": "Party"
+            // add other fields as needed
+        }
     }
-}
 */
 router.post('/set-gendata', async (req, res) => {
     const { user_id, data } = req.body;
@@ -274,6 +274,18 @@ router.post('/set-gendata', async (req, res) => {
         return res.status(500).json(createErrorObj("Failed to set general data."));
     }
 });
+
+// updates the users tags given a user id and array of selected tag ids. Example I used in postman
+/*
+    {
+        "user_id": 47,
+        "tag_ids": [
+            2,
+            3,
+            6
+        ]
+    }
+*/
 
 router.post('/update-user-tags', async (req, res) => {
     const { user_id, tag_ids } = req.body;
@@ -290,6 +302,8 @@ router.post('/update-user-tags', async (req, res) => {
     }
 });
 
+// returns an array of a users selected tag ids
+// postman route no json is {{api_url}}/profile/user-selected-tags?user_id=47
 router.get('/user-selected-tags', async (req, res) => {
     const { user_id } = req.query;
     if (!user_id) {
@@ -305,9 +319,24 @@ router.get('/user-selected-tags', async (req, res) => {
     }
 });
 
+// returns all tag ids (don't hard code tags). Example output:
+/*
+    {
+        "tag_ids": [
+            {
+                "tag_id": 1,
+                "tag_text": "Gym"
+            },
+            {
+                "tag_id": 2,
+                "tag_text": "Needs Parking"
+            },
+        ]
+    }
+*/
 router.get('/all-tag-ids', async (req, res) => {
     try {
-        const tagIds = await getAllTagIds();
+        const tagIds = await getAllTags();
         res.json({ tag_ids: tagIds });
     } catch (error) {
         console.error('Error getting all tag ids:', error);

@@ -368,19 +368,7 @@ export async function getGeneralData(user_id) {
   }
 }
 
-// sets/updates a all fields in u_generaldata given a user_id and data. Example I use in postman route:
-/*
-    {
-    "user_id": 56,
-    "data": {
-        "wakeup_time": 90,
-        "sleep_time": 150,
-        "substances": "Yes",
-        "room_activity": "Party"
-        // add other fields as needed
-    }
-}
-*/
+// sets/updates a all fields in u_generaldata given a user_id and data.
 export async function setGeneralData(user_id, data) {
   return new Promise((resolve, reject) => {
       // Check if user_id exists
@@ -433,6 +421,7 @@ function performUpdate(user_id, data, resolve, reject) {
   });
 }
 
+// updates the database for a user_ids selected tags
 export async function updateUserTags(user_id, selected_tag_ids) {
   return new Promise((resolve, reject) => {
       // Remove existing tags for the user
@@ -465,6 +454,7 @@ export async function updateUserTags(user_id, selected_tag_ids) {
   });
 }
 
+// gets all the users selected tags
 export async function getUserSelectedTags(user_id) {
   return new Promise((resolve, reject) => {
       const query = `SELECT tag_id FROM ${tableNames.u_tags} WHERE user_id = ? AND tag_value = TRUE`;
@@ -482,19 +472,19 @@ export async function getUserSelectedTags(user_id) {
   });
 }
 
-export async function getAllTagIds() {
+// gets tag_ids with associated tag_text (so no hard coded tags)
+export async function getAllTags() {
   return new Promise((resolve, reject) => {
-      const query = `SELECT tag_id FROM ${tableNames.tags}`;
+      const query = 'SELECT tag_id, tag_text FROM tags';
 
       db.query(query, (err, results) => {
           if (err) {
-              console.error("Error getting all tag ids", err);
+              console.error("Error getting all tags", err);
               reject(err);
               return;
           }
 
-          const tagIds = results.map(row => row.tag_id);
-          resolve(tagIds);
+          resolve(results);
       });
   });
 }
