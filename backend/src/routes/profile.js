@@ -230,6 +230,7 @@ router.get('/get-topfive', async (req, res) => {
     }
 });
 
+// gets all fields from u_generaldata given a user_id
 router.get('/get-gendata', async (req, res) => {
     const {user_id} = req.body;
     if (!user_id){
@@ -244,6 +245,20 @@ router.get('/get-gendata', async (req, res) => {
     }
 });
 
+
+// sets/updates a all fields in u_generaldata given a user_id and data. Example I use in postman route:
+/*
+    {
+    "user_id": 56,
+    "data": {
+        "wakeup_time": 90,
+        "sleep_time": 150,
+        "substances": "Yes",
+        "room_activity": "Party"
+        // add other fields as needed
+    }
+}
+*/
 router.post('/set-gendata', async (req, res) => {
     const { user_id, data } = req.body;
     if (!user_id || !data) {

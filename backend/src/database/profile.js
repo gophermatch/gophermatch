@@ -350,6 +350,7 @@ export async function getTopFive(user_id){
     });
 }
 
+// gets all fields from u_generaldata given a user_id
 export async function getGeneralData(user_id) {
   const query = `SELECT * FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
   try {
@@ -369,6 +370,19 @@ export async function getGeneralData(user_id) {
   }
 }
 
+// sets/updates a all fields in u_generaldata given a user_id and data. Example I use in postman route:
+/*
+    {
+    "user_id": 56,
+    "data": {
+        "wakeup_time": 90,
+        "sleep_time": 150,
+        "substances": "Yes",
+        "room_activity": "Party"
+        // add other fields as needed
+    }
+}
+*/
 export async function setGeneralData(user_id, data) {
   return new Promise((resolve, reject) => {
       // Check if user_id exists
@@ -404,6 +418,7 @@ export async function setGeneralData(user_id, data) {
   });
 }
 
+// helper function for set general data
 function performUpdate(user_id, data, resolve, reject) {
   const fields = Object.keys(data).map(key => `${key} = ?`).join(", ");
   const values = Object.values(data);
