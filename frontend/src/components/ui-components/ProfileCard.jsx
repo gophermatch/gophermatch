@@ -81,7 +81,7 @@ export function ProfileCard({
                 </div>
               <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
-                  <Poll pollData={pollData} />
+                  <Poll pollData={pollData} revealAnswers={false}/>
                 </div>
                 <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
                   <SleepSchedule sleepSchedule={sleepSchedule} />

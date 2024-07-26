@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import ApartmentTag from "./ApartmentTag.jsx";
 
-export default function Poll({pollData}) {
-    const [answerRevealed, setAnswerRevealed] = useState(false);
+export default function Poll({pollData, revealAnswers}) {
+    const [answerRevealed, setAnswerRevealed] = useState(revealAnswers);
     let voteTotal = 0;
     for (let i = 0; i < pollData.answers.length; i++){
         voteTotal = voteTotal + pollData.answers[i].votes;
     }
-    function displayResults(){
-        /*backend should be linked here to add a vote
+    function displayResults(userVote){
+        /*backend should be linked here to add a vote */
         userVote.votes++;
-        voteTotal++; */
+        voteTotal++;
         setAnswerRevealed(prev => !prev);
     }
   return (
@@ -40,14 +40,14 @@ export default function Poll({pollData}) {
         pollData.answers.map((newAnswer) =>
           <p className={"flex justify-center w-full mt-[1vh]"}>
             <span className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"}>
-              {newAnswer.answer} {(newAnswer.votes/voteTotal)*100}%
+              {newAnswer.answer} {(newAnswer.votes/voteTotal).toPrecision(3)*100}%
             </span>
           </p>  
         )
         :
         pollData.answers.map((newAnswer) =>
         <p className={"flex justify-center w-full mt-[1vh]"}>
-          <button className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"} onClick={displayResults}>
+          <button className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"} onClick={() => displayResults(newAnswer)}>
             {newAnswer.answer}
           </button>
         </p>)  }
