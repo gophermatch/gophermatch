@@ -7,7 +7,8 @@ import {
     updateProfile,
     savePictureUrl,
     retrievePictureUrls, createBio, removePicture, updateApartmentInfo,
-    insertTopFive, getTopFive
+    insertTopFive, getTopFive,
+    getGeneralData, setGeneralData
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -228,5 +229,34 @@ router.get('/get-topfive', async (req, res) => {
         return res.status(500).json(createErrorObj("Failed to get top five."));
     }
 });
+
+router.get('/get-gendata', async (req, res) => {
+    const {user_id} = req.body;
+    if (!user_id){
+        return res.status(400).json(createErrorObj("Missing parameters for get-gendata"));
+    }
+
+    try {
+        const results = await getGeneralData(user_id);
+        return res.json(results);
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to get general data."));
+    }
+});
+
+router.post('/set-gendata', async (req, res) => {
+    const { user_id, data } = req.body;
+    if (!user_id || !data) {
+        return res.status(400).json(createErrorObj("Missing parameters for set-gendata"));
+    }
+
+    try {
+        const results = await setGeneralData(user_id, data);
+        return res.json({ message: "Data updated successfully", results });
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to set general data."));
+    }
+});
+
 
 export default router
