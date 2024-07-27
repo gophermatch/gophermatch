@@ -42,9 +42,14 @@ export default function Poll({pollData, revealAnswers}) {
         {answerRevealed ? 
         answersState.map((newAnswer, index) =>
           <p className={"flex justify-center w-full mt-[1vh]"}>
-            <div className={"rounded-lg w-[97%] h-[33px] flex items-center justify-between border-maroon text-xs text-white bg-maroon"}>
-                <div className={`bg-dark_maroon rounded-lg flex h-[100%] w-[${(answersState[index].votes/voteTotal*100).toFixed(1)}%]`}></div>
-              {newAnswer.answer} {(newAnswer.votes/voteTotal*100).toFixed(1)}%
+            <div className={"rounded-lg w-[97%] h-[33px] relative border-maroon text-xs text-white bg-maroon"}>
+                <div style= {{ width: `${(answersState[index].votes/voteTotal*100)}%`}} className={`bg-dark_maroon rounded-lg flex h-[100%]`}></div>
+                <div className={"absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
+                    {newAnswer.answer}
+                </div>
+                <div className = {"absolute left-[92.5%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
+                    {(newAnswer.votes/voteTotal*100).toFixed(1)}%
+                </div>
             </div>
           </p>  
         )

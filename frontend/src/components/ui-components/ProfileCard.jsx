@@ -53,11 +53,11 @@ export function ProfileCard({
     question: "What is your favorite color?",
     answers: [
       { answer: "Red", votes: 15 },
-      { answer: "Blue", votes: 20 },
-      { answer: "Green", votes: 10 },
-      { answer: "Yellow", votes: 5 }
+      { answer: "Blue", votes: 29 },
+      { answer: "Green", votes: 9 },
+      { answer: "Yellow", votes: 6 }
     ]
-  };
+  }
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
       <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
