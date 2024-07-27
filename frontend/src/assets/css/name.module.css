@@ -1,0 +1,29 @@
+/* name.module.css */
+.container {
+    font-family: 'Roboto Slab', serif;
+  }
+  
+  .name {
+    font-size: 3vh;
+    font-weight: bold;
+  }
+  
+  .major {
+    margin-top: -1vh;
+    font-size: 2vh;
+    font-weight: bold;
+  }
+  
+  .bio {
+    width: 100%;
+    height: 17vh;
+    border-radius: 8px;
+    border: 1.7px solid maroon;
+  }
+  
+  .bioText {
+    margin-left: 4px;
+    font-size: 2vh;
+    font-weight: thin;
+  }
+  

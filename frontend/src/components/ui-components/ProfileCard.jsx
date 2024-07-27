@@ -63,60 +63,83 @@ interface profileData {
     //   }
     // };
 
-export function ProfileCard({
-  user_data,
-  name,
-  major,
-  bio,
-  pictureUrls,
-  qna,
-  sleepSchedule,
-  pollData,
-  aptOrDormData,
-}) {
-
-  useEffect(() => {
-    console.log(pictureUrls)
-  }, [user_data]);
-
-
-  return (
-    <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
-      <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
-        <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
-          <div className="w-[30vh] min-w-[25%]">
-            <Carousel editable={false} pictureUrls={pictureUrls}></Carousel>
-          </div>
-          <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
-            <div className="flex grow-[2] flex-col border-dashed border-2 border-maroon">
-              <NameAndBio name={name} major={major} bio={bio} />
-            </div>
-            <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-              <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-                <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
-                  {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo aptData={aptOrDormData}/>}
+    export function ProfileCard({
+      user_data,
+      name,
+      major,
+      bio,
+      pictureUrls,
+      qna,
+      sleepSchedule,
+      pollData,
+      aptOrDormData,
+    }) {
+      const [profileData, setProfileData] = useState(null);
+    
+      useEffect(() => {
+        const fetchProfileData = async () => {
+          try {
+            const response = await backend.get("/profile/user-profile", {
+              params: { user_id: user_data?.user_id },
+              withCredentials: true,
+            });
+            if (response) {
+              setProfileData(response.data);
+            } else {
+              throw new Error("Failed to fetch profile data");
+            }
+          } catch (error) {
+            console.error("Error fetching profile data:", error);
+          }
+        };
+        if (user_data) {
+          fetchProfileData();
+        }
+      }, [user_data]);
+    
+      useEffect(() => {
+        console.log(profileData);
+      }, [profileData]);
+    
+      // Check if user_data is defined and has the expected properties
+      const fullName = user_data ? `${user_data.first_name} ${user_data.last_name}` : "No name";
+      const fullMajor = user_data ? `${user_data.major} '${user_data.graduating_year?.toString().slice(-2)}` : "No major";
+    
+      return (
+        <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
+          <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
+            <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
+              <div className="w-[30vh] min-w-[25%]">
+                <Carousel editable={false} pictureUrls={pictureUrls}></Carousel>
+              </div>
+              <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
+                <div className="flex grow-[2] flex-col">
+                  <NameAndBio name={fullName} major={fullMajor} bio={profileData?.bio || "No bio available"} />
                 </div>
-                  <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
-                    <Qna qna={qna} />
+                <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
+                  <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
+                    <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
+                      {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo aptData={aptOrDormData}/>}
+                    </div>
+                    <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
+                      <Qna qna={qna} />
+                    </div>
                   </div>
-                </div>
-              <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-                <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
-                  <Poll pollData={pollData} />
-                </div>
-                <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
-                  <SleepSchedule sleepSchedule={sleepSchedule} />
+                  <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
+                    <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
+                      <Poll pollData={pollData} />
+                    </div>
+                    <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
+                      <SleepSchedule sleepSchedule={sleepSchedule} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  )
-}
-
-
+      );
+    }
 
 
 
