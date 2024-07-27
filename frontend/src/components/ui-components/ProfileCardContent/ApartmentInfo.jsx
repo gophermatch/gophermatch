@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ApartmentTag from "./ApartmentTag.jsx";
 
 export default function ApartmentInfo(aptData, editing) {
@@ -14,18 +14,20 @@ export default function ApartmentInfo(aptData, editing) {
     { id: 5, name: 'Balcony' },
   ];
 
-  const testTagValues = [
+  const [testTagValues, setTestTagValues] = useState([
     { id: 1, value: true },
     { id: 2, value: true },
     { id: 3, value: true },
     { id: 4, value: true },
     { id: 5, value: false },
-  ];
+  ]);
 
   const onToggleTag = (id) => {
-    const i = testTags.findIndex(tag => tag.id == id);
-
-    tagValues[i].value = !tagValues[i].value;
+    setTestTagValues(prevValues =>
+      prevValues.map(tag =>
+        tag.id === id ? { ...tag, value: !tag.value } : tag
+      )
+    );
   }
 
   return (
