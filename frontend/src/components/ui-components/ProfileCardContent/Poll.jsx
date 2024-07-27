@@ -14,6 +14,7 @@ export default function Poll({pollData, revealAnswers}) {
         pollData.answers[index].votes++;
         voteTotal++;
         setAnswerRevealed(prev => !prev);
+        setAnswersState(pollData.answers);
     }
   return (
     <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-lg font-roboto_slab font-medium"}>
@@ -42,7 +43,7 @@ export default function Poll({pollData, revealAnswers}) {
         answersState.map((newAnswer, index) =>
           <p className={"flex justify-center w-full mt-[1vh]"}>
             <div className={"rounded-lg w-[97%] h-[33px] flex items-center justify-between border-maroon text-xs text-white bg-maroon"}>
-                <div className={`bg-dark_maroon rounded-lg flex h-[100%] w-[${(newAnswer.votes/voteTotal*100).toFixed(1)}%]`}></div>
+                <div className={`bg-dark_maroon rounded-lg flex h-[100%] w-[${(answersState[index].votes/voteTotal*100).toFixed(1)}%]`}></div>
               {newAnswer.answer} {(newAnswer.votes/voteTotal*100).toFixed(1)}%
             </div>
           </p>  
