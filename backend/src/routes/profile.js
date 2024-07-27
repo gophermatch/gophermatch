@@ -233,7 +233,7 @@ router.get('/get-topfive', async (req, res) => {
 
 // gets all fields from u_generaldata given a user_id
 router.get('/get-gendata', async (req, res) => {
-    const {user_id} = req.body;
+    const {user_id} = req.query;
     if (!user_id){
         return res.status(400).json(createErrorObj("Missing parameters for get-gendata"));
     }
