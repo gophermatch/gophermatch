@@ -2,20 +2,33 @@ import React, { useState, useEffect } from 'react';
 import ApartmentTag from "./ApartmentTag.jsx";
 
 export default function EditPoll({pollData}) {
+  let [answersState, setAnswersState] = useState(pollData.answers);
   function changeQuestion(newQuestion){
     pollData.question = newQuestion;
     console.log(pollData);
   }
-  function changeAnswer(oldAnswer, newAnswer){
-    oldAnswer.answer = newAnswer;
-    oldAnswer.votes = 0;
+  function changeAnswer(index, newAnswer){
+    pollData.answers[index].answer = newAnswer;
+    pollData.answers[index].votes = 0;
     console.log(pollData);
   }
-  function removeAnswer(oldAnswer){
+  function removeAnswer(oldAnswer) {
     const desiredIndex = pollData.answers.indexOf(oldAnswer);
-    pollData.answers.splice(desiredIndex, desiredIndex);
-    /*note to self to make this update somehow*/
-    console.log(desiredIndex);
+    if (desiredIndex !== -1) {
+        pollData.answers = [
+            ...pollData.answers.slice(0, desiredIndex),
+            ...pollData.answers.slice(desiredIndex + 1)
+        ];
+    }
+    setAnswersState(pollData.answers);
+    console.log(pollData);
+  }
+  function addAnswer() {
+    pollData.answers = [
+      ...pollData.answers,
+      { answer: "New answer", votes: 0 }
+    ];
+    setAnswersState(pollData.answers);
     console.log(pollData);
   }
   return (
@@ -24,7 +37,7 @@ export default function EditPoll({pollData}) {
         {/*Top headers*/}
         <p className={"flex justify-center w-full"}>
           <span>Q:  </span>
-          <input id="questionInput" className={"text-center"}>
+          <input id="questionInput" className={"text-center"} value = {pollData.question}>
             
           </input>
           <button onClick={() => changeQuestion(document.getElementById("questionInput").value)}>✅</button>
@@ -44,18 +57,19 @@ export default function EditPoll({pollData}) {
           }
         }}>
         {
-        pollData.answers.map((newAnswer) =>
+        answersState.map((newAnswer, index) =>
           <p className={"flex justify-center w-full mt-[1vh]"}>
             <span className={"rounded-lg px-3 w-[20%] h-[33px] mr-1 flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"}>
-              A{pollData.answers.indexOf(newAnswer)+1}:
+              A{index+1}:
             </span>
-            <input id={pollData.answers.indexOf(newAnswer)+100} className={"text-center border-2 rounded-lg"}>
+            <input id={index+100} className={"text-center border-2 rounded-lg"} value={newAnswer.answer}>
             
             </input>
-            <button onClick={() => changeAnswer(newAnswer, document.getElementById(pollData.answers.indexOf(newAnswer)+100).value)}>✅</button>
+            <button onClick={() => changeAnswer(index, document.getElementById(index+100).value)}>✅</button>
             <button onClick={() => removeAnswer(newAnswer)}>➖</button>
           </p>  
         )}
+        {answersState.length < 4 && <button onClick={() => addAnswer()}>➕</button>}
         </div>
       </div>
     </div>

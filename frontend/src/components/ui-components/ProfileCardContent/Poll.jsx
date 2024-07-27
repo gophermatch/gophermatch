@@ -40,7 +40,7 @@ export default function Poll({pollData, revealAnswers}) {
         pollData.answers.map((newAnswer) =>
           <p className={"flex justify-center w-full mt-[1vh]"}>
             <span className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"}>
-              {newAnswer.answer} {(newAnswer.votes/voteTotal).toPrecision(3)*100}%
+              {newAnswer.answer} {(newAnswer.votes/voteTotal*100).toFixed(1)}%
             </span>
           </p>  
         )
