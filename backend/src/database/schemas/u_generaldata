@@ -1,6 +1,14 @@
 CREATE TABLE u_generaldata (
-    user_id INT UNIQUE,
+    user_id INT NOT NULL PRIMARY KEY,
     wakeup_time INT DEFAULT 80,
     sleep_time INT DEFAULT 144,
-    PRIMARY KEY (user_id)
+    substances ENUM('Yes', 'No') DEFAULT 'No',
+    alcohol ENUM('Yes', 'No') DEFAULT 'No',
+    room_activity ENUM('Party', 'Friends', 'Empty') DEFAULT 'Friends',
+    num_roommates_min INT DEFAULT NULL,
+    num_roommates_max INT DEFAULT NULL,
+    bedroom_preference ENUM('Shared', 'Single') DEFAULT 'Shared',
+    bathroom_preference ENUM('Shared', 'Attached') DEFAULT 'Shared',
+    move_in_date DATE DEFAULT NULL,
+    move_out_date DATE DEFAULT NULL
 );

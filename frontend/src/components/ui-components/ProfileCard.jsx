@@ -18,8 +18,12 @@ interface pollData {
 }
 interface dormData {
   type: "dorm"
-  top5Dorms: string[]
-  ...maybe other dorm data later
+  top5Dorms: string[],
+  numPeople: {
+    min: number,
+    max: number
+  },
+  semesters: string,
 }
 interface aptData {
   type: "apartment"
@@ -93,8 +97,9 @@ export function ProfileCard({
             </div>
             <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-                <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
-                  {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo aptData={aptOrDormData}/>}
+                <div className={"flex grow-[5] border-none border-2 border-maroon max-h-40"}>
+                  {/* {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo aptData={aptOrDormData}/>} */}
+                  <Top5Dorms dormData={aptOrDormData} />
                 </div>
                   <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
                     <Qna qna={qna} />
