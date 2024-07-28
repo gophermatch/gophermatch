@@ -37,7 +37,7 @@ export default function EditPoll({pollData}) {
         {/*Top headers*/}
         <p className={"flex justify-center w-full"}>
           <span>Q:  </span>
-          <input id="questionInput" className={"text-center"} value = {pollData.question}>
+          <input id="questionInput" className={"text-center"}>
             
           </input>
           <button onClick={() => changeQuestion(document.getElementById("questionInput").value)}>✅</button>
@@ -62,7 +62,7 @@ export default function EditPoll({pollData}) {
             <span className={"rounded-lg px-3 w-[20%] h-[33px] mr-1 flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"}>
               A{index+1}:
             </span>
-            <input id={index+100} className={"text-center border-2 rounded-lg"} value={newAnswer.answer}>
+            <input id={index+100} className={"text-center border-2 rounded-lg"}>
             
             </input>
             <button onClick={() => changeAnswer(index, document.getElementById(index+100).value)}>✅</button>
