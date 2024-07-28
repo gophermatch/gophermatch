@@ -356,3 +356,94 @@ export async function getTopFive(user_id){
         });
     });
 }
+
+// Get poll questions for a user
+export async function getPollQuestions(user_id) {
+  return new Promise((resolve, reject) => {
+      const queryString = `SELECT * FROM u_pollquestions WHERE user_id = ?`;
+      db.query(queryString, [user_id], (err, rows) => {
+          if (err) {
+              console.error("Error fetching poll questions:", err);
+              reject(err);
+              return;
+          }
+          resolve(rows);
+      });
+  });
+}
+
+// Update poll question for a user
+export async function updatePollQuestion(user_id, question_text) {
+  return new Promise((resolve, reject) => {
+      const queryString = `UPDATE u_pollquestions SET question_text = ? WHERE user_id = ?`;
+      db.query(queryString, [question_text, user_id], (err, result) => {
+          if (err) {
+              console.error("Error updating poll question:", err);
+              reject(err);
+              return;
+          }
+          resolve(result);
+      });
+  });
+}
+
+// Get poll options for a user
+export async function getPollOptions(user_id) {
+  return new Promise((resolve, reject) => {
+      const queryString = `SELECT * FROM u_polloptions WHERE user_id = ?`;
+      db.query(queryString, [user_id], (err, rows) => {
+          if (err) {
+              console.error("Error fetching poll options:", err);
+              reject(err);
+              return;
+          }
+          resolve(rows);
+      });
+  });
+}
+
+// Update poll option for a user
+export async function updatePollOption(user_id, option_id, option_text) {
+  return new Promise((resolve, reject) => {
+      const queryString = `UPDATE u_polloptions SET option_text = ? WHERE user_id = ? AND option_id = ?`;
+      db.query(queryString, [option_text, user_id, option_id], (err, result) => {
+          if (err) {
+              console.error("Error updating poll option:", err);
+              reject(err);
+              return;
+          }
+          resolve(result);
+      });
+  });
+}
+
+// Create a new poll option for a user
+export async function createPollOption(user_id, option_text) {
+  return new Promise((resolve, reject) => {
+      const queryString = `INSERT INTO u_polloptions (user_id, option_text) VALUES (?, ?)`;
+      db.query(queryString, [user_id, option_text], (err, result) => {
+          if (err) {
+              console.error("Error creating poll option:", err);
+              reject(err);
+              return;
+          }
+          resolve(result);
+      });
+  });
+}
+
+// Delete a poll option for a user
+export async function deletePollOption(user_id, option_id) {
+  return new Promise((resolve, reject) => {
+      const queryString = `DELETE FROM u_polloptions WHERE user_id = ? AND option_id = ?`;
+      db.query(queryString, [user_id, option_id], (err, result) => {
+          if (err) {
+              console.error("Error deleting poll option:", err);
+              reject(err);
+              return;
+          }
+          resolve(result);
+      });
+  });
+}
+
