@@ -74,12 +74,22 @@ export function ProfileCard({
   sleepSchedule,
   pollData,
   aptOrDormData,
+  userId
 }) {
+
+  pollData = {
+    question: "What is your favorite color?",
+    answers: [
+      { answer: "Red", votes: 15 },
+      { answer: "Blue", votes: 29 },
+      { answer: "Green", votes: 9 },
+      { answer: "Yellow", votes: 6 }
+    ]
+  }
 
   useEffect(() => {
     console.log(pictureUrls)
   }, [user_data]);
-
 
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
@@ -103,7 +113,7 @@ export function ProfileCard({
                 </div>
               <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
-                  <Poll pollData={pollData} />
+                  <Poll pollData={pollData} revealAnswers={false} userId={16}/>
                 </div>
                 <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
                   <SleepSchedule sleepSchedule={sleepSchedule} />
