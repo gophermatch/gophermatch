@@ -13,7 +13,6 @@ import {
     updatePollOption,
     createPollOption,
     deletePollOption,
-    insertTopFive, getTopFive,
     getGeneralData, setGeneralData,
     updateUserTags, getUserSelectedTags, getAllTags
 } from "../database/profile.js";
