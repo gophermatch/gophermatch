@@ -14,11 +14,9 @@ SELECT
     u_userdata.major,
     u_userdata.graduating_year,
     u_bios.bio,
-    JSON_ARRAY(u_apartment.rent, u_apartment.move_in_date, u_apartment.move_out_date) AS apartment_data,
-    GROUP_CONCAT(DISTINCT CONCAT(u_tags.tag_id, ':', u_tags.tag_value) ORDER BY u_tags.tag_id SEPARATOR ', ') AS tags,
+    JSON_ARRAY(u_apartment.rent, u_apartment.building) AS apartment_data,
     u_pollquestions.question_text AS poll_question,
     JSON_ARRAY(qna.qna_data) AS qna,
-    JSON_ARRAY(u_generaldata.wakeup_time, u_generaldata.sleep_time) AS sleep_schedule,
     pictures.pictures AS pictures
 FROM 
     u_userdata
@@ -26,8 +24,6 @@ LEFT JOIN
     u_bios ON u_userdata.user_id = u_bios.user_id
 LEFT JOIN 
     u_apartment ON u_userdata.user_id = u_apartment.user_id
-LEFT JOIN 
-    u_tags ON u_userdata.user_id = u_tags.user_id
 LEFT JOIN 
     u_pollquestions ON u_userdata.user_id = u_pollquestions.user_id
 LEFT JOIN 
@@ -42,8 +38,6 @@ LEFT JOIN
         GROUP BY 
             user_id
     ) AS qna ON u_userdata.user_id = qna.user_id
-LEFT JOIN 
-    u_generaldata ON u_userdata.user_id = u_generaldata.user_id
 LEFT JOIN 
     (
         SELECT
@@ -70,10 +64,7 @@ GROUP BY
     u_userdata.graduating_year,
     u_bios.bio,
     u_apartment.rent,
-    u_apartment.move_in_date,
-    u_apartment.move_out_date,
-    u_generaldata.wakeup_time,
-    u_generaldata.sleep_time,
+    u_apartment.building,
     u_pollquestions.question_text;
 `;
 
