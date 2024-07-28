@@ -73,9 +73,13 @@ export default function Match() {
       <div>
           <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={profileMode}/>
           <ProfileCard
+            // Makes more sense to just pass in all the data, seperating can be done by individual components
+            // TODO: remove other props than all_data
+            all_data={filterResults[currentIndex]}
             user_data={filterResults[currentIndex]?.user_data}
             qnaAnswers={filterResults[currentIndex]?.profile_data?.qnaAnswers}
             editedBio={filterResults[currentIndex]?.profile_data?.bio}
+            pictureUrls={JSON.parse(filterResults[currentIndex]?.profile_data?.pictures)}
             editable={false}
             dormMode={profileMode}
             top5={['', '', '', '', '']}
