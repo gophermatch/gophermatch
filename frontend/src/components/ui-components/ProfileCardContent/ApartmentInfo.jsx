@@ -4,13 +4,13 @@ import backend from "../../../backend.js";
 import currentUser from "../../../currentUser.js";
 import './apartmentStyles.css';
 import NumericTextbox from "./NumericTextbox.jsx";
+import MonthDropdown from "./MonthDropdown.jsx";
 
-export default function ApartmentInfo(aptData, editing) {
+export default function ApartmentInfo({all_data, editing}) {
 
   useEffect(() => {
+    console.log(all_data);
     fetchAllTags().then(fetchUserTags);
-
-    fetchGenData();
   }, []);
 
   // Fetch a map of tag IDs to their text values from the database
@@ -28,15 +28,6 @@ export default function ApartmentInfo(aptData, editing) {
     const tagReq = await backend.get('profile/user-selected-tags', {params: {user_id: currentUser.user_id}});
 
     setActiveTags(tagReq.data.tag_ids);
-  }
-
-  // Fetch the user's active tag IDs from the database
-  async function fetchGenData ()
-  {
-    // Data returns with an array of chosen tag ids, ex: [2, 3, 6]
-    const genReq = await backend.get('profile/get-gendata', {params: {user_id: 56}});
-
-    setGenData(genReq.data);
   }
 
   // TODO: Need to hook in the "Save profile" button with this. Needs to be done once it's added.
@@ -59,8 +50,6 @@ export default function ApartmentInfo(aptData, editing) {
   const [activeTags, setActiveTags] = useState([
     1, 2, 3, 4
   ]);
-
-  const [genData, setGenData] = useState([]);
 
   // Called from within the ApartmentTag components to toggle the values
   const onToggleTag = (id) => {
@@ -88,25 +77,24 @@ export default function ApartmentInfo(aptData, editing) {
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
         {/*Top header panel with apt name*/}
         <div className={"flex grow-[1]"}>
-          Looking to live in Fieldhouse
+          {/* TODO: Should this just be replaced by tags?*/}
+          Looking to live in {JSON.parse(all_data.profile_data.apartment_data)[1]}
         </div>
         {/*Middle info panel with apt info*/}
         <div className={"flex grow-[1] w-full justify-center items-center flex-col font-[350]"}>
           <div className={"flex w-full justify-center gap-[1vw]"}>
-            <span><b>3</b> bed</span>
-            <span><b>3</b> bath</span>
-            <span><b>$500</b> budget</span>
+            <span>{editing ? <NumericTextbox value={all_data.general_data.num_beds} min={1} max={6}/> : <b>{all_data.general_data.num_beds}</b>} bed</span>
+            <span>{editing ? <NumericTextbox value={all_data.general_data.num_bathrooms} min={1} max={6}/> : <b>{all_data.general_data.num_bathrooms}</b>} bath</span>
+            <span>{editing ? <>$<NumericTextbox wide={true} value={JSON.parse(all_data.profile_data.apartment_data)[0]} min={0} max={9999}/></> : <b>${JSON.parse(all_data.profile_data.apartment_data)[0]}</b>} budget</span>
           </div>
           <div className={"flex h-0 w-[95%] border-solid border-b-[1px] border-maroon"}></div>
           <div className={"flex w-full justify-center gap-[1vw]"}>
 
           <span className={"whitespace-nowrap"}>{editing ? <>
-          <NumericTextbox value={genData.num_roommates_min} min={1} max={6}/>
-           &nbsp;to
-          <NumericTextbox value={genData.num_roommates_max} min={1} max={6}/></>
-          : <b>{genData.num_roommates_max}</b>}
-          &nbsp;roommates</span>
-            <span>September to May</span>
+          <NumericTextbox value={all_data.general_data.num_residents} min={1} max={6}/></>
+          : <b>{all_data.general_data.num_residents}</b>}
+          &nbsp;residents</span>
+            <span><MonthDropdown initialValue={all_data.general_data.move_in_month}/> to <MonthDropdown initialValue={all_data.general_data.move_out_month}/></span>
           </div>
         </div>
 

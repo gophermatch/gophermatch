@@ -64,6 +64,7 @@ interface profileData {
     // };
 
 export function ProfileCard({
+  all_data,
   user_data,
   name,
   major,
@@ -94,7 +95,7 @@ export function ProfileCard({
             <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
-                  {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo aptData={aptOrDormData} editing={true}/>}
+                  {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo all_data={all_data} editing={true}/>}
                 </div>
                   <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
                     <Qna qna={qna} />
