@@ -65,7 +65,6 @@ export function EditProfileCard({
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
           <div className="w-[30vh] h-full border-dashed border-2 border-maroon min-w-[25%]">
             EDITING
-            <button onclick="console.log(pollData)">Try it</button>
             {/* Carousel */}
           </div>
           <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
