@@ -3,7 +3,7 @@ import { db , tableNames} from './db.js'; // Your database connection setup
 import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
 import qnaOptions from '../../../frontend/src/components/ui-components/qnaOptions.json' assert { type: 'json' };
 import { getUserData } from "./account.js";
-import { getProfile } from "./profile.js";
+import { getGeneralData, getProfile } from "./profile.js";
 
 export async function recordUserDecision(user1Id, user2Id, decision) {
     try {
@@ -202,9 +202,11 @@ export async function getInteractedProfiles(user_id){
 
   export async function getProfileInfoMultiple(user_ids)
   {
+    const genDataPromises = user_ids.map(userId => getGeneralData(userId));
     const profilePromises = user_ids.map(userId => getProfile(userId));
     const userDataPromises = user_ids.map(userId => getUserData(userId));
 
+    const genDataResults = await Promise.all(genDataPromises);
     const profileDataResults = await Promise.all(profilePromises);
     const userDataResults = await Promise.all(userDataPromises);
 
@@ -212,6 +214,7 @@ export async function getInteractedProfiles(user_id){
     const profileInfo = user_ids.map((user_id, index) => {
       return {
         user_id: user_id,
+        general_data: genDataResults[index][0],
         profile_data: profileDataResults[index],
         user_data: userDataResults[index]
       };

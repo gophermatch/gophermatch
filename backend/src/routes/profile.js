@@ -12,7 +12,10 @@ import {
     getPollOptions,
     updatePollOption,
     createPollOption,
-    deletePollOption
+    deletePollOption,
+    insertTopFive, getTopFive,
+    getGeneralData, setGeneralData,
+    updateUserTags, getUserSelectedTags, getAllTags
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -343,6 +346,117 @@ router.delete('/poll-option', async (req, res) => {
     }
 });
 
+// gets all fields from u_generaldata given a user_id
+router.get('/get-gendata', async (req, res) => {
+    const {user_id} = req.query;
+    if (!user_id){
+        return res.status(400).json(createErrorObj("Missing parameters for get-gendata"));
+    }
 
+    try {
+        const results = await getGeneralData(user_id);
+        return res.json(results);
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to get general data."));
+    }
+});
+
+
+// sets/updates a all fields in u_generaldata given a user_id and data. Example I use in postman route:
+// Any fields not included in data are filled with default values
+/*
+    {
+        "user_id": 56,
+        "data": {
+            "wakeup_time": 90,
+            "sleep_time": 150,
+            "substances": "Yes",
+            "room_activity": "Party"
+            // add other fields as needed
+        }
+    }
+*/
+router.post('/set-gendata', async (req, res) => {
+    const { user_id, data } = req.body;
+    if (!user_id || !data) {
+        return res.status(400).json(createErrorObj("Missing parameters for set-gendata"));
+    }
+
+    try {
+        const results = await setGeneralData(user_id, data);
+        return res.json({ message: "Data updated successfully"});
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to set general data."));
+    }
+});
+
+// updates the users tags given a user id and array of selected tag ids. Example I used in postman
+/*
+    {
+        "user_id": 47,
+        "tag_ids": [
+            2,
+            3,
+            6
+        ]
+    }
+*/
+
+router.post('/update-user-tags', async (req, res) => {
+    const { user_id, tag_ids } = req.body;
+    if (!user_id || !Array.isArray(tag_ids)) {
+        return res.status(400).json({ error: 'Missing or invalid parameters' });
+    }
+
+    try {
+        await updateUserTags(user_id, tag_ids);
+        res.json({ message: 'User tags updated successfully' });
+    } catch (error) {
+        console.error('Error updating user tags:', error);
+        res.status(500).json({ error: 'Failed to update user tags' });
+    }
+});
+
+// returns an array of a users selected tag ids
+// postman route no json is {{api_url}}/profile/user-selected-tags?user_id=47
+router.get('/user-selected-tags', async (req, res) => {
+    const { user_id } = req.query;
+    if (!user_id) {
+        return res.status(400).json({ error: 'Missing user_id parameter' });
+    }
+
+    try {
+        const tagIds = await getUserSelectedTags(user_id);
+        res.json({ user_id, tag_ids: tagIds });
+    } catch (error) {
+        console.error('Error getting user selected tags:', error);
+        res.status(500).json({ error: 'Failed to get user selected tags' });
+    }
+});
+
+// returns all tag ids (don't hard code tags). Example output:
+/*
+    {
+        "tag_ids": [
+            {
+                "tag_id": 1,
+                "tag_text": "Gym"
+            },
+            {
+                "tag_id": 2,
+                "tag_text": "Needs Parking"
+            },
+        ]
+    }
+*/
+router.get('/all-tag-ids', async (req, res) => {
+    try {
+        const tagIds = await getAllTags();
+        res.json({ tag_ids: tagIds });
+    } catch (error) {
+        console.error('Error getting all tag ids:', error);
+        res.status(500).json({ error: 'Failed to get all tag ids' });
+    }
+});
 
 export default router

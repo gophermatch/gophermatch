@@ -1,5 +1,3 @@
-
-
 .imageWrapper img {
     max-width: 100%;
     object-fit: cover;
@@ -11,6 +9,7 @@
     margin-top: 1vh;
     margin-bottom: 1vh;
     height: 2.5vh;
+    justify-content: center; /* Center align the dots */
 }
 
 .progressButton {
@@ -20,23 +19,22 @@
     flex: none;
     border: none;
     background-color: white;
-    box-shadow: 0px 0px 5px #888888;
-    border-radius: 50%;
+    border-radius: 100%;
     width: 4vh;
     height: 4vh;
     overflow: none;
     transition: 0.2s;
-    margin-left: 1.65vw;
-    margin-right: 1.65vw;
-    margin-top: 0.75vh;
+    margin-left: 2.5vw;
+    margin-right: 2.5vw;
+    margin-top: 0.3vh;
 }
 
 .progressButton:hover {
-    background-color: rgb(148, 148, 148)
+    background-color: rgb(148, 148, 148);
 }
 
 .progressButton:active {
-    background-color: white
+    background-color: white;
 }
 
 .dots {
@@ -44,18 +42,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex:  5;
+    flex: 5;
     margin-top: 2.5vh;
 }
 
 .dotSolid, .dotEmpty {
     box-sizing: border-box;
-    flex: 1;
+    width: 14px;
     height: 14px;
-    max-width: 14px;
     border-radius: 50%;
-    border: none;
-    background: none;
     padding: 0;
     margin-left: 1vw;
     margin-right: 1vw;
@@ -64,8 +59,68 @@
 .dotSolid {
     background-color: maroon;
 }
+
 .dotEmpty {
     border: 2px solid maroon;
     cursor: pointer;
 }
 
+@media (min-width: 640px) {
+    .dotEmpty, .dotSolid {
+        width: 7px;
+        height: 7px;
+        margin-top: -1vh;
+    }
+
+    .progressButton {
+        font-size: 4vh;
+        margin-left: 4px;
+        margin-right: 4px;
+        margin-top: -1.5px;
+    }
+}
+
+@media (min-width: 768px) {
+    .dotEmpty, .dotSolid {
+        width: 10px;
+        height: 10px;
+        margin-top: -2vh;
+    }
+
+    .progressButton {
+        font-size: 4vh;
+        margin-left: 2.3vw;
+        margin-right: 2.3vw;
+        margin-top: -1.5px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .dotEmpty, .dotSolid {
+        width: 12px;
+        height: 12px;
+        margin-top: -1.75vh;
+    }
+
+    .progressButton {
+        font-size: 3vh;
+        margin-left: 16px;
+        margin-right: 16px;
+        margin-top: -1.5px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .dotEmpty, .dotSolid {
+        width: 14px;
+        height: 14px;
+        margin-top: -1vh;
+    }
+
+    .progressButton {
+        font-size: 3vh;
+        margin-left: 32px;
+        margin-right: 32px;
+        margin-top: -1.5px;
+    }
+}
