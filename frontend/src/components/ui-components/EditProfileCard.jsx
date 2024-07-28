@@ -41,8 +41,10 @@ export function EditProfileCard({
   sleepSchedule,
   aptData,
   dormData,
-  pollData
+  pollData,
+  userId
 }) {
+  /* */
   pollData = {
     question: "What is your favorite color?",
     answers: [
@@ -85,7 +87,7 @@ export function EditProfileCard({
               <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
                   {/* Poll */}
-                  <EditPoll pollData={pollData}/> 
+                  <EditPoll pollData={pollData} revealAnswers={true} userId={16}/> 
                 </div>
                 <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
                   {/* Sleep schedule */}

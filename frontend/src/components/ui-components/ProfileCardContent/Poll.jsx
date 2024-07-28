@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ApartmentTag from "./ApartmentTag.jsx";
 
-export default function Poll({pollData, revealAnswers}) {
+export default function Poll({pollData, revealAnswers, userId}) {
     const [answerRevealed, setAnswerRevealed] = useState(revealAnswers);
     let [answersState, setAnswersState] = useState(pollData.answers);
 
