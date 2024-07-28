@@ -7,7 +7,7 @@ import { EditProfileCard } from '../ui-components/EditProfileCard';
 
 export default function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
 
   useEffect(() => {
     backend.get('/profile', {params: {user_id: currentUser.user_id}}).then((res) => {
