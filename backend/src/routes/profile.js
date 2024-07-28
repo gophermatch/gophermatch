@@ -7,7 +7,12 @@ import {
     updateProfile,
     savePictureUrl,
     retrievePictureUrls, createBio, removePicture, updateApartmentInfo,
-    insertTopFive, getTopFive
+    insertTopFive, getTopFive,  getPollQuestions,
+    updatePollQuestion,
+    getPollOptions,
+    updatePollOption,
+    createPollOption,
+    deletePollOption
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -228,5 +233,116 @@ router.get('/get-topfive', async (req, res) => {
         return res.status(500).json(createErrorObj("Failed to get top five."));
     }
 });
+
+// Get poll questions for a user
+router.get('/poll-questions', async (req, res) => {
+    const user_id = req.query.user_id;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const questions = await getPollQuestions(user_id);
+        res.status(200).json(questions);
+    } catch (error) {
+        console.error("Error fetching poll questions:", error);
+        res.status(500).json(createErrorObj("Failed to fetch poll questions. Please try again later."));
+    }
+});
+
+// Update poll question for a user
+router.put('/poll-question', async (req, res) => {
+    const user_id = req.body.user_id;
+    const question_text = req.body.question_text;
+
+    if (!user_id || !question_text) {
+        res.status(400).json(createErrorObj("Must specify user_id and question_text to update poll question!"));
+        return;
+    }
+
+    try {
+        await updatePollQuestion(user_id, question_text);
+        res.status(200).json({ message: "Poll question updated!" });
+    } catch (error) {
+        console.error("Error updating poll question:", error);
+        res.status(500).json(createErrorObj("Failed to update poll question. Please try again later."));
+    }
+});
+
+// Get poll options for a user
+router.get('/poll-options', async (req, res) => {
+    const user_id = req.query.user_id;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const options = await getPollOptions(user_id);
+        res.status(200).json(options);
+    } catch (error) {
+        console.error("Error fetching poll options:", error);
+        res.status(500).json(createErrorObj("Failed to fetch poll options. Please try again later."));
+    }
+});
+
+// Update poll option for a user
+router.put('/poll-option', async (req, res) => {
+    const { user_id, option_id, option_text } = req.body;
+
+    if (!user_id || !option_id || !option_text) {
+        res.status(400).json(createErrorObj("Must specify user_id, option_id, and option_text to update poll option!"));
+        return;
+    }
+
+    try {
+        await updatePollOption(user_id, option_id, option_text);
+        res.status(200).json({ message: "Poll option updated!" });
+    } catch (error) {
+        console.error("Error updating poll option:", error);
+        res.status(500).json(createErrorObj("Failed to update poll option. Please try again later."));
+    }
+});
+
+// Create a new poll option for a user
+router.post('/poll-option', async (req, res) => {
+    const { user_id, option_text } = req.body;
+
+    if (!user_id || !option_text) {
+        res.status(400).json(createErrorObj("Must specify user_id and option_text to create poll option!"));
+        return;
+    }
+
+    try {
+        await createPollOption(user_id, option_text);
+        res.status(200).json({ message: "Poll option created!" });
+    } catch (error) {
+        console.error("Error creating poll option:", error);
+        res.status(500).json(createErrorObj("Failed to create poll option. Please try again later."));
+    }
+});
+
+// Delete a poll option for a user
+router.delete('/poll-option', async (req, res) => {
+    const { user_id, option_id } = req.query;
+
+    if (!user_id || !option_id) {
+        res.status(400).json(createErrorObj("Must specify user_id and option_id to delete poll option!"));
+        return;
+    }
+
+    try {
+        await deletePollOption(user_id, option_id);
+        res.status(200).json({ message: "Poll option deleted!" });
+    } catch (error) {
+        console.error("Error deleting poll option:", error);
+        res.status(500).json(createErrorObj("Failed to delete poll option. Please try again later."));
+    }
+});
+
+
 
 export default router
