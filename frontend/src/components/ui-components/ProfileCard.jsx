@@ -107,7 +107,7 @@ export function ProfileCard({
                 <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
                   {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo all_data={all_data} editing={true}/>}
                 </div>
-                  <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
+                  <div className={"flex grow-[3] overflow-y-auto overflow-x-hidden max-h-40"}>
                     <Qna qna={qna} />
                   </div>
                 </div>
