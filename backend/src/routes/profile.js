@@ -7,7 +7,14 @@ import {
     updateProfile,
     savePictureUrl,
     retrievePictureUrls, createBio, removePicture, updateApartmentInfo,
-    insertTopFive, getTopFive
+    insertTopFive, getTopFive,  getPollQuestions,
+    updatePollQuestion,
+    getPollOptions,
+    updatePollOption,
+    createPollOption,
+    deletePollOption,
+    getGeneralData, setGeneralData,
+    updateUserTags, getUserSelectedTags, getAllTags
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -226,6 +233,228 @@ router.get('/get-topfive', async (req, res) => {
         return res.json(optInput);
     } catch (error) {
         return res.status(500).json(createErrorObj("Failed to get top five."));
+    }
+});
+
+// Get poll questions for a user
+router.get('/poll-questions', async (req, res) => {
+    const user_id = req.query.user_id;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const questions = await getPollQuestions(user_id);
+        res.status(200).json(questions);
+    } catch (error) {
+        console.error("Error fetching poll questions:", error);
+        res.status(500).json(createErrorObj("Failed to fetch poll questions. Please try again later."));
+    }
+});
+
+// Update poll question for a user
+router.put('/poll-question', async (req, res) => {
+    const user_id = req.body.user_id;
+    const question_text = req.body.question_text;
+
+    if (!user_id || !question_text) {
+        res.status(400).json(createErrorObj("Must specify user_id and question_text to update poll question!"));
+        return;
+    }
+
+    try {
+        await updatePollQuestion(user_id, question_text);
+        res.status(200).json({ message: "Poll question updated!" });
+    } catch (error) {
+        console.error("Error updating poll question:", error);
+        res.status(500).json(createErrorObj("Failed to update poll question. Please try again later."));
+    }
+});
+
+// Get poll options for a user
+router.get('/poll-options', async (req, res) => {
+    const user_id = req.query.user_id;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const options = await getPollOptions(user_id);
+        res.status(200).json(options);
+    } catch (error) {
+        console.error("Error fetching poll options:", error);
+        res.status(500).json(createErrorObj("Failed to fetch poll options. Please try again later."));
+    }
+});
+
+// Update poll option for a user
+router.put('/poll-option', async (req, res) => {
+    const { user_id, option_id, option_text } = req.body;
+
+    if (!user_id || !option_id || !option_text) {
+        res.status(400).json(createErrorObj("Must specify user_id, option_id, and option_text to update poll option!"));
+        return;
+    }
+
+    try {
+        await updatePollOption(user_id, option_id, option_text);
+        res.status(200).json({ message: "Poll option updated!" });
+    } catch (error) {
+        console.error("Error updating poll option:", error);
+        res.status(500).json(createErrorObj("Failed to update poll option. Please try again later."));
+    }
+});
+
+// Create a new poll option for a user
+router.post('/poll-option', async (req, res) => {
+    const { user_id, option_text } = req.body;
+
+    if (!user_id || !option_text) {
+        res.status(400).json(createErrorObj("Must specify user_id and option_text to create poll option!"));
+        return;
+    }
+
+    try {
+        await createPollOption(user_id, option_text);
+        res.status(200).json({ message: "Poll option created!" });
+    } catch (error) {
+        console.error("Error creating poll option:", error);
+        res.status(500).json(createErrorObj("Failed to create poll option. Please try again later."));
+    }
+});
+
+// Delete a poll option for a user
+router.delete('/poll-option', async (req, res) => {
+    const { user_id, option_id } = req.query;
+
+    if (!user_id || !option_id) {
+        res.status(400).json(createErrorObj("Must specify user_id and option_id to delete poll option!"));
+        return;
+    }
+
+    try {
+        await deletePollOption(user_id, option_id);
+        res.status(200).json({ message: "Poll option deleted!" });
+    } catch (error) {
+        console.error("Error deleting poll option:", error);
+        res.status(500).json(createErrorObj("Failed to delete poll option. Please try again later."));
+    }
+});
+
+// gets all fields from u_generaldata given a user_id
+router.get('/get-gendata', async (req, res) => {
+    const {user_id} = req.query;
+    if (!user_id){
+        return res.status(400).json(createErrorObj("Missing parameters for get-gendata"));
+    }
+
+    try {
+        const results = await getGeneralData(user_id);
+        return res.json(results);
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to get general data."));
+    }
+});
+
+
+// sets/updates a all fields in u_generaldata given a user_id and data. Example I use in postman route:
+// Any fields not included in data are filled with default values
+/*
+    {
+        "user_id": 56,
+        "data": {
+            "wakeup_time": 90,
+            "sleep_time": 150,
+            "substances": "Yes",
+            "room_activity": "Party"
+            // add other fields as needed
+        }
+    }
+*/
+router.post('/set-gendata', async (req, res) => {
+    const { user_id, data } = req.body;
+    if (!user_id || !data) {
+        return res.status(400).json(createErrorObj("Missing parameters for set-gendata"));
+    }
+
+    try {
+        const results = await setGeneralData(user_id, data);
+        return res.json({ message: "Data updated successfully"});
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to set general data."));
+    }
+});
+
+// updates the users tags given a user id and array of selected tag ids. Example I used in postman
+/*
+    {
+        "user_id": 47,
+        "tag_ids": [
+            2,
+            3,
+            6
+        ]
+    }
+*/
+
+router.post('/update-user-tags', async (req, res) => {
+    const { user_id, tag_ids } = req.body;
+    if (!user_id || !Array.isArray(tag_ids)) {
+        return res.status(400).json({ error: 'Missing or invalid parameters' });
+    }
+
+    try {
+        await updateUserTags(user_id, tag_ids);
+        res.json({ message: 'User tags updated successfully' });
+    } catch (error) {
+        console.error('Error updating user tags:', error);
+        res.status(500).json({ error: 'Failed to update user tags' });
+    }
+});
+
+// returns an array of a users selected tag ids
+// postman route no json is {{api_url}}/profile/user-selected-tags?user_id=47
+router.get('/user-selected-tags', async (req, res) => {
+    const { user_id } = req.query;
+    if (!user_id) {
+        return res.status(400).json({ error: 'Missing user_id parameter' });
+    }
+
+    try {
+        const tagIds = await getUserSelectedTags(user_id);
+        res.json({ user_id, tag_ids: tagIds });
+    } catch (error) {
+        console.error('Error getting user selected tags:', error);
+        res.status(500).json({ error: 'Failed to get user selected tags' });
+    }
+});
+
+// returns all tag ids (don't hard code tags). Example output:
+/*
+    {
+        "tag_ids": [
+            {
+                "tag_id": 1,
+                "tag_text": "Gym"
+            },
+            {
+                "tag_id": 2,
+                "tag_text": "Needs Parking"
+            },
+        ]
+    }
+*/
+router.get('/all-tag-ids', async (req, res) => {
+    try {
+        const tagIds = await getAllTags();
+        res.json({ tag_ids: tagIds });
+    } catch (error) {
+        console.error('Error getting all tag ids:', error);
+        res.status(500).json({ error: 'Failed to get all tag ids' });
     }
 });
 

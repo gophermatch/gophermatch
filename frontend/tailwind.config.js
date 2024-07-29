@@ -37,6 +37,7 @@ export default {
       maroon_new: '#7D0000',
       maroon_dark: '#5E0000',
       inactive_gray: '#C6C6C6',
+      dark_inactive_gray: '#969696',
       gold: 'rgb(234 179 8)',
       pink: 'rgb(254 249 195)',
       login: 'rgb(161 98 7)',
