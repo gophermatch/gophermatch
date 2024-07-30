@@ -6,7 +6,7 @@ import currentUser from '../../currentUser';
 
 export default function Match() {
 
-    const [filterResults, setFilterResults] = useState([]);
+    const [filteredUserIds, setFilterResults] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const [filters, setFilters] = useState([]);
@@ -21,11 +21,11 @@ export default function Match() {
     async function goToNext(decision) {
         await backend.post('/match/matcher', {
             user1Id: currentUser.user_id,
-            user2Id: filterResults[currentIndex].user_id,
+            user2Id: filteredUserIds[currentIndex].user_id,
             decision: decision
         });
 
-        if(currentIndex+1 >= filterResults.length){
+        if(currentIndex+1 >= filteredUserIds.length){
           console.log("ran out of results, appending more");
           await appendFilterResults()
           setCurrentIndex(0);
@@ -51,7 +51,7 @@ export default function Match() {
     });
   }
 
-    if (currentIndex >= filterResults.length) {
+    if (currentIndex >= filteredUserIds.length) {
         return (
           <div className={"h-full" +
             ""}>
@@ -69,7 +69,7 @@ export default function Match() {
     return (
       <div>
           <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
-          <ProfileCard user_id={filterResults[currentIndex]} />
+          <ProfileCard user_id={filteredUserIds[currentIndex]} />
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
               <button onClick={() => goToNext("reject")}
                       className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
