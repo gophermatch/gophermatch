@@ -37,7 +37,7 @@ export function EditProfileCard({
   user_id
 }) {
   /* */
-  pollData = {
+  const pollData = {
     question: "What is your favorite color?",
     answers: [
       { answer: "Red", votes: 15 },

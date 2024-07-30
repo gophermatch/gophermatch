@@ -56,7 +56,7 @@ router.post('/filter-results', async (req, res) => {
 
         const interactedProfiles = await getInteractedProfiles(user_id);
 
-        const commonUserIds = userdataResults.filter(id => qnaResults.includes(id) && !interactedProfiles.includes(id) && id !== user_id);
+        const commonUserIds = userdataResults.filter(id => !interactedProfiles.includes(id) && id !== user_id);
 
         res.json(commonUserIds);
     } catch (error) {

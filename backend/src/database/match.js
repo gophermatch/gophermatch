@@ -95,7 +95,7 @@ async function handleReciprocalMatch(user1Id, user2Id) {
 export async function getFilterResults(filters) {
     return new Promise((resolve, reject) => {
       // Start the query string with all user_ids
-      let queryString = `SELECT DISTINCT user_id FROM ${tableNames.u_userdata}`;
+      let queryString = `SELECT DISTINCT user_id FROM ${tableNames.u_generaldata}`;
   
       // Initialize an array to hold WHERE conditions
       const whereConditions = [];

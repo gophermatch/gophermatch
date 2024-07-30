@@ -67,7 +67,7 @@ export function ProfileCard({
   user_id
 }) {
 
-  pollData = {
+  const pollData = {
     question: "What is your favorite color?",
     answers: [
       { answer: "Red", votes: 15 },
@@ -77,28 +77,24 @@ export function ProfileCard({
     ]
   }
 
-  useEffect(() => {
-    console.log(pictureUrls)
-  }, [user_data]);
-
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
       <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
           <div className="w-[30vh] h-full border-dashed border-2 border-maroon min-w-[25%]">
-            <Carousel editable={false} pictureUrls={pictureUrls}></Carousel>
+            <Carousel editable={false} pictureUrls={[""]}></Carousel>
           </div>
           <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
             <div className="flex grow-[2] flex-col border-dashed border-2 border-maroon">
-              <NameAndBio name={name} major={major} bio={bio} />
+              <NameAndBio name={"dummy name"} major={"dummy major"} bio={"dummy bio"} />
             </div>
             <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
-                  {aptOrDormData && aptOrDormData.type === "dorm" ? <Top5Dorms dormData={aptOrDormData}/> : <ApartmentInfo all_data={all_data} editing={true}/>}
+                  {false ? <Top5Dorms dormData={null}/> : <ApartmentInfo all_data={null} editing={true}/>}
                 </div>
                   <div className={"flex grow-[3] overflow-y-auto overflow-x-hidden max-h-40"}>
-                    <Qna qna={qna} />
+                    <Qna qna={null} />
                   </div>
                 </div>
               <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
@@ -106,7 +102,7 @@ export function ProfileCard({
                   <Poll pollData={pollData} revealAnswers={false} userId={16}/>
                 </div>
                 <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
-                  <SleepSchedule sleepSchedule={sleepSchedule} />
+                  <SleepSchedule sleepSchedule={null} />
                 </div>
               </div>
             </div>

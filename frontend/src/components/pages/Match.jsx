@@ -55,7 +55,7 @@ export default function Match() {
         return (
           <div className={"h-full" +
             ""}>
-              <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={profileMode}/>
+              <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
             <div className={"flex h-full justify-center items-center"}>
               <div className={"flex flex-col"}>
                 <p className={"text-center"}>Out of results, please change your filters or</p>
