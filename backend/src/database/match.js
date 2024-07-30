@@ -2,8 +2,6 @@
 import { db , tableNames} from './db.js'; // Your database connection setup
 import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
 import qnaOptions from '../../../frontend/src/components/ui-components/qnaOptions.json' assert { type: 'json' };
-import { getUserData } from "./account.js";
-import { getGeneralData, getProfile } from "./profile.js";
 
 export async function recordUserDecision(user1Id, user2Id, decision) {
     try {
