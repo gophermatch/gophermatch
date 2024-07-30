@@ -50,19 +50,16 @@ router.post('/unrejectall', async (req, res) => {
 
 
 router.post('/filter-results', async (req, res) => {
-    const { user_id, userData, filters, amount } = req.body;
+    const { user_id, userData, amount } = req.body;
 
     try {
         const userdataResults = await getFilterResults(userData);
-
-        const qnaResults = await getFilterResultsQna(filters);
 
         const interactedProfiles = await getInteractedProfiles(user_id);
 
         const commonUserIds = userdataResults.filter(id => qnaResults.includes(id) && !interactedProfiles.includes(id) && id !== user_id);
 
-        const profileData = await getProfileInfoMultiple(commonUserIds.slice(0, amount));
-        res.json(profileData);
+        res.json(commonUserIds);
     } catch (error) {
         console.error('Error getting filter results:', error);
         res.status(500).json({ error: "Failed to get filter results." });

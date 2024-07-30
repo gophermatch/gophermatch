@@ -87,6 +87,7 @@ export async function getUserData(user_id){
     });
 }
 
+// TODO: Will need to be redone
 export async function updateAccountInfo(userdata, userId){
     console.log(userdata);
         const filteredNewVals = Object.entries(userdata).reduce((acc, [key, value]) => {
@@ -115,6 +116,7 @@ export async function updateAccountInfo(userdata, userId){
     });
 }
 
+// TODO: Will need to be redone
 export async function insertAccountInfo(userdata, userId){
     console.log(userdata);
     const filteredNewVals = Object.entries(userdata).reduce((acc, [key, value]) => {

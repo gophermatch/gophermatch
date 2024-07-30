@@ -93,6 +93,7 @@ async function handleReciprocalMatch(user1Id, user2Id) {
     }
 }
 
+// TODO: Needs to be updated
 export async function getFilterResults(filters) {
     return new Promise((resolve, reject) => {
       // Start the query string with all user_ids
@@ -151,21 +152,6 @@ export async function getInteractedProfiles(user_id){
     });
   });
 }
-
-  export async function getFilterResultsQna(optionIds) {
-    return new Promise((resolve, reject) => {
-      if (!optionIds || optionIds.length === 0) {
-        db.query(`SELECT DISTINCT user_id FROM u_qna`, [], (err, rows) => {
-          if (err) {
-            console.error("Error querying all user_ids from u_qna:", err);
-            reject(err);
-            return;
-          }
-          const userIds = rows.map(row => row.user_id);
-          resolve(userIds);
-        });
-        return;
-      }
   
       // Map option IDs to their respective questions using the qnaOptions data
       const questionIdToOptionIds = qnaOptions.reduce((acc, q) => {
@@ -198,29 +184,6 @@ export async function getInteractedProfiles(user_id){
         resolve(userIds);
       });
     });
-  }
-
-  export async function getProfileInfoMultiple(user_ids)
-  {
-    const genDataPromises = user_ids.map(userId => getGeneralData(userId));
-    const profilePromises = user_ids.map(userId => getProfile(userId));
-    const userDataPromises = user_ids.map(userId => getUserData(userId));
-
-    const genDataResults = await Promise.all(genDataPromises);
-    const profileDataResults = await Promise.all(profilePromises);
-    const userDataResults = await Promise.all(userDataPromises);
-
-    // Combine account data and user data
-    const profileInfo = user_ids.map((user_id, index) => {
-      return {
-        user_id: user_id,
-        general_data: genDataResults[index][0],
-        profile_data: profileDataResults[index],
-        user_data: userDataResults[index]
-      };
-    });
-
-    return profileInfo;
   }
 
 // Function to retrieve all user IDs that a specified user has marked as 'unsure'.

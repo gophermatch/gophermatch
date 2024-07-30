@@ -84,142 +84,6 @@ GROUP BY
           });
       });
 }
-
-// Creates and stores a profile in DB
-// second argument (profile obj) is optional
-export async function createBio(user_id, profile) {
-    if (!profile) profile = {}
-    return new Promise((resolve, reject) => {
-        const qr = buildInsertString(tableNames.u_bios, {user_id, ...profile})
-
-        db.query(qr.queryString, qr.values, (err, res) => {
-            if (err) {
-                if (err.code === "ER_DUP_ENTRY") reject("Profile already exists")
-                else reject(err)
-                return
-            }
-            if (res.affectedRows != 1) {
-                reject({})
-            } else {
-                // res.insertId exists iff exactly one row is inserted
-                resolve({user_id: res.insertId, ...profile})
-            }
-        })
-    })
-}
-
-// updates the stored profile
-// database/profile.js
-
-// ... Other imports and functions
-
-export async function updateProfile(user_id, profile) {
-    return new Promise(async (resolve, reject) => {
-      const { qnaAnswers, ...profileData } = profile;
-  
-      try {
-         if (Object.keys(profileData).length > 0) {
-        const updateQuery = buildUpdateString(tableNames.u_bios, { user_id }, profileData);
-        console.log(updateQuery);
-        await db.query(updateQuery.queryString, updateQuery.values);
-      }
-  
-        for (const { question_id, option_id } of qnaAnswers) {
-          // Fetch the existing answer
-          const existingAnswerPromise = new Promise((resolveQuery, rejectQuery) => {
-            const qr = buildSelectString("*", tableNames.u_qna, { user_id, question_id });
-            db.query(qr.queryString, qr.values, (err, rows) => {
-              if (err) {
-                rejectQuery(err);
-              } else {
-                resolveQuery(rows);
-              }
-            });
-          });
-  
-          let existingAnswer;
-          try {
-            existingAnswer = await existingAnswerPromise;
-          } catch (error) {
-            reject(error);
-            return;
-          }
-  
-          let qnaUpdateQuery;
-          if (existingAnswer && existingAnswer.length > 0) {
-            // Update existing answer
-            qnaUpdateQuery = buildUpdateString(tableNames.u_qna, { user_id, question_id }, { option_id });
-          } else {
-            // Insert new answer
-            qnaUpdateQuery = buildInsertString(tableNames.u_qna, { user_id, question_id, option_id });
-          }
-  
-          await db.query(qnaUpdateQuery.queryString, qnaUpdateQuery.values);
-        }
-  
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
-
-  //meant to update all Apartment specific QNA
-  export async function updateApartmentInfo(user_id, apartmentData) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        // Check if the entry exists using the provided buildSelectString function
-        const existCheck = buildSelectString("*", "u_apartment", { user_id });
-        db.query(existCheck.queryString, existCheck.values, async (err, existResult) => {
-          if (err) {
-            console.error("Error checking apartment existence:", err);
-            reject(err);
-            return;
-          }
-          
-          console.log("Existence check result:", existResult);
-          if (existResult && existResult.length > 0) {
-            console.log("Updating existing apartment info");
-            // Update existing apartment info using the provided buildUpdateString function
-            const updateQuery = buildUpdateString("u_apartment", { user_id }, apartmentData);
-            console.log("Update Query:", updateQuery.queryString); // For debugging
-            await db.query(updateQuery.queryString, updateQuery.values);
-          } else {
-            console.log("Inserting new apartment info");
-            // Insert new apartment info using the provided buildInsertString function
-            const insertQuery = buildInsertString("u_apartment", { user_id, ...apartmentData });
-            console.log("Insert Query:", insertQuery.queryString); // For debugging
-            await db.query(insertQuery.queryString, insertQuery.values);
-          }
-          
-          resolve();
-        });
-      } catch (error) {
-        console.error("Database operation failed:", error); // Proper error logging
-        reject(error);
-      }
-    });
-  }
-  
-
-  export async function getAllUserIds() {
-    return new Promise((resolve, reject) => {
-        // Assuming 'user_id' is the column name in your 'users' table that holds the user IDs
-        const qr = buildSelectString("user_id", tableNames.users, {});
-  
-        db.query(qr.queryString, qr.values, (err, rows) => {
-            if (err) {
-                console.error("Error fetching user IDs from database:", err);
-                reject(err);
-                return;
-            }
-  
-            // Extract user_id from each row and return an array of user_ids
-            const userIds = rows.map(row => row.user_id);
-            resolve(userIds);
-        });
-    });
-  }
   
   export async function savePictureUrl(user_id, pictureUrl, pic_number) {
     return new Promise((resolve, reject) => {
@@ -430,7 +294,8 @@ export async function deletePollOption(user_id, option_id) {
 }
 
 // gets all fields from u_generaldata given a user_id
-export async function getGeneralData(user_id) {
+// TODO: select arrays
+export async function getGeneralData(user_id, select) {
   const query = `SELECT * FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
   try {
       const results = await new Promise((resolve, reject) => {
