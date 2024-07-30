@@ -5,10 +5,9 @@ import backend from '../../backend';
 import currentUser from '../../currentUser';
 
 export default function Match() {
+
     const [filterResults, setFilterResults] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-
-    const [profileMode, setProfileMode] = useState(0);
 
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState({});
@@ -42,8 +41,6 @@ export default function Match() {
         user_id: currentUser.user_id
       });
 
-      console.log(response);
-
       await appendFilterResults();
     }
 
@@ -71,21 +68,8 @@ export default function Match() {
 
     return (
       <div>
-          <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={profileMode}/>
-          <ProfileCard
-            // Makes more sense to just pass in all the data, seperating can be done by individual components
-            // TODO: remove other props than all_data
-            all_data={filterResults[currentIndex]}
-            user_data={filterResults[currentIndex]?.user_data}
-            qnaAnswers={filterResults[currentIndex]?.profile_data?.qnaAnswers}
-            editedBio={filterResults[currentIndex]?.profile_data?.bio}
-            // pictureUrls={JSON.parse(filterResults[currentIndex]?.profile_data?.pictures)}
-            pictureUrls={["https://undefined.blob.core.windows.net/user-profile-images/user-56-uploaded-1711870963082", "https://undefined.blob.core.windows.net/user-profile-images/user-47-uploaded-1712426147922", "https://undefined.blob.core.windows.net/user-profile-images/user-48-uploaded-1712788437136"]}
-            editable={false}
-            dormMode={profileMode}
-            top5={['', '', '', '', '']}
-            question="fjoeiwf"
-          />
+          <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
+          <ProfileCard user_id={filterResults[currentIndex]} />
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
               <button onClick={() => goToNext("reject")}
                       className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
@@ -100,11 +84,11 @@ export default function Match() {
           </div>
 
           <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
-            <button onClick={() => setProfileMode(0)}
+            <button onClick={() => {}}
                 className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">Dorm</button>
-            <button onClick={() => setProfileMode(2)}
+            <button onClick={() => {}}
                 className="w-[8vh] h-[8vh] bg-offwhite border-black border-[1px] rounded-full text-center align-middle text-black font-bold hover:bg-slate-300 shadow-md">Both</button>
-            <button onClick={() => setProfileMode(1)}
+            <button onClick={() => {}}
                 className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">Apt.</button>
         </div>
       </div>

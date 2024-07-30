@@ -64,17 +64,7 @@ interface profileData {
     // };
 
 export function ProfileCard({
-  all_data,
-  user_data,
-  name,
-  major,
-  bio,
-  pictureUrls,
-  qna,
-  sleepSchedule,
-  pollData,
-  aptOrDormData,
-  userId
+  user_id
 }) {
 
   pollData = {
