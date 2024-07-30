@@ -77,6 +77,15 @@ export function ProfileCard({
     ]
   }
 
+  useEffect(() => {
+    const response = backend.get('/profile/get-gendata', {
+      params: { user_id: user_id, filter: ["first-name", "last-name", "bio", "major"] },
+      withCredentials: true,
+    });
+
+    console.log(response.data);
+  },[])
+
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
       <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>

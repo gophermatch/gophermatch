@@ -211,10 +211,15 @@ export async function deletePollOption(user_id, option_id) {
 }
 
 // gets all fields from u_generaldata given a user_id
-// TODO: select arrays
-export async function getGeneralData(user_id, select) {
-  const query = `SELECT * FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
-  try {
+// filter can be specified to only fetch certain values, otherwise defaults to fetching all
+export async function getGeneralData(user_id, filter) {
+
+    const columns = filter?.join(', ');
+
+    const query = filter ? `SELECT ${columns} FROM ${tableNames.u_generaldata} WHERE user_id = ?`
+     : `SELECT * FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
+
+    try {
       const results = await new Promise((resolve, reject) => {
           db.query(query, [user_id], (err, results) => {
               if (err) {
