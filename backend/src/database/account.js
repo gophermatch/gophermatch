@@ -68,25 +68,6 @@ export async function deleteUser(user_id) {
     })
 }
 
-export async function getUserData(user_id){
-    return new Promise((resolve, reject) => {
-        const qr = buildSelectString("*", tableNames.u_userdata, {user_id});
-
-        db.query(qr.queryString, qr.values, (err, rows) => {
-
-            const res = queryRowsToArray(rows)
-
-            if (err) {
-                console.error("Error fetching user data", err);
-                reject(err);
-                return;
-            }
-
-            resolve(res[0]);
-        });
-    });
-}
-
 // TODO: Will need to be redone
 export async function updateAccountInfo(userdata, userId){
     console.log(userdata);

@@ -6,9 +6,8 @@ import {
     retrieveUserMatches,
     deleteInboxMatch,
     getFilterResults,
-    getFilterResultsQna,
     getUserUnseenMatches,
-    markUserMatchesAsSeen, getProfileInfoMultiple, getInteractedProfiles, unrejectAll
+    markUserMatchesAsSeen, getInteractedProfiles, unrejectAll
 } from "../database/match.js";
 
 const router = Router()

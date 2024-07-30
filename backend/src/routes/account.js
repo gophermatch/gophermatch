@@ -1,9 +1,8 @@
 import bcrypt from 'bcrypt'
 import { Router } from 'express';
-import { createUser, deleteUser, getUserData, insertAccountInfo, updateAccountInfo } from "../database/account.js";
+import { createUser, deleteUser, insertAccountInfo, updateAccountInfo } from "../database/account.js";
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
-import { createBio } from '../database/profile.js';
 
 const router = Router()
 const saltRounds = 10;
@@ -31,9 +30,6 @@ router.post('/', async (req, res) => {
 
         // create the user's profile
 
-        //const profile = await createProfile(user.user_id)
-        const profile = await createBio(user.user_id)
-
         const userWithoutPass = loginUser(req, user)
         res.status(201).json(userWithoutPass)
     } catch (e) {
@@ -42,6 +38,7 @@ router.post('/', async (req, res) => {
     }
 })
 
+// TODO needs to be redone
 router.get('/fetch', async (req, res) => {
     let user_id = req.query.user_id;
 
@@ -49,7 +46,7 @@ router.get('/fetch', async (req, res) => {
 
     try {
         // update the user's account info
-        let data = await getUserData(user_id)
+        let data = null;
         res.status(200).json({data: data, message: "User account queried!"})
     } catch (e) {
         console.error(e)
@@ -65,7 +62,7 @@ router.put('/creation/new', async (req, res) => {
 
     // Fetch account data to see if it exists in the DB or not
     try{
-        let data = await getUserData(userdata.user_id);
+        let data = null;
 
         if(data == null){
             console.log("inserting");

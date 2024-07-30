@@ -3,9 +3,8 @@ import { Router } from 'express';
 import fs from 'fs';
 import { createErrorObj } from './routeutil.js'
 import {
-    updateProfile,
     savePictureUrl,
-    retrievePictureUrls, createBio, removePicture,
+    retrievePictureUrls, removePicture,
     insertTopFive, getTopFive,  getPollQuestions,
     updatePollQuestion,
     getPollOptions,

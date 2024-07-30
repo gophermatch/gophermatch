@@ -150,39 +150,6 @@ export async function getInteractedProfiles(user_id){
     });
   });
 }
-  
-      // Map option IDs to their respective questions using the qnaOptions data
-      const questionIdToOptionIds = qnaOptions.reduce((acc, q) => {
-        if (q.options && Array.isArray(q.options)) {
-          q.options.forEach(opt => {
-            if (optionIds.includes(opt.option_id)) {
-              if (!acc[q.id]) acc[q.id] = [];
-              acc[q.id].push(opt.option_id);
-            }
-          });
-        }
-        return acc;
-      }, {});
-  
-      // Create an array of conditions, each condition checks for one question's options.
-      const conditions = Object.entries(questionIdToOptionIds).map(([questionId, options]) => 
-        `question_id = ${questionId} AND option_id IN (${options.join(',')})`
-      );
-  
-      let queryString = `SELECT user_id FROM u_qna WHERE (${conditions.join(') OR (')}) GROUP BY user_id`;
-  
-      db.query(queryString, (err, rows) => {
-        if (err) {
-          console.error("Error querying filter results from u_qna:", err);
-          reject(err);
-          return;
-        }
-        // Extract user_id from each row and return an array of unique user_ids
-        const userIds = rows.map(row => row.user_id);
-        resolve(userIds);
-      });
-    });
-  }
 
 // Function to retrieve all user IDs that a specified user has marked as 'unsure'.
 export async function getSavedMatches(userId) {
