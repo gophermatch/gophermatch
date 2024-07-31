@@ -2,10 +2,23 @@ import { useEffect, useState } from "react";
 import backend from "../../../backend";
 import styles from '../../../assets/css/name.module.css';
 
-export default function NameAndBio({ name, major, bio, setBio, userID }) {
+export default function NameAndBio({ name, major, bio, broadcaster }) {
     const [userInfo, setUserInfo] = useState([]);
     const [editValues, setEditValues] = useState({});
     const [firstName, setFirstName] = useState('');
+
+    useEffect(() => {
+        if (broadcaster) {
+            const cb = () => {
+                return new Promise(() => {
+                    console.log("Saving data")
+                })
+            }
+    
+            broadcaster.connect(cb)
+            return () => broadcaster.disconnect(cb)
+        }
+    }, [])
 
     // const fetchUserInfo = async () => {
     //     try {
