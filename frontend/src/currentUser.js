@@ -6,7 +6,7 @@ import backend from "./backend.js";
 class User {
     #user_id;  // private member
     #account_created;
-    #user_data;
+    #gen_data;
 
     constructor() {
         this.#setDefaults()
@@ -29,20 +29,22 @@ class User {
         console.log(`user logged in as ${user_id}`)
         this.#user_id = user_id
 
-        this.#user_data = await this.getAccount()
-        this.#account_created = this.#user_data != null;
+        this.#gen_data = await this.getAccount()
+        this.#account_created = this.#gen_data.first_name != "";
 
         console.log("Account created: " + this.#account_created);
     }
 
      async getAccount(){
         // Check if the user has submitted the account creation page yet by checking their first name
-        const response = await backend.get('/account/fetch', {
+        const response = await backend.get('/profile/get-gendata', {
             params: { user_id: this.#user_id },
             withCredentials: true,
         });
 
-        return response.data.data;
+        console.log("Logged in user data: ", response.data[0]);
+
+        return response.data[0];
     }
 
     // Delete login information
@@ -55,16 +57,16 @@ class User {
     }
 
     get account_created(){
-        return this.#user_data != null;
+        return this.#gen_data != null;
     }
 
-    get user_data(){
-        return this.#user_data;
+    get gen_data(){
+        return this.#gen_data;
     }
 
-    set user_data(data){
+    set gen_data(data){
         this.#account_created = true;
-        this.#user_data = data;
+        this.#gen_data = data;
     }
 }
 
