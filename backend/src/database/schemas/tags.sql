@@ -1,0 +1,4 @@
+CREATE TABLE tags (
+    tag_id INT AUTO_INCREMENT PRIMARY KEY,
+    tag_text VARCHAR(256) UNIQUE
+);

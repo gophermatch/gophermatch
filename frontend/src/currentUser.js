@@ -5,9 +5,8 @@ import backend from "./backend.js";
 
 class User {
     #user_id;  // private member
-    #email;
     #account_created;
-    #user_data;
+    #gen_data;
 
     constructor() {
         this.#setDefaults()
@@ -15,7 +14,6 @@ class User {
 
     #setDefaults() {
         this.#user_id = -1
-        this.#email = null
     }
 
     // returns true if user is logged in
@@ -24,30 +22,29 @@ class User {
     }
 
     // Stores login information
-    async login(user_id, email) {
+    async login(user_id) {
         if (typeof user_id !== "number") 
             throw "user_id must be a number"
-        if (typeof email !== "string")
-            throw "email must be a string"
 
         console.log(`user logged in as ${user_id}`)
         this.#user_id = user_id
-        this.#email = email
 
-        this.#user_data = await this.getAccount()
-        this.#account_created = this.#user_data != null;
+        this.#gen_data = await this.getAccount()
+        this.#account_created = this.#gen_data.first_name != "";
 
         console.log("Account created: " + this.#account_created);
     }
 
      async getAccount(){
         // Check if the user has submitted the account creation page yet by checking their first name
-        const response = await backend.get('/account/fetch', {
+        const response = await backend.get('/profile/get-gendata', {
             params: { user_id: this.#user_id },
             withCredentials: true,
         });
 
-        return response.data.data;
+        console.log("Logged in user data: ", response.data[0]);
+
+        return response.data[0];
     }
 
     // Delete login information
@@ -59,21 +56,17 @@ class User {
         return this.#user_id
     }
 
-    get email() {
-        return this.#email
-    }
-
     get account_created(){
-        return this.#user_data != null;
+        return this.#gen_data != null;
     }
 
-    get user_data(){
-        return this.#user_data;
+    get gen_data(){
+        return this.#gen_data;
     }
 
-    set user_data(data){
+    set gen_data(data){
         this.#account_created = true;
-        this.#user_data = data;
+        this.#gen_data = data;
     }
 }
 

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import React from 'react';
+import React, { useEffect } from 'react';
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
 
@@ -20,6 +20,29 @@ export default function Login() {
         if (email && password) onLoginAttempt();
     }
 
+    useEffect(() => {
+        // On page load, make a request to the backend to see if we have a session. If we do, log in with that email and password
+        checkAlreadyLoggedIn();
+      }, []);
+
+    async function checkAlreadyLoggedIn()
+    {
+        try {
+
+            console.log("checking session");
+
+            const response = await backend.get('/login/check-session')
+
+            console.log(response.data);
+
+            if (response.data.loggedIn) {
+                tryLogin(response.data.user.email, "already-logged-in")
+            }
+          } catch (error) {
+            console.error('Error fetching session status:', error);
+          }
+    }
+
     async function onLoginAttempt() {
         if (!email) {
             setEmailError("Email missing");
@@ -34,6 +57,10 @@ export default function Login() {
             return;
         }
 
+        tryLogin(email, password);
+    }
+
+    async function tryLogin(email, password) {
         try {
             const res = await backend.put("/login", {
                 email,

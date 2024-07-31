@@ -3,12 +3,16 @@ import { Router } from 'express';
 import fs from 'fs';
 import { createErrorObj } from './routeutil.js'
 import {
-    getProfile,
-    getApartmentProfile,
-    updateProfile,
     savePictureUrl,
-    retrievePictureUrls, createBio, removePicture, updateApartmentInfo,
-    insertTopFive, getTopFive
+    retrievePictureUrls, removePicture,
+    insertTopFive, getTopFive,  getPollQuestions,
+    updatePollQuestion,
+    getPollOptions,
+    updatePollOption,
+    createPollOption,
+    deletePollOption,
+    getGeneralData, setGeneralData,
+    updateUserTags, getUserSelectedTags, getAllTags
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -16,123 +20,6 @@ import { azureStorageConfig } from "../env.js";
 
 const upload = multer({ dest: 'uploads/' }); // Temporarily stores files in 'uploads/' directory
 const router = Router();
-
-// GET api/profile/
-router.get('/', async (req, res) => {
-    const user_id = req.query.user_id;
-    const apartment = req.query.apartment;
-
-    if (!user_id) {
-        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
-        return;
-    }
-
-    // Validate user_id if needed
-
-    try {
-        if(apartment == 0){
-            const profile = await getProfile(user_id);
-            res.status(200).json(profile);
-        } else {
-            const profile = await getApartmentProfile(user_id);
-            res.status(200).json(profile);
-        }
-    } catch (error) {
-        console.error("Error fetching profile:", error);
-        res.status(500).json(createErrorObj("Failed to fetch profile. Please try again later."));
-        // Log the detailed error for backend debugging:
-        // Log error using your preferred logging mechanism (console.log, Winston, etc.)
-    }
-});
-
-
-// Update profile
-// PUT api/profile/
-// REQUIRES the request's Content-Type to be "application/json"
-router.put('/', async (req, res) => {
-    const user_id = req.body.user_id
-    const profile = req.body.profile
-    const updatingApartment = req.body.updating_apartment
-    //delete profile.user_id // prevent user from chaning the user_id of their profile record
-    // Note: commented out because it wasn't letting insert top 5 work
-
-    if (!user_id || !profile) {
-        res.status(400).json(createErrorObj("Must specify the user_id and profile object to update the profile!"))
-        return
-    }
-
-    // If the user is updating a profile that's not their own
-    if (user_id !== req.session.user.user_id) {
-        res.status(400).json(createErrorObj("Cannot update someone else's profile!"))
-        return
-    }
-
-    // Check if profile object is empty
-    if (Object.keys(profile).length == 0) {
-        res.status(400).json(createErrorObj("Must provide some new values to update! (To delete a value, use the value null)"))
-        return
-    }
-
-    try {
-        await updateProfile(user_id, profile)
-        console.log("went to apent")
-        if(updatingApartment == 1){
-            await updateApartmentInfo(user_id, req.body.apartmentInfo)
-            console.log("went to apartment")
-        }
-        res.status(200).json({message: "Profile updated!"})
-    } catch(e) {
-        console.error(e)
-        res.status(400).json(createErrorObj(e))
-    }
-})
-
-
-router.get('/all-user-ids', async (req, res) => {
-    try {
-        const userIds = await getAllUserIds();
-        res.json(userIds);
-    } catch (error) {
-        console.error("Failed to retrieve user IDs:", error);
-        res.status(500).json({ error: "Failed to retrieve user IDs" });
-    }
-});
-
-router.get('/qna', async (req, res) => {
-    const user_id = req.query.user_id;
-
-    if (!user_id) {
-        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
-        return;
-    }
-
-    try {
-        const qna = await getQnA(user_id);
-        res.status(200).json(qna);
-    } catch (e) {
-        console.error(e);
-        res.status(400).json(createErrorObj(e));
-    }
-});
-
-// Save/update QnA for a user
-router.put('/qna', async (req, res) => {
-    const user_id = req.body.user_id;
-    const qna = req.body.qna;
-
-    if (!user_id || !qna) {
-        res.status(400).json(createErrorObj("Must specify user_id and qna to update QnA!"));
-        return;
-    }
-
-    try {
-        await saveQnA(user_id, qna);
-        res.status(200).json({ message: "QnA updated!" });
-    } catch (e) {
-        console.error(e);
-        res.status(400).json(createErrorObj(e));
-    }
-});
 
 router.post('/upload-picture', upload.single('file'), async (req, res) => {
     if (!req.file) {
@@ -233,6 +120,231 @@ router.get('/get-topfive', async (req, res) => {
         return res.json(optInput);
     } catch (error) {
         return res.status(500).json(createErrorObj("Failed to get top five."));
+    }
+});
+
+// Get poll questions for a user
+router.get('/poll-questions', async (req, res) => {
+    const user_id = req.query.user_id;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const questions = await getPollQuestions(user_id);
+        res.status(200).json(questions);
+    } catch (error) {
+        console.error("Error fetching poll questions:", error);
+        res.status(500).json(createErrorObj("Failed to fetch poll questions. Please try again later."));
+    }
+});
+
+// Update poll question for a user
+router.put('/poll-question', async (req, res) => {
+    const user_id = req.body.user_id;
+    const question_text = req.body.question_text;
+
+    if (!user_id || !question_text) {
+        res.status(400).json(createErrorObj("Must specify user_id and question_text to update poll question!"));
+        return;
+    }
+
+    try {
+        await updatePollQuestion(user_id, question_text);
+        res.status(200).json({ message: "Poll question updated!" });
+    } catch (error) {
+        console.error("Error updating poll question:", error);
+        res.status(500).json(createErrorObj("Failed to update poll question. Please try again later."));
+    }
+});
+
+// Get poll options for a user
+router.get('/poll-options', async (req, res) => {
+    const user_id = req.query.user_id;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const options = await getPollOptions(user_id);
+        res.status(200).json(options);
+    } catch (error) {
+        console.error("Error fetching poll options:", error);
+        res.status(500).json(createErrorObj("Failed to fetch poll options. Please try again later."));
+    }
+});
+
+// Update poll option for a user
+router.put('/poll-option', async (req, res) => {
+    const { user_id, option_id, option_text } = req.body;
+
+    if (!user_id || !option_id || !option_text) {
+        res.status(400).json(createErrorObj("Must specify user_id, option_id, and option_text to update poll option!"));
+        return;
+    }
+
+    try {
+        await updatePollOption(user_id, option_id, option_text);
+        res.status(200).json({ message: "Poll option updated!" });
+    } catch (error) {
+        console.error("Error updating poll option:", error);
+        res.status(500).json(createErrorObj("Failed to update poll option. Please try again later."));
+    }
+});
+
+// Create a new poll option for a user
+router.post('/poll-option', async (req, res) => {
+    const { user_id, option_text } = req.body;
+
+    if (!user_id || !option_text) {
+        res.status(400).json(createErrorObj("Must specify user_id and option_text to create poll option!"));
+        return;
+    }
+
+    try {
+        await createPollOption(user_id, option_text);
+        res.status(200).json({ message: "Poll option created!" });
+    } catch (error) {
+        console.error("Error creating poll option:", error);
+        res.status(500).json(createErrorObj("Failed to create poll option. Please try again later."));
+    }
+});
+
+// Delete a poll option for a user
+router.delete('/poll-option', async (req, res) => {
+    const { user_id, option_id } = req.query;
+
+    if (!user_id || !option_id) {
+        res.status(400).json(createErrorObj("Must specify user_id and option_id to delete poll option!"));
+        return;
+    }
+
+    try {
+        await deletePollOption(user_id, option_id);
+        res.status(200).json({ message: "Poll option deleted!" });
+    } catch (error) {
+        console.error("Error deleting poll option:", error);
+        res.status(500).json(createErrorObj("Failed to delete poll option. Please try again later."));
+    }
+});
+
+// gets all fields from u_generaldata given a user_id\
+router.get('/get-gendata', async (req, res) => {
+    const {user_id} = req.query;
+
+    const filter = req.query['filter[]'];
+
+    if (!user_id){
+        return res.status(400).json(createErrorObj("Missing parameters for get-gendata"));
+    }
+
+    try {
+        const results = await getGeneralData(user_id, filter);
+        return res.json(results);
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to get general data."));
+    }
+});
+
+
+// sets/updates a all fields in u_generaldata given a user_id and data. Example I use in postman route:
+// Any fields not included in data are filled with default values
+/*
+    {
+        "user_id": 56,
+        "data": {
+            "wakeup_time": 90,
+            "sleep_time": 150,
+            "substances": "Yes",
+            "room_activity": "Party"
+            // add other fields as needed
+        }
+    }
+*/
+router.post('/set-gendata', async (req, res) => {
+    const { user_id, data } = req.body;
+    if (!user_id || !data) {
+        return res.status(400).json(createErrorObj("Missing parameters for set-gendata"));
+    }
+
+    try {
+        const results = await setGeneralData(user_id, data);
+        return res.json({ message: "Data updated successfully"});
+    } catch (error) {
+        return res.status(500).json(createErrorObj("Failed to set general data."));
+    }
+});
+
+// updates the users tags given a user id and array of selected tag ids. Example I used in postman
+/*
+    {
+        "user_id": 47,
+        "tag_ids": [
+            2,
+            3,
+            6
+        ]
+    }
+*/
+
+router.post('/update-user-tags', async (req, res) => {
+    const { user_id, tag_ids } = req.body;
+    if (!user_id || !Array.isArray(tag_ids)) {
+        return res.status(400).json({ error: 'Missing or invalid parameters' });
+    }
+
+    try {
+        await updateUserTags(user_id, tag_ids);
+        res.json({ message: 'User tags updated successfully' });
+    } catch (error) {
+        console.error('Error updating user tags:', error);
+        res.status(500).json({ error: 'Failed to update user tags' });
+    }
+});
+
+// returns an array of a users selected tag ids
+// postman route no json is {{api_url}}/profile/user-selected-tags?user_id=47
+router.get('/user-selected-tags', async (req, res) => {
+    const { user_id } = req.query;
+    if (!user_id) {
+        return res.status(400).json({ error: 'Missing user_id parameter' });
+    }
+
+    try {
+        const tagIds = await getUserSelectedTags(user_id);
+        res.json({ user_id, tag_ids: tagIds });
+    } catch (error) {
+        console.error('Error getting user selected tags:', error);
+        res.status(500).json({ error: 'Failed to get user selected tags' });
+    }
+});
+
+// returns all tag ids (don't hard code tags). Example output:
+/*
+    {
+        "tag_ids": [
+            {
+                "tag_id": 1,
+                "tag_text": "Gym"
+            },
+            {
+                "tag_id": 2,
+                "tag_text": "Needs Parking"
+            },
+        ]
+    }
+*/
+router.get('/all-tag-ids', async (req, res) => {
+    try {
+        const tagIds = await getAllTags();
+        res.json({ tag_ids: tagIds });
+    } catch (error) {
+        console.error('Error getting all tag ids:', error);
+        res.status(500).json({ error: 'Failed to get all tag ids' });
     }
 });
 

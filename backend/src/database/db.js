@@ -12,21 +12,13 @@ export const db = createPool({
 
 export const tableNames = {
     users: "users",
-    u_bios: "u_bios",
-        u_matches: "u_matches", // junction table
-        u_qnas: "u_qnas",
-        u_pictures: "u_pictures",
-        u_inboxt: "u_inboxt",
-    u_prefs: "u_preferences",
-        u_locations: "u_locations",
-        u_qna: "u_qna",
-    u_userdata: "u_userdata",
+    u_matches: "u_matches", // junction table
+    u_pictures: "u_pictures",
+    u_inboxt: "u_inboxt",
     u_topfive: "u_topfive",
     u_subleases: "u_subleases",
     u_savelease: "u_savelease",
-    u_apartment: "u_apartment",
-
-    // Lookup tables
-    locations: "locations",
-    questions: "questions",
+    u_generaldata: "u_generaldata",
+    u_tags: "u_tags",
+    tags: "tags",
 }

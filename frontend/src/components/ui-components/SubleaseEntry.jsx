@@ -23,9 +23,9 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
 
   return (
     <div
-      className={"mt-[3vh] ml-[7.5vw] h-[30vh] w-[75vw] flex items-center"}>
-      <div className={"font-profile font-bold p-0 text-maroon_new h-full w-[90%] bg-cream"}>
-      <div className={`h-[33%] relative top-[-1vh] w-full ${sublease.premium ? 'bg-gold': 'bg-maroon_new'}`}>
+      className={"mt-[3vh] ml-[7.5vw] aspect-[16/3.3] flex items-center"}>
+      <div className={"font-profile font-bold p-0 text-maroon_new h-full w-[90%] bg-cream rounded-md"}>
+      <div className={`h-[33%] relative top-[-1vh] w-full ${sublease.premium ? 'bg-gold': 'bg-maroon_new'} rounded-t-md`}>
         <p className={"flex justify-between text-white text-[1.5vw] w-full ml-[1vw] mt-[1vh]"}>
           <span className={"mt-[0.7vh]"}>{sublease.building_name}
           </span>
@@ -40,24 +40,24 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
       </div>
       <div className={"relative ml-[2.5vw] mr-[2.5vw] mt-[2.5vh] h-[55%] w-[70%] grid grid-cols-6 text-[1.2vw]"}>
         <span>Pets</span>
-        <span className="font-light">{sublease.pets_allowed}</span>
+        <span className="font-light text-black">{sublease.pets_allowed}</span>
         <span>Furnished</span>
-        <span className="font-light">{sublease.has_pool ? "Yes" : "No"}</span>
+        <span className="font-light text-black">{sublease.is_furnished ? "Yes" : "No"}</span>
         <span>Bedrooms</span>
-        <span className="font-light">{sublease.num_bedrooms}</span>
+        <span className="font-light text-black">{sublease.num_bedrooms}</span>
         <span>Kitchen</span>
-        <span className="font-light">{sublease.has_kitchen}</span>
+        <span className="font-light text-black">{sublease.has_kitchen}</span>
         <span>Laundry</span>
-        <span className="font-light">{sublease.has_laundry}</span>
+        <span className="font-light text-black">{sublease.has_laundry}</span>
         <span>Bathrooms</span>
-        <span className="font-light">{sublease.num_bathrooms}</span>
+        <span className="font-light text-black">{sublease.num_bathrooms}</span>
         <span>Parking</span>
-        <span className="whitespace-nowrap font-light">{sublease.has_parking}</span>
+        <span className="whitespace-nowrap font-light text-black">{sublease.has_parking}</span>
         <span>Gym</span>
-        <span className="font-light">{sublease.has_gym ? "Yes" : "No"}</span>
+        <span className="font-light text-black">{sublease.has_gym ? "Yes" : "No"}</span>
         <span>Roommates</span>
-        <span className="font-light">{sublease.num_roommates}</span>
-        <div className="absolute top-[-2.5vh] right-[-16vw]">${sublease.rent_amount} per month</div>
+        <span className="font-light text-black">{sublease.num_roommates}</span>
+        <div className="absolute top-[-2.5vh] right-[-16vw]"><span className={"font-extrabold"}>${sublease.rent_amount}</span> <span className={"font-light"}>per month</span></div>
         <button className="absolute top-[11vh] right-[-16vw] text-white bg-maroon_new rounded-lg w-[6vw] font-roboto" onClick={save}>Contact</button>
       </div>
       </div>

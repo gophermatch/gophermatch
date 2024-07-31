@@ -2,8 +2,6 @@
 import { db , tableNames} from './db.js'; // Your database connection setup
 import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString, buildDeleteString } from './dbutils.js'
 import qnaOptions from '../../../frontend/src/components/ui-components/qnaOptions.json' assert { type: 'json' };
-import { getUserData } from "./account.js";
-import { getProfile } from "./profile.js";
 
 export async function recordUserDecision(user1Id, user2Id, decision) {
     try {
@@ -93,10 +91,11 @@ async function handleReciprocalMatch(user1Id, user2Id) {
     }
 }
 
+// TODO: Needs to be updated
 export async function getFilterResults(filters) {
     return new Promise((resolve, reject) => {
       // Start the query string with all user_ids
-      let queryString = `SELECT DISTINCT user_id FROM ${tableNames.u_userdata}`;
+      let queryString = `SELECT DISTINCT user_id FROM ${tableNames.u_generaldata}`;
   
       // Initialize an array to hold WHERE conditions
       const whereConditions = [];
@@ -151,74 +150,6 @@ export async function getInteractedProfiles(user_id){
     });
   });
 }
-
-  export async function getFilterResultsQna(optionIds) {
-    return new Promise((resolve, reject) => {
-      if (!optionIds || optionIds.length === 0) {
-        db.query(`SELECT DISTINCT user_id FROM u_qna`, [], (err, rows) => {
-          if (err) {
-            console.error("Error querying all user_ids from u_qna:", err);
-            reject(err);
-            return;
-          }
-          const userIds = rows.map(row => row.user_id);
-          resolve(userIds);
-        });
-        return;
-      }
-  
-      // Map option IDs to their respective questions using the qnaOptions data
-      const questionIdToOptionIds = qnaOptions.reduce((acc, q) => {
-        if (q.options && Array.isArray(q.options)) {
-          q.options.forEach(opt => {
-            if (optionIds.includes(opt.option_id)) {
-              if (!acc[q.id]) acc[q.id] = [];
-              acc[q.id].push(opt.option_id);
-            }
-          });
-        }
-        return acc;
-      }, {});
-  
-      // Create an array of conditions, each condition checks for one question's options.
-      const conditions = Object.entries(questionIdToOptionIds).map(([questionId, options]) => 
-        `question_id = ${questionId} AND option_id IN (${options.join(',')})`
-      );
-  
-      let queryString = `SELECT user_id FROM u_qna WHERE (${conditions.join(') OR (')}) GROUP BY user_id`;
-  
-      db.query(queryString, (err, rows) => {
-        if (err) {
-          console.error("Error querying filter results from u_qna:", err);
-          reject(err);
-          return;
-        }
-        // Extract user_id from each row and return an array of unique user_ids
-        const userIds = rows.map(row => row.user_id);
-        resolve(userIds);
-      });
-    });
-  }
-
-  export async function getProfileInfoMultiple(user_ids)
-  {
-    const profilePromises = user_ids.map(userId => getProfile(userId));
-    const userDataPromises = user_ids.map(userId => getUserData(userId));
-
-    const profileDataResults = await Promise.all(profilePromises);
-    const userDataResults = await Promise.all(userDataPromises);
-
-    // Combine account data and user data
-    const profileInfo = user_ids.map((user_id, index) => {
-      return {
-        user_id: user_id,
-        profile_data: profileDataResults[index],
-        user_data: userDataResults[index]
-      };
-    });
-
-    return profileInfo;
-  }
 
 // Function to retrieve all user IDs that a specified user has marked as 'unsure'.
 export async function getSavedMatches(userId) {

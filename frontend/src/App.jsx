@@ -7,7 +7,6 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Layout from "./components/Layout.jsx"
 import Match from "./components/pages/Match.jsx"
-import Profile from "./components/pages/Profile.jsx"
 import Settings from "./components/pages/Settings.jsx"
 import Inbox from "./components/pages/Inbox.jsx";
 import Login from "./components/pages/Login.jsx"
@@ -23,6 +22,8 @@ import Sublease from './components/pages/Sublease.jsx'
 import Payment from './components/pages/Payment.jsx'
 import SubleaseCreation from "./components/pages/SubleaseCreation.jsx";
 import showMatch from './components/pages/ShowMatch.jsx'
+import ProfilePage from './components/pages/ProfilePage.jsx'
+import backend from './backend.js'
 
 // Redirects the main page "/" to login page if user is not logged in, 
 // or to match page if user is logged in
@@ -37,8 +38,41 @@ async function mainPageRedirect({request}) {
 
 // Redirects the login page to match page if user is logged in
 async function loginPageRedirect() {
-    console.log("User attempting to visit login page, is logged in: " + currentUser.logged_in);
-    if (currentUser.logged_in) {
+
+    const checkLoggedIn = async () => { try {
+
+      console.log("checking session");
+
+      const response = await backend.get('/login/check-session')
+
+      console.log(response.data);
+
+      if (response.data.loggedIn) {
+          const res = await backend.put("/login", {
+            email: response.data.user.email,
+            password: "already-logged-in"
+          });
+
+          const user_id = res.data.user_id;
+          await currentUser.login(user_id);
+
+          return true;
+      }
+
+      return false;
+
+    } catch (error) {
+      console.error('Error fetching session status:', error);
+
+      return false;
+    }
+  }
+
+    const loggedIn = await checkLoggedIn();
+
+    console.log("User attempting to visit login page, is logged in: " + loggedIn);
+
+    if (loggedIn) {
         if(currentUser.account_created) {
             return redirect("/match")
         }
@@ -131,7 +165,7 @@ const router = createBrowserRouter([
                 loader: unauthPageRedirect
             },{
                 path: "profile",
-                element: <Profile />,
+                element: <ProfilePage />,
                 loader: unauthPageRedirect
             },{
               path: "payment",
