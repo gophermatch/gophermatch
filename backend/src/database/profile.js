@@ -219,6 +219,8 @@ export async function getGeneralData(user_id, filter) {
     const query = filter ? `SELECT ${columns} FROM ${tableNames.u_generaldata} WHERE user_id = ?`
      : `SELECT * FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
 
+    console.log(query);
+
     try {
       const results = await new Promise((resolve, reject) => {
           db.query(query, [user_id], (err, results) => {
