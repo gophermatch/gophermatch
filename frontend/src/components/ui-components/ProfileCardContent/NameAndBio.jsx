@@ -12,6 +12,7 @@ export default function NameAndBio({ name, major, bio, broadcaster }) {
             const cb = () => {
                 return new Promise(() => {
                     console.log("Saving data")
+                    resolve()
                 })
             }
     

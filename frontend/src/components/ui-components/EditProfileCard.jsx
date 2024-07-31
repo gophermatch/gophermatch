@@ -59,11 +59,13 @@ export function EditProfileCard({user_id}) {
   const [isSaving, setIsSaving] = useState(false);
 
   function onSaveClick() {
+    if (isSaving) {
+      return
+    }
     setIsSaving(true)
     broadcaster.fire()
-      .then(() => console.log("All worked"))
-      .catch((e) => console.error("SAVE NOT SUCCESSFUL: ", e))
       .finally(() => setIsSaving(false))
+      .catch((e) => console.error("SAVE NOT SUCCESSFUL: ", e))
       //TODO: switch to non-editing card and remount all components
   }
 
@@ -105,7 +107,7 @@ export function EditProfileCard({user_id}) {
                   {/* Sleep schedule */}
                   Sleep sched here
                 </div>
-                <button onClick={onSaveClick} className="absolute bottom-0 h-[40px] left-[40%] right-[40%] bg-maroon text-white">Save</button>
+                <button onClick={onSaveClick} className={`absolute bottom-0 h-[40px] left-[40%] right-[40%] ${isSaving ? "bg-gray" : "bg-maroon"} text-white`}>Save</button>
               </div>
             </div>
           </div>
