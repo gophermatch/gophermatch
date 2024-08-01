@@ -98,7 +98,7 @@ interface profileData {
       }, [user_data]);
     
       useEffect(() => {
-        console.log(profileData);
+        console.log(pictureUrls);
       }, [profileData]);
     
       // Check if user_data is defined and has the expected properties
