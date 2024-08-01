@@ -16,8 +16,7 @@ export default function Match() {
       setCurrentIndex(0);
       setFilterResults([]);
       appendFilterResults();
-      console.log("Picture Urls:", pictureUrls)
-    }, [filters, userData, profile_data]);
+    }, [filters, userData]);
 
     async function goToNext(decision) {
         await backend.post('/match/matcher', {

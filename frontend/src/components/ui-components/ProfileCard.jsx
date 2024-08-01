@@ -98,7 +98,7 @@ interface profileData {
 
   useEffect(() => {
     console.log(pictureUrls);
-  }, [pictureUrls]);
+  }, [profileData]);
 
   // Check if user_data is defined and has the expected properties
   const fullName = user_data ? `${user_data.first_name} ${user_data.last_name}` : "No name";
