@@ -97,8 +97,8 @@ interface profileData {
   }, [user_data]);
 
   useEffect(() => {
-    console.log(profileData);
-  }, [profileData]);
+    console.log(pictureUrls);
+  }, [pictureUrls]);
 
   // Check if user_data is defined and has the expected properties
   const fullName = user_data ? `${user_data.first_name} ${user_data.last_name}` : "No name";
@@ -119,7 +119,7 @@ interface profileData {
       <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
           <div className="w-[30vh] h-full border-dashed border-2 border-maroon min-w-[25%]">
-            <Carousel editable={false} pictureUrls={[""]}></Carousel>
+            <Carousel editable={false} pictureUrls={pictureUrls}></Carousel>
           </div>
           <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
             <div className="flex grow-[2] flex-col border-dashed border-2 border-maroon">
