@@ -6,5 +6,6 @@ import { EditProfileCard } from '../ui-components/EditProfileCard';
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(true);
 
-  return isEditing ? <EditProfileCard user_id={currentUser.user_id} /> : <ProfileCard user_id={currentUser.user_id} />
+  //return isEditing ? <EditProfileCard user_id={currentUser.user_id} /> : <ProfileCard user_id={currentUser.user_id} />
+  return <ProfileCard user_id={currentUser.user_id} />
 }

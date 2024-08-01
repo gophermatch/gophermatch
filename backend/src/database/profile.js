@@ -214,7 +214,7 @@ export async function deletePollOption(user_id, option_id) {
 // filter can be specified to only fetch certain values, otherwise defaults to fetching all
 export async function getGeneralData(user_id, filter) {
 
-    const columns = filter?.join(', ');
+    const columns = Array.isArray(filter) ? filter.join(', ') : filter;
 
     const query = filter ? `SELECT ${columns} FROM ${tableNames.u_generaldata} WHERE user_id = ?`
      : `SELECT * FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
