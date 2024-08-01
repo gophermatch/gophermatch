@@ -67,6 +67,37 @@ export function ProfileCard({
   user_id
 }) {
 
+  const [profileData, setProfileData] = useState(null);
+    
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const response = await backend.get("/profile/user-profile", {
+          params: { user_id: user_data?.user_id },
+          withCredentials: true,
+        });
+        if (response) {
+          setProfileData(response.data);
+        } else {
+          throw new Error("Failed to fetch profile data");
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+    if (user_data) {
+      fetchProfileData();
+    }
+  }, [user_data]);
+
+  useEffect(() => {
+    console.log(profileData);
+  }, [profileData]);
+
+  // Check if user_data is defined and has the expected properties
+  const fullName = user_data ? `${user_data.first_name} ${user_data.last_name}` : "No name";
+  const fullMajor = user_data ? `${user_data.major} '${user_data.graduating_year?.toString().slice(-2)}` : "No major";
+
   const pollData = {
     question: "What is your favorite color?",
     answers: [
@@ -86,7 +117,7 @@ export function ProfileCard({
           </div>
           <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
             <div className="flex grow-[2] flex-col border-dashed border-2 border-maroon">
-              <NameAndBio name={"dummy name"} major={"dummy major"} bio={"dummy bio"} />
+              <NameAndBio name={fullName} major={fullMajor} bio={"dummy bio"} />
             </div>
             <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
