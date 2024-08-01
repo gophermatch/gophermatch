@@ -213,6 +213,7 @@ export async function deletePollOption(user_id, option_id) {
 // gets all fields from u_generaldata given a user_id
 // filter can be specified to only fetch certain values, otherwise defaults to fetching all
 export async function getGeneralData(user_id, filter) {
+    console.log("enter")
 
     const columns = Array.isArray(filter) ? filter.join(', ') : filter;
 

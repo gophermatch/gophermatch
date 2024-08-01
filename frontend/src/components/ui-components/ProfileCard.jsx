@@ -7,6 +7,7 @@ import Poll from "./ProfileCardContent/Poll";
 import SleepSchedule from "./ProfileCardContent/SleepSchedule";
 import Carousel from "./ProfileCardContent/Carousel";
 import backend from "../../backend";
+import currentUser from '../../currentUser.js';
 
 /*
 interface qna {
@@ -63,9 +64,36 @@ interface profileData {
     //   }
     // };
 
-export function ProfileCard({
-  user_id
-}) {
+export function ProfileCard({ user_id }) {
+  const [name, setName] = useState('');
+  const [major, setMajor] = useState('');
+  const [bio, setBio] = useState('');
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await backend.get('/profile/get-gendata', {
+          params: {
+            user_id: currentUser.user_id,
+            'filter[]': ['first_name', 'last_name', 'major', 'bio']
+          }
+        });
+
+        console.log(response);
+
+        if (response.data && response.data.length > 0) {
+          const user = response.data[0];
+          setName(`${user.first_name} ${user.last_name}`);
+          setMajor(user.major);
+          setBio(user.bio);
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    }
+
+    fetchData();
+  }, [user_id]);
 
   const pollData = {
     question: "What is your favorite color?",
@@ -75,7 +103,7 @@ export function ProfileCard({
       { answer: "Green", votes: 9 },
       { answer: "Yellow", votes: 6 }
     ]
-  }
+  };
 
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
@@ -86,17 +114,17 @@ export function ProfileCard({
           </div>
           <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
             <div className="flex grow-[2] flex-col border-dashed border-2 border-maroon">
-              <NameAndBio name={"dummy name"} major={"dummy major"} bio={"dummy bio"} />
+              <NameAndBio name={name} major={major} bio={bio} />
             </div>
             <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
                   {/*false ? <Top5Dorms dormData={null}/> : <ApartmentInfo all_data={null} editing={true}/>*/}
                 </div>
-                  <div className={"flex grow-[3] overflow-y-auto overflow-x-hidden max-h-40"}>
-                    <Qna qna={null} />
-                  </div>
+                <div className={"flex grow-[3] overflow-y-auto overflow-x-hidden max-h-40"}>
+                  <Qna qna={null} />
                 </div>
+              </div>
               <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
                   <Poll pollData={pollData} revealAnswers={false} userId={16}/>
@@ -110,7 +138,7 @@ export function ProfileCard({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // import React, { useEffect, useState } from "react";
