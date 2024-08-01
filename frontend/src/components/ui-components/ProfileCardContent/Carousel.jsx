@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../../assets/css/carousel.module.css';
 
-export default function Carousel({ editable, pictureUrls = [] }) {
+export default function Carousel({ editable }) {
     const [position, setPosition] = useState(0);
     const [isHovering, setIsHovering] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const navigate = useNavigate();
+    const [pictureUrls, setPicturesUrls] = useState();
 
     function showOverlay() {
         const imageWrapper = document.getElementById("imageWrapper");
