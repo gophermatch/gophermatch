@@ -32,7 +32,7 @@ export default function Sidebar() {
                 <NavLink exact to="/" className={"w-1/4"} onClick={handleLogoClick}>
                     <img src="../assets/images/logo.png" className="" alt="Logo" />
                 </NavLink>
-                    <p className={"w-3/4 text-[10px] sm:text-[12px] md:text-[14px] xl:text-[16px] 2xl:text-[18px] font-bold text-white"}>Welcome, {currentUser.user_data.first_name}!</p>
+                    <p className={"w-3/4 text-[10px] sm:text-[12px] md:text-[14px] xl:text-[16px] 2xl:text-[18px] font-bold text-white"}>Welcome, {currentUser.gen_data.first_name}!</p>
                 </div>
                 <div className={"mt-[3vh] w-[14vw] h-[0.1vh] bg-gold rounded-full"}></div>
                 <div className="mt-[2.5vh] relative">

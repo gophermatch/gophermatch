@@ -34,19 +34,10 @@ interface profileData {
 }
 */
 export function EditProfileCard({
-  name,
-  major,
-  bio,
-  pictureUrls,
-  qna,
-  sleepSchedule,
-  aptData,
-  dormData,
-  pollData,
-  userId
+  user_id
 }) {
   /* */
-  pollData = {
+  const pollData = {
     question: "What is your favorite color?",
     answers: [
       { answer: "Red", votes: 15 },
