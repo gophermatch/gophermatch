@@ -63,11 +63,17 @@ interface profileData {
     //   }
     // };
 
-export function ProfileCard({
-  user_id
-}) {
-
-  const [profileData, setProfileData] = useState(null);
+    export function ProfileCard({
+      user_data,
+      name,
+      major,
+      bio,
+      pictureUrls,
+      qna,
+      sleepSchedule,
+      aptOrDormData,
+    }) {
+      const [profileData, setProfileData] = useState(null);
     
   useEffect(() => {
     const fetchProfileData = async () => {
