@@ -71,8 +71,8 @@ export default function Match() {
           <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
           <ProfileCard
 
-            // pictureUrls={JSON.parse(filterResults[currentIndex]?.profile_data?.pictures)}
-            pictureUrls={["https://undefined.blob.core.windows.net/user-profile-images/user-56-uploaded-1711870963082", "https://undefined.blob.core.windows.net/user-profile-images/user-47-uploaded-1712426147922", "https://undefined.blob.core.windows.net/user-profile-images/user-48-uploaded-1712788437136"]}
+            pictureUrls={JSON.parse(filterResults[currentIndex]?.profile_data?.pictures)}
+            // pictureUrls={["https://undefined.blob.core.windows.net/user-profile-images/user-56-uploaded-1711870963082", "https://undefined.blob.core.windows.net/user-profile-images/user-47-uploaded-1712426147922", "https://undefined.blob.core.windows.net/user-profile-images/user-48-uploaded-1712788437136"]}
           />
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
               <button onClick={() => goToNext("reject")}
