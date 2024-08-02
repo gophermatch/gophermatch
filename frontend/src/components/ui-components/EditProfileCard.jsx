@@ -1,6 +1,8 @@
 import EditPoll from "./ProfileCardContent/EditPoll";
 import React, { useState, useEffect, useMemo } from 'react';
 import NameAndBio from "./ProfileCardContent/NameAndBio";
+import pencil from "../../assets/images/pencil.svg";
+import close from "../../assets/images/red_x.svg";
 
 /*
 interface qna {
@@ -56,7 +58,9 @@ class SaveBroadcaster {
 
 export function EditProfileCard({user_id}) {
   const broadcaster = useMemo(() => new SaveBroadcaster(), []);
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = useState(false); // waiting for backend response
+  const [isEditing, setIsEditing] = useState(false); // editing profile data
+  const [isDorm, setIsDorm] = useState(false); // dorm or apartment mode
 
   function onSaveClick() {
     if (isSaving) {
@@ -64,14 +68,27 @@ export function EditProfileCard({user_id}) {
     }
     setIsSaving(true)
     broadcaster.fire()
-      .finally(() => setIsSaving(false))
       .catch((e) => console.error("SAVE NOT SUCCESSFUL: ", e))
-      //TODO: switch to non-editing card and remount all components
+      .then(() => setIsSaving(false))
+      .finally(() => setIsEditing(false)) //TODO: increment profile card key should cause elements to refresh
   }
+
+  const save_or_cancel = (isEditing ?
+    <div className="absolute flex align-middle justify-between top-[40px] right-[40px] h-[4vh]">
+      <button onClick={onSaveClick} className={`rounded-lg px-[35px] font-roboto_slab text-white ${isSaving ? "bg-newwhite" : "bg-maroon"}`}>Save Changes</button>
+      <button onClick={() => setIsEditing(false)} className="w-[20px] ml-[15px]">
+        <img src={close} />
+      </button>
+    </div>
+    :
+    <button onClick={() => setIsEditing(true)} className="absolute top-[40px] right-[40px] w-[5vh] h-[5vh]">
+      <img src={pencil} />
+    </button>
+  )
 
   return ( // TODO
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
-      <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
+      <div className={"relative w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
           <div className="w-[30vh] h-full border-dashed border-2 border-maroon min-w-[25%]">
             EDITING
@@ -107,11 +124,11 @@ export function EditProfileCard({user_id}) {
                   {/* Sleep schedule */}
                   Sleep sched here
                 </div>
-                <button onClick={onSaveClick} className={`absolute bottom-0 h-[40px] left-[40%] right-[40%] ${isSaving ? "bg-gray" : "bg-maroon"} text-white`}>Save</button>
               </div>
             </div>
           </div>
         </div>
+        {save_or_cancel}
       </div>
     </div>
   )
