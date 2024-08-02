@@ -38,7 +38,7 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
           {sublease.building_address}
         </p>
       </div>
-      <div className={"relative ml-[2.5vw] mr-[2.5vw] mt-[2.5vh] h-[55%] w-[70%] grid grid-cols-6 text-[1.2vw]"}>
+      <div className={"relative ml-[2.5vw] mr-[2.5vw] mt-[0.5vh] h-[55%] w-[70%] grid grid-cols-6 text-[1.2vw]"}>
         <span>Pets</span>
         <span className="font-light text-black">{sublease.pets_allowed}</span>
         <span>Furnished</span>
@@ -57,8 +57,8 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
         <span className="font-light text-black">{sublease.has_gym ? "Yes" : "No"}</span>
         <span>Roommates</span>
         <span className="font-light text-black">{sublease.num_roommates}</span>
-        <div className="absolute top-[-2.5vh] right-[-16vw]"><span className={"font-extrabold"}>${sublease.rent_amount}</span> <span className={"font-light"}>per month</span></div>
-        <button className="absolute top-[11vh] right-[-16vw] text-white bg-maroon_new rounded-lg w-[6vw] font-roboto" onClick={save}>Contact</button>
+        <div className="absolute right-[-13.5vw]"><span className={"font-extrabold"}>${sublease.rent_amount}</span> <span className={"font-light"}>per month</span></div>
+        <button className="absolute bottom-[0vh] right-[-13.5vw] text-white bg-maroon_new rounded-lg w-[6vw] font-roboto" onClick={save}>Contact</button>
       </div>
       </div>
 
