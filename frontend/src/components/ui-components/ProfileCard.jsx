@@ -144,8 +144,8 @@ export function ProfileCard({ user_id }) {
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
       <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
-          <div className="w-[30vh] h-full border-dashed border-2 border-maroon min-w-[25%]">
-            <Carousel editable={false} pictureUrls={[""]}></Carousel>
+          <div className="w-[30vh] h-full min-w-[25%]">
+            <Carousel user_id={user_id} editable={false}></Carousel>
           </div>
           <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
             <div className="flex grow-[2] flex-col border-dashed border-2 border-maroon">
