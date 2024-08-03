@@ -126,6 +126,7 @@ router.get('/get-topfive', async (req, res) => {
 // Get poll questions for a user
 router.get('/poll-questions', async (req, res) => {
     const user_id = req.query.user_id;
+    console.log(user_id)
 
     if (!user_id) {
         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));

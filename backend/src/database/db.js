@@ -21,4 +21,6 @@ export const tableNames = {
     u_generaldata: "u_generaldata",
     u_tags: "u_tags",
     tags: "tags",
+    u_pollquestions: "u_pollquestions",
+    u_polloptions: "u_polloptions",
 }
