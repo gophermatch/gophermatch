@@ -172,10 +172,10 @@ export async function getPollOptions(user_id) {
 }
 
 // Update poll option for a user
-export async function updatePollOption(user_id, option_id, option_text) {
+export async function updatePollOption(user_id, new_option_text, old_option_text) {
   return new Promise((resolve, reject) => {
-      const queryString = `UPDATE ${tableNames.u_polloptions} SET option_text = ? WHERE user_id = ? AND option_id = ?`;
-      db.query(queryString, [option_text, user_id, option_id], (err, result) => {
+      const queryString = `UPDATE ${tableNames.u_polloptions} SET option_text = ? WHERE user_id = ? AND option_text = ?`;
+      db.query(queryString, [new_option_text, user_id, old_option_text], (err, result) => {
           if (err) {
               console.error("Error updating poll option:", err);
               reject(err);
@@ -202,10 +202,10 @@ export async function createPollOption(user_id, option_text) {
 }
 
 // Delete a poll option for a user
-export async function deletePollOption(user_id, option_id) {
+export async function deletePollOption(user_id, option_text) {
   return new Promise((resolve, reject) => {
-      const queryString = `DELETE FROM ${tableNames.u_polloptions} WHERE user_id = ? AND option_id = ?`;
-      db.query(queryString, [user_id, option_id], (err, result) => {
+      const queryString = `DELETE FROM ${tableNames.u_polloptions} WHERE user_id = ? AND option_text = ?`;
+      db.query(queryString, [user_id, option_text], (err, result) => {
           if (err) {
               console.error("Error deleting poll option:", err);
               reject(err);
