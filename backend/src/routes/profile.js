@@ -236,9 +236,9 @@ router.delete('/poll-option', async (req, res) => {
 // gets all fields from u_generaldata given a user_id\
 router.get('/get-gendata', async (req, res) => {
     const {user_id} = req.query;
+    const filter = req.query['filter[]'];
 
-    const filter = req.query.filter;
-    console.log(user_id)
+    console.log(filter)
 
     if (!user_id) {
         return res.status(400).json({ error: "Missing parameters for get-gendata" });
