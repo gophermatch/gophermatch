@@ -42,138 +42,142 @@ interface profileData {
 }
 */
 
-    // useEffect(() => {
-    //   fetchPictureUrls();
-    // }, [user_data]);
-  
-    // const fetchPictureUrls = async () => {
-    //   try {
-    //     const response = await backend.get("/profile/user-pictures", {
-    //       params: {user_id: user_data.user_id},
-    //       withCredentials: true,
-    //     });
-    //     if (response) {
-    //       const data = response.data;
-  
-    //       setPictureUrls(data.pictureUrls)
-    //     } else {
-    //       throw new Error("Failed to fetch picture URLs");
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching picture URLs:", error);
-    //   }
-    // };
+export function ProfileCard({ user_id }) {
+  const [name, setName] = useState('');
+  const [major, setMajor] = useState('');
+  const [bio, setBio] = useState('');
+  const [pollData, setPollData] = useState(null);
+  const [top5Data, setTop5Data] = useState(null);
+  const [apartmentData, setApartmentData] = useState(null);
 
-    export function ProfileCard({ user_id }) {
-      const [name, setName] = useState('');
-      const [major, setMajor] = useState('');
-      const [bio, setBio] = useState('');
-      const [pollData, setPollData] = useState(null);
-      const [top5Data, setTop5Data] = useState(null);
-    
-      useEffect(() => {
-        async function fetchData() {
-          try {
-            const response = await backend.get('/profile/get-gendata', {
-              params: {
-                user_id: currentUser.user_id,
-                'filter[]': ['first_name', 'last_name', 'major', 'bio']
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await backend.get('/profile/get-gendata', {
+          params: {
+            user_id: currentUser.user_id,
+            filter: [
+              'first_name', 'last_name', 'major', 'bio', 'num_beds',
+              'num_bathrooms', 'num_residents', 'move_in_month', 'move_out_month',
+              'rent', 'building'
+            ]
+          }
+        });
+
+        const response2 = await backend.get('/profile/poll-options', {
+          params: {
+            user_id: currentUser.user_id
+          }
+        });
+
+        const response3 = await backend.get('/profile/poll-questions', {
+          params: {
+            user_id: currentUser.user_id
+          }
+        });
+
+        const response4 = await backend.get('/profile/get-topfive', {
+          params: {
+            user_id: currentUser.user_id
+          }
+        });
+
+        if (response.data && response.data.length > 0) {
+          const user = response.data[0];
+          console.log("User data:", user);
+          if (user) {
+            setName(`${user.first_name} ${user.last_name}`);
+            setMajor(user.major);
+            setBio(user.bio);
+
+            const apartmentData = {
+              general_data: {
+                num_beds: user.num_beds,
+                num_bathrooms: user.num_bathrooms,
+                num_residents: user.num_residents,
+                move_in_month: user.move_in_month,
+                move_out_month: user.move_out_month,
+              },
+              profile_data: {
+                apartment_data: JSON.stringify([user.rent, user.building])
               }
-            });
-    
-            const response2 = await backend.get('/profile/poll-options', {
-              params: {
-                user_id: currentUser.user_id
-              }
-            });
-    
-            const response3 = await backend.get('/profile/poll-questions', {
-              params: {
-                user_id: currentUser.user_id
-              }
-            });
-    
-            const response4 = await backend.get('/profile/get-topfive', {
-              params: {
-                user_id: currentUser.user_id
-              }
-            });
-    
-            if (response.data && response.data.length > 0) {
-              const user = response.data[0];
-              setName(`${user.first_name} ${user.last_name}`);
-              setMajor(user.major);
-              setBio(user.bio);
-            }
-    
-            if (response2.data && response3.data) {
-              const options = response2.data.map(option => ({
-                answer: option.option_text,
-                votes: option.num_votes
-              }));
-              const question = response3.data[0]?.question_text || "Poll Question";
-    
-              setPollData({
-                question: question,
-                answers: options
-              });
-            }
-    
-            if (response4.data) {
-              setTop5Data({
-                question: response4.data.question,
-                inputs: [
-                  response4.data.input1,
-                  response4.data.input2,
-                  response4.data.input3,
-                  response4.data.input4,
-                  response4.data.input5,
-                ]
-              });
-            }
-          } catch (error) {
-            console.error('Error fetching user profile:', error);
+            };
+            console.log("Apartment data:", apartmentData);
+            setApartmentData(apartmentData);
           }
         }
-    
-        fetchData();
-      }, [user_id]);
-    
-      return (
-        <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
-          <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
-            <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
-              <div className="w-[30vh] h-full border-dashed border-2 border-maroon min-w-[25%]">
-                <Carousel editable={false} pictureUrls={[""]}></Carousel>
-              </div>
-              <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
-                <div className="flex grow-[2] flex-col border-dashed border-2 border-maroon">
-                  <NameAndBio name={name} major={major} bio={bio} />
+
+        if (response2.data && response3.data) {
+          const options = response2.data.map(option => ({
+            answer: option.option_text,
+            votes: option.num_votes
+          }));
+          const question = response3.data[0]?.question_text || "Poll Question";
+
+          setPollData({
+            question: question,
+            answers: options
+          });
+        }
+
+        if (response4.data) {
+          setTop5Data({
+            question: response4.data.question,
+            inputs: [
+              response4.data.input1,
+              response4.data.input2,
+              response4.data.input3,
+              response4.data.input4,
+              response4.data.input5,
+            ]
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    }
+
+    fetchData();
+  }, [user_id]);
+
+  return (
+    <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
+      <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
+        <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
+          <div className="w-[30vh] h-full border-dashed border-2 border-maroon min-w-[25%]">
+            <Carousel editable={false} pictureUrls={[""]}></Carousel>
+          </div>
+          <div className="flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem] grow">
+            <div className="flex grow-[2] flex-col border-dashed border-2 border-maroon">
+              <NameAndBio name={name} major={major} bio={bio} />
+            </div>
+            <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
+              <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
+                <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
+                  {/*top5Data ? <Top5Dorms top5Data={top5Data} /> : */apartmentData ? <ApartmentInfo all_data={apartmentData} editing={false}/> : 'Loading...'}
                 </div>
-                <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-                  <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-                    <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
-                      {top5Data ? <Top5Dorms top5Data={top5Data} /> : 'Loading...'}
-                    </div>
-                    <div className={"flex grow-[3] overflow-y-auto overflow-x-hidden max-h-40"}>
-                      <Qna qna={null} />
-                    </div>
-                  </div>
-                  <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
-                    <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
-                      {pollData ? <Poll pollData={pollData} revealAnswers={true} userId={currentUser.user_id}/> : 'Loading...'}
-                    </div>
-                    <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
-                      <SleepSchedule sleepSchedule={null} />
-                    </div>
-                  </div>
+                <div className={"flex grow-[3] overflow-y-auto overflow-x-hidden max-h-40"}>
+                  <Qna qna={null} />
+                </div>
+              </div>
+              <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
+                <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
+                  {pollData ? <Poll pollData={pollData} revealAnswers={true} userId={currentUser.user_id}/> : 'Loading...'}
+                </div>
+                <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
+                  <SleepSchedule sleepSchedule={null} />
                 </div>
               </div>
             </div>
           </div>
         </div>
-      );
-    }
+      </div>
+    </div>
+  );
+}
+
+
+
 
 // import React, { useEffect, useState } from "react";
 // import Carousel from './Carousel';

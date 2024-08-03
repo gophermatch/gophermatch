@@ -237,17 +237,17 @@ router.delete('/poll-option', async (req, res) => {
 router.get('/get-gendata', async (req, res) => {
     const {user_id} = req.query;
 
-    const filter = req.query['filter[]'];
+    const filter = req.query.filter;
 
-    if (!user_id){
-        return res.status(400).json(createErrorObj("Missing parameters for get-gendata"));
+    if (!user_id) {
+        return res.status(400).json({ error: "Missing parameters for get-gendata" });
     }
 
     try {
         const results = await getGeneralData(user_id, filter);
         return res.json(results);
     } catch (error) {
-        return res.status(500).json(createErrorObj("Failed to get general data."));
+        return res.status(500).json({ error: "Failed to get general data." });
     }
 });
 
