@@ -126,6 +126,7 @@ router.get('/get-topfive', async (req, res) => {
 // Get poll questions for a user
 router.get('/poll-questions', async (req, res) => {
     const user_id = req.query.user_id;
+    console.log(user_id)
 
     if (!user_id) {
         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
@@ -180,15 +181,15 @@ router.get('/poll-options', async (req, res) => {
 
 // Update poll option for a user
 router.put('/poll-option', async (req, res) => {
-    const { user_id, option_id, option_text } = req.body;
+    const { user_id, new_option_text, old_option_text } = req.body;
 
-    if (!user_id || !option_id || !option_text) {
-        res.status(400).json(createErrorObj("Must specify user_id, option_id, and option_text to update poll option!"));
+    if (!user_id || !new_option_text || !old_option_text) {
+        res.status(400).json(createErrorObj("Must specify user_id, new_option_text, and old_option_text to update poll option!"));
         return;
     }
 
     try {
-        await updatePollOption(user_id, option_id, option_text);
+        await updatePollOption(user_id, new_option_text, old_option_text);
         res.status(200).json({ message: "Poll option updated!" });
     } catch (error) {
         console.error("Error updating poll option:", error);
@@ -216,15 +217,15 @@ router.post('/poll-option', async (req, res) => {
 
 // Delete a poll option for a user
 router.delete('/poll-option', async (req, res) => {
-    const { user_id, option_id } = req.query;
+    const { user_id, option_text } = req.body;
 
-    if (!user_id || !option_id) {
-        res.status(400).json(createErrorObj("Must specify user_id and option_id to delete poll option!"));
+    if (!user_id || !option_text) {
+        res.status(400).json(createErrorObj("Must specify user_id and option_text to delete poll option!"));
         return;
     }
 
     try {
-        await deletePollOption(user_id, option_id);
+        await deletePollOption(user_id, option_text);
         res.status(200).json({ message: "Poll option deleted!" });
     } catch (error) {
         console.error("Error deleting poll option:", error);
@@ -236,17 +237,17 @@ router.delete('/poll-option', async (req, res) => {
 router.get('/get-gendata', async (req, res) => {
     const {user_id} = req.query;
 
-    const filter = req.query['filter[]'];
+    const filter = req.query.filter;
 
-    if (!user_id){
-        return res.status(400).json(createErrorObj("Missing parameters for get-gendata"));
+    if (!user_id) {
+        return res.status(400).json({ error: "Missing parameters for get-gendata" });
     }
 
     try {
         const results = await getGeneralData(user_id, filter);
         return res.json(results);
     } catch (error) {
-        return res.status(500).json(createErrorObj("Failed to get general data."));
+        return res.status(500).json({ error: "Failed to get general data." });
     }
 });
 
