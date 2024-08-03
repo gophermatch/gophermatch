@@ -268,6 +268,7 @@ router.get('/get-gendata', async (req, res) => {
     }
 */
 router.post('/set-gendata', async (req, res) => {
+    console.log()
     const { user_id, data } = req.body;
     if (!user_id || !data) {
         return res.status(400).json(createErrorObj("Missing parameters for set-gendata"));
