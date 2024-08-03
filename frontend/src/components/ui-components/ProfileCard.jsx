@@ -68,6 +68,7 @@ export function ProfileCard({ user_id }) {
   const [name, setName] = useState('');
   const [major, setMajor] = useState('');
   const [bio, setBio] = useState('');
+  const [pollData, setPollData] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -78,14 +79,42 @@ export function ProfileCard({ user_id }) {
             'filter[]': ['first_name', 'last_name', 'major', 'bio']
           }
         });
+        console.log("hey")
 
-        console.log(response);
+        const response2 = await backend.get('/profile/poll-options', {
+          params: {
+            user_id: currentUser.user_id
+          }
+        });
+        console.log("hey2")
+
+
+        const response3 = await backend.get('/profile/poll-questions', {
+          params: {
+            user_id: currentUser.user_id
+          }
+        });
 
         if (response.data && response.data.length > 0) {
           const user = response.data[0];
           setName(`${user.first_name} ${user.last_name}`);
           setMajor(user.major);
           setBio(user.bio);
+        }
+
+        if (response2.data && response3.data) {
+          console.log(response2.data)
+          console.log(response3.data)
+          const options = response2.data.map(option => ({
+            answer: option.option_text,
+            votes: option.num_votes
+          }));
+          const question = response3.data[0]?.question_text || "Poll Question";
+
+          setPollData({
+            question: question,
+            answers: options
+          });
         }
       } catch (error) {
         console.error('Error fetching user profile:', error);
@@ -94,16 +123,6 @@ export function ProfileCard({ user_id }) {
 
     fetchData();
   }, [user_id]);
-
-  const pollData = {
-    question: "What is your favorite color?",
-    answers: [
-      { answer: "Red", votes: 15 },
-      { answer: "Blue", votes: 29 },
-      { answer: "Green", votes: 9 },
-      { answer: "Yellow", votes: 6 }
-    ]
-  };
 
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
@@ -127,7 +146,7 @@ export function ProfileCard({ user_id }) {
               </div>
               <div className="grow-[2] flex flex-col lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
-                  <Poll pollData={pollData} revealAnswers={false} userId={16}/>
+                  {pollData ? <Poll pollData={pollData} revealAnswers={true} userId={currentUser.user_id}/> : 'Loading...'}
                 </div>
                 <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
                   <SleepSchedule sleepSchedule={null} />
