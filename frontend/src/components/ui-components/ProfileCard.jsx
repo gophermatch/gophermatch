@@ -55,7 +55,7 @@ export function ProfileCard({ user_id }) {
       try {
         const response = await backend.get('/profile/get-gendata', {
           params: {
-            user_id: currentUser.user_id,
+            user_id: user_id,
             filter: [
               'first_name', 'last_name', 'major', 'bio', 'num_beds',
               'num_bathrooms', 'num_residents', 'move_in_month', 'move_out_month',
@@ -66,19 +66,19 @@ export function ProfileCard({ user_id }) {
 
         const response2 = await backend.get('/profile/poll-options', {
           params: {
-            user_id: currentUser.user_id
+            user_id: user_id
           }
         });
 
         const response3 = await backend.get('/profile/poll-questions', {
           params: {
-            user_id: currentUser.user_id
+            user_id: user_id
           }
         });
 
         const response4 = await backend.get('/profile/get-topfive', {
           params: {
-            user_id: currentUser.user_id
+            user_id: user_id
           }
         });
 

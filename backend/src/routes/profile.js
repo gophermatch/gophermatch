@@ -238,6 +238,7 @@ router.get('/get-gendata', async (req, res) => {
     const {user_id} = req.query;
 
     const filter = req.query.filter;
+    console.log(user_id)
 
     if (!user_id) {
         return res.status(400).json({ error: "Missing parameters for get-gendata" });
