@@ -19,9 +19,11 @@ function ExampleComponent({broadcaster}) {
 	const [myState, setMyState] = useState()
 
 	useEffect(() => {
-		const cb = () => backend.put("something")
-		broadcaster.connect(cb)
-		return () => broadcaster.disconnect(cb)
-	}, [])
+		if (broadcaster) {
+			const cb = () => backend.put("something")
+			broadcaster.connect(cb)
+			return () => broadcaster.disconnect(cb)
+		}
+	}, [broadcaster])
 }
 ```

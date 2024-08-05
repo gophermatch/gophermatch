@@ -8,7 +8,7 @@ const NumericTextbox = ({value, min, max, placeholder, wide}) => {
         min={min}
         max={max}
         value={value}
-        onChange={null}
+        onChange={() => {}}
         className={`${wide ? 'w-[40%]' : 'w-[18%]'} h-[80%] mt-1 py-1 text-center border rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-maroon`}
         placeholder={placeholder}
         style={{
