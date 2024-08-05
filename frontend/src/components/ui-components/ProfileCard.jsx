@@ -42,7 +42,7 @@ interface profileData {
 }
 */
 
-export function ProfileCard({ user_id }) {
+export function ProfileCard({ user_id, save_func}) {
   const [name, setName] = useState('');
   const [major, setMajor] = useState('');
   const [bio, setBio] = useState('');
@@ -142,9 +142,9 @@ export function ProfileCard({ user_id }) {
 
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
-      <div className={"w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
-      <button onClick={() => goToNext("reject")}
-                      className="w-[4%] h-[7%] top-0 right-0 bg-maroon_new rounded-full hover:bg-maroon_dark shadow-md">
+      <div className={"w-full aspect-[1.8475] relative h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
+      <button onClick={save_func}
+                      className="w-[4%] h-[7%] absolute top-[5%] right-[3%] bg-maroon_new rounded-full hover:bg-maroon_dark shadow-md">
                   <img src="assets/images/match-save.svg" alt="Save" className="w-[50%] h-[50%] m-auto" />
               </button>
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
