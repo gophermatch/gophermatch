@@ -12,7 +12,7 @@ import {
     createPollOption,
     deletePollOption,
     getGeneralData, setGeneralData,
-    updateUserTags, getUserSelectedTags, getAllTags
+    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -194,6 +194,18 @@ router.put('/poll-option', async (req, res) => {
     } catch (error) {
         console.error("Error updating poll option:", error);
         res.status(500).json(createErrorObj("Failed to update poll option. Please try again later."));
+    }
+});
+
+router.put('/toggle-dorm', async (req, res) => {
+    const { user_id } = req.body;
+
+    try {
+        await toggleDormAndApartment(user_id);
+        res.status(200).json({ message: "Apartment/Dorm Toggled!" });
+    } catch (error) {
+        console.error("Error toggling dorm and apartment.", error);
+        res.status(500).json(createErrorObj("Failed to toggle dorm/apartment. Please try again later."));
     }
 });
 

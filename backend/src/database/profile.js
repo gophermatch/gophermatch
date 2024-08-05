@@ -364,3 +364,24 @@ export async function getAllTags() {
       });
   });
 }
+
+export async function toggleDormAndApartment(user_id){
+    return new Promise((resolve, reject) => {
+        const query = `
+            UPDATE ${tableNames.u_generaldata}
+            SET 
+                show_dorm = NOT show_dorm,
+                show_apartment = NOT show_apartment
+            WHERE user_id = ?
+        `;
+        db.query(query, [user_id], (err, results) => {
+            if (err){
+                console.error("Trouble toggling dorm and apartment", err);
+                reject(err);
+                return;
+            }
+            
+            resolve(results)
+        });
+    });
+}

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { ProfileCard} from '../ui-components/ProfileCard';
 import currentUser from '../../currentUser';
+import backend from '../../backend';
 import pencil from "../../assets/images/pencil.svg";
 import close from "../../assets/images/red_x.svg";
 
@@ -31,6 +32,17 @@ export default function ProfilePage() {
   const [isDorm, setIsDorm] = useState(false); // dorm or apartment mode
 
   const [nextKey, setNextKey] = useState(0); // incrementing key will cause profile card to re-mount
+
+  async function dormToggleBackend() {
+    await backend.put('profile/toggle-dorm', {
+      user_id: currentUser.user_id
+    });
+  };
+
+  const dormToggle = () => {
+    setIsDorm(!isDorm);
+    dormToggleBackend();
+  }
 
   function onSaveClick() {
     if (isSaving) {
@@ -70,6 +82,7 @@ export default function ProfilePage() {
       user_id={currentUser.user_id}
       isDorm={isDorm}
       broadcaster={isEditing ? broadcaster : null}
+      dormToggle={dormToggle}
     />
     {save_or_cancel}
     </>
