@@ -143,6 +143,7 @@ export function ProfileCard({ user_id, save_func}) {
   return (
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
       <div className={"w-full aspect-[1.8475] relative h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
+      {/*Bookmark button to save the profile to inbox, calls routes from Match.jsx*/}
       <button onClick={save_func}
                       className="w-[4%] h-[7%] absolute top-[5%] right-[3%] bg-maroon_new rounded-full hover:bg-maroon_dark shadow-md">
                   <img src="assets/images/match-save.svg" alt="Save" className="w-[50%] h-[50%] m-auto" />
