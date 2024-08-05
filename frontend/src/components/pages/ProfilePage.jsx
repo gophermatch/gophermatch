@@ -44,11 +44,16 @@ export default function ProfilePage() {
       .finally(() => setIsEditing(false)) //TODO: increment profile card key should cause elements to refresh
   }
 
+  function discardChanges() {
+    setIsEditing(false)
+    setNextKey(key => key + 1)
+  }
+
   //TODO: set the positioning here for the edit/save/cancel buttons once scaling is redone
   const save_or_cancel = (isEditing ?
     <div className="absolute flex align-middle justify-between top-[40px] right-[40px] h-[4vh]">
       <button onClick={onSaveClick} className={`rounded-lg px-[35px] font-roboto_slab text-white ${isSaving ? "bg-newwhite" : "bg-maroon"}`}>Save Changes</button>
-      <button onClick={() => setIsEditing(false)} className="w-[20px] ml-[15px]">
+      <button onClick={discardChanges} className="w-[20px] ml-[15px]">
         <img src={close} />
       </button>
     </div>
