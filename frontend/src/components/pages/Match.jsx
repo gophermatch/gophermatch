@@ -69,19 +69,17 @@ export default function Match() {
     return (
       <div>
           <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
-          <ProfileCard user_id={filteredUserIds[currentIndex]} />
-          <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
+          <ProfileCard user_id={filteredUserIds[currentIndex]} save_func={() => goToNext("unsure")}/>
+          <div className="absolute flex bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-3">
               <button onClick={() => goToNext("reject")}
-                      className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
-                  <p className={"text-gold"}>X</p>
+                      className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
+                  <img src="assets/images/match-reject.svg" alt="Reject" className="w-[50%] h-[50%] object-contain" />
               </button>
-              <button onClick={() => goToNext("unsure")}
-                       className="w-[8vh] h-[8vh] bg-offwhite border-black border-[1px] rounded-full text-center align-middle text-white font-bold hover:bg-slate-300 shadow-md">💾</button>
               <button onClick={() => goToNext("match")}
-                      className="w-[8vh] h-[8vh] bg-gold rounded-full text-center align-middle text-white font-bold hover:bg-green-600 shadow-md">
-                  <p className={"text-maroon_new"}>&#10003;</p>
+                      className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
+                  <img src="assets/images/match-accept.svg" alt="Match" className="w-[55%] h-[55%] object-contain" />
               </button>
-          </div>
+              </div>
 
           <div className="absolute bottom-[3vh] ml-[70vw] space-x-[1vw] text-[1vw]">
             <button onClick={() => {}}
