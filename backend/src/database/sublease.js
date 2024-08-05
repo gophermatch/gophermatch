@@ -195,5 +195,49 @@ export async function getSavedSubleases(user_id) {
       }
     });
   });
-}
+} 
 
+// returns array of jsons for user's saved subleases (can change the name of this funciton later)
+export async function getSavedSubleaseNew(user_id) {
+  return new Promise((resolve, reject) => {
+    // First query to get the sublease IDs
+    const subleaseIdQuery = `
+      SELECT 
+        sublease_id
+      FROM 
+        ${tableNames.u_savelease}
+      WHERE 
+        user_id = ?
+    `;
+
+    db.query(subleaseIdQuery, [user_id], (err, subleaseIdRows) => {
+      if (err) {
+        console.error('Error fetching saved sublease IDs:', err);
+        reject(err);
+      } else if (subleaseIdRows.length === 0) {
+        reject(new Error('No saved subleases found.'));
+      } else {
+        const subleaseIds = subleaseIdRows.map(row => row.sublease_id);
+
+        // Second query to get the sublease details
+        const subleaseDetailsQuery = `
+          SELECT 
+            *
+          FROM 
+            ${tableNames.u_subleases}
+          WHERE 
+            sublease_id IN (?)
+        `;
+
+        db.query(subleaseDetailsQuery, [subleaseIds], (err, subleaseDetailsRows) => {
+          if (err) {
+            console.error('Error fetching sublease details:', err);
+            reject(err);
+          } else {
+            resolve(subleaseDetailsRows);
+          }
+        });
+      }
+    });
+  });
+}

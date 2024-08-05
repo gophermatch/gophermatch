@@ -99,6 +99,7 @@ export default function Inbox({ user_data }) {
     }
 
     function displaySublease(sublease) {
+        console.log("hey")
         backend.get('/sublease/get', { params: { user_id: sublease.user_id } }).then((res) => {
             setSelectedSublease(res.data);
         });
