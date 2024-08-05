@@ -2,30 +2,63 @@ import { useState, useEffect } from "react";
 import backend from "../../../backend";
 import currentUser from '../../../currentUser.js';
 
-export default function Top5Dorms({ }) {
+/*
+    Currently only the button to switch between both semesters and
+    one semester in conditional based on edit mode. The min and max
+    people also needs to be made conditional, and the UI should be
+    cleaned up a bit in edit mode. The component is in view mode
+    if broadcaster is null, otherwise its in edit mode.
 
-    const [top5Data, setTop5Data] = useState(null);
+    Data should ONLY be saved inside the broadcaster useEffect. It
+    looks like the order is immediately being sent to the backend, this
+    needs to be switched to all be done while saving. Please delete
+    this comment once its fixed so some pour soul doesn't have to try
+    to figure out where the saving issue is.
+*/
+
+export default function Top5Dorms({user_id, broadcaster}) {
+
+    //TODO: add better defaults or some other loading state
+    const [top5Data, setTop5Data] = useState({
+        inputs: ["comstock", "middlebrook", "something", "idk", "idk2"],
+        question: "Top 5??" //TODO: question should not exist in backend, should be hardcoded into html
+    });
 
     const [holdPos, setHoldPos] = useState(null);
     const [holdBase, setHoldBase] = useState(null);
     const [heldDorm, setHeldDorm] = useState('');
     const mousePos = useMousePosition();
 
-    const [top5Dorms, setTop5Dorms] = useState(top5Data.inputs);
+    const [top5Dorms, setTop5Dorms] = useState(top5Data.inputs); //TODO: this seems like duplicate state
     const [minPeople, setMinPeople] = useState(2);
     const [maxPeople, setMaxPeople] = useState(4);
     const [semesters, setSemesters] = useState("Both Semesters");
 
     useEffect(() => {
+        if (broadcaster) {
+            const cb = () => {
+                //TODO: should be able to swap this return out for just `return backend.put(...)` for data saving
+                return new Promise((resolve) => {
+                    console.log("Saving data")
+                    resolve()
+                })
+            }
+
+            broadcaster.connect(cb)
+            return () => broadcaster.disconnect(cb)
+        }
+      }, [broadcaster])
+
+    useEffect(() => {
         async function fetchData() {
           try {
-    
+
             const topfive = await backend.get('/profile/get-topfive', {
               params: {
                 user_id: user_id
               }
             });
-    
+
             if (topfive.data) {
               setTop5Data({
                 question: topfive.data.question,
@@ -42,7 +75,7 @@ export default function Top5Dorms({ }) {
             console.error('Error fetching user profile:', error);
           }
         }
-    
+
         fetchData();
       }, [user_id]);
 
@@ -104,7 +137,8 @@ export default function Top5Dorms({ }) {
                     <div className="inline-block">People</div>
                 </div>
                 <div className="ml-auto w-[200px] text-right">{semesters}</div>
-                <button className="ml-[10px] bg-maroon text-white px-1 h-[20px] rounded-xl" onClick={() => setSemesters(semesters === "Both Semesters" ? "1 Semester" : "Both Semesters")}>^</button>
+                {/* if the broadcaster exists then the component is in edit mode */}
+                {broadcaster && <button className="ml-[10px] bg-maroon text-white px-1 h-[20px] rounded-xl" onClick={() => setSemesters(semesters === "Both Semesters" ? "1 Semester" : "Both Semesters")}>^</button>}
             </div>
             <hr className="border-t-1 bordet-top-solid border-maroon_new"></hr>
             <div className="flex-1 overflow-auto">

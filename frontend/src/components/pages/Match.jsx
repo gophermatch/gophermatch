@@ -69,7 +69,7 @@ export default function Match() {
     return (
       <div>
           <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
-          <ProfileCard user_id={filteredUserIds[currentIndex]} />
+          <ProfileCard user_id={filteredUserIds[currentIndex]} isDorm={true} />
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
               <button onClick={() => goToNext("reject")}
                       className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">

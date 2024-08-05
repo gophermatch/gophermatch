@@ -6,7 +6,7 @@ import './apartmentStyles.css';
 import NumericTextbox from "./NumericTextbox.jsx";
 import MonthDropdown from "./MonthDropdown.jsx";
 
-export default function ApartmentInfo({user_id, editing}) {
+export default function ApartmentInfo({user_id, broadcaster}) {
 
   const [genData, setGenData] = useState({});
 
@@ -72,7 +72,7 @@ export default function ApartmentInfo({user_id, editing}) {
 
   // Called from within the ApartmentTag components to toggle the values
   const onToggleTag = (id) => {
-    
+
     // Update active tags with the given ID toggled
     setActiveTags((prev) => {
 
@@ -102,14 +102,14 @@ export default function ApartmentInfo({user_id, editing}) {
         {/*Middle info panel with apt info*/}
         <div className={"flex grow-[1] w-full justify-center items-center flex-col font-[350]"}>
           <div className={"flex w-full justify-center gap-[1vw]"}>
-            <span>{editing ? <NumericTextbox value={genData?.num_beds} min={1} max={6}/> : <b>{genData?.num_beds}</b>} bed</span>
-            <span>{editing ? <NumericTextbox value={genData?.num_bathrooms} min={1} max={6}/> : <b>{genData?.num_bathrooms}</b>} bath</span>
-            <span>{editing ? <>$<NumericTextbox wide={true} value={genData?.rent} min={0} max={9999}/></> : <b>${genData?.rent}</b>} budget</span>
+            <span>{broadcaster ? <NumericTextbox value={genData?.num_beds} min={1} max={6}/> : <b>{genData?.num_beds}</b>} bed</span>
+            <span>{broadcaster ? <NumericTextbox value={genData?.num_bathrooms} min={1} max={6}/> : <b>{genData?.num_bathrooms}</b>} bath</span>
+            <span>{broadcaster ? <>$<NumericTextbox wide={true} value={genData?.rent} min={0} max={9999}/></> : <b>${genData?.rent}</b>} budget</span>
           </div>
           <div className={"flex h-0 w-[95%] border-solid border-b-[1px] border-maroon"}></div>
           <div className={"flex w-full justify-center gap-[1vw]"}>
 
-          <span className={"whitespace-nowrap"}>{editing ? <>
+          <span className={"whitespace-nowrap"}>{broadcaster ? <>
           <NumericTextbox value={genData?.num_residents} min={1} max={6}/></>
           : <b>{genData?.num_residents}</b>}
           &nbsp;residents</span>
