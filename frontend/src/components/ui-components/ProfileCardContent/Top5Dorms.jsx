@@ -38,7 +38,7 @@ export default function Top5Dorms({user_id, broadcaster}) {
         if (broadcaster) {
             const cb = () => {
                 //TODO: should be able to swap this return out for just `return backend.put(...)` for data saving
-                return new Promise(() => {
+                return new Promise((resolve) => {
                     console.log("Saving data")
                     resolve()
                 })

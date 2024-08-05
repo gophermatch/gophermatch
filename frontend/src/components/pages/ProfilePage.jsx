@@ -30,6 +30,8 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false); // editing profile data
   const [isDorm, setIsDorm] = useState(false); // dorm or apartment mode
 
+  const [nextKey, setNextKey] = useState(0); // incrementing key will cause profile card to re-mount
+
   function onSaveClick() {
     if (isSaving) {
       return
@@ -37,6 +39,7 @@ export default function ProfilePage() {
     setIsSaving(true)
     broadcaster.fire()
       .catch((e) => console.error("SAVE NOT SUCCESSFUL: ", e))
+      .then(() => setNextKey(key => key + 1))
       .then(() => setIsSaving(false))
       .finally(() => setIsEditing(false)) //TODO: increment profile card key should cause elements to refresh
   }
@@ -58,6 +61,7 @@ export default function ProfilePage() {
   return (
     <>
     <ProfileCard
+      key={nextKey}
       user_id={currentUser.user_id}
       isDorm={isDorm}
       broadcaster={isEditing ? broadcaster : null}
