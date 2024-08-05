@@ -21,7 +21,7 @@ export default function Match() {
     async function goToNext(decision) {
         await backend.post('/match/matcher', {
             user1Id: currentUser.user_id,
-            user2Id: filteredUserIds[currentIndex].user_id,
+            user2Id: filteredUserIds[currentIndex],
             decision: decision
         });
 
