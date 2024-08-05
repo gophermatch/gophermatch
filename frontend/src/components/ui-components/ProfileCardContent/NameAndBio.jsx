@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import backend from "../../../backend";
 import styles from '../../../assets/css/name.module.css';
 
+//TODO: add edit state, is in edit if broadcaster is not null
+
 export default function NameAndBio({ user_id, broadcaster }) {
     const [bio, setBio] = useState('');
     const [major, setMajor] = useState('');
@@ -18,7 +20,9 @@ export default function NameAndBio({ user_id, broadcaster }) {
                 ]
               }
             });
-    
+
+            console.log("NAME BIO REQUESTED")
+
             if (response.data && response.data.length > 0) {
               const user = response.data[0];
               console.log("User data:", user);
@@ -32,24 +36,27 @@ export default function NameAndBio({ user_id, broadcaster }) {
             console.error('Error fetching user name, major, and bio:', error);
           }
         }
-    
+
         fetchData();
       }, [user_id]);
 
 
     useEffect(() => {
         if (broadcaster) {
+            //TODO: return promise from backend put request ex: `const cb = () => backend.put('/something')`
             const cb = () => {
                 return new Promise(() => {
                     console.log("Saving data")
                     resolve()
                 })
             }
-    
+
             broadcaster.connect(cb)
             return () => broadcaster.disconnect(cb)
         }
-    }, [])
+    }, [broadcaster])
+
+    // we should probably be using tailwind rather than css modules but doesn't really matter
 
     return (
         <div className={styles.container}>
