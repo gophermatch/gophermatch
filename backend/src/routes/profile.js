@@ -237,8 +237,9 @@ router.delete('/poll-option', async (req, res) => {
 router.get('/get-gendata', async (req, res) => {
     console.log("gendata")
     const {user_id} = req.query;
+    const filter = req.query['filter[]'];
 
-    const filter = req.query.filter;
+    console.log(filter)
 
     if (!user_id) {
         return res.status(400).json({ error: "Missing parameters for get-gendata" });
@@ -269,6 +270,7 @@ router.get('/get-gendata', async (req, res) => {
     }
 */
 router.post('/set-gendata', async (req, res) => {
+    console.log()
     const { user_id, data } = req.body;
     if (!user_id || !data) {
         return res.status(400).json(createErrorObj("Missing parameters for set-gendata"));

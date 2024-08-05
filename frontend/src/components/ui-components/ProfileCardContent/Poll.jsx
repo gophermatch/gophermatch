@@ -1,7 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import ApartmentTag from "./ApartmentTag.jsx";
 
-export default function Poll({pollData, revealAnswers, userId}) {
+export default function Poll({revealAnswers, user_id}) {
+
+  const [pollData, setPollData] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const pollOps = await backend.get('/profile/poll-options', {
+          params: {
+            user_id: user_id
+          }
+        });
+
+        const pollQs = await backend.get('/profile/poll-questions', {
+          params: {
+            user_id: user_id
+          }
+        });
+
+        if (pollOps.data && pollQs.data) {
+          const options = pollOps.data.map(option => ({
+            answer: option.option_text,
+            votes: option.num_votes
+          }));
+          const question = pollQs.data[0]?.question_text || "Poll Question";
+
+          setPollData({
+            question: question,
+            answers: options
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching poll data:', error);
+      }
+    }
+
+    fetchData();
+
+  }, [user_id]);
+
+  if(!pollData || !pollData.answers || !pollData.question)
+  {
+    return (<div>No poll data found</div>);
+  }
+
     const [answerRevealed, setAnswerRevealed] = useState(revealAnswers);
     let [answersState, setAnswersState] = useState(pollData.answers);
 
