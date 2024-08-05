@@ -126,14 +126,15 @@ router.get('/get-saves', async (req, res) =>{
   }
 });
 
-router.get('/saved-sublease-ids', async (req, res) =>{
+router.get('/saved-subleases', async (req, res) =>{
   try {
     const {user_id} = req.query;
     if(!user_id){
       return res.status(400).json({ error: "Missing required fields: user_id." });
     }
-    const subleaseids = await getSavedSubleaseNew(user_id);
-    res.json(subleaseids);
+    const subleases = await getSavedSubleaseNew(user_id);
+    console.log(subleases)
+    res.json(subleases);
   } catch (error) {
     console.error("Error getting saved sublease ids: ", error);
     res.status(500).json(createErrorObj('Error geting saved sublease ids', error.message));
