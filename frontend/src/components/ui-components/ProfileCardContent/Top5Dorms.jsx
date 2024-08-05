@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import backend from "../../../backend";
 import currentUser from '../../../currentUser.js';
 
-export default function Top5Dorms({ top5Data }) {
+export default function Top5Dorms({ }) {
+
+    const [top5Data, setTop5Data] = useState(null);
+
     const [holdPos, setHoldPos] = useState(null);
     const [holdBase, setHoldBase] = useState(null);
     const [heldDorm, setHeldDorm] = useState('');
@@ -14,8 +17,34 @@ export default function Top5Dorms({ top5Data }) {
     const [semesters, setSemesters] = useState("Both Semesters");
 
     useEffect(() => {
-        setTop5Dorms(top5Data.inputs);
-    }, [top5Data]);
+        async function fetchData() {
+          try {
+    
+            const topfive = await backend.get('/profile/get-topfive', {
+              params: {
+                user_id: user_id
+              }
+            });
+    
+            if (topfive.data) {
+              setTop5Data({
+                question: topfive.data.question,
+                inputs: [
+                    topfive.data.input1,
+                    topfive.data.input2,
+                    topfive.data.input3,
+                    topfive.data.input4,
+                    topfive.data.input5,
+                ]
+              });
+            }
+          } catch (error) {
+            console.error('Error fetching user profile:', error);
+          }
+        }
+    
+        fetchData();
+      }, [user_id]);
 
     function handleChangePeople(value, stateDispatch) {
         const digit = value.slice(-1);

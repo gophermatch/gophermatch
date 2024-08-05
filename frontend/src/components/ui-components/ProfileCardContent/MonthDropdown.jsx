@@ -5,7 +5,7 @@ const MonthDropdown = ({initialValue}) => {
     useEffect(() => {
         // Set initial value to January
         setSelectedMonth(initialValue);
-    }, []);
+    }, [initialValue]);
 
   const [selectedMonth, setSelectedMonth] = useState('');
 
