@@ -9,7 +9,7 @@ import Qna from "./ProfileCardContent/Qna";
 // user_id: number, isDorm: boolean, broadcaster?: SignalBroadcaster
 export function ProfileCard({user_id, isDorm, broadcaster}) {
   return ( // TODO
-    <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
+    <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[35rem] sm:w-[30rem] h-screen flex items-center justify-center font-profile font-bold text-maroon_new`}>
       <div className={"relative w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
         <div className={"flex p-[4vh] h-full w-full lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]"}>
           <div className="w-[30vh] h-full min-w-[25%]">

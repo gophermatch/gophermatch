@@ -127,53 +127,60 @@ export default function Top5Dorms({user_id, broadcaster}) {
         }
     }, [mousePos]);
 
-    return (
-        <div className="flex flex-col border-2 border-solid border-maroon_new rounded-md w-full h-full p-[5px] font-roboto_slab">
-            <div className="basis-[30px] flex">
-                <div>
-                    <input type="text" value={minPeople} onChange={e => handleChangePeople(e.target.value, setMinPeople)} className="ml-[10px] w-[15px] bg-offwhite inline-block" />
-                    <div className="inline-block">-</div>
-                    <input type="text" value={maxPeople} onChange={e => handleChangePeople(e.target.value, setMaxPeople)} className="w-[15px] bg-offwhite inline-block" />
-                    <div className="inline-block">People</div>
-                </div>
-                <div className="ml-auto w-[200px] text-right">{semesters}</div>
-                {/* if the broadcaster exists then the component is in edit mode */}
-                {broadcaster && <button className="ml-[10px] bg-maroon text-white px-1 h-[20px] rounded-xl" onClick={() => setSemesters(semesters === "Both Semesters" ? "1 Semester" : "Both Semesters")}>^</button>}
+    const getTopValue = (isHeld, holdBase, offset, basePosition, index) => {
+        const topValue = isHeld ? holdBase + offset : basePosition;
+        if (window.innerWidth >= 1024) { // Adjust for large screens
+          return topValue + (index * 20);
+        }
+        return topValue;
+      };
+    
+      return (
+        <div className="flex flex-col border-2 border-solid border-maroon_new rounded-md w-[12.7rem] md:h-[4.5rem] md:w-[14rem] lg:h-[6rem] lg:w-[17.76rem] xl:h-[7rem] xl:w-[30rem] h-[4rem] sm:h-[4rem] sm:ml-[0] sm:mt-[0rem] sm:w-[12rem] ml-[0.25rem] mt-[0.5rem] p-[5px] font-roboto_slab">
+          <div className="basis-[30px] flex text-[10px] lg:text-[15px] md:text-[12px] sm:text-[8px]">
+            <div className="flex flex-row">
+              <input type="text" value={minPeople} onChange={e => handleChangePeople(e.target.value, setMinPeople)} className="ml-[0px] w-[15px] h-[15px] sm:h-[12px] sm:w-[12px] md:h-[16px] md:w-[16px] lg:h-[19px] lg:w-[19px] text-center bg-offwhite inline-block" />
+              <div className="inline-block ml-[2px] mr-[2px]">-</div>
+              <input type="text" value={maxPeople} onChange={e => handleChangePeople(e.target.value, setMaxPeople)} className="w-[15px] h-[15px] sm:h-[12px] sm:w-[12px] md:h-[16px] md:w-[16px] lg:h-[19px] lg:w-[19px] text-center bg-offwhite inline-block" />
+              <div className="inline-block ml-[3px] md:ml-[5px]">People</div>
             </div>
-            <hr className="border-t-1 bordet-top-solid border-maroon_new"></hr>
-            <div className="flex-1 overflow-auto">
-                <p className="text-sm">{top5Data.question}</p>
-                <div className="relative">
-                    {top5Dorms.map((dorm, i) => {
-                        const isHeld = heldDorm === dorm;
-                        const basePosition = 35 * i;
-                        return (
-                            <div
-                                key={dorm}
-                                className={`bg-maroon w-[calc(100%-30px)] leading-[30px] pl-[5px] rounded-md text-white select-none absolute ${!isHeld && 'transition-all'}`}
-                                style={{
-                                    top: isHeld ? holdBase + offset : basePosition,
-                                    left: "30px",
-                                    zIndex: heldDorm === dorm ? 1 : 0,
-                                }}
-                                onMouseDown={() => { setHoldPos(mousePos); setHoldBase(basePosition); setHeldDorm(dorm); }}
-                                onMouseUp={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
-                                onMouseLeave={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
-                            >
-                                {dorm}
-                            </div>
-                        );
-                    })}
-                    {[0, 0, 0, 0, 0].map((_, i) => (
-                        <div key={i} className="absolute bg-maroon w-[25px] leading-[30px] text-white text-center rounded-md" style={{ top: 35 * i }}>
-                            {i + 1}
-                        </div>
-                    ))}
+            <div className="ml-auto w-[200px] text-right">{semesters}</div>
+            {broadcaster && <button className="ml-[10px] bg-maroon text-white px-1 h-[20px] rounded-xl" onClick={() => setSemesters(semesters === "Both Semesters" ? "1 Semester" : "Both Semesters")}>^</button>}
+          </div>
+          <hr className="border-t-1 mt-[-10px] sm:mt-[-15px] md:mt-[-10px] lg:mt-[-7px] border-t-solid border-maroon_new"></hr>
+          <div className="flex-1 overflow-auto">
+            <p className="text-[10px] sm:text-[10px] lg:text-[14px]">{top5Data.question}</p>
+            <div className="relative">
+              {top5Dorms.map((dorm, i) => {
+                const isHeld = heldDorm === dorm;
+                const basePosition = 20 * i;
+                return (
+                  <div
+                    key={dorm}
+                    className={`bg-maroon w-[calc(100%-30px)] h-[1rem] text-[10px] lg:text-[13px] lg:h-[1.3rem] flex items-center ml-[-3px] pl-[5px] rounded-md text-white select-none absolute ${!isHeld && 'transition-all'}`}
+                    style={{
+                      top: window.innerWidth >= 1024 ? 25 * i : 20 * i ,
+                      left: "30px",
+                      zIndex: heldDorm === dorm ? 1 : 0,
+                    }}
+                    onMouseDown={() => { setHoldPos(mousePos); setHoldBase(basePosition); setHeldDorm(dorm); }}
+                    onMouseUp={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
+                    onMouseLeave={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
+                  >
+                    {dorm}
+                  </div>
+                );
+              })}
+              {[0, 0, 0, 0, 0].map((_, i) => (
+                <div key={i} className="absolute bg-maroon w-[15px] h-[15px] text-[10px] lg:h-[1.3rem] lg:w-[1.3rem] flex items-center justify-center text-white text-center rounded-md" style={{ top: window.innerWidth >= 1024 ? 25 * i : 20 * i }}>
+                  {i + 1}
                 </div>
+              ))}
             </div>
+          </div>
         </div>
-    );
-}
+      );
+    }
 
 const useMousePosition = () => {
     const [mousePosition, setMousePosition] = useState({ x: null, y: null });

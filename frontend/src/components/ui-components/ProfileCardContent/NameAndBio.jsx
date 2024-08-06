@@ -59,14 +59,14 @@ export default function NameAndBio({ user_id, broadcaster }) {
     // we should probably be using tailwind rather than css modules but doesn't really matter
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ml-[0.25rem] sm:ml-[0rem] md:ml-[-0.25rem] lg:ml-[-]`}>
             <div className={styles.name}>
                 {name}
             </div>
             <div className={styles.major}>
                 {major}
             </div>
-            <div className={styles.bio}>
+            <div className={`${styles.bio} p-0 z-0 sm:h-[3.5rem] sm:w-[20.7rem] md:h-[3.5rem] md:w-[24rem] lg:h-[4rem] lg:w-[30rem] xl:h-[7rem] sm:mt-[-0.1rem] xl:w-[40rem]`}>
                 <div className={styles.bioText}>
                     {bio}
                 </div>
