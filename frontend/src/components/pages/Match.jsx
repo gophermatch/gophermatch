@@ -12,11 +12,38 @@ export default function Match() {
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState({});
     
+    const [isDorm, setIsDorm] = useState(false);
+    
     useEffect(() => {
       setCurrentIndex(0);
       setFilterResults([]);
       appendFilterResults();
+      // fetch housing preference for current user
+      const fetchPreference = async () => {
+        const preference = await getHousingPreference();
+        setIsDorm(Boolean(preference));
+      };
+      
+      fetchPreference();
+
     }, [filters, userData]);
+
+    const getHousingPreference = async () => {
+      try{
+        const preference = await backend.get('profile/get-housingpref', {
+          params: {
+            user_id: currentUser.user_id
+          }
+        });
+  
+        if(preference.data){
+          return preference.data.show_dorm;
+        }
+        return 0;
+      }catch(error){
+        console.error('Error fetching housing preference:', error);
+      }
+    };
 
     async function goToNext(decision) {
         await backend.post('/match/matcher', {
@@ -33,7 +60,7 @@ export default function Match() {
         }
 
         setCurrentIndex(currentIndex+1);
-    }
+    } 
 
     async function showRejectedMatches()
     {
@@ -69,7 +96,7 @@ export default function Match() {
     return (
       <div>
           <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
-          <ProfileCard user_id={filteredUserIds[currentIndex]} isDorm={true} />
+          <ProfileCard user_id={filteredUserIds[currentIndex]} isDorm={isDorm} />
           <div className="absolute bottom-[3vh] justify-around left-1/2 transform -translate-x-1/2 space-x-5">
               <button onClick={() => goToNext("reject")}
                       className="w-[8vh] h-[8vh] bg-maroon_new rounded-full text-center align-middle text-white font-bold hover:bg-red-600 shadow-md">
