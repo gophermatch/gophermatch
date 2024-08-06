@@ -28,7 +28,8 @@ export function ProfileCard({user_id, showDorm, showApt, broadcaster, toggleVisi
             <div className="flex grow-[3] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] lg:gap-[1.5rem] md:gap-[1rem] sm:gap-[0.5rem]">
                 <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
-                  {isDorm ?
+                  {/*How should we really pass this? Match and Profile page will end up passing it differently, but we could use the same prop*/}
+                  {true ?
                     <Top5Dorms user_id={user_id} broadcaster={broadcaster} />
                     :
                     <ApartmentInfo user_id={user_id} broadcaster={broadcaster} />

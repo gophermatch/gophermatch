@@ -106,7 +106,6 @@ export default function ProfilePage() {
     <ProfileCard
       key={nextKey}
       user_id={currentUser.user_id}
-      isDorm={isDorm}
       broadcaster={isEditing ? broadcaster : null}
       dormToggle={dormToggle}
       profileMode={true}
