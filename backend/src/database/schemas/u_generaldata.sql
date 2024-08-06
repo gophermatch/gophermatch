@@ -32,7 +32,8 @@ CREATE TABLE u_generaldata (
     rent INT NOT NULL DEFAULT 0, -- Accepts any number, with two decimal places
     building VARCHAR(255) DEFAULT 'Any',
     -- New
-    profile_display_mode ENUM('apartments', 'dorms', 'either') DEFAULT 'either',
+    show_dorm BOOLEAN DEFAULT TRUE,
+    show_apartment BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
         ON DELETE CASCADE,
     UNIQUE (user_id)
