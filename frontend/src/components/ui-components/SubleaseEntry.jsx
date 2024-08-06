@@ -23,26 +23,25 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
   }
 
   return (
-    <div
-      className={"mt-[2.5vh] ml-[3vw] aspect-[16/3.3] flex items-center"}>
-      <div className={"font-profile font-bold p-0 text-maroon_new lg:h-[11.5rem] md:h-[8.75rem] xl:w-[95%] xl:ml-0 lg:ml-0 lg:w-[90%] md:w-[70%] md:ml-[12%] md:mt-[5%] sm:w-[40%] sm:ml-[25%] bg-cream rounded-[20px]"}>
-      <div className={`h-[2.5rem] relative top-[-1vh] w-full ${sublease.premium ? 'bg-gold': 'bg-maroon_new'} rounded-t-[20px]`}>
+    <div className={"mt-[2.5vh] ml-[3vw] aspect-[16/3.3] flex items-center"}>
+      <div className={"font-profile font-bold p-0 text-maroon_new h-[6rem] ml-[33rem] w-[26%] sm:h-[6.3rem] sm:w-[50%] xl:w-[95%] xl:ml-0 lg:ml-[6rem] lg:h-[67%] xl:h-[78%] lg:w-[79%] md:w-[50%] md:ml-[19rem] md:mt-[5%] sm:ml-[25%] bg-cream rounded-[20px]"}>
+      <div className={`h-[1.5rem] lg:h-[2rem] xl:h-[2.5rem] relative top-[-1vh] w-full ${sublease.premium ? 'bg-gold': 'bg-maroon_new'} rounded-t-[20px]`}>
         <p className={"flex justify-between text-white text-[1.5vw] w-full ml-[1vw] mt-[1vh] font-roboto_slab"}>
-          <span className={"mt-[0.3vh] flex flex-row font-light"}>
+          <span className={"mt-[2vh] ml-[2vw] md:ml-[0.5rem] xl:ml-[0.2rem] xl:mt-[0.75vh] text-[11px] xl:text-[17px] sm:text-[12px] lg:text-[15.5px] sm:mt-[4px] flex flex-row font-light"}>
             <p className={styles.lightBold}>
               {sublease.building_name} 
             </p>
-            <p className={"text-white text-[17px] ml-[1vw] mt-[0.65vh]"}>
+            <p className={"text-white xl:text-[15px] text-[9px] ml-[1vw] mt-[1vh] lg:text-[13px] sm:mt-[3.25px] xl:mt-[2px]"}>
             {sublease.building_address}
         </p>
           </span>
-          <span className={"ml-[3vw] inline-block text-right mr-[2vw] mt-[0.7vh] font-light"}>
+          <span className={"ml-[3vw] inline-block text-right xl:mr-[2rem] xl:mt-[1vh] lg:text-[15px] text-[10px] sm:text-[11px] sm:mt-[3.5px] mr-[4vw] mt-[2vh] font-light"}>
             Available {DateTime.fromISO(sublease.sublease_start_date).toFormat('MM/dd/yyyy')}-{DateTime.fromISO(sublease.sublease_end_date).toFormat('MM/dd/yyyy')}
           </span>
         </p>
       </div>
-      <div className={"relative flex flex-row ml-[2.5vw] mr-[2.5vw] mt-[0.5vh] h-[59%] w-[80%] text-[1.2vw]"}>
-        <div className="flex flex-col w-[300px] bg-light_gray ml-[-1.75vw] rounded-[12px] font-roboto_condensed">
+      <div className={"relative flex flex-row ml-[2.5vw] mr-[2.5vw] mt-[0.5vh] h-[60%] w-[80%] text-[1.2vw]"}>
+        <div className="flex flex-col w-[300px] bg-light_gray ml-[-1.75vw] rounded-[12px] text-[7px] lg:text-[13px] xl:text-[14px] font-roboto_condensed">
           <div className={`flex flex-col font-roboto_condensed`}>
             <div className="flex flex-row justify-between items-center">
               <span className="ml-[13px] mt-[7px]">Pets</span>
@@ -64,7 +63,7 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
             <span className="mr-[13px] mt-[4px] font-light text-black">{sublease.num_bedrooms}</span>
           </div>
         </div>
-        <div className="flex flex-col ml-[10px] w-[300px] bg-light_gray rounded-[12px] font-roboto_condensed">
+        <div className="flex flex-col ml-[10px] w-[300px] bg-light_gray rounded-[12px] xl:text-[14px] lg:text-[13px] text-[7px] font-roboto_condensed">
           <div className="flex flex-row justify-between items-center"> 
             <span className="ml-[13px] mt-[7px]">Kitchen</span>
             <span className="mr-[13px] mt-[7px] font-light text-black justify-end">{sublease.has_kitchen}</span>
@@ -84,7 +83,7 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
             <span className="mr-[13px] mt-[4px] font-light text-black">{sublease.num_bathrooms}</span>
           </div>
         </div>
-        <div className="flex flex-col ml-[12px] w-[300px] bg-light_gray rounded-[12px] font-roboto_condensed">
+        <div className="flex flex-col ml-[12px] w-[300px] bg-light_gray rounded-[12px] xl:text-[14px] lg:text-[13px] text-[7px] font-roboto_condensed">
           <div className="flex flex-row justify-between items-center"> 
             <span className="ml-[13px] mt-[7px]">Parking</span>
             <span className="mr-[13px] mt-[7px] whitespace-nowrap font-light text-black">{sublease.has_parking}</span>
@@ -104,9 +103,9 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
             <span className="mr-[13px]  mt-[4px] font-light text-black">{sublease.num_roommates}</span>
           </div>
         </div>
-        <div className="absolute sm:right-[-3.5rem] xl:right-[-9.15rem] md:right-[-6rem] font-roboto_slab">
+        <div className="absolute text-[7px] xl:text-[17px] lg:text-[14px] md:text-[10px] sm:text-[8px] right-[-3.5rem] sm:right-[-4.25rem] xl:right-[-9.15rem] lg:right-[-8.25rem] md:right-[-6rem] font-roboto_slab">
           <span className={"font-extrabold"}>${sublease.rent_amount}</span> <span className={"font-light"}>per month</span></div>
-          <button className="absolute bottom-[0vh] sm:bottom-[0.5rem] sm:right-[-3.5rem] md:right-[-6rem] xl:right-[-9.15rem] text-white bg-maroon_new rounded-full w-[6vw] font-roboto" onClick={save}>Contact</button>
+          <button className="absolute w-[2rem] xl:text-[15px] xl:h-[1.75rem] xl:w-[4.4rem] lg:text-[13px] lg:w-[4rem] lg:h-[1.5rem] sm:w-[2.75rem] md:w-[3.25rem]  bottom-[0vh] md:h-[18px] md:text-[10px] h-[14px] sm:h-[16px] sm:text-[8px] text-[6px] right-[-3.5rem] sm:bottom-[0.5rem] sm:right-[-4.25rem] md:right-[-6rem] lg:right-[-8.25rem] xl:right-[-9.15rem] text-white bg-maroon_new rounded-full font-roboto hover:bg-maroon_dark" onClick={save}>Contact</button>
         </div>
       </div>
     </div>
