@@ -21,7 +21,7 @@ export default function Inbox({ user_data }) {
                     backend.get('account/fetch', { params: { user_id: matchId }, withCredentials: true }),
                     backend.get('/profile/user-pictures', { params: { user_id: matchId } })
                 ]));
-
+    
                 Promise.all(profilePromises).then((promiseResults) => {
                     const translatedData = promiseResults.map(([profileRes, accountRes, picsRes]) => {
                         return { ...profileRes.data, ...accountRes.data.data, pics: picsRes.data.pictureUrls };
@@ -31,31 +31,28 @@ export default function Inbox({ user_data }) {
             } catch (error) {
                 console.error("Error fetching matched profiles:", error);
             }
-
             try {
                 const subleaseRes = await backend.get('/sublease/saved-subleases', { params: { user_id: currentUser.user_id } });
-                const subleaseData = subleaseRes.data;
-
-                console.log("Fetched subleases:", subleaseData); // Log fetched sublease data
-
-                const contactPromises = subleaseData.map((sublease) =>
-                    backend.get('/profile/get-gendata', { params: { user_id: sublease.user_id, filter: ['first_name,last_name,contact_email'] } })
+                console.log("HEHEHE", subleaseRes);
+                const subleasePromises = subleaseRes.data.map(sublease =>
+                    backend.get('/profile/get-gendata', {
+                        params: {
+                            user_id: sublease.user_id,
+                            filter: ['first_name', 'last_name', 'contact_email']
+                        }
+                    }).then(userRes => ({ ...sublease, ...userRes.data[0] }))
                 );
-
-                Promise.all(contactPromises).then((contactResults) => {
-                    console.log("Fetched contact info:", contactResults); // Log fetched contact data
-                    const combinedSubleases = subleaseData.map((sublease, index) => ({
-                        ...sublease,
-                        ...contactResults[index].data[0]
-                    }));
-                    console.log("Combined subleases:", combinedSubleases); // Log combined sublease and contact data
-                    updateMatchedSubleases(combinedSubleases);
+                console.log(subleasePromises)
+    
+                Promise.all(subleasePromises).then((subleasesWithUserData) => {
+                    updateMatchedSubleases(subleasesWithUserData);
                 });
             } catch (error) {
                 console.error("Failed fetching subleases: ", error);
             }
         })();
     }, []);
+    
 
     useEffect(() => {
         backend.post('/match/mark-seen', { userId: currentUser.user_id });
@@ -94,13 +91,6 @@ export default function Inbox({ user_data }) {
         setSelectedSublease(sublease);
     }
 
-    const formatPhoneNumber = (phoneNumber) => {
-        if (phoneNumber.length !== 10) {
-            return phoneNumber;
-        }
-        return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
-    };
-
     return (
         <div className="p-8">
             {selectedProfile && (
@@ -127,7 +117,7 @@ export default function Inbox({ user_data }) {
                                     <img src={person.pics[0] || kanye} className="rounded-full h-[8vh] w-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" alt="Profile" onClick={() => displayProfile(person)}></img>
                                     <div className="flex flex-col w-full text-start items-start justify-start">
                                         <button className="text-[2.5vh] mt-[0.75vh] w-auto ml-[1vw] font-roboto font-light text-start text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
-                                        <button className="text-[2vh] font-thin ml-[1vw]" onClick={() => displayProfile(person)}>{formatPhoneNumber(person.contact_phone)}</button>
+                                        <button className="text-[2vh] font-thin ml-[1vw]" onClick={() => displayProfile(person)}>{person.contact_phone}</button>
                                     </div>
                                     <div className="w-full text-right">
                                         <button className="text-[2.5vh] text-inactive_gray hover:text-maroon w-[4vw] mr-[1vw] mt-[2.5vh]" onClick={() => unmatch(person.user_id)}>X</button>
@@ -144,10 +134,10 @@ export default function Inbox({ user_data }) {
                             <div className="flex" key={index}>
                                 <div className="flex flex-row w-full">
                                     <div className="flex flex-col w-full text-start justify-start">
-                                        <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] w-[30vw] font-roboto font-[390] text-maroon">{`${sublease.first_name} ${sublease.last_name}`}</p>
+                                        <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] w-[30vw] font-roboto font-[390] text-maroon">{`${sublease.building_name} - ${sublease.building_address}`}</p>
                                         <div className="flex flex-row">
-                                            <p className="ml-[1vw] text-xs text-left text-[1.5vh] w-[25vw] font-roboto font-light">{`${sublease.building_name}`}</p>
-                                            <p className="ml-[1vw] text-xs text-left text-[1.5vh] w-[25vw] font-roboto font-light">{`${sublease.contact_email}`}</p>
+                                            <p className="ml-[1vw] text-xs text-left text-[1.5vh] w-[25vw] font-roboto font-light">{`${sublease.first_name} ${sublease.last_name}`}</p>
+                                            <p className="ml-[1vw] text-xs text-left text-[1.5vh] w-[25vw] font-roboto font-light">{sublease.contact_email}</p>
                                         </div>
                                     </div>
                                     <div className="w-full text-right">
@@ -168,4 +158,5 @@ export default function Inbox({ user_data }) {
             </div>
         </div>
     );
+    
 }
