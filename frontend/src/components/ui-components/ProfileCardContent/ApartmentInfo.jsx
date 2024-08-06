@@ -92,28 +92,28 @@ export default function ApartmentInfo({user_id, broadcaster}) {
   }
 
   return (
-    <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-xl font-roboto_slab font-medium"}>
-      <div className={"flex w-full h-full justify-center items-center flex-col"}>
+    <div className={"w-full h-[4.5rem] rounded-lg border-solid border-2 mt-[0.25rem] ml-[0.25rem] border-maroon text-xl font-roboto_slab font-medium"}>
+      <div className={"flex w-full h-full justify-center items-center flex-col text-[8px]"}>
         {/*Top header panel with apt name*/}
-        <div className={"flex grow-[1]"}>
+        <div className={"flex grow-[1] text-[9px] mt-[28px]"}>
           {/* TODO: Should this just be replaced by tags?*/}
           Looking to live in {genData?.building}
         </div>
         {/*Middle info panel with apt info*/}
-        <div className={"flex grow-[1] w-full justify-center items-center flex-col font-[350]"}>
+        <div className={"flex grow-[1] w-full justify-center items-center flex-col mt-[-15px] font-[350]"}>
           <div className={"flex w-full justify-center gap-[1vw]"}>
             <span>{broadcaster ? <NumericTextbox value={genData?.num_beds} min={1} max={6}/> : <b>{genData?.num_beds}</b>} bed</span>
             <span>{broadcaster ? <NumericTextbox value={genData?.num_bathrooms} min={1} max={6}/> : <b>{genData?.num_bathrooms}</b>} bath</span>
             <span>{broadcaster ? <>$<NumericTextbox wide={true} value={genData?.rent} min={0} max={9999}/></> : <b>${genData?.rent}</b>} budget</span>
           </div>
-          <div className={"flex h-0 w-[95%] border-solid border-b-[1px] border-maroon"}></div>
+          <div className={"flex h-0 w-[95%] mt-[-5px] border-solid border-b-[1px] border-maroon"}></div>
           <div className={"flex w-full justify-center gap-[1vw]"}>
 
-          <span className={"whitespace-nowrap"}>{broadcaster ? <>
+          <span className={"whitespace-nowrap ml-[0.2rem] mt-[-4px]"}>{broadcaster ? <>
           <NumericTextbox value={genData?.num_residents} min={1} max={6}/></>
           : <b>{genData?.num_residents}</b>}
           &nbsp;residents</span>
-            <span><MonthDropdown initialValue={genData.move_in_month}/> to <MonthDropdown initialValue={genData.move_out_month}/></span>
+            <span className="mt-[-3px]"><MonthDropdown initialValue={genData.move_in_month}/> to <MonthDropdown initialValue={genData.move_out_month}/></span>
           </div>
         </div>
 
