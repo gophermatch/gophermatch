@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
 import SubleaseFilter from "../ui-components/SubleaseFilter.jsx";
+import styles from '../../assets/css/sublease.module.css';
+
 
 export default function Sublease()
 {
@@ -118,8 +120,10 @@ export default function Sublease()
         }
       }}>
 
-        <Link to={"/createsublease"} color="primary" className={"rounded-md flex flex-1 w-[70vw] mt-[4vh] h-[7vh] m-auto bg-white text-lg text-black transition-transform duration-500 scale-[96%] hover:scale-[98%]"}>
-          <p className={"m-auto"}>{userSublease==null ? "Add your sublease" : "Edit your sublease"}</p>
+        <Link to={"/createsublease"} color="primary" className={`${styles.linkClass} rounded-full flex flex-1 w-[70vw] mt-[4vh] h-[2vh] m-auto text-lg text-black pionter-events-auto`}>
+          <button className={`${styles.buttonClass} rounded-full mt-[-3.5vh] bg-maroon h-[4rem] w-[4rem] text-white text-[60px] ml-[89.5%] xl:ml-[89.5%] lg:ml-[89.6%] transition-transform duration-500 scale-[96%] hover:scale-[105%] cursor-pointer`}>
+            +
+          </button>
         </Link>
         {subleases.length > 0 ? subleases.map(item => (
           // Return a React element for each item in the array
