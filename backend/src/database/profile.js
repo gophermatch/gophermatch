@@ -365,6 +365,7 @@ export async function getAllTags() {
   });
 }
 
+// setting apartment/dorm preference
 export async function toggleDormAndApartment(user_id){
     return new Promise((resolve, reject) => {
         const query = `
@@ -381,7 +382,22 @@ export async function toggleDormAndApartment(user_id){
                 return;
             }
             
-            resolve(results)
+            resolve(results);
         });
     });
 }
+
+// getting apartment/dorm preference
+export async function getHousingPreference(user_id) {
+    return new Promise((resolve, reject) => {
+        const queryString = `SELECT show_dorm FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
+        db.query(queryString, [user_id], (err, results) => {
+            if (err) {
+                console.error("Error fetching housing preference:", err);
+                reject(err);
+                return;
+            }
+            resolve(results[0]);
+        });
+    });
+  }

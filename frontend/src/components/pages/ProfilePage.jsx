@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ProfileCard} from '../ui-components/ProfileCard';
 import currentUser from '../../currentUser';
 import backend from '../../backend';
@@ -39,6 +39,23 @@ export default function ProfilePage() {
     });
   };
 
+  const getHousingPreference = async () => {
+    try{
+      const preference = await backend.get('profile/get-housingpref', {
+        params: {
+          user_id: currentUser.user_id
+        }
+      });
+
+      if(preference.data){
+        return preference.data.show_dorm;
+      }
+      return 0;
+    }catch(error){
+      console.error('Error fetching housing preference:', error);
+    }
+  };
+
   const dormToggle = () => {
     setIsDorm(!isDorm);
     dormToggleBackend();
@@ -75,6 +92,15 @@ export default function ProfilePage() {
     </button>
   )
 
+  useEffect(() => {
+    const fetchPreference = async () => {
+      const preference = await getHousingPreference();
+      setIsDorm(Boolean(preference));
+    };
+
+    fetchPreference();
+  }, []);
+
   return (
     <>
     <ProfileCard
@@ -83,6 +109,7 @@ export default function ProfilePage() {
       isDorm={isDorm}
       broadcaster={isEditing ? broadcaster : null}
       dormToggle={dormToggle}
+      profileMode={true}
     />
     {save_or_cancel}
     </>
