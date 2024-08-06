@@ -21,7 +21,7 @@ export default function Inbox({ user_data }) {
                     backend.get('account/fetch', { params: { user_id: matchId }, withCredentials: true }),
                     backend.get('/profile/user-pictures', { params: { user_id: matchId } })
                 ]));
-    
+
                 Promise.all(profilePromises).then((promiseResults) => {
                     const translatedData = promiseResults.map(([profileRes, accountRes, picsRes]) => {
                         return { ...profileRes.data, ...accountRes.data.data, pics: picsRes.data.pictureUrls };
@@ -42,8 +42,7 @@ export default function Inbox({ user_data }) {
                         }
                     }).then(userRes => ({ ...sublease, ...userRes.data[0] }))
                 );
-                console.log(subleasePromises)
-    
+
                 Promise.all(subleasePromises).then((subleasesWithUserData) => {
                     updateMatchedSubleases(subleasesWithUserData);
                 });
@@ -52,7 +51,6 @@ export default function Inbox({ user_data }) {
             }
         })();
     }, []);
-    
 
     useEffect(() => {
         backend.post('/match/mark-seen', { userId: currentUser.user_id });
@@ -150,7 +148,9 @@ export default function Inbox({ user_data }) {
                     ))}
                     {selectedSublease && (
                         <div>
-                            <SubleaseEntry subleaseData={selectedSublease} editable={false} />
+                            <SubleaseEntry sublease={selectedSublease} refreshFunc={() => {
+                                // Optional: Function to refresh the sublease list after an action
+                            }} />
                             <button onClick={() => setSelectedSublease(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
                         </div>
                     )}
@@ -158,5 +158,4 @@ export default function Inbox({ user_data }) {
             </div>
         </div>
     );
-    
 }
