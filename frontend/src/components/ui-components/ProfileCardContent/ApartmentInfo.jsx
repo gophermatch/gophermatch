@@ -92,10 +92,10 @@ export default function ApartmentInfo({user_id, broadcaster}) {
   }
 
   return (
-    <div className={"w-full h-[4.5rem] rounded-lg border-solid border-2 mt-[0.25rem] ml-[0.25rem] border-maroon text-xl font-roboto_slab font-medium"}>
+    <div className={"w-full h-[5rem] rounded-lg border-solid border-2 mt-[0.25rem] ml-[0.25rem] border-maroon text-xl font-roboto_slab font-medium"}>
       <div className={"flex w-full h-full justify-center items-center flex-col text-[8px]"}>
         {/*Top header panel with apt name*/}
-        <div className={"flex grow-[1] text-[9px] mt-[28px]"}>
+        <div className={"flex grow-[1] text-[9px]"}>
           {/* TODO: Should this just be replaced by tags?*/}
           Looking to live in {genData?.building}
         </div>
@@ -118,7 +118,7 @@ export default function ApartmentInfo({user_id, broadcaster}) {
         </div>
 
         {/*Bottom panel with tags*/}
-        <div className={"flex w-[98%] p-2 max-h-[80%] grow-[0] flex-wrap gap-1 overflow-y-scroll custom-scrollbar"}>
+        <div className={"flex  w-[98%] h-[20%] p-2 max-h-[80%] grow-[0] flex-wrap gap-1 overflow-y-scroll custom-scrollbar"}>
           {allTagIds.map(tag => {
             const tagValue = activeTags.includes(tag.tag_id);
             return(
