@@ -35,14 +35,14 @@ export default function Saved() {
             }})
 
             const profilePromises = matchesRes.data.map((matchId) => Promise.all([
-                backend.get('/profile', {params: {user_id: matchId}}),
+                // backend.get('/profile', {params: {user_id: matchId}}),
                 backend.get('account/fetch', {params: {user_id: matchId}, withCredentials: true}),
                 backend.get("/profile/user-pictures", {params: {user_id: matchId}})
             ]));
 
             Promise.all(profilePromises).then((promiseResults) => {
-                const translatedData = promiseResults.map(([profileRes, accountRes, picsRes]) => {
-                    return {...profileRes.data, ...accountRes.data.data, pics: picsRes.data.pictureUrls}
+                const translatedData = promiseResults.map(([ accountRes, picsRes]) => {
+                    return {...accountRes.data.data, pics: picsRes.data.pictureUrls}
                 })
                 updateMatchedProfiles(translatedData);
             });
