@@ -32,18 +32,24 @@ export default function Saved() {
         (async () => {
             const matchesRes = await backend.get('/match/saved-matches', {params: {
                 userId: currentUser.user_id
-            }})
+            }});
 
-            const profilePromises = matchesRes.data.map((matchId) => Promise.all([
-                // backend.get('/profile', {params: {user_id: matchId}}),
-                backend.get('account/fetch', {params: {user_id: matchId}, withCredentials: true}),
-                backend.get("/profile/user-pictures", {params: {user_id: matchId}})
-            ]));
+            console.log("Saved matches user_ids:", matchesRes.data);
+
+            const columnsToFetch = ['first_name', 'last_name', 'major', 'graduating_year', 'user_id'];
+
+            const profilePromises = matchesRes.data.map((matchId) => 
+                backend.get('/profile/get-gendata', {
+                    params: { 
+                        user_id: matchId,
+                        filter: columnsToFetch 
+                    }
+                })
+            );
 
             Promise.all(profilePromises).then((promiseResults) => {
-                const translatedData = promiseResults.map(([ accountRes, picsRes]) => {
-                    return {...accountRes.data.data, pics: picsRes.data.pictureUrls}
-                })
+                const translatedData = promiseResults.map((response) => response.data[0]);
+                console.log("Processed profile data:", translatedData);
                 updateMatchedProfiles(translatedData);
             });
         })();
@@ -84,7 +90,6 @@ export default function Saved() {
         }
     }
     
-
     function displayProfile(profile) {
         setSelectedProfile(profile);
     }
@@ -112,38 +117,24 @@ export default function Saved() {
             </div>
             <div className="bg-white h-[87vh] w-[47vw] rounded-br-[0.5vh] rounded-bl-[0.5vh] items-center text-center justify-center">
             {people.map((person, index) => (
-                <div className="flex flex-col h-[11vh] w-full">
-                <div className="flex" key={index}>
-                    <div className="flex flex-row w-full">
-                            <img src={person.pics[0] || kanye} className="rounded-full h-[8vh] w-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" onClick={() => displayProfile(person)}></img>
-                            <div className=" flex flex-col w-full text-start justify-start">
+                <div className="flex flex-col h-[11vh] w-full" key={person.user_id}>
+                    <div className="flex">
+                        <div className="flex flex-row w-full">
+                            <img src={kanye} className="rounded-full h-[8vh] w-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" onClick={() => displayProfile(person)}></img>
+                            <div className="flex flex-col w-full text-start justify-start">
                                 <div className="flex flex-row">
-                                    <button className="text-[2.5vh] mt-[1.5vh] ml-[1vw] font-roboto font-[390]  text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
+                                    <button className="text-[2.5vh] mt-[1.5vh] ml-[1vw] font-roboto font-[390] text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
                                 </div>
                                 <div className="flex flex-row">
                                     <button className="ml-[1vw] text-[2vh] font-[200] text-black" onClick={() => displayProfile(person)}>{person.major} Major, Class of {person.graduating_year}</button>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end justify-end">
-                            <button
-                                className="" 
-                                onClick={() => match(person.user_id)}>
-                            <svg 
-                                width="3vw" 
-                                height="3vh" 
-                                viewBox="0 0 64 64" 
-                                xmlns="http://www.w3.org/2000/svg" 
-                                fill="none"
-                                className="hover:stroke-gold" 
-                                stroke="#000000"><polyline points="12 28 28 44 52 20"/>
-                            </svg>
-                            </button>
-                            <button
-                                className="hover:text-maroon text-inactive_gray mr-[1.1vw] text-[2.125vh]"
-                                onClick={() => removeSave(person.user_id)}>
-                                X
-                            </button>
-                        </div>
+                                <button className="" onClick={() => match(person.user_id)}>
+                                    <svg width="3vw" height="3vh" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none" className="hover:stroke-gold" stroke="#000000"><polyline points="12 28 28 44 52 20"/></svg>
+                                </button>
+                                <button className="hover:text-maroon text-inactive_gray mr-[1.1vw] text-[2.125vh]" onClick={() => removeSave(person.user_id)}>X</button>
+                            </div>
                         </div>
                     </div>
                     <div className="w-[40vw] h-[0.1vh] ml-[3.5vw] bg-gray font-thin mt-[1.75vh]"></div>
