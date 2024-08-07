@@ -52,7 +52,8 @@ export default {
       inter: ['Inter', 'serif'],
       profile: ['Inconsolata', 'serif'],
       roboto: ['Roboto', 'serif'],
-      roboto_slab: ['Roboto Slab', 'serif']
+      roboto_slab: ['Roboto Slab', 'serif'],
+      roboto_condensed: ['Roboto Condensed', 'serif']
     },
   },
   plugins: [],
