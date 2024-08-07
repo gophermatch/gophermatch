@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
 import SubleaseFilter from "../ui-components/SubleaseFilter.jsx";
+import styles from '../../assets/css/sublease.module.css';
+
 
 export default function Sublease()
 {
@@ -118,8 +120,10 @@ export default function Sublease()
         }
       }}>
 
-        <Link to={"/createsublease"} color="primary" className={"rounded-md flex flex-1 w-[70vw] mt-[4vh] h-[7vh] m-auto bg-white text-lg text-black transition-transform duration-500 scale-[96%] hover:scale-[98%]"}>
-          <p className={"m-auto"}>{userSublease==null ? "Add your sublease" : "Edit your sublease"}</p>
+        <Link to={"/createsublease"} color="primary" className={`${styles.linkClass} rounded-full flex flex-1 w-[70vw] mt-[4vh] h-[2vh] m-auto text-lg text-black pionter-events-auto`}>
+          <button className={`${styles.buttonClass} rounded-full h-[3rem] w-[3rem] sm:mt-[0rem] lg:h-[3.75rem] lg:text-[55px] lg:w-[3.75rem] lg:mt-[-0.5rem] lg:ml-[92%] md:mt-[1rem] md:ml-[90%] sm:ml-[88%] text-[40px] ml-[85%] mt-[2rem] md:h-[3.5rem] md:w-[3.5rem] md:text-[50px] xl:mt-[-3.5vh] bg-maroon xl:h-[4rem] xl:w-[4rem] text-white xl:text-[60px] xl:ml-[89.5%] transition-transform duration-500 scale-[96%] hover:scale-[105%] cursor-pointer`}>
+            +
+          </button>
         </Link>
         {subleases.length > 0 ? subleases.map(item => (
           // Return a React element for each item in the array

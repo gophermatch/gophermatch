@@ -14,20 +14,38 @@ export default function Settings() {
 
     const fetchUserInfo = async () => {
         try {
-            const response = await backend.get('/account/fetch', {
-                params: { user_id: userID }
+            const columnsToFetch = ['first_name', 'last_name', 'hometown', 'gender', 'housing_preference', 'graduating_year', 'college', 'contact_phone', 'contact_email', 'contact_snapchat', 'contact_instagram'];
+            
+            const response = await backend.get('/profile/get-gendata', {
+                params: { 
+                    user_id: userID,
+                    filter: columnsToFetch 
+                }
             });
+            
             if (response.status === 200) {
-                const data = response.data.data;
-                const filteredData = Object.entries(data).filter(([key, value]) => key !== 'user_id' && key !== 'hear_about_us' && key !== 'date_of_birth');
+                const data = response.data[0];
+                const filteredData = Object.entries(data).filter(([key, value]) => 
+                    key !== 'user_id' && key !== 'hear_about_us' && key !== 'date_of_birth'
+                );
                 setUserInfo(filteredData);
-                setEditValues(Object.fromEntries(filteredData.map(([key, value]) => [key, value])));
+                setEditValues(Object.fromEntries(filteredData));
+                
+                // Determine contact_type based on non-empty contact field
+                const contactFields = ['contact_phone', 'contact_email', 'contact_snapchat', 'contact_instagram'];
+                for (const field of contactFields) {
+                    if (data[field]) {
+                        setEditValues(prev => ({ ...prev, contact_type: field.replace('contact_', '').charAt(0).toUpperCase() + field.replace('contact_', '').slice(1) }));
+                        break;
+                    }
+                }
+                
                 return data;
             } else {
                 console.log('Error fetching user data');
             }
         } catch (error) {
-            console.log('Error fetching user data');
+            console.log('Error fetching user data:', error);
         }
     }
 
@@ -37,13 +55,29 @@ export default function Settings() {
 
     const saveUserInfo = async () => {
         try {
-            const response = await backend.post('/account/update', {
-                userId: userID,
-                ...editValues,
+            // Create a copy of editValues and remove contact_type
+            const dataToSend = { ...editValues };
+            delete dataToSend.contact_type;
+
+            // Clear other contact fields based on selected contact_type
+            const contactFields = ['contact_phone', 'contact_email', 'contact_snapchat', 'contact_instagram'];
+            contactFields.forEach(field => {
+                if (field !== `contact_${editValues.contact_type.toLowerCase()}`) {
+                    dataToSend[field] = '';
+                }
             });
-            console.log('Account information successfully updated')
+
+            const response = await backend.post('/profile/set-gendata', {
+                user_id: userID,
+                data: dataToSend,
+            });
+            if (response.status === 200) {
+                console.log('Account information successfully updated');
+            } else {
+                console.log('Error saving user data');
+            }
         } catch (error) {
-            console.log('Error saving user data:', error)
+            console.log('Error saving user data:', error);
         }
     }
 
@@ -52,11 +86,22 @@ export default function Settings() {
         if (field === 'contact_phone') {
             formattedValue = formatPhoneNumber(value);
         }
-        const hasChanged = editValues[field] !== formattedValue;
-        setEditValues({
+        
+        let updatedValues = {
             ...editValues,
             [field]: formattedValue,
-        });
+        };
+
+        // If changing contact_type, reset other contact fields
+        if (field === 'contact_type') {
+            updatedValues.contact_phone = '';
+            updatedValues.contact_email = '';
+            updatedValues.contact_snapchat = '';
+            updatedValues.contact_instagram = '';
+        }
+
+        const hasChanged = JSON.stringify(updatedValues) !== JSON.stringify(editValues);
+        setEditValues(updatedValues);
         setIsEdited(hasChanged);
     };
 
@@ -67,8 +112,6 @@ export default function Settings() {
         navigate('/match')
     }
 
-    
-
     const handleEditClick = (key) => {
         setEditKey(key);
         setEditMode(true);
@@ -77,9 +120,7 @@ export default function Settings() {
     useEffect(() => {
         const housingPreference = userInfo.find(([key]) => key === 'housing_preference')?.[1] || '';
         setEditValues((prevValues) => ({
-            ...prevValues,
-            dormCheckbox: housingPreference.includes('Dorms'),
-            apartmentCheckbox: housingPreference.includes('Apartments'),
+            ...prevValues
         }));
     }, [userInfo]);
 
@@ -90,28 +131,6 @@ export default function Settings() {
         }));
         setIsEdited(true);
     };
-
-    // const updateHousingPreference = () => {
-    //     const { dormCheckbox, apartmentCheckbox } = editValues;
-    //     let newPreference = '';
-    
-    //     if (dormCheckbox && apartmentCheckbox) {
-    //         newPreference = 'Both';
-    //     } else if (dormCheckbox) {
-    //         newPreference = 'Dorms';
-    //     } else if (apartmentCheckbox) {
-    //         newPreference = 'Apartments';
-    //     }
-    
-    //     if (editValues.housing_preference !== newPreference) {
-    //         handleInputChange('housing_preference', newPreference);
-    //     }
-    // };
-    
-    // useEffect(() => {
-    //     updateHousingPreference();
-    // }, [editValues.dormCheckbox, editValues.apartmentCheckbox]);
-    
 
     const formatPhoneNumber = (value) => {
         const cleaned = ('' + value).replace(/\D/g, '');

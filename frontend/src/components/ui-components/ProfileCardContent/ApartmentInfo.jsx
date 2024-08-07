@@ -6,12 +6,31 @@ import './apartmentStyles.css';
 import NumericTextbox from "./NumericTextbox.jsx";
 import MonthDropdown from "./MonthDropdown.jsx";
 
-export default function ApartmentInfo({all_data, editing}) {
+export default function ApartmentInfo({user_id, broadcaster}) {
+
+  const [genData, setGenData] = useState({});
 
   useEffect(() => {
-    console.log(all_data);
+    async function fetchData () {
+      const response = await backend.get('/profile/get-gendata', {
+      params: {
+        user_id: user_id,
+        filter: [
+        'num_beds', 'num_bathrooms', 'num_residents', 'move_in_month', 'move_out_month', 'rent', 'building'
+        ]
+      }
+      });
+
+      if(response.data) setGenData(response.data[0]);
+      else console.log("Something went wrong fetching genData!");
+    }
+
+    fetchData();
+
+    console.log(genData);
+
     fetchAllTags().then(fetchUserTags);
-  }, []);
+  }, [user_id]);
 
   // Fetch a map of tag IDs to their text values from the database
   async function fetchAllTags ()
@@ -53,7 +72,7 @@ export default function ApartmentInfo({all_data, editing}) {
 
   // Called from within the ApartmentTag components to toggle the values
   const onToggleTag = (id) => {
-    
+
     // Update active tags with the given ID toggled
     setActiveTags((prev) => {
 
@@ -78,23 +97,23 @@ export default function ApartmentInfo({all_data, editing}) {
         {/*Top header panel with apt name*/}
         <div className={"flex grow-[1]"}>
           {/* TODO: Should this just be replaced by tags?*/}
-          Looking to live in {JSON.parse(all_data.profile_data.apartment_data)[1]}
+          Looking to live in {genData?.building}
         </div>
         {/*Middle info panel with apt info*/}
         <div className={"flex grow-[1] w-full justify-center items-center flex-col font-[350]"}>
           <div className={"flex w-full justify-center gap-[1vw]"}>
-            <span>{editing ? <NumericTextbox value={all_data.general_data.num_beds} min={1} max={6}/> : <b>{all_data.general_data.num_beds}</b>} bed</span>
-            <span>{editing ? <NumericTextbox value={all_data.general_data.num_bathrooms} min={1} max={6}/> : <b>{all_data.general_data.num_bathrooms}</b>} bath</span>
-            <span>{editing ? <>$<NumericTextbox wide={true} value={JSON.parse(all_data.profile_data.apartment_data)[0]} min={0} max={9999}/></> : <b>${JSON.parse(all_data.profile_data.apartment_data)[0]}</b>} budget</span>
+            <span>{broadcaster ? <NumericTextbox value={genData?.num_beds} min={1} max={6}/> : <b>{genData?.num_beds}</b>} bed</span>
+            <span>{broadcaster ? <NumericTextbox value={genData?.num_bathrooms} min={1} max={6}/> : <b>{genData?.num_bathrooms}</b>} bath</span>
+            <span>{broadcaster ? <>$<NumericTextbox wide={true} value={genData?.rent} min={0} max={9999}/></> : <b>${genData?.rent}</b>} budget</span>
           </div>
           <div className={"flex h-0 w-[95%] border-solid border-b-[1px] border-maroon"}></div>
           <div className={"flex w-full justify-center gap-[1vw]"}>
 
-          <span className={"whitespace-nowrap"}>{editing ? <>
-          <NumericTextbox value={all_data.general_data.num_residents} min={1} max={6}/></>
-          : <b>{all_data.general_data.num_residents}</b>}
+          <span className={"whitespace-nowrap"}>{broadcaster ? <>
+          <NumericTextbox value={genData?.num_residents} min={1} max={6}/></>
+          : <b>{genData?.num_residents}</b>}
           &nbsp;residents</span>
-            <span><MonthDropdown initialValue={all_data.general_data.move_in_month}/> to <MonthDropdown initialValue={all_data.general_data.move_out_month}/></span>
+            <span><MonthDropdown initialValue={genData.move_in_month}/> to <MonthDropdown initialValue={genData.move_out_month}/></span>
           </div>
         </div>
 
