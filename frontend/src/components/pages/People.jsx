@@ -1,11 +1,11 @@
 import kanye from '../../assets/images/kanye.png';
 import { useEffect, useState } from 'react';
-import { ProfileCard } from '../ui-components/ProfileCard';
+import { ProfileCard } from '../ui-components/ProfileCard.jsx';
 import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
 import backend from '../../backend.js';
 import currentUser from '../../currentUser.js';
 
-export default function Inbox({ user_data }) {
+export default function People({ user_data }) {
     const [matchedProfiles, updateMatchedProfiles] = useState([]);
     const [matchedSubleases, updateMatchedSubleases] = useState([]);
     const [selectedProfile, setSelectedProfile] = useState(null);
