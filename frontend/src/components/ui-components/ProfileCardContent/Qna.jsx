@@ -7,6 +7,7 @@ const CHOICE_DICT = {
     "room_activity": ["Party", "Friends", "Empty"],
     "substances": ["Yes", "No"],
     "alcohol": ["Yes", "No"],
+    "tidiness": ["Dirty", "Clean"],
 }
 
 function OptionDropdown({value, name, dropdown, setDropdown, dispatch}) {
@@ -33,18 +34,19 @@ export default function Qna({user_id, broadcaster}) {
     const [room_activity, setRoomActivity] = useState("")
     const [substances, setSubstances] = useState("")
     const [alcohol, setAlcohol] = useState("")
+    const [tidiness, setTidiness] = useState("")
 
     const [currentDropdown, setCurrentDropdown] = useState(undefined)
 
     useEffect(() => {
         backend.get('/profile/get-gendata', {params: {
             user_id: user_id,
-            filter: ['room_activity', 'substances', 'alcohol'],
+            filter: ['room_activity', 'substances', 'alcohol', 'tidiness'],
         }}).then(res => {
             setRoomActivity(res.data[0].room_activity)
             setSubstances(res.data[0].substances)
             setAlcohol(res.data[0].alcohol)
-            console.log(res.data)
+            setTidiness(res.data[0].tidiness)
         }).catch(console.error)
     }, [])
 
@@ -52,7 +54,7 @@ export default function Qna({user_id, broadcaster}) {
         if (broadcaster) {
             const cb = () => backend.post('profile/set-gendata', {
                 user_id: user_id,
-                data: {room_activity, substances, alcohol}
+                data: {room_activity, substances, alcohol, tidiness},
             })
 
             broadcaster.connect(cb)
@@ -131,7 +133,17 @@ export default function Qna({user_id, broadcaster}) {
                 Preferred Tidiness
             </div>
             <div className={"flex-1 text-right flex justify-end align-middle"}>
-                Neat Freak
+                {broadcaster ?
+                    <OptionDropdown
+                        value={tidiness}
+                        name={"tidiness"}
+                        dropdown={currentDropdown}
+                        setDropdown={setCurrentDropdown}
+                        dispatch={setTidiness}
+                    />
+                    :
+                    tidiness
+                }
             </div>
         </div>
     </div>
