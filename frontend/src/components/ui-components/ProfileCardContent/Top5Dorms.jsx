@@ -136,7 +136,7 @@ export default function Top5Dorms({user_id, broadcaster}) {
     }, [mousePos]);
 
     return (
-        <div className="flex flex-col border-2 border-solid border-maroon_new rounded-md w-full h-full p-[5px] font-roboto_slab">
+        <div className="flex flex-col border-2 border-solid border-maroon_new rounded-md w-full h-full p-[5px] font-roboto_slab custom-scrollbar">
             <div className="basis-[30px] flex">
                 <div className="w-1/5">
                     {peopleDict[String(numPeople)]}
@@ -148,7 +148,7 @@ export default function Top5Dorms({user_id, broadcaster}) {
                 }
             </div>
             <hr className="border-t-1 bordet-top-solid border-maroon_new"></hr>
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-auto custom-scrollbar pr-[5px]">
                 <p className="text-sm">{top5Data.question}</p>
                 <div className="relative">
                     {top5Dorms.map((dorm, i) => {
