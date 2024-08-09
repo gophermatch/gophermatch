@@ -19,14 +19,11 @@ export default function Inbox({ user_data }) {
                 const profilePromises = matchesRes.data.map(({ matchId, timestamp }) => Promise.all([
                     backend.get('/profile', { params: { user_id: matchId } }),
                     backend.get('account/fetch', { params: { user_id: matchId }, withCredentials: true }),
-                    backend.get('/profile/user-pictures', {params: {user_id: matchId}})
+                    backend.get('/profile/user-pictures', { params: { user_id: matchId } })
                 ]));
 
                 Promise.all(profilePromises).then((promiseResults) => {
                     const translatedData = promiseResults.map(([profileRes, accountRes, picsRes]) => {
-                        console.log("Account info is: ", accountRes.data.data)
-                        console.log("Profile info is: ", profileRes.data)
-                        console.log("qna answers are: ", profileRes.data.qnaAnswers)
                         return { ...profileRes.data, ...accountRes.data.data, pics: picsRes.data.pictureUrls };
                     });
                     updateMatchedProfiles(translatedData);
@@ -35,10 +32,22 @@ export default function Inbox({ user_data }) {
                 console.error("Error fetching matched profiles:", error);
             }
             try {
-                const subleaseRes = await backend.get('/sublease/get-saves', { params: { user_id: currentUser.user_id } });
-                updateMatchedSubleases(subleaseRes.data);
+                const subleaseRes = await backend.get('/sublease/saved-subleases', { params: { user_id: currentUser.user_id } });
+                console.log("HEHEHE", subleaseRes);
+                const subleasePromises = subleaseRes.data.map(sublease =>
+                    backend.get('/profile/get-gendata', {
+                        params: {
+                            user_id: sublease.user_id,
+                            filter: ['first_name', 'last_name', 'contact_email']
+                        }
+                    }).then(userRes => ({ ...sublease, ...userRes.data[0] }))
+                );
+
+                Promise.all(subleasePromises).then((subleasesWithUserData) => {
+                    updateMatchedSubleases(subleasesWithUserData);
+                });
             } catch (error) {
-                console.error("Failed fetching subleases: ", error)
+                console.error("Failed fetching subleases: ", error);
             }
         })();
     }, []);
@@ -46,28 +55,6 @@ export default function Inbox({ user_data }) {
     useEffect(() => {
         backend.post('/match/mark-seen', { userId: currentUser.user_id });
     }, []);
-
-    const fetchPictureUrls = async () => {
-        try {
-            if (!user_id) {
-                console.error("User ID is missing");
-                return;
-            }
-
-            const response = await backend.get("/profile/user-pictures", {
-                params: { user_id: user_id },
-                withCredentials: true,
-            });
-            if (response && response.data) {
-                console.log("Picture URLs:", response.data.pictureUrls);
-                setPictureUrls(response.data.pictureUrls);
-            } else {
-                console.error("Failed to fetch picture URLs");
-            }
-        } catch (error) {
-            console.error("Error fetching picture URLs:", error);
-        }
-    };
 
     function unmatch(profileId) {
         backend.delete('/match/inbox-delete', { params: { user1_id: currentUser.user_id, user2_id: profileId } })
@@ -99,17 +86,8 @@ export default function Inbox({ user_data }) {
     }
 
     function displaySublease(sublease) {
-        backend.get('/sublease/get', { params: { user_id: sublease.user_id } }).then((res) => {
-            setSelectedSublease(res.data);
-        });
+        setSelectedSublease(sublease);
     }
-
-    const formatPhoneNumber = (phoneNumber) => {
-        if (phoneNumber.length !== 10) {
-            return phoneNumber;
-        }
-        return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
-    };
 
     return (
         <div className="p-8">
@@ -145,36 +123,39 @@ export default function Inbox({ user_data }) {
                                 </div>
                             </div>
                         </div>
-                        ))}
-                        <div className="flex text-start justify-start font-medium">
-                            <span className="text-maroon text-start text-[2vh] ml-[0.5vw] mt-[2vh] mb-[1vh] font-roboto justify-start">Subleases</span>
-                        </div>
-                        {matchedSubleases.map((sublease, index) => (
-                            <div className="flex flex-col h-[9.5vh] w-full" key={index}>
-                                <div className="flex" key={index}>
-                                    <div className="flex flex-row w-full">
-                                        <div className="flex flex-col w-full text-start justify-start">
-                                            <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] w-[30vw] font-roboto font-[390] text-maroon">{`${sublease.address} - ${sublease.room_type}`}</p>
-                                            <div className="flex flex-row">
-                                                <p className="ml-[1vw] text-xs text-left text-[1.5vh] w-[25vw] font-roboto font-light">{sublease.email}</p>
-                                            </div>
+                    ))}
+                    <div className="flex text-start justify-start font-medium">
+                        <span className="text-maroon text-start text-[2vh] ml-[0.5vw] mt-[2vh] mb-[1vh] font-roboto justify-start">Subleases</span>
+                    </div>
+                    {matchedSubleases.map((sublease, index) => (
+                        <div className="flex flex-col h-[9.5vh] w-full" key={index}>
+                            <div className="flex" key={index}>
+                                <div className="flex flex-row w-full">
+                                    <div className="flex flex-col w-full text-start justify-start">
+                                        <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] w-[30vw] font-roboto font-[390] text-maroon">{`${sublease.building_name} - ${sublease.building_address}`}</p>
+                                        <div className="flex flex-row">
+                                            <p className="ml-[1vw] text-xs text-left text-[1.5vh] w-[25vw] font-roboto font-light">{`${sublease.first_name} ${sublease.last_name}`}</p>
+                                            <p className="ml-[1vw] text-xs text-left text-[1.5vh] w-[25vw] font-roboto font-light">{sublease.contact_email}</p>
                                         </div>
-                                        <div className="w-full text-right">
-                                            <button className="text-[1.5vh] bg-white hover:bg-red-500 hover:text-white w-[4vw] h-[2.5vh] rounded-lg mr-[1vw] mt-[1.5vh] border-2 border-maroon" onClick={() => displaySublease(sublease)}>View</button>
-                                            <button className="text-[1.5vh] bg-white hover:bg-red-500 hover:text-white w-[4vw] h-[2.5vh] rounded-lg mr-[1vw] mt-[1.5vh] border-2 border-maroon" onClick={() => deleteSublease(sublease.sublease_id)}>Remove</button>
-                                        </div>
+                                    </div>
+                                    <div className="w-full text-right">
+                                        <button className="text-[1.5vh] bg-white hover:bg-red-500 hover:text-white w-[4vw] h-[2.5vh] rounded-lg mr-[1vw] mt-[1.5vh] border-2 border-maroon" onClick={() => displaySublease(sublease)}>View</button>
+                                        <button className="text-[1.5vh] bg-white hover:bg-red-500 hover:text-white w-[4vw] h-[2.5vh] rounded-lg mr-[1vw] mt-[1.5vh] border-2 border-maroon" onClick={() => deleteSublease(sublease.sublease_id)}>Remove</button>
                                     </div>
                                 </div>
                             </div>
-                        ))}
-                        {selectedSublease && (
-                            <div>
-                                <SubleaseEntry subleaseData={selectedSublease} editable={false} />
-                                <button onClick={() => setSelectedSublease(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
-                            </div>
-                        )}
-                    </div>
+                        </div>
+                    ))}
+                    {selectedSublease && (
+                        <div>
+                            <SubleaseEntry sublease={selectedSublease} refreshFunc={() => {
+                                // Optional: Function to refresh the sublease list after an action
+                            }} />
+                            <button onClick={() => setSelectedSublease(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
+                        </div>
+                    )}
                 </div>
             </div>
+        </div>
     );
 }
