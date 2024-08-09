@@ -2,12 +2,15 @@ import kanye from '../../assets/images/kanye.png';
 import { useEffect, useState } from 'react';
 import { ProfileCard } from '../ui-components/ProfileCard.jsx';
 import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
+import MatchEntry from '../ui-components/MatchEntry.jsx';
+import SubleaseInboxEntry from '../ui-components/SubleaseInboxEntry.jsx';
+import SavedEntry from '../ui-components/SavedEntry.jsx';
 import backend from '../../backend.js';
 import currentUser from '../../currentUser.js';
 
 export default function People({ user_data }) {
-    const [matchedProfiles, updateMatchedProfiles] = useState([]);
-    const [matchedSubleases, updateMatchedSubleases] = useState([]);
+    const [matchedProfileIds, updateMatchedProfiles] = useState([]);
+    const [matchedSubleaseIds, updateMatchedSubleases] = useState([]);
     const [selectedProfile, setSelectedProfile] = useState(null);
     const [selectedSublease, setSelectedSublease] = useState(null);
     const [activeButton, setActiveButton] = useState('Roommates'); // Initially set to 'Roommates'
@@ -16,26 +19,16 @@ export default function People({ user_data }) {
         (async () => {
             try {
                 const matchesRes = await backend.get('/match/inbox', { params: { userId: currentUser.user_id } });
-                const profilePromises = matchesRes.data.map(({ matchId, timestamp }) => Promise.all([
-                    backend.get('/profile', { params: { user_id: matchId } }),
-                    backend.get('account/fetch', { params: { user_id: matchId }, withCredentials: true }),
-                    backend.get('/profile/user-pictures', {params: {user_id: matchId}})
-                ]));
 
-                Promise.all(profilePromises).then((promiseResults) => {
-                    const translatedData = promiseResults.map(([profileRes, accountRes, picsRes]) => {
-                        console.log("Account info is: ", accountRes.data.data)
-                        console.log("Profile info is: ", profileRes.data)
-                        console.log("qna answers are: ", profileRes.data.qnaAnswers)
-                        return { ...profileRes.data, ...accountRes.data.data, pics: picsRes.data.pictureUrls };
-                    });
-                    updateMatchedProfiles(translatedData);
-                });
+                updateMatchedProfiles(matchesRes.data.map(item => item.matchId));
             } catch (error) {
                 console.error("Error fetching matched profiles:", error);
             }
             try {
                 const subleaseRes = await backend.get('/sublease/get-saves', { params: { user_id: currentUser.user_id } });
+
+                console.log("sub data", subleaseRes.data);
+
                 updateMatchedSubleases(subleaseRes.data);
             } catch (error) {
                 console.error("Failed fetching subleases: ", error)
@@ -130,49 +123,15 @@ export default function People({ user_data }) {
                             <path className="cls-1" d="M6.47,10.71a2,2,0,0,0-2,2h0V35.32a2,2,0,0,0,2,2H41.53a2,2,0,0,0,2-2h0V12.68a2,2,0,0,0-2-2H6.47Zm33.21,3.82L24,26.07,8.32,14.53" />
                         </svg>
                     </div>
-                    {matchedProfiles.map((person, index) => (
-                        <div className="flex flex-col h-[9.5vh] w-full" key={index}>
-                            <div className="flex" key={index}>
-                                <div className="flex flex-row w-full">
-                                    <img src={person.pics[0] || kanye} className="rounded-full h-[8vh] w-[8vh] mt-[0.5vh] ml-[0.5vw] cursor-pointer" alt="Profile" onClick={() => displayProfile(person)}></img>
-                                    <div className="flex flex-col w-full text-start items-start justify-start">
-                                        <button className="text-[2.5vh] mt-[0.75vh] w-auto ml-[1vw] font-roboto font-light text-start text-maroon" onClick={() => displayProfile(person)}>{`${person.first_name} ${person.last_name}`}</button>
-                                        <button className="text-[2vh] font-thin ml-[1vw]" onClick={() => displayProfile(person)}>{person.contact_phone}</button>
-                                    </div>
-                                    <div className="w-full text-right">
-                                        <button className="text-[2.5vh] text-inactive_gray hover:text-maroon w-[4vw] mr-[1vw] mt-[2.5vh]" onClick={() => unmatch(person.user_id)}>X</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    {matchedProfileIds.map((person) => (
+                        <MatchEntry user_id={person} deleteMatch={unmatch}/>
                         ))}
-                        <div className="flex text-start justify-start font-medium">
-                            <span className="text-maroon text-start text-[2vh] ml-[0.5vw] mt-[2vh] mb-[1vh] font-roboto justify-start">Subleases</span>
-                        </div>
-                        {matchedSubleases.map((sublease, index) => (
-                            <div className="flex flex-col h-[9.5vh] w-full" key={index}>
-                                <div className="flex" key={index}>
-                                    <div className="flex flex-row w-full">
-                                        <div className="flex flex-col w-full text-start justify-start">
-                                            <p className="text-[2.5vh] mt-[1.5vh] ml-[1vw] w-[30vw] font-roboto font-[390] text-maroon">{`${sublease.address} - ${sublease.room_type}`}</p>
-                                            <div className="flex flex-row">
-                                                <p className="ml-[1vw] text-xs text-left text-[1.5vh] w-[25vw] font-roboto font-light">{sublease.email}</p>
-                                            </div>
-                                        </div>
-                                        <div className="w-full text-right">
-                                            <button className="text-[1.5vh] bg-white hover:bg-red-500 hover:text-white w-[4vw] h-[2.5vh] rounded-lg mr-[1vw] mt-[1.5vh] border-2 border-maroon" onClick={() => displaySublease(sublease)}>View</button>
-                                            <button className="text-[1.5vh] bg-white hover:bg-red-500 hover:text-white w-[4vw] h-[2.5vh] rounded-lg mr-[1vw] mt-[1.5vh] border-2 border-maroon" onClick={() => deleteSublease(sublease.sublease_id)}>Remove</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div className="flex text-start justify-start font-medium">
+                        <span className="text-maroon text-start text-[2vh] ml-[0.5vw] mt-[2vh] mb-[1vh] font-roboto justify-start">Subleases</span>
+                    </div>
+                        {matchedSubleaseIds.map((sublease) => (
+                            <SubleaseInboxEntry user_id={sublease} deleteSub={deleteSublease}/>
                         ))}
-                        {selectedSublease && (
-                            <div>
-                                <SubleaseEntry subleaseData={selectedSublease} editable={false} />
-                                <button onClick={() => setSelectedSublease(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
