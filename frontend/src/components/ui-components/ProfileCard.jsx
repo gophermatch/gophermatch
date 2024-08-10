@@ -22,7 +22,7 @@ export function ProfileCard({user_id, isDorm, broadcaster, save_func}) {
           </div>
           <div className="flex flex-col gap-[3.6%] grow">
             <div>
-              <NameAndBio user_id={user_id} />
+              <NameAndBio user_id={user_id} broadcaster={broadcaster} />
             </div>
             <div className="flex grow-[3] gap-[3.6%]">
               <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] gap-[3.6%]">
