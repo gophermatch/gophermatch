@@ -104,8 +104,8 @@ export default function Saved() {
                     <button onClick={() => setSelectedProfile(null)} className="absolute top-5 right-5 text-5xl text-maroon">X</button>
                 </div>
             )}
-            <div className="flex flex-col items-center justify-center">
-                <div className="h-[5vh] w-[47vw] mt-[1vh] bg-maroon rounded-tr-[0.5vh] rounded-tl-[0.5vh] flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center h-[500px] w-[200px]">
+                <div className="h-[100%] w-[100%] mt-[1vh] bg-maroon rounded-tr-[0.5vh] rounded-tl-[0.5vh] flex items-center justify-center">
                     <svg
                         width="4vw"
                         height="4vh"

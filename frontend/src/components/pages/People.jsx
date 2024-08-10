@@ -79,39 +79,41 @@ export default function People({ user_data }) {
     };
 
     return (
-        <div className="p-8">
-            <div className="p-8">
-                <div className="flex flex-col items-center text-center justify-center">
-                    <div className="flex flex-row bg-maroon h-[5vh] mt-[-2.8vh] w-[47vw] rounded-tl-[0.5vh] rounded-tr-[0.5vh]">
+        <div className="flex flex-col items-center h-[100%] w-[100%] text-center justify-center ">
+                <div className="flex flex-col items-center h-[825px] w-[739px] text-center justify-center ">
+                    <div className="flex flex-row bg-maroon h-[8%] w-[100%] rounded-tl-[10px] rounded-tr-[10px]">
                         <svg
                             viewBox="0 0 48 48"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-[4vh] w-full mt-[0.5vh]"
+                            className="h-[80%] w-full mt-[0.5vh]"
                             fill="white">
                             <path className="cls-1" d="M6.47,10.71a2,2,0,0,0-2,2h0V35.32a2,2,0,0,0,2,2H41.53a2,2,0,0,0,2-2h0V12.68a2,2,0,0,0-2-2H6.47Zm33.21,3.82L24,26.07,8.32,14.53" />
                         </svg>
                     </div>
-                    <div className="bg-white pt-[5px] h-[87vh] w-[47vw] rounded-br-[0.5vh] rounded-bl-[0.5vh] items-center text-center justify-center overflow-y-scroll custom-scrollbar">
+                    <div className="bg-white pt-[5px] h-[100%] w-[100%] rounded-br-[10px] rounded-bl-[10px] items-center text-center justify-center overflow-y-scroll custom-scrollbar">
+                    
+                    <div className="flex text-start justify-start font-medium">
+                        <span className="text-maroon text-start text-[18px] ml-[0.5vw] mt-[1%] mb-[1vh] font-bold font-roboto_condensed justify-start">Roommates</span>
+                    </div>
                     {matchedProfileIds.map((id) => (
                         <MatchEntry user_id={id} deleteMatch={unmatch}/>
                         ))}
 
                     <div className="flex text-start justify-start font-medium">
-                        <span className="text-maroon text-start text-[2vh] ml-[0.5vw] mt-[2vh] mb-[1vh] font-roboto justify-start">Saved</span>
+                        <span className="text-maroon text-start text-[18px] ml-[0.5vw] mt-[1%] mb-[1vh] font-bold font-roboto_condensed justify-start">Roommates</span>
                     </div>
                     {savedProfileIds.map((id) => (
                         <SavedEntry user_id={id}/>
                         ))}
 
                     <div className="flex text-start justify-start font-medium">
-                        <span className="text-maroon text-start text-[2vh] ml-[0.5vw] mt-[2vh] mb-[1vh] font-roboto justify-start">Subleases</span>
+                        <span className="text-maroon text-start text-[18px] ml-[0.5vw] mt-[1%] mb-[1vh] font-bold font-roboto_condensed justify-start">Roommates</span>
                     </div>
                         {matchedSubleaseIds.map((id) => (
                             <SubleaseInboxEntry sublease_id={id} deleteSub={deleteSublease}/>
                         ))}
                     </div>
                     </div>
-                </div>
-            </div>
+        </div>
     );
 }
