@@ -1,50 +1,78 @@
+import { useEffect, useRef } from "react";
 
+export default function Qna({ qna, setQna }) {
+    const containerRef = useRef(null);
 
-export default function Qna({qna, setQna}) {
+    const resizeFont = () => {
+        if (containerRef.current) {
+            const parentHeight = containerRef.current.clientHeight;
+            const fontSize = parentHeight * 0.13; // Adjust this multiplier as needed
+            containerRef.current.style.fontSize = `${fontSize}px`;
+        }
+    };
+
+    useEffect(() => {
+        const observer = new ResizeObserver(resizeFont);
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+
+        resizeFont(); // Ensure the font size is set correctly on mount or when the page is revisited
+
+        return () => {
+            observer.disconnect(); // Clean up the observer on unmount
+        };
+    }, []);
+
     return (
-    <div className={"w-[33vw] ml-[0.25rem] text-[8px] xl:text-[16px] xl:h-[9rem] xl:w-[23.75rem] lg:text-[13px] lg:h-[7rem] lg:w-[17.75rem] md:text-[9px] md:h-[5.25rem] md:w-[14rem] sm:w-[12rem] sm:mt-[0.25rem] sm:h-[4.5rem] sm:text-[7.8px] sm:ml-[0] h-[14vw] absolute top-[67%] rounded-lg border-solid border-2 border-maroon xl:text-lg lg: text-md md:text-sm sm:text-xs font-roboto_slab font-medium"}>
-    <div className={"flex w-full h-full justify-center items-center flex-col px-[1%]"}>
-        <div className={"flex w-full whitespace-nowrap"}>
-            <div className={"flex-1"}>
-                Preferred Room Activity Level
-            </div>
-            <div className={"flex-1 text-right"}>
-                Empty
+        <div 
+            ref={containerRef}
+            className={"w-full rounded-lg border-solid border-[1.5px] border-maroon font-roboto_slab font-medium"} 
+            style={{ height: 'calc(100% * 1)' }}
+        >
+            <div className={"flex w-full h-full justify-center items-center flex-col px-[1%]"}>
+                <div className={"flex w-full whitespace-nowrap"}>
+                    <div className={"flex-1"}>
+                        Preferred Room Activity Level
+                    </div>
+                    <div className={"flex-1 text-right"}>
+                        Empty
+                    </div>
+                </div>
+
+                <div className={"flex w-[97%] h-[5%] border-b"}></div>
+
+                <div className={"flex w-full whitespace-nowrap"}>
+                    <div className={"flex-1"}>
+                        Substance Preference
+                    </div>
+                    <div className={"flex-1 text-right"}>
+                        Man of god
+                    </div>
+                </div>
+
+                <div className={"flex w-[97%] h-[5%] border-b"}></div>
+
+                <div className={"flex w-full whitespace-nowrap"}>
+                    <div className={"flex-1"}>
+                        Alcohol Preference
+                    </div>
+                    <div className={"flex-1 text-right"}>
+                        Hand Sanitizer Only
+                    </div>
+                </div>
+
+                <div className={"flex w-[97%] h-[5%] border-b"}></div>
+
+                <div className={"flex w-full whitespace-nowrap"}>
+                    <div className={"flex-1"}>
+                        Preferred Tidiness
+                    </div>
+                    <div className={"flex-1 text-right"}>
+                        Neat Freak
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div className={"flex w-[97%] h-[5%] border-b"}></div>
-
-        <div className={"flex w-full whitespace-nowrap"}>
-            <div className={"flex-1"}>
-                Substance Preference
-            </div>
-            <div className={"flex-1 text-right"}>
-                Man of god
-            </div>
-        </div>
-
-        <div className={"flex w-[97%] h-[5%] border-b"}></div>
-
-        <div className={"flex w-full whitespace-nowrap"}>
-            <div className={"flex-1"}>
-                Alcohol Preference
-            </div>
-            <div className={"flex-1 text-right"}>
-                Hand Sanitizer Only
-            </div>
-        </div>
-
-        <div className={"flex w-[97%] h-[5%] border-b"}></div>
-
-        <div className={"flex w-full whitespace-nowrap"}>
-            <div className={"flex-1"}>
-                Preferred Tidiness
-            </div>
-            <div className={"flex-1 text-right"}>
-                Neat Freak
-            </div>
-        </div>
-    </div>
-    </div>);
+    );
 }

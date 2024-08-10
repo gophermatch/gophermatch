@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ApartmentTag from "./ApartmentTag.jsx";
 import backend from "../../../backend.js";
 import currentUser from "../../../currentUser.js";
@@ -9,6 +9,7 @@ import MonthDropdown from "./MonthDropdown.jsx";
 export default function ApartmentInfo({user_id, broadcaster}) {
 
   const [genData, setGenData] = useState({});
+  const livingRef = useRef(null);
 
   useEffect(() => {
     async function fetchData () {
@@ -91,17 +92,38 @@ export default function ApartmentInfo({user_id, broadcaster}) {
 
   }
 
+  const resizeFont = () => {
+    if (livingRef.current) {
+        const parentHeight = livingRef.current.clientHeight;
+        const fontSize = parentHeight * 0.13; // Adjust this multiplier as needed
+        livingRef.current.style.fontSize = `${fontSize}px`;
+    }
+};
+
+  useEffect(() => {
+      const observer = new ResizeObserver(resizeFont);
+      if (livingRef.current) {
+          observer.observe(livingRef.current);
+      }
+
+      resizeFont(); // Ensure the font size is set correctly on mount or when the page is revisited
+
+      return () => {
+          observer.disconnect(); // Clean up the observer on unmount
+      };
+  }, []);
+
   return (
-    <div className={"w-full h-[5rem] rounded-lg border-solid border-2 mt-[0.25rem] ml-[0.25rem] border-maroon text-xl font-roboto_slab font-medium"}>
-      <div className={"flex w-full h-full justify-center items-center flex-col text-[8px]"}>
+    <div className={"w-full h-[100%] rounded-lg border-solid border-2 border-maroon font-roboto_slab font-medium"} ref={livingRef}>
+      <div className={"flex w-full h-full justify-center items-center flex-col"}>
         {/*Top header panel with apt name*/}
-        <div className={"flex grow-[1] text-[9px]"}>
+        <div className={"flex text-[100%] mt-[-8%]"}>
           {/* TODO: Should this just be replaced by tags?*/}
           Looking to live in {genData?.building}
         </div>
         {/*Middle info panel with apt info*/}
-        <div className={"flex grow-[1] w-full justify-center items-center flex-col mt-[-15px] font-[350]"}>
-          <div className={"flex w-full justify-center gap-[1vw]"}>
+        <div className={"flex w-full justify-center items-center mt-[1%] flex-col font-[350]"}>
+          <div className={"flex w-full justify-center gap-[3.6%]"}>
             <span>{broadcaster ? <NumericTextbox value={genData?.num_beds} min={1} max={6}/> : <b>{genData?.num_beds}</b>} bed</span>
             <span>{broadcaster ? <NumericTextbox value={genData?.num_bathrooms} min={1} max={6}/> : <b>{genData?.num_bathrooms}</b>} bath</span>
             <span>{broadcaster ? <>$<NumericTextbox wide={true} value={genData?.rent} min={0} max={9999}/></> : <b>${genData?.rent}</b>} budget</span>

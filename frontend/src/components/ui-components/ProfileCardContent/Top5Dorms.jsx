@@ -136,7 +136,8 @@ export default function Top5Dorms({user_id, broadcaster}) {
       };
     
       return (
-        <div className="flex flex-col border-2 border-solid border-maroon_new rounded-md w-[12.7rem] md:h-[4.5rem] md:w-[14rem] lg:h-[6rem] lg:w-[17.76rem] xl:h-[7rem] xl:w-[30rem] h-[4rem] sm:h-[4rem] sm:ml-[0] sm:mt-[0rem] sm:w-[12rem] ml-[0.25rem] mt-[0.5rem] p-[5px] font-roboto_slab">
+        <div className="flex flex-col border-[1.5px] border-solid border-maroon_new rounded-md w-full p-[5px] font-roboto_slab"
+             style={{ height: 'calc(100% * 1'}}>
           <div className="basis-[30px] flex text-[10px] lg:text-[15px] md:text-[12px] sm:text-[8px]">
             <div className="flex flex-row">
               <input type="text" value={minPeople} onChange={e => handleChangePeople(e.target.value, setMinPeople)} className="ml-[0px] w-[15px] h-[15px] sm:h-[12px] sm:w-[12px] md:h-[16px] md:w-[16px] lg:h-[19px] lg:w-[19px] text-center bg-offwhite inline-block" />

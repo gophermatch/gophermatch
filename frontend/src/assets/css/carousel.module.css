@@ -31,13 +31,13 @@
     border: none;
     background-color: white;
     border-radius: 100%;
-    width: 4vh;
-    height: 4vh;
+    width: 1.5vh;
+    height: 1.5vh;
     overflow: none;
     transition: 0.2s;
     margin-left: 2.5vw;
     margin-right: 2.5vw;
-    margin-top: 0.3vh;
+    margin-top: -0%;
 }
 
 .progressButton:hover {
@@ -59,12 +59,13 @@
 
 .dotSolid, .dotEmpty {
     box-sizing: border-box;
-    width: 14px;
-    height: 14px;
+    width: 1.5vh;
+    height: 1.5vh;
     border-radius: 50%;
     padding: 0;
     margin-left: 1vw;
     margin-right: 1vw;
+    margin-top: -18%;
 }
 
 .dotSolid {
@@ -74,72 +75,4 @@
 .dotEmpty {
     border: 2px solid maroon;
     cursor: pointer;
-}
-
-@media (min-width: 640px) {
-    .dotEmpty, .dotSolid {
-        width: 7px;
-        height: 7px;
-        margin-left: 2px;
-        margin-right: 2px;
-        margin-top: -1rem;
-    }
-
-    .progressButton {
-        font-size: 2vh;
-        margin-left: 4px;
-        margin-right: 4px;
-        margin-top: -0.3rem;
-    }
-}
-
-@media (min-width: 768px) {
-    .dotEmpty, .dotSolid {
-        width: 10px;
-        height: 10px;
-        margin-left: 4px;
-        margin-right: 4px;
-        margin-top: -2vh;
-    }
-
-    .progressButton {
-        font-size: 0.8rem;
-        margin-left: 0.9rem;
-        margin-right: 0.9rem;
-        margin-top: -1.5px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .dotEmpty, .dotSolid {
-        width: 12px;
-        height: 12px;
-        margin-left: 1vw;
-        margin-right: 1vw;
-        margin-top: -1.75vh;
-    }
-
-    .progressButton {
-        font-size: 1rem;
-        margin-left: 2.1rem;
-        margin-right: 2.1rem;
-        margin-top: -1.5px;
-    }
-}
-
-@media (min-width: 1280px) {
-    .dotEmpty, .dotSolid {
-        width: 14px;
-        height: 14px;
-        margin-left: 1vw;
-        margin-right: 1vw;
-        margin-top: -1vh;
-    }
-
-    .progressButton {
-        font-size: 3vh;
-        margin-left: 32px;
-        margin-right: 32px;
-        margin-top: -1.5px;
-    }
 }

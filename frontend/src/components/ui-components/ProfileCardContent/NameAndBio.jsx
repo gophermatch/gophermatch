@@ -1,73 +1,103 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import backend from "../../../backend";
 import styles from '../../../assets/css/name.module.css';
-
-//TODO: add edit state, is in edit if broadcaster is not null
 
 export default function NameAndBio({ user_id, broadcaster }) {
     const [bio, setBio] = useState('');
     const [major, setMajor] = useState('');
     const [name, setFullName] = useState('');
+    
+    const nameRef = useRef(null);
+    const majorRef = useRef(null);
+    const bioRef = useRef(null);
 
     useEffect(() => {
         async function fetchData() {
-          try {
-            const response = await backend.get('/profile/get-gendata', {
-              params: {
-                user_id: user_id,
-                filter: [
-                  'first_name', 'last_name', 'major', 'bio'
-                ]
-              }
-            });
+            try {
+                const response = await backend.get('/profile/get-gendata', {
+                    params: {
+                        user_id: user_id,
+                        filter: ['first_name', 'last_name', 'major', 'bio']
+                    }
+                });
 
-            console.log("NAME BIO REQUESTED")
-
-            if (response.data && response.data.length > 0) {
-              const user = response.data[0];
-              console.log("User data:", user);
-              if (user) {
-                setFullName(`${user.first_name} ${user.last_name}`);
-                setMajor(user.major);
-                setBio(user.bio);
-              }
+                if (response.data && response.data.length > 0) {
+                    const user = response.data[0];
+                    if (user) {
+                        setFullName(`${user.first_name} ${user.last_name}`);
+                        setMajor(user.major);
+                        setBio(user.bio);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user name, major, and bio:', error);
             }
-          } catch (error) {
-            console.error('Error fetching user name, major, and bio:', error);
-          }
         }
 
         fetchData();
-      }, [user_id]);
-
+    }, [user_id]);
 
     useEffect(() => {
         if (broadcaster) {
-            //TODO: return promise from backend put request ex: `const cb = () => backend.put('/something')`
             const cb = () => {
-                return new Promise(() => {
-                    console.log("Saving data")
-                    resolve()
-                })
-            }
+                return new Promise((resolve) => {
+                    console.log("Saving data");
+                    resolve();
+                });
+            };
 
-            broadcaster.connect(cb)
-            return () => broadcaster.disconnect(cb)
+            broadcaster.connect(cb);
+            return () => broadcaster.disconnect(cb);
         }
-    }, [broadcaster])
+    }, [broadcaster]);
 
-    // we should probably be using tailwind rather than css modules but doesn't really matter
+    const resizeFont = () => {
+        if (nameRef.current) {
+            const parentHeight = nameRef.current.parentElement.clientHeight;
+            const fontSize = Math.max(12, parentHeight * 0.115); // Minimum font size for readability
+            nameRef.current.style.fontSize = `${fontSize}px`;
+        }
+        if (majorRef.current) {
+            const parentHeight = majorRef.current.parentElement.clientHeight;
+            const fontSize = Math.max(10, parentHeight * 0.09); // Minimum font size for readability
+            majorRef.current.style.fontSize = `${fontSize}px`;
+        }
+        if (bioRef.current) {
+            const parentHeight = bioRef.current.parentElement.clientHeight;
+            const fontSize = Math.max(10, parentHeight * 0.1); // Minimum font size for readability
+            bioRef.current.style.fontSize = `${fontSize}px`;
+        }
+    };
+
+    useEffect(() => {
+        const observer = new ResizeObserver(resizeFont);
+
+        if (nameRef.current && majorRef.current && bioRef.current) {
+            observer.observe(nameRef.current.parentElement);
+            observer.observe(majorRef.current.parentElement);
+            observer.observe(bioRef.current.parentElement);
+        }
+
+        resizeFont(); // Initial resize
+
+        window.addEventListener('resize', resizeFont); // Re-calculate on window resize
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('resize', resizeFont);
+        };
+    }, []);
 
     return (
-        <div className={`${styles.container} ml-[0.25rem] sm:ml-[0rem] md:ml-[-0.25rem] lg:ml-[-]`}>
-            <div className={styles.name}>
+        <div className={`${styles.container}`}>
+            <div className={`${styles.name}`} ref={nameRef}>
                 {name}
             </div>
-            <div className={styles.major}>
+            <div className={`${styles.major} mt-[-1.3%]`} ref={majorRef}>
                 {major}
             </div>
-            <div className={`${styles.bio} p-0 z-0 sm:h-[3.5rem] sm:w-[20.7rem] md:h-[3.5rem] md:w-[24rem] lg:h-[4rem] lg:w-[30rem] xl:h-[7rem] sm:mt-[-0.1rem] xl:w-[40rem]`}>
-                <div className={styles.bioText}>
+            <div className={`${styles.bio} p-0 z-0 w-auto`} style={{ aspectRatio: '1 / 0.25' }}>
+                <div className={styles.bioText} ref={bioRef}>
                     {bio}
                 </div>
             </div>
