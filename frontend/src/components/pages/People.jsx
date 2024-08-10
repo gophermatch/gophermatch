@@ -46,28 +46,6 @@ export default function People({ user_data }) {
         backend.post('/match/mark-seen', { userId: currentUser.user_id });
     }, []);
 
-    const fetchPictureUrls = async () => {
-        try {
-            if (!user_id) {
-                console.error("User ID is missing");
-                return;
-            }
-
-            const response = await backend.get("/profile/user-pictures", {
-                params: { user_id: user_id },
-                withCredentials: true,
-            });
-            if (response && response.data) {
-                console.log("Picture URLs:", response.data.pictureUrls);
-                setPictureUrls(response.data.pictureUrls);
-            } else {
-                console.error("Failed to fetch picture URLs");
-            }
-        } catch (error) {
-            console.error("Error fetching picture URLs:", error);
-        }
-    };
-
     function unmatch(profileId) {
         backend.delete('/match/inbox-delete', { params: { user1_id: currentUser.user_id, user2_id: profileId } })
             .then(() => {
@@ -113,7 +91,7 @@ export default function People({ user_data }) {
                             <path className="cls-1" d="M6.47,10.71a2,2,0,0,0-2,2h0V35.32a2,2,0,0,0,2,2H41.53a2,2,0,0,0,2-2h0V12.68a2,2,0,0,0-2-2H6.47Zm33.21,3.82L24,26.07,8.32,14.53" />
                         </svg>
                     </div>
-                    <div className="bg-white h-[87vh] w-[47vw] rounded-br-[0.5vh] rounded-bl-[0.5vh] items-center text-center justify-center overflow-y-scroll custom-scrollbar">
+                    <div className="bg-white pt-[5px] h-[87vh] w-[47vw] rounded-br-[0.5vh] rounded-bl-[0.5vh] items-center text-center justify-center overflow-y-scroll custom-scrollbar">
                     {matchedProfileIds.map((id) => (
                         <MatchEntry user_id={id} deleteMatch={unmatch}/>
                         ))}

@@ -26,6 +26,6 @@ export default function SavedEntry ({user_id}) {
                 </div>
             </div>
         </div>
-        <div className="w-[40vw] h-[0.1vh] ml-[3.5vw] bg-gray font-thin mt-[1.75vh]"></div>
+        <div className="w-[95%] h-[1%] ml-[2.5%] bg-gray font-thin mt-[1.75vh]"></div>
     </div>);
    }

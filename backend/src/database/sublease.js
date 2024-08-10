@@ -37,9 +37,11 @@ export async function updateSublease(sublease_data) {
   });
 }
 
-export async function getSublease(user_id) {
+// Accepts either user_id or sublease_id, will use whichever is defined
+export async function getSublease(user_id, sublease_id) {
   return new Promise((resolve, reject) => {
-    const { queryString, values } = buildSelectString("*", tableNames.u_subleases, { user_id });
+
+    const { queryString, values } = buildSelectString("*", tableNames.u_subleases, user_id ? { user_id } : {sublease_id});
     
     db.query(queryString, values, (err, results) => {
       if (err) {

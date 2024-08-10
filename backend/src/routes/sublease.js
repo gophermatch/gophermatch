@@ -5,14 +5,15 @@ import { createSublease, getSublease, deleteSublease, getSubleases, updateSublea
 
 const router = Router()
 
+// Accepts either user_id or sublease_id, will use whichever is defined
 router.get('/get', async (req, res) => {
-    const { user_id } = req.query;
-    if (!user_id) {
-      return res.status(400).json({ message: "user_id is required" });
+    const { user_id, sublease_id } = req.query;
+    if (!user_id && !sublease_id) {
+      return res.status(400).json({ message: "user_id or sublease_id is required" });
     }
   
     try {
-      const sublease = await getSublease(user_id);
+      const sublease = await getSublease(user_id, sublease_id);
       res.json(sublease);
     } catch (err) {
       res.status(404).json({ message: err.message });
