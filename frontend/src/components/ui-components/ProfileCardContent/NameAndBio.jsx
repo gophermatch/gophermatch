@@ -81,28 +81,18 @@ export default function NameAndBio({ user_id, broadcaster }) {
 
         fetchData();
       }, [user_id]);
-
-    async function onFinishEdit ()
-    {
-      await backend.post('/profile/set-gendata', {
-          user_id: user_id,
-          data: {
-            bio: bio,
-            major: major
-          }
-        });
-    }
     
     useEffect(() => {
         if (broadcaster) {
             //TODO: return promise from backend put request ex: `const cb = () => backend.put('/something')`
-            const cb = () => {
-              try {
-                onFinishEdit()
-              } catch(error){
-                console.error('Error saving major and/or bio:', error);
-              }
-            }
+            const cb = () =>
+              backend.post('/profile/set-gendata', {
+                user_id: user_id,
+                data: {
+                  bio: bio,
+                  major: major
+                }
+              });
 
             broadcaster.connect(cb)
             return () => broadcaster.disconnect(cb)
@@ -133,7 +123,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
               : major}
             </div>
             <div className="w-full h-[12vh] rounded-lg mt-1.5 border border-maroon flex">
-              <div className="flex-1 text-[1.8vh] text-left font-normal">
+              <p className="flex-1 text-[1.8vh] text-left font-normal">
                   {broadcaster ? 
                     <input
                       className = "w-full h-full p-2 border-none rounded-lg resize-none"
@@ -141,7 +131,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                       onChange={(e) => setBio(e.target.value)}
                     /> 
                   : bio}
-                </div>
+                </p>
             </div>
         </div>
     );
