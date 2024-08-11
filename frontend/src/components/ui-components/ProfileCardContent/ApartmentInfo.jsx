@@ -89,8 +89,19 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
   return (
     <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-xl font-roboto_slab font-medium"}>
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
-        <div className={"flex grow-[1]"}>
-          Looking to live in {genData.building || "Any"}
+        <div className={"flex grow-[1] justify-center items-center"}>
+          <span>Looking to live in&nbsp;</span>
+          {broadcaster ? (
+            <input
+              type="text"
+              value={genData.building}
+              onChange={(e) => updateGenData('building', e.target.value)}
+              placeholder="Enter building name"
+              className="text-center border rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-maroon"
+            />
+          ) : (
+            <span>{genData.building || "Any"}</span>
+          )}
         </div>
         <div className={"flex grow-[1] w-full justify-center items-center flex-col font-[350]"}>
           <div className={"flex w-full justify-center gap-[1vw]"}>
