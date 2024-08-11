@@ -72,7 +72,7 @@ export default function Carousel({ user_id, editable }) {
     )) : null;
 
     const dotSection = (
-        <div className={styles.dotSection + " mx-[2vw] mt-[0.5vh]"}>
+        <div className={styles.dotSection + " mx-[2vw] mt-[2px]"}>
             <button className={styles.progressButton} onClick={() => setPosition((position - 1 + carouselLen) % carouselLen)}>
                 &lt;
             </button>

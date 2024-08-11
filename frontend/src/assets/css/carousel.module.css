@@ -25,19 +25,19 @@
 
 .progressButton {
     z-index: 10;
-    font-size: 2.75vh;
+    font-size: 100%;
     line-height: 20px;
     flex: none;
     border: none;
     background-color: white;
     border-radius: 100%;
-    width: 1.5vh;
-    height: 1.5vh;
+    width: 18px;
+    height: 18px;
     overflow: none;
     transition: 0.2s;
-    margin-left: 2.5vw;
-    margin-right: 2.5vw;
-    margin-top: -0%;
+    margin-left: 13px;
+    margin-right: 13px;
+    margin-top: -1.5px;
 }
 
 .progressButton:hover {
@@ -54,18 +54,17 @@
     align-items: center;
     justify-content: center;
     flex: 5;
-    margin-top: 2.5vh;
+    margin-top: 6px;
 }
 
 .dotSolid, .dotEmpty {
     box-sizing: border-box;
-    width: 1.5vh;
-    height: 1.5vh;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     padding: 0;
-    margin-left: 1vw;
-    margin-right: 1vw;
-    margin-top: -18%;
+    margin-left: 3px;
+    margin-right: 3px;
 }
 
 .dotSolid {
@@ -75,4 +74,76 @@
 .dotEmpty {
     border: 2px solid maroon;
     cursor: pointer;
+}
+
+@media (min-width: 640px) {
+    .dotEmpty, .dotSolid {
+        width: 10px;
+        height: 10px;
+        margin-left: 4px;
+        margin-right: 4px;
+        margin-top: -0.3rem;
+    }
+
+    .progressButton {
+        font-size: 15px;
+        margin-left: 17px;
+        margin-right: 17px;
+        margin-top: -2px;
+    }
+}
+
+@media (min-width: 768px) {
+    .dotEmpty, .dotSolid {
+        width: 11px;
+        height: 11px;
+        margin-left: 6px;
+        margin-right: 6px;
+        margin-top: -2px;
+    }
+
+    .progressButton {
+        font-size: 18px;
+        width: 22px;
+        height: 22px;
+        margin-left: 0.9rem;
+        margin-right: 0.9rem;
+        margin-top: -1.5px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .dotEmpty, .dotSolid {
+        width: 11px;
+        height: 11px;
+        margin-left: 11px;
+        margin-right: 11px;
+        margin-top: -1px;
+    }
+
+    .progressButton {
+        font-size: 20px;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: -0px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .dotEmpty, .dotSolid {
+        width: 13px;
+        height: 13px;
+        margin-left: 14px;
+        margin-right: 14px;
+        margin-top: 2px;
+    }
+
+    .progressButton {
+        font-size: 25px;
+        height: 27px;
+        width: 27px;
+        margin-left: 28px;
+        margin-right: 28px;
+        margin-top: 1px;
+    }
 }

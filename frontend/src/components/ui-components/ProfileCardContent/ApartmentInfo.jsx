@@ -117,7 +117,7 @@ export default function ApartmentInfo({user_id, broadcaster}) {
     <div className={"w-full h-[100%] rounded-lg border-solid border-2 border-maroon font-roboto_slab font-medium"} ref={livingRef}>
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
         {/*Top header panel with apt name*/}
-        <div className={"flex text-[100%] mt-[-8%]"}>
+        <div className={"flex text-[100%] mt-[0%]"}>
           {/* TODO: Should this just be replaced by tags?*/}
           Looking to live in {genData?.building}
         </div>
@@ -128,19 +128,19 @@ export default function ApartmentInfo({user_id, broadcaster}) {
             <span>{broadcaster ? <NumericTextbox value={genData?.num_bathrooms} min={1} max={6}/> : <b>{genData?.num_bathrooms}</b>} bath</span>
             <span>{broadcaster ? <>$<NumericTextbox wide={true} value={genData?.rent} min={0} max={9999}/></> : <b>${genData?.rent}</b>} budget</span>
           </div>
-          <div className={"flex h-0 w-[95%] mt-[-5px] border-solid border-b-[1px] border-maroon"}></div>
+          <div className={"flex h-0 w-[95%] mt-[-0%] border-solid border-b-[1px] border-maroon"}></div>
           <div className={"flex w-full justify-center gap-[1vw]"}>
 
-          <span className={"whitespace-nowrap ml-[0.2rem] mt-[-4px]"}>{broadcaster ? <>
+          <span className={"whitespace-nowrap"}>{broadcaster ? <>
           <NumericTextbox value={genData?.num_residents} min={1} max={6}/></>
-          : <b>{genData?.num_residents}</b>}
+          : <b className="ml-[20%]">{genData?.num_residents}</b>}
           &nbsp;residents</span>
-            <span className="mt-[-3px]"><MonthDropdown initialValue={genData.move_in_month}/> to <MonthDropdown initialValue={genData.move_out_month}/></span>
+            <span className="mt-[-3px] ml-[5%]"><MonthDropdown initialValue={genData.move_in_month}/> to <MonthDropdown initialValue={genData.move_out_month}/></span>
           </div>
         </div>
 
         {/*Bottom panel with tags*/}
-        <div className={"flex  w-[98%] h-[20%] p-2 max-h-[80%] grow-[0] flex-wrap gap-1 overflow-y-scroll custom-scrollbar"}>
+        <div className={"flex  w-[98%] h-[40%] p-2 max-h-[80%] grow-[0] flex-wrap gap-1 overflow-y-scroll custom-scrollbar"}>
           {allTagIds.map(tag => {
             const tagValue = activeTags.includes(tag.tag_id);
             return(

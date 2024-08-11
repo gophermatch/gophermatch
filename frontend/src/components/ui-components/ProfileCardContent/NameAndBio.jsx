@@ -17,12 +17,17 @@ export default function NameAndBio({ user_id, broadcaster }) {
                 const response = await backend.get('/profile/get-gendata', {
                     params: {
                         user_id: user_id,
-                        filter: ['first_name', 'last_name', 'major', 'bio']
+                        filter: [
+                            'first_name', 'last_name', 'major', 'bio'
+                        ]
                     }
                 });
 
+                console.log("NAME BIO REQUESTED");
+
                 if (response.data && response.data.length > 0) {
                     const user = response.data[0];
+                    console.log("User data:", user);
                     if (user) {
                         setFullName(`${user.first_name} ${user.last_name}`);
                         setMajor(user.major);
@@ -44,7 +49,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                     console.log("Saving data");
                     resolve();
                 });
-            };
+            }
 
             broadcaster.connect(cb);
             return () => broadcaster.disconnect(cb);
@@ -54,37 +59,33 @@ export default function NameAndBio({ user_id, broadcaster }) {
     const resizeFont = () => {
         if (nameRef.current) {
             const parentHeight = nameRef.current.parentElement.clientHeight;
-            const fontSize = Math.max(12, parentHeight * 0.115); // Minimum font size for readability
+            const fontSize = parentHeight * 0.115;
             nameRef.current.style.fontSize = `${fontSize}px`;
         }
         if (majorRef.current) {
             const parentHeight = majorRef.current.parentElement.clientHeight;
-            const fontSize = Math.max(10, parentHeight * 0.09); // Minimum font size for readability
+            const fontSize = parentHeight * 0.09; 
             majorRef.current.style.fontSize = `${fontSize}px`;
         }
         if (bioRef.current) {
             const parentHeight = bioRef.current.parentElement.clientHeight;
-            const fontSize = Math.max(10, parentHeight * 0.1); // Minimum font size for readability
-            bioRef.current.style.fontSize = `${fontSize}px`;
+            const fontSize = parentHeight * 0.1;
+            bioRef.current.style.fontSize = `${fontSize}px`; // Fixed typo here
         }
     };
 
     useEffect(() => {
         const observer = new ResizeObserver(resizeFont);
-
         if (nameRef.current && majorRef.current && bioRef.current) {
             observer.observe(nameRef.current.parentElement);
             observer.observe(majorRef.current.parentElement);
-            observer.observe(bioRef.current.parentElement);
+            observer.observe(bioRef.current.parentElement); 
         }
 
-        resizeFont(); // Initial resize
-
-        window.addEventListener('resize', resizeFont); // Re-calculate on window resize
+        resizeFont();
 
         return () => {
             observer.disconnect();
-            window.removeEventListener('resize', resizeFont);
         };
     }, []);
 

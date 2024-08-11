@@ -24,7 +24,7 @@ export function ProfileCard({user_id, isDorm, broadcaster, save_func}) {
             <div>
               <NameAndBio user_id={user_id} />
             </div>
-            <div className="flex h-[50%] gap-[3.6%] border border-black">
+            <div className="flex h-[50%] gap-[3.6%]">
               <div className="flex w-[55%] flex-col overflow-x-hidden gap-[7.2%]">
                 <div className={"flex h-[65%] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden"}>
                   {isDorm ?
