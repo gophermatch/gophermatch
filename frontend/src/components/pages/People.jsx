@@ -47,12 +47,26 @@ export default function People({ user_data }) {
     }, []);
 
     function unmatch(profileId) {
+
+        console.log("removing match: ", profileId);
+
         backend.delete('/match/inbox-delete', { params: { user1_id: currentUser.user_id, user2_id: profileId } })
             .then(() => {
-                updateMatchedProfiles(prevProfiles => prevProfiles.filter(profile => profile.user_id !== profileId));
+                updateMatchedProfiles(prevProfiles => prevProfiles.filter(uid => uid !== profileId));
+                updateSavedProfiles(prevProfiles => prevProfiles.filter(uid => uid !== profileId));
             })
             .catch((error) => {
                 console.error("Error unmatching profiles:", error);
+            });
+    }
+
+    function confirmMatch(profileId) {
+        backend.post('/match/matcher', { user1Id: currentUser.user_id, user2Id: profileId, decision: "match"})
+            .then(() => {
+                updateSavedProfiles(prevProfiles => prevProfiles.filter(uid => uid !== profileId));
+            })
+            .catch((error) => {
+                console.error("Error matching profiles:", error);
             });
     }
 
@@ -64,7 +78,7 @@ export default function People({ user_data }) {
             }
         })
         .then(() => {
-            updateMatchedSubleases(prevSubleases => prevSubleases.filter(sublease => sublease.sublease_id !== sublease_id));
+            updateMatchedSubleases(prevProfiles => prevProfiles.filter(sid => sid !== sublease_id));
         })
         .catch((error) => {
             console.error("Error deleting sublease:", error);
@@ -80,7 +94,7 @@ export default function People({ user_data }) {
 
     return (
         <div className="flex flex-col items-center h-[100%] w-[100%] text-center justify-center ">
-                <div className="flex flex-col items-center h-[825px] w-[739px] text-center justify-center ">
+                <div className="flex flex-col items-center h-[41.25vw] w-[36.95vw] text-center justify-center ">
                     <div className="flex flex-row bg-maroon h-[8%] w-[100%] rounded-tl-[10px] rounded-tr-[10px]">
                         <svg
                             viewBox="0 0 48 48"
@@ -90,28 +104,28 @@ export default function People({ user_data }) {
                             <path className="cls-1" d="M6.47,10.71a2,2,0,0,0-2,2h0V35.32a2,2,0,0,0,2,2H41.53a2,2,0,0,0,2-2h0V12.68a2,2,0,0,0-2-2H6.47Zm33.21,3.82L24,26.07,8.32,14.53" />
                         </svg>
                     </div>
-                    <div className="bg-white pt-[5px] h-[100%] w-[100%] rounded-br-[10px] rounded-bl-[10px] items-center text-center justify-center overflow-y-scroll custom-scrollbar">
+                    <div className="bg-white pt-[2%] pb-[2%] h-[100%] w-[100%] rounded-br-[10px] rounded-bl-[10px] items-center text-center justify-center overflow-y-scroll custom-scrollbar">
                     
                     <div className="flex text-start justify-start font-medium">
-                        <span className="text-maroon text-start text-[18px] ml-[0.5vw] mt-[1%] mb-[1vh] font-bold font-roboto_condensed justify-start">Roommates</span>
+                        <span className="text-maroon text-start text-[18px] ml-[2%] mt-[1%] mb-[2%] font-bold font-roboto_condensed justify-start">Roommates</span>
                     </div>
-                    {matchedProfileIds.map((id) => (
+                    {matchedProfileIds.length > 0 ? matchedProfileIds.map((id) => (
                         <MatchEntry user_id={id} deleteMatch={unmatch}/>
-                        ))}
+                        )) : <div>No matches yet</div>}
 
                     <div className="flex text-start justify-start font-medium">
-                        <span className="text-maroon text-start text-[18px] ml-[0.5vw] mt-[1%] mb-[1vh] font-bold font-roboto_condensed justify-start">Roommates</span>
+                        <span className="text-maroon text-start text-[18px] ml-[2%] mt-[1%] mb-[2%] font-bold font-roboto_condensed justify-start">Saved Profiles</span>
                     </div>
-                    {savedProfileIds.map((id) => (
-                        <SavedEntry user_id={id}/>
-                        ))}
+                    {savedProfileIds.length > 0 ? savedProfileIds.map((id) => (
+                        <SavedEntry user_id={id} deleteMatch={unmatch} acceptMatch={confirmMatch}/>
+                        )) : <div>No profiles saved, click the bookmark on a user's profile</div>}
 
                     <div className="flex text-start justify-start font-medium">
-                        <span className="text-maroon text-start text-[18px] ml-[0.5vw] mt-[1%] mb-[1vh] font-bold font-roboto_condensed justify-start">Roommates</span>
+                        <span className="text-maroon text-start text-[18px] ml-[2%] mt-[1%] mb-[2%] font-bold font-roboto_condensed justify-start">Subleases</span>
                     </div>
-                        {matchedSubleaseIds.map((id) => (
+                        {matchedSubleaseIds.length > 0 ? matchedSubleaseIds.map((id) => (
                             <SubleaseInboxEntry sublease_id={id} deleteSub={deleteSublease}/>
-                        ))}
+                        )) : <div>You aren't in contact with any subleases</div>}
                     </div>
                     </div>
         </div>

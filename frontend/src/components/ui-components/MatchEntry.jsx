@@ -54,34 +54,30 @@ export default function MatchEntry ({user_id, deleteMatch}) {
     }
 
     return (
-        <div className="flex flex-col h-[18%] w-full duration-200 hover:bg-gray cursor-pointer" key={0}>
+        <div className="flex flex-col h-[18%] w-full duration-200 hover:bg-gray cursor-pointer" key={user_id}>
         <div className="flex">
             <div className="flex flex-row w-full">
                 <img
                     src={picUrl || kanye}
                     className="rounded-[5%] h-[98px] w-[98px] aspect-square mt-[2%] ml-[2%]"
-                    onClick={() => displayProfile(person)}
-                    alt={`Kanye's profile`}
+                    alt={`Profile`}
                 />
                 <div className="flex flex-col w-full text-start justify-start">
                     <div className="flex flex-row">
                         <div className="text-[18px] mt-[6.5%] ml-[5%] font-roboto_slab text-black font-[390]">{`${userData.first_name} ${userData.last_name}`}</div>
                     </div>
                     <div className="flex flex-row">
-                        <div className="ml-[5%] text-[18px] font-[200] text-black">{getValidContact()}</div>
+                        <div className="ml-[5%] text-[18px] font-[200] text-black">{`Contact at ${getValidContact()}`}</div>
                     </div>
                 </div>
-                <div className="flex flex-col items-end justify-end">
-                    <button className="" onClick={() => match(person.user_id)}>
-                        <svg width="3vw" height="3vh" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none" className="hover:stroke-gold" stroke="#000000"><polyline points="12 28 28 44 52 20" /></svg>
-                    </button>
-                    <button className="h-[15px] w-[15px] mr-[1.1vw]" onClick={() => removeSave(person.user_id)}>
-                        <img src="../../assets/images/people_remove.svg" alt="Remove" className="w-[100%] h-[100%] object-contain text-maroon fill-current hover:contrast-100" />
+                <div className="flex flex-col mt-[4%] mr-[5%] items-center justify-center">
+                    <button className="h-[20px] w-[20px]" onClick={() => deleteMatch(user_id)}>
+                        <img src="../../assets/images/people_remove.svg" alt="Remove" className="w-[100%] h-[100%] object-contain text-maroon fill-current duration-200 hover:brightness-0" />
                     </button>
                 </div>
             </div>
         </div>
-        <div className="w-[95%] h-[1%] ml-[2.5%] bg-maroon font-thin mt-[2.85%]"></div>
+        <div className="w-[95%] h-[1px] ml-[2.5%] bg-maroon font-thin mt-[2.85%]"></div>
     </div>
     );
 }
