@@ -36,6 +36,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
       'History',
       'Industrial Engineering',
       'Information Technology',
+      'International Business',
       'Journalism',
       'Law',
       'Marketing',
@@ -84,7 +85,6 @@ export default function NameAndBio({ user_id, broadcaster }) {
     
     useEffect(() => {
         if (broadcaster) {
-            //TODO: return promise from backend put request ex: `const cb = () => backend.put('/something')`
             const cb = () =>
               backend.post('/profile/set-gendata', {
                 user_id: user_id,
@@ -125,9 +125,10 @@ export default function NameAndBio({ user_id, broadcaster }) {
             <div className="w-full h-[12vh] rounded-lg mt-1.5 border border-maroon flex">
               <p className="flex-1 text-[1.8vh] text-left font-normal">
                   {broadcaster ? 
-                    <input
+                    <textarea
                       className = "w-full h-full p-2 border-none rounded-lg resize-none"
                       value={bio}
+                      maxLength="200"
                       onChange={(e) => setBio(e.target.value)}
                     /> 
                   : bio}
