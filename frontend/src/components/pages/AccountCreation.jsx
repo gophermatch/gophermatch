@@ -67,9 +67,9 @@ export default function AccountCreation() {
 
     async function submit(){
         try {
-            const res = await backend.put("/account/creation/new", {
-                userdata: {
-                    user_id: currentUser.user_id,
+            const payload = {
+                user_id: currentUser.user_id,
+                data: {
                     first_name: firstName,
                     last_name: lastName,
                     date_of_birth: DateTime.fromFormat(dob, "M/dd/yy").toSQLDate(),
@@ -85,20 +85,22 @@ export default function AccountCreation() {
                     contact_snapchat: contactSnapchat,
                     contact_instagram: contactInstagram
                 }
-            })
-
+            };
+    
+            const res = await backend.post("/profile/set-gendata", payload);
+    
             console.log(res.data.message);
-
+    
             currentUser.user_data = await currentUser.getAccount();
-
+    
             console.log("redirecting to match");
-
+    
             navigate("/match");
-
+    
         } catch(err) {
-            console.error(err)
+            console.error(err);
         }
-    }
+    }    
 
     const notEmpty = (obj) => {
         return obj !== null && obj !== '';
