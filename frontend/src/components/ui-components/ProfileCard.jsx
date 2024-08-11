@@ -16,7 +16,7 @@ export function ProfileCard({user_id, isDorm, broadcaster, save_func}) {
                       className="w-[4%] h-[7%] absolute top-[5%] right-[3%] bg-maroon_new rounded-full hover:bg-maroon_dark shadow-md">
                   <img src="assets/images/match-save.svg" alt="Save" className="w-[50%] h-[50%] m-auto" />
               </button>
-        <div className={"flex p-[4vh] h-full w-full gap-[3.6%]"}>
+        <div className={"flex p-[2%] h-full w-full gap-[3.6%]"}>
           <div className="w-[25%] h-full min-w-[25%]">
           <Carousel user_id={user_id} editable={broadcaster ? true : false}></Carousel>
           </div>
@@ -38,13 +38,13 @@ export function ProfileCard({user_id, isDorm, broadcaster, save_func}) {
                   </div>
                 </div>
               <div className="grow-[2] flex flex-col gap-[3.6%]">
-                <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
+                <div className={"flex grow-[3] border-dashed border-2 border-maroon overflow-hidden"}>
                   {/* don't know if passing reveal answers is necessary */}
                   <Poll revealAnswers={true} user_id={user_id} broadcaster={broadcaster} />
                 </div>
-                <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
+                <div className={"flex grow-[1] border-dashed border-2 border-maroon overflow-hidden"}>
                   {/* Sleep schedule */}
-                  Sleep sched here
+                  <div>Sleep schedule here</div>
                 </div>
               </div>
             </div>
