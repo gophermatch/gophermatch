@@ -150,7 +150,7 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
             {pollData.answers.map((newAnswer, index) => (
               <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
                 <div className={"rounded-lg w-[97%] h-[33px] relative border-maroon text-xs text-white bg-maroon"}>
-                  <div style={{ width: `${(pollData.answers[index].votes / voteTotal * 100)}%` }} className={`bg-dark_maroon rounded-lg flex h-[100%]`}></div>
+                  {!broadcaster && <div style={{ width: `${(pollData.answers[index].votes / voteTotal * 100)}%` }} className={`bg-dark_maroon rounded-lg flex h-[100%]`}/>}
                   <div className={"absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
                     {broadcaster ? 
                       <input
