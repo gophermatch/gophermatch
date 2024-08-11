@@ -18,6 +18,7 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
     building: ''
   });
   
+  const [originalGenData, setOriginalGenData] = useState({}); // Store original data
   const [activeTags, setActiveTags] = useState([]);
   const [allTagIds, setAllTagIds] = useState([]);
 
@@ -29,6 +30,7 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
       }
     }).then(res => {
       setGenData(res.data[0]);
+      setOriginalGenData(res.data[0]); // Store the original data
     }).catch(console.error);
 
     backend.get('profile/all-tag-ids')
@@ -42,20 +44,34 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
 
   useEffect(() => {
     if (broadcaster) {
-      const cb = () => backend.post('/profile/set-gendata', {
-        user_id: currentUser.user_id,
-        data: genData
-      }).then(() => {
-        return backend.post('/profile/update-user-tags', {
+      const cb = () => {
+        const validatedGenData = validateGenData(genData);
+        return backend.post('/profile/set-gendata', {
           user_id: currentUser.user_id,
-          tag_ids: activeTags
+          data: validatedGenData
+        }).then(() => {
+          return backend.post('/profile/update-user-tags', {
+            user_id: currentUser.user_id,
+            tag_ids: activeTags
+          });
         });
-      });
+      };
 
       broadcaster.connect(cb);
       return () => broadcaster.disconnect(cb);
     }
   }, [broadcaster, genData, activeTags]);
+
+  const validateGenData = (data) => {
+    // If any field is empty, revert it to the original value
+    const validatedData = { ...data };
+    Object.keys(validatedData).forEach(key => {
+      if (validatedData[key] === '' || validatedData[key] === null || validatedData[key] === undefined) {
+        validatedData[key] = originalGenData[key];
+      }
+    });
+    return validatedData;
+  };
 
   const updateGenData = (key, value) => {
     setGenData(prevData => ({
