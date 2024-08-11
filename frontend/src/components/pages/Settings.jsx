@@ -197,8 +197,8 @@ export default function Settings() {
                         </select>
                     </div>
                 </div>
-                <div className="mt-[2.5vh] text-settings text-[2vh] ml-[5.5vw]">Housing Preference</div>
-                <div className="mt-[1vh] ml-[4.5vw] flex flex-row">
+                {/* <div className="mt-[2.5vh] text-settings text-[2vh] ml-[5.5vw]">Housing Preference</div> */}
+                {/* <div className="mt-[1vh] ml-[4.5vw] flex flex-row">
                     <input
                         type="checkbox"
                         id="dormCheckbox"
@@ -207,8 +207,8 @@ export default function Settings() {
                         className="h-[2.8vh] w-[2.8vw] cursor-pointer"
                         checked={editValues.dormCheckbox || false}
                         onChange={(e) => handleCheckboxChange('dormCheckbox', e.target.checked)}
-                    />
-                    <div className="mt-[-0.4vh]">
+                    /> */}
+                    {/* <div className="mt-[-0.4vh]">
                         <label htmlFor="dormCheckbox" className="text-black text-[2vh] ml-[0.25vw] mt-[-0.25vh] font-light">
                             Dorms
                         </label>
@@ -227,7 +227,7 @@ export default function Settings() {
                             Apartments
                         </label>
                     </div>
-                </div>
+                </div> */}
                 <div className="ml-[4.75vw] mt-[2vh] h-[0.075vh] bg-black w-[59.2vw]"></div>
                 <div className="flex flex-row">
                     <div className="flex flex-col mt-[1.5vh]">
