@@ -38,7 +38,7 @@ export function ProfileCard({user_id, isDorm, broadcaster, save_func}) {
                   </div>
                 </div>
               <div className="grow-[2] flex flex-col gap-[3.6%]">
-                <div className={"flex grow-[3] border-dashed border-2 border-maroon"}>
+                <div className={"flex grow-[3] border-none border-2 border-maroon"}>
                   <Poll revealAnswers={true} user_id={user_id} broadcaster={broadcaster} />
                 </div>
                 <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
