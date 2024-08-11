@@ -43,6 +43,7 @@ export default {
       login: 'rgb(161 98 7)',
       transparent: 'transparent',
       cream: '#FFFAF7',
+      dark_cream: '#c4bdb9',
       light_gray: '#EDEDED',
       gray: 'rgb(212 212 216)',
       gray_text: 'rgb(31 41 55)',

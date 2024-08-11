@@ -3,11 +3,16 @@ import {React, useEffect, useState} from "react";
 import kanye from '../../assets/images/kanye.png';
 import backend from '../../backend.js';
 
-export default function SubleaseInboxEntry ({sublease_id, deleteSub}) {
+export default function SubleaseInboxEntry ({sublease_id, deleteSub, setDisplay}) {
 
     useEffect(() => {
         if(sublease_id > 0) fetchSubleaseData();
     }, [sublease_id]);
+
+    const handleRemoveClick = (event) => {
+        event.stopPropagation(); // Prevents the event from reaching the parent which would show the profile
+        deleteSub(sublease_id);
+    };
 
     const [subleaseData, setSubleaseData] = useState({});
     const [userData, setUserData] = useState({});
@@ -65,11 +70,11 @@ export default function SubleaseInboxEntry ({sublease_id, deleteSub}) {
         return userData.contact_phone || 
                userData.contact_snapchat || 
                userData.contact_instagram || 
-               userData.contact_email;
+               userData.contact_email || "No contact info found";
     }
 
     return (
-        <div className="flex flex-col h-[18%] w-full border-inactive_gray border-b-[1px] duration-200 hover:bg-gray cursor-pointer" key={sublease_id}>
+        <div className="flex flex-col h-[18%] w-full border-inactive_gray border-b-[1px] duration-200 hover:bg-gray cursor-pointer" onClick={() => setDisplay({id: sublease_id, display_type: "sublease"})} key={sublease_id}>
             <div className="flex flex-row w-full h-full">
                 <img
                     src={picUrl || kanye}
@@ -88,43 +93,12 @@ export default function SubleaseInboxEntry ({sublease_id, deleteSub}) {
                  </div>
                 </div>
                 <div className="flex flex-col gap-[10%] w-[20%] items-center justify-center overflow-hidden">
-                    <button className="" onClick={() => acceptMatch(user_id)}>
-                        <img src="../../assets/images/people_accept.svg" alt="Match" className="w-[100%] h-[100%] object-contain text-maroon fill-current duration-200 hover:brightness-0" />
-                    </button>
-                    <button className="" onClick={() => deleteMatch(user_id)}>
+                    <button className="" onClick={handleRemoveClick}>
                         <img src="../../assets/images/people_remove.svg" alt="Remove" className="w-[100%] h-[100%] object-contain text-maroon fill-current duration-200 hover:brightness-0" />
                     </button>
                 </div>
             </div>
         <div className="w-[95%] h-[1px] ml-[2.5%] bg-maroon font-thin mt-[2.85%]"></div>
     </div>
-    //     <div className="flex flex-col h-[18%] w-full duration-200 hover:bg-gray cursor-pointer" key={sublease_id}>
-    //     <div className="flex">
-    //         <div className="flex flex-row w-full">
-    //             <img
-    //                 src={picUrl || kanye}
-    //                 className="rounded-[5%] h-[98px] w-[98px] aspect-square mt-[2%] ml-[2%]"
-    //                 alt={`Profile`}
-    //             />
-    //             <div className="flex flex-col w-full text-start justify-start">
-    //                 <div className="flex flex-row">
-    //                     <div className="text-[18px] mt-[4.5%] ml-[5%] font-roboto_slab text-black font-[390]">{`${subleaseData.building_name}`}</div>
-    //                 </div>
-    //                 <div className="flex flex-row">
-    //                     <div className="ml-[5%] text-[18px] font-[200] text-black">{`$${subleaseData.rent_amount}/month`}</div>
-    //                 </div>
-    //                 <div className="flex flex-row">
-    //                     <div className="ml-[5%] text-[18px] font-[200] text-black">{getValidContact()}</div>
-    //                 </div>
-    //             </div>
-    //             <div className="flex flex-col mt-[4%] mr-[5%] items-center justify-center">
-    //                 <button className="h-[20px] w-[20px]" onClick={() => deleteSub(sublease_id)}>
-    //                     <img src="../../assets/images/people_remove.svg" alt="Remove" className="w-[100%] h-[100%] object-contain text-maroon fill-current duration-200 hover:brightness-0" />
-    //                 </button>
-    //             </div>
-    //         </div>
-    //     </div>
-    //     <div className="w-[95%] h-[1px] ml-[2.5%] bg-maroon font-thin mt-[2.85%]"></div>
-    // </div>
     );
 }

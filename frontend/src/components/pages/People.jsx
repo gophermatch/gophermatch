@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
-import { ProfileCard } from '../ui-components/ProfileCard.jsx';
-import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
 import MatchEntry from '../ui-components/MatchEntry.jsx';
 import SubleaseInboxEntry from '../ui-components/SubleaseInboxEntry.jsx';
 import SavedEntry from '../ui-components/SavedEntry.jsx';
 import backend from '../../backend.js';
 import currentUser from '../../currentUser.js';
-import "../ui-components/ProfileCardContent/apartmentStyles.css"
+import "../ui-components/ProfileCardContent/apartmentStyles.css";
+import { ProfileCard } from '../ui-components/ProfileCard.jsx';
+import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
 
-export default function People({ user_data }) {
+export default function People() {
+
     const [matchedProfileIds, updateMatchedProfiles] = useState([]);
     const [matchedSubleaseIds, updateMatchedSubleases] = useState([]);
     const [savedProfileIds, updateSavedProfiles] = useState([]);
 
+    // { id: int (user_id or sublease_id), display_type: str (dorm, sublease, apartment) }
+    const [fullDisplay, setDisplay] = useState({});
 
     useEffect(() => {
         (async () => {
@@ -85,16 +88,55 @@ export default function People({ user_data }) {
         });
     }
 
-    const formatPhoneNumber = (phoneNumber) => {
-        if (phoneNumber.length !== 10) {
-            return phoneNumber;
+    if(fullDisplay)
+    {
+        if(fullDisplay.display_type == "apartment" || fullDisplay.display_type == "dorm")
+        {
+            return(
+                <div className="flex items-center h-full w-full bg-dark_cream">
+                    
+                    <button onClick={() => setDisplay({})}>
+                            <img
+                            src="../../assets/images/people_back.svg"
+                            alt="Remove"
+                            className="w-[50px] h-[50px] object-contain absolute top-0 text-maroon fill-current duration-200 transform brightness-200 hover:brightness-0"
+                            />
+                        </button>
+
+                    <div className="flex-grow flex items-center mt-[-8%] justify-center w-full text-center">
+                        <div className="mt-[8%]">
+                            <ProfileCard user_id={fullDisplay.id} isDorm={fullDisplay.display_type == "dorm"}/>
+                        </div>
+                    </div>
+                </div>
+            );
         }
-        return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
-    };
+
+        if(fullDisplay.display_type == "sublease")
+        {
+            return(
+                <div className="flex items-center h-full w-full bg-dark_cream">
+                    
+                    <button onClick={() => setDisplay({})}>
+                            <img
+                            src="../../assets/images/people_back.svg"
+                            alt="Remove"
+                            className="w-[50px] h-[50px] object-contain absolute top-0 text-maroon fill-current duration-200 transform brightness-200 hover:brightness-0"
+                            />
+                        </button>
+
+                    <div className="flex-grow flex items-center mt-[-8%] justify-center w-full text-center">
+                        <SubleaseEntry sublease_id={fullDisplay.id} hideContact={true} className="bg-maroon"/>
+                    </div>
+                </div>
+            );
+        }
+            
+    }
 
     return (
         <div className="flex flex-col items-center h-[100%] w-[100%] text-center justify-center ">
-                <div className="flex flex-col items-center h-[41.25vw] w-[36.95vw] text-center justify-center ">
+                <div className="flex flex-col items-center h-[412.5px] w-[369.5px] 2xl:h-[825px] 2xl:w-[739px] xl:h-[825px] xl:w-[739px] lg:h-[825px] lg:w-[739px] md:h-[618.75px] md:w-[554.25px] sm:h-[412.5px] sm:w-[369.5px] text-center justify-center ">
                     <div className="flex flex-row bg-maroon h-[8%] w-[100%] rounded-tl-[10px] rounded-tr-[10px]">
                         <svg
                             viewBox="0 0 48 48"
@@ -110,21 +152,21 @@ export default function People({ user_data }) {
                         <span className="text-maroon text-start text-[18px] ml-[2%] mt-[1%] mb-[2%] font-bold font-roboto_condensed justify-start">Roommates</span>
                     </div>
                     {matchedProfileIds.length > 0 ? matchedProfileIds.map((id) => (
-                        <MatchEntry user_id={id} deleteMatch={unmatch}/>
+                        <MatchEntry user_id={id} deleteMatch={unmatch} setDisplay={setDisplay}/>
                         )) : <div>No matches yet</div>}
 
                     <div className="flex text-start justify-start font-medium">
                         <span className="text-maroon text-start text-[18px] ml-[2%] mt-[1%] mb-[2%] font-bold font-roboto_condensed justify-start">Saved Profiles</span>
                     </div>
                     {savedProfileIds.length > 0 ? savedProfileIds.map((id) => (
-                        <SavedEntry user_id={id} deleteMatch={unmatch} acceptMatch={confirmMatch}/>
+                        <SavedEntry user_id={id} deleteMatch={unmatch} acceptMatch={confirmMatch} setDisplay={setDisplay}/>
                         )) : <div>No profiles saved, click the bookmark on a user's profile</div>}
 
                     <div className="flex text-start justify-start font-medium">
                         <span className="text-maroon text-start text-[18px] ml-[2%] mt-[1%] mb-[2%] font-bold font-roboto_condensed justify-start">Subleases</span>
                     </div>
                         {matchedSubleaseIds.length > 0 ? matchedSubleaseIds.map((id) => (
-                            <SubleaseInboxEntry sublease_id={id} deleteSub={deleteSublease}/>
+                            <SubleaseInboxEntry sublease_id={id} deleteSub={deleteSublease} setDisplay={setDisplay}/>
                         )) : <div>You aren't in contact with any subleases</div>}
                     </div>
                     </div>
