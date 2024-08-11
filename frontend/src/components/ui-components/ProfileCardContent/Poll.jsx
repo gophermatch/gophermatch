@@ -37,12 +37,17 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
             answer: option.option_text,
             votes: option.num_votes
           }));
-          const question = pollQs.data[0]?.question_text || "Poll Question";
 
           setPollData({
-            question: question,
             answers: options
           });
+        }
+
+        if (pollQs.data){
+          setPollData(prevPollData => ({
+            ...prevPollData,
+            question: pollQs.data[0]?.question_text
+          }));
         }
       } catch (error) {
         console.error('Error fetching poll data:', error);
