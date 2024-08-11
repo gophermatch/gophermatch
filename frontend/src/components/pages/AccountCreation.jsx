@@ -95,7 +95,7 @@ export default function AccountCreation() {
     
             console.log("redirecting to match");
     
-            navigate("/match");
+            navigate("/login");
     
         } catch(err) {
             console.error(err);
