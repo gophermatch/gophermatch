@@ -238,14 +238,13 @@ router.get('/get-gendata', async (req, res) => {
     const {user_id} = req.query;
     const filter = req.query['filter[]'];
 
-    console.log(filter)
-
     if (!user_id) {
         return res.status(400).json({ error: "Missing parameters for get-gendata" });
     }
 
     try {
         const results = await getGeneralData(user_id, filter);
+        console.log(results)
         return res.json(results);
     } catch (error) {
         return res.status(500).json({ error: "Failed to get general data." });

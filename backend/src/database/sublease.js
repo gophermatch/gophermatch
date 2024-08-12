@@ -179,6 +179,7 @@ export async function getSavedSubleases(user_id) {
     `, (err, rows) => {
       if (err) {
         console.error(err);
+        reject(err);  // Added reject in case of an error
       } else {
         const data = rows.map(row => row.sublease_id);
         resolve(data);
@@ -187,3 +188,87 @@ export async function getSavedSubleases(user_id) {
   });
 }
 
+
+// returns array of jsons for user's saved subleases (can change the name of this function later)
+export async function getSavedSubleaseNew(user_id) {
+  return new Promise((resolve, reject) => {
+    // First query to get the sublease IDs
+    const subleaseIdQuery = `
+      SELECT 
+        sublease_id
+      FROM 
+        ${tableNames.u_savelease}
+      WHERE 
+        user_id = ?
+    `;
+
+    db.query(subleaseIdQuery, [user_id], (err, subleaseIdRows) => {
+      if (err) {
+        console.error('Error fetching saved sublease IDs:', err);
+        reject(err);
+      } else if (subleaseIdRows.length === 0) {
+        reject(new Error('No saved subleases found.'));
+      } else {
+        const subleaseIds = subleaseIdRows.map(row => row.sublease_id);
+
+        // Second query to get the sublease details
+        const subleaseDetailsQuery = `
+          SELECT 
+            sublease_id,
+            building_address,
+            building_name,
+            user_id
+          FROM 
+            ${tableNames.u_subleases}
+          WHERE 
+            sublease_id IN (?)
+        `;
+
+        db.query(subleaseDetailsQuery, [subleaseIds], (err, subleaseDetailsRows) => {
+          if (err) {
+            console.error('Error fetching sublease details:', err);
+            reject(err);
+          } else {
+            // Get user IDs from the sublease details
+            const userIds = subleaseDetailsRows.map(row => row.user_id);
+
+            // Query to get the user contact information
+            const userContactQuery = `
+              SELECT 
+                user_id,
+                contact_email
+              FROM 
+                ${tableNames.u_generaldata}
+              WHERE 
+                user_id IN (?)
+            `;
+
+            db.query(userContactQuery, [userIds], (err, userContactRows) => {
+              if (err) {
+                console.error('Error fetching user contact information:', err);
+                reject(err);
+              } else {
+                // Create a map of user contact information
+                const userContactMap = userContactRows.reduce((map, row) => {
+                  map[row.user_id] = row.contact_email;
+                  return map;
+                }, {});
+
+                // Combine sublease details with user contact information
+                const result = subleaseDetailsRows.map(sublease => ({
+                  sublease_id: sublease.sublease_id,
+                  building_address: sublease.building_address,
+                  building_name: sublease.building_name,
+                  contact_email: userContactMap[sublease.user_id] || null,
+                  user_id: sublease.user_id
+                }));
+
+                resolve(result);
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+}
