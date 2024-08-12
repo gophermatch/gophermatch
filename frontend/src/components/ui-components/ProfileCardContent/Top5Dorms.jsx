@@ -157,9 +157,9 @@ export default function Top5Dorms({user_id, broadcaster}) {
                 return (
                   <div
                     key={dorm}
-                    className={`bg-maroon w-[calc(100%-30px)] h-[1rem] text-[10px] lg:text-[13px] lg:h-[1.3rem] flex items-center ml-[-3px] pl-[5px] rounded-md text-white select-none absolute ${!isHeld && 'transition-all'}`}
+                    className={`bg-maroon w-[calc(100%-30px)] h-[13px] text-[9px] lg:text-[13px] lg:h-[1.3rem] flex items-center ml-[-3px] pl-[5px] rounded-[3px] lg:rounded-[5px] text-white select-none absolute ${!isHeld && 'transition-all'}`}
                     style={{
-                      top: window.innerWidth >= 1024 ? 25 * i : 20 * i ,
+                      top: window.innerWidth >= 1024 ? 25 * i : 18 * i ,
                       left: "30px",
                       zIndex: heldDorm === dorm ? 1 : 0,
                     }}
@@ -172,7 +172,7 @@ export default function Top5Dorms({user_id, broadcaster}) {
                 );
               })}
               {[0, 0, 0, 0, 0].map((_, i) => (
-                <div key={i} className="absolute bg-maroon w-[15px] h-[15px] text-[10px] lg:h-[1.3rem] lg:w-[1.3rem] flex items-center justify-center text-white text-center rounded-md" style={{ top: window.innerWidth >= 1024 ? 25 * i : 20 * i }}>
+                <div key={i} className="absolute bg-maroon w-[13px] h-[13px] text-[9px] lg:text-[12px] lg:h-[1.3rem] lg:w-[1.3rem] flex items-center justify-center text-white text-center rounded-[3px] lg:rounded-[5px]" style={{ top: window.innerWidth >= 1024 ? 25 * i : 18 * i }}>
                   {i + 1}
                 </div>
               ))}
