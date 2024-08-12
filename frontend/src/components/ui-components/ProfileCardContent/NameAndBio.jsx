@@ -9,6 +9,49 @@ export default function NameAndBio({ user_id, broadcaster }) {
     const [major, setMajor] = useState('');
     const [name, setFullName] = useState('');
 
+    const majorList = [
+      'Accounting',
+      'Aerospace Engineering',
+      'Anthropology',
+      'Architecture',
+      'Biochemistry',
+      'Biology',
+      'Biomedical Engineering',
+      'Business Administration',
+      'Chemical Engineering',
+      'Chemistry',
+      'Civil Engineering',
+      'Communications',
+      'Computer Engineering',
+      'Computer Science',
+      'Economics',
+      'Education',
+      'Electrical Engineering',
+      'English',
+      'Environmental Science',
+      'Finance',
+      'Geography',
+      'Graphic Design',
+      'Health Sciences',
+      'History',
+      'Industrial Engineering',
+      'Information Technology',
+      'International Business',
+      'Journalism',
+      'Law',
+      'Marketing',
+      'Mathematics',
+      'Mechanical Engineering',
+      'Nursing',
+      'Philosophy',
+      'Physics',
+      'Political Science',
+      'Psychology',
+      'Public Health',
+      'Sociology',
+      'Statistics'
+  ];
+  
     useEffect(() => {
         async function fetchData() {
           try {
@@ -39,37 +82,57 @@ export default function NameAndBio({ user_id, broadcaster }) {
 
         fetchData();
       }, [user_id]);
-
-
+    
     useEffect(() => {
         if (broadcaster) {
-            //TODO: return promise from backend put request ex: `const cb = () => backend.put('/something')`
-            const cb = () => {
-                return new Promise(() => {
-                    console.log("Saving data")
-                    resolve()
-                })
-            }
+            const cb = () =>
+              backend.post('/profile/set-gendata', {
+                user_id: user_id,
+                data: {
+                  bio: bio,
+                  major: major
+                }
+              });
 
             broadcaster.connect(cb)
             return () => broadcaster.disconnect(cb)
         }
-    }, [broadcaster])
+    }, [broadcaster, bio, major])
 
     // we should probably be using tailwind rather than css modules but doesn't really matter
 
     return (
         <div className={styles.container}>
-            <div className={styles.name}>
+            <div className="text-[3vh] font-bold">
                 {name}
             </div>
-            <div className={styles.major}>
-                {major}
+            <div className="mt-[-1vh] text-[2vh] font-[450]">
+              {broadcaster ? 
+                <select
+                  id="selectionBox"
+                  value={major}
+                  onChange={(e) => setMajor(e.target.value)}
+                  className="border-2 rounded-lg mt-[1vh]"
+                >
+                  {majorList.map((option, index) => (
+                    <option key={index} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select> 
+              : major}
             </div>
-            <div className={styles.bio}>
-                <div className={styles.bioText}>
-                    {bio}
-                </div>
+            <div className="w-full h-[12vh] rounded-lg mt-1.5 border border-maroon flex">
+              <p className="flex-1 text-[1.8vh] text-left font-normal">
+                  {broadcaster ? 
+                    <textarea
+                      className = "w-full h-full p-2 border-none rounded-lg resize-none"
+                      value={bio}
+                      maxLength="200"
+                      onChange={(e) => setBio(e.target.value)}
+                    /> 
+                  : bio}
+                </p>
             </div>
         </div>
     );
