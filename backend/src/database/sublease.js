@@ -37,9 +37,11 @@ export async function updateSublease(sublease_data) {
   });
 }
 
-export async function getSublease(user_id) {
+// Accepts either user_id or sublease_id, will use whichever is defined
+export async function getSublease(user_id, sublease_id) {
   return new Promise((resolve, reject) => {
-    const { queryString, values } = buildSelectString("*", tableNames.u_subleases, { user_id });
+
+    const { queryString, values } = buildSelectString("*", tableNames.u_subleases, user_id ? { user_id } : {sublease_id});
     
     db.query(queryString, values, (err, results) => {
       if (err) {
@@ -172,27 +174,13 @@ export async function deleteSavedSublease(user_id, sublease_id) {
 
 export async function getSavedSubleases(user_id) {
   return new Promise((resolve, reject) => {
-    db.query(`
-      SELECT u_savelease.sublease_id, u_subleases.building_name, u_generaldata.first_name, u_generaldata.last_name, u_generaldata.contact_email, u_generaldata.contact_phone, u_generaldata.contact_snapchat, u_generaldata.contact_instagram
-      FROM (u_savelease
-      INNER JOIN u_subleases ON u_savelease.sublease_id = u_subleases.sublease_id AND u_savelease.user_id = ${user_id}) 
-      INNER JOIN u_generaldata ON u_generaldata.user_id = u_subleases.user_id
-    `, (err, rows) => {
+    db.query(`SELECT u_savelease.sublease_id FROM u_savelease WHERE u_savelease.user_id = ${user_id} `, (err, rows) => {
       if (err) {
         console.error(err);
         reject(err);  // Added reject in case of an error
       } else {
-        const data = rows.map(row => {
-          // Determine the preferred contact method
-          const contact = row.contact_email || row.contact_phone || row.contact_snapchat || row.contact_instagram || "No contact provided";
-          return {
-            user_id: row.user_id,  // Correctly associate the sublease user_id
-            sublease_id: row.sublease_id,
-            building_name: row.building_name,
-            name: `${row.first_name} ${row.last_name}`,
-            contact: contact
-          }
-        });
+
+        const data = rows.map(row => row.sublease_id);
         resolve(data);
       }
     });

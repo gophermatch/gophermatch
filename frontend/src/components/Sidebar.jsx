@@ -40,8 +40,7 @@ export default function Sidebar() {
                         ['Match', '/match'],
                         ['Profile', '/profile'],
                         ['Settings', '/settings'],
-                        ['Inbox', '/inbox'],
-                        ['Saved', '/saved'],
+                        ['People', '/people'],
                         ['Subleases', '/sublease']
                     ].map(([label, destination]) => (
                         <NavLink
@@ -57,12 +56,12 @@ export default function Sidebar() {
                                     setInboxClicked(false);
                                 }
                             }}
-                            ref={label === 'Inbox' ? inboxRef : null} // Assign ref only to the Inbox NavLink
+                            ref={label === 'People' ? inboxRef : null} // Assign ref only to the People NavLink
                         >
                             {label}
                             {/*{activePage === destination && <div className="absolute bottom-0 left-0 w-full h-1 bg-gold"></div>}*/}
                             {
-                                label === 'Inbox' && <InboxNotification inboxClicked={inboxClicked} />
+                                label === 'People' && <InboxNotification inboxClicked={inboxClicked} />
                             }
                         </NavLink>
                     ))}

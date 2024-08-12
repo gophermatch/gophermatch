@@ -1,20 +1,24 @@
 import { useState, useEffect } from "react";
 import backend from "../../../backend";
 import currentUser from '../../../currentUser.js';
+import hamburger from "../../../assets/images/hamburger.svg";
 
-/*
-    Currently only the button to switch between both semesters and
-    one semester in conditional based on edit mode. The min and max
-    people also needs to be made conditional, and the UI should be
-    cleaned up a bit in edit mode. The component is in view mode
-    if broadcaster is null, otherwise its in edit mode.
+const DORM_OPTIONS = [
+    "Comstock",
+    "Middlebrook",
+    "17th",
+    "Pioneer",
+    "Bailey",
+    "Centennial",
+    "Frontier",
+]
 
-    Data should ONLY be saved inside the broadcaster useEffect. It
-    looks like the order is immediately being sent to the backend, this
-    needs to be switched to all be done while saving. Please delete
-    this comment once its fixed so some pour soul doesn't have to try
-    to figure out where the saving issue is.
-*/
+const peopleDict = {
+    "1": "Single",
+    "2": "Double",
+    "3": "Triple",
+    "4": "Quad",
+}
 
 export default function Top5Dorms({user_id, broadcaster}) {
 
@@ -27,30 +31,52 @@ export default function Top5Dorms({user_id, broadcaster}) {
     const [holdPos, setHoldPos] = useState(null);
     const [holdBase, setHoldBase] = useState(null);
     const [heldDorm, setHeldDorm] = useState('');
+    const [openedDropdown, setOpenedDropdown] = useState(undefined); // integer representing index
     const mousePos = useMousePosition();
 
     const [top5Dorms, setTop5Dorms] = useState(top5Data.inputs); //TODO: this seems like duplicate state
-    const [minPeople, setMinPeople] = useState(2);
-    const [maxPeople, setMaxPeople] = useState(4);
-    const [semesters, setSemesters] = useState("Both Semesters");
+    const [numPeople, setNumPeople] = useState(1);
+
+    const unusedOptions = DORM_OPTIONS.filter(option => !top5Dorms.includes(option));
+
+    function swapDormOption(i, value) {
+        const dorms = [...top5Dorms]
+        dorms[i] = value
+        setTop5Dorms(dorms)
+        setOpenedDropdown(undefined)
+    }
 
     useEffect(() => {
         if (broadcaster) {
             const cb = () => {
-                //TODO: should be able to swap this return out for just `return backend.put(...)` for data saving
-                return new Promise((resolve) => {
-                    console.log("Saving data")
-                    resolve()
-                })
+                return Promise.all([
+                    backend.put('/profile/insert-topfive', {
+                        user_id: user_id,
+                        question: top5Data.question,
+                        input1: top5Dorms[0],
+                        input2: top5Dorms[1],
+                        input3: top5Dorms[2],
+                        input4: top5Dorms[3],
+                        input5: top5Dorms[4]
+                    }),
+                    backend.post('profile/set-gendata', {
+                        user_id: user_id,
+                        data: {num_residents: numPeople}
+                    })
+                ])
             }
 
             broadcaster.connect(cb)
             return () => broadcaster.disconnect(cb)
         }
-      }, [broadcaster])
+      }, [broadcaster, top5Dorms, numPeople])
 
     useEffect(() => {
         async function fetchData() {
+          backend.get('/profile/get-gendata', {params: {
+            user_id: user_id,
+            filter: ['num_residents']
+          }}).then(res => setNumPeople(res.data[0].num_residents));
           try {
 
             const topfive = await backend.get('/profile/get-topfive', {
@@ -70,6 +96,13 @@ export default function Top5Dorms({user_id, broadcaster}) {
                     topfive.data.input5,
                 ]
               });
+              setTop5Dorms([
+                topfive.data.input1,
+                topfive.data.input2,
+                topfive.data.input3,
+                topfive.data.input4,
+                topfive.data.input5
+              ])
             }
           } catch (error) {
             console.error('Error fetching user profile:', error);
@@ -79,30 +112,7 @@ export default function Top5Dorms({user_id, broadcaster}) {
         fetchData();
       }, [user_id]);
 
-    function handleChangePeople(value, stateDispatch) {
-        const digit = value.slice(-1);
-        if (!isNaN(digit)) {
-            stateDispatch(digit);
-        }
-    }
-
     const offset = holdPos ? mousePos.y - holdPos.y : undefined;
-
-    const updateTop5Order = async (updatedDorms) => {
-        try {
-            await backend.put('/profile/insert-topfive', {
-                user_id: currentUser.user_id,
-                question: top5Data.question,
-                input1: updatedDorms[0],
-                input2: updatedDorms[1],
-                input3: updatedDorms[2],
-                input4: updatedDorms[3],
-                input5: updatedDorms[4]
-            });
-        } catch (error) {
-            console.error('Error updating top 5 order:', error);
-        }
-    };
 
     useEffect(() => {
         if (!holdPos) {
@@ -115,7 +125,6 @@ export default function Top5Dorms({user_id, broadcaster}) {
             setTop5Dorms([...top5Dorms]);
             setHoldBase(v => v + offset);
             setHoldPos(mousePos);
-            updateTop5Order(top5Dorms); // Update backend with new order
         }
 
         if (offset > 35 && dormIndex < top5Dorms.length - 1) { // lowered down a position
@@ -123,25 +132,23 @@ export default function Top5Dorms({user_id, broadcaster}) {
             setTop5Dorms([...top5Dorms]);
             setHoldBase(v => v + offset);
             setHoldPos(mousePos);
-            updateTop5Order(top5Dorms); // Update backend with new order
         }
     }, [mousePos]);
 
     return (
-        <div className="flex flex-col border-2 border-solid border-maroon_new rounded-md w-full h-full p-[5px] font-roboto_slab">
+        <div className="flex flex-col border-2 border-solid border-maroon_new rounded-md w-full h-full p-[5px] font-roboto_slab custom-scrollbar">
             <div className="basis-[30px] flex">
-                <div>
-                    <input type="text" value={minPeople} onChange={e => handleChangePeople(e.target.value, setMinPeople)} className="ml-[10px] w-[15px] bg-offwhite inline-block" />
-                    <div className="inline-block">-</div>
-                    <input type="text" value={maxPeople} onChange={e => handleChangePeople(e.target.value, setMaxPeople)} className="w-[15px] bg-offwhite inline-block" />
-                    <div className="inline-block">People</div>
+                <div className="w-1/5">
+                    {peopleDict[String(numPeople)]}
                 </div>
-                <div className="ml-auto w-[200px] text-right">{semesters}</div>
-                {/* if the broadcaster exists then the component is in edit mode */}
-                {broadcaster && <button className="ml-[10px] bg-maroon text-white px-1 h-[20px] rounded-xl" onClick={() => setSemesters(semesters === "Both Semesters" ? "1 Semester" : "Both Semesters")}>^</button>}
+                {broadcaster ?
+                    <button onClick={() => setNumPeople(num => (num % 4) + 1)} className="bg-maroon text-white px-1 rounded-full">-&gt;</button>
+                    :
+                    <></>
+                }
             </div>
             <hr className="border-t-1 bordet-top-solid border-maroon_new"></hr>
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-auto custom-scrollbar pr-[5px]">
                 <p className="text-sm">{top5Data.question}</p>
                 <div className="relative">
                     {top5Dorms.map((dorm, i) => {
@@ -150,17 +157,49 @@ export default function Top5Dorms({user_id, broadcaster}) {
                         return (
                             <div
                                 key={dorm}
-                                className={`bg-maroon w-[calc(100%-30px)] leading-[30px] pl-[5px] rounded-md text-white select-none absolute ${!isHeld && 'transition-all'}`}
+                                className={`bg-maroon w-[calc(100%-30px)] leading-[30px] pl-[5px] rounded-md text-white select-none absolute flex align-middle ${!isHeld && 'transition-all'}`}
                                 style={{
                                     top: isHeld ? holdBase + offset : basePosition,
                                     left: "30px",
-                                    zIndex: heldDorm === dorm ? 1 : 0,
+                                    zIndex: heldDorm === dorm || openedDropdown === i ? 1 : 0,
                                 }}
-                                onMouseDown={() => { setHoldPos(mousePos); setHoldBase(basePosition); setHeldDorm(dorm); }}
-                                onMouseUp={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
                                 onMouseLeave={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
+                                onMouseUp={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
                             >
-                                {dorm}
+                                {broadcaster ?
+                                    <>
+                                    <div
+                                        className="h-[30px] w-[18px] flex align-middle cursor-grab"
+                                        onMouseDown={() => { setHoldPos(mousePos); setHoldBase(basePosition); setHeldDorm(dorm); }}
+                                        >
+                                        <img src={hamburger} draggable="false" />
+                                    </div>
+                                    <div
+                                        className="border-[1px] border-white border-solid pl-[4px] m-[4px] leading-[22px] h-[22px] w-[50%] cursor-pointer relative"
+                                        onClick={openedDropdown !== i ? () => setOpenedDropdown(i): () => {}}
+                                    >
+                                        {openedDropdown === i ?
+                                            <div className="absolute top-0 right-0 left-0 bg-white text-maroon border-[1px] border-solid border-inactive_gray">
+                                                <button className="block w-full text-left hover:bg-offwhite" onClick={() => setOpenedDropdown(undefined)}>{dorm}</button>
+                                                {unusedOptions.map(option => (
+                                                    <button
+                                                        key={option}
+                                                        className="block w-full text-left hover:bg-offwhite border-t-inactive_gray border-t-[1px] border-t-solid"
+                                                        onClick={() => swapDormOption(i, option)}
+                                                        >
+                                                        {option}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            :
+                                            dorm
+                                        }
+
+                                    </div>
+                                    </>
+                                    :
+                                    dorm
+                                }
                             </div>
                         );
                     })}
