@@ -17,6 +17,8 @@
     "@stripe/react-stripe-js": "^2.7.0",
     "@stripe/stripe-js": "^3.3.0",
     "express-session": "^1.18.0",
+    "firebase": "^10.12.5",
+    "firebase-admin": "^12.3.1",
     "luxon": "^3.4.4",
     "multer": "^1.4.5-lts.1",
     "react-beautiful-dnd": "^13.1.1",
