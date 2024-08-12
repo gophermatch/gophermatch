@@ -101,7 +101,6 @@ export async function retrievePictureUrls(user_id) {
 
 export async function getTopFive(user_id){
     return new Promise((resolve, reject) => {
-        console.log(user_id);
         const query = `SELECT question, input1, input2, input3, input4, input5 FROM ${tableNames.u_topfive} WHERE user_id = ?`;
 
         db.query(query, [user_id], (err, results) => {
@@ -224,8 +223,6 @@ export async function getGeneralData(user_id, filter) {
 
     const query = filter ? `SELECT ${columns} FROM ${tableNames.u_generaldata} WHERE user_id = ?`
      : `SELECT * FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
-    console.log(user_id)
-    console.log(query)
 
     try {
       const results = await new Promise((resolve, reject) => {

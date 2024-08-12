@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 
-const MonthDropdown = ({initialValue}) => {
-
-    useEffect(() => {
-        // Set initial value to January
-        setSelectedMonth(initialValue);
-    }, [initialValue]);
-
+const MonthDropdown = ({ initialValue, onChange }) => {
   const [selectedMonth, setSelectedMonth] = useState('');
 
+  useEffect(() => {
+    setSelectedMonth(initialValue);
+  }, [initialValue]);
+
   const handleChange = (event) => {
-    setSelectedMonth(event.target.value);
+    const newMonth = event.target.value;
+    setSelectedMonth(newMonth);
+    onChange(newMonth); // Notify the parent component of the change
   };
 
   const months = [

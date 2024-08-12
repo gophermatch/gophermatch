@@ -174,13 +174,12 @@ export async function deleteSavedSublease(user_id, sublease_id) {
 
 export async function getSavedSubleases(user_id) {
   return new Promise((resolve, reject) => {
-    db.query(`
-      SELECT u_savelease.sublease_id FROM u_savelease WHERE u_savelease.user_id = ${user_id} 
-    `, (err, rows) => {
+    db.query(`SELECT u_savelease.sublease_id FROM u_savelease WHERE u_savelease.user_id = ${user_id} `, (err, rows) => {
       if (err) {
         console.error(err);
         reject(err);  // Added reject in case of an error
       } else {
+
         const data = rows.map(row => row.sublease_id);
         resolve(data);
       }
