@@ -12,7 +12,7 @@ import {
     createPollOption,
     deletePollOption,
     getGeneralData, setGeneralData,
-    updateUserTags, getUserSelectedTags, getAllTags
+    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -193,6 +193,37 @@ router.put('/poll-option', async (req, res) => {
     } catch (error) {
         console.error("Error updating poll option:", error);
         res.status(500).json(createErrorObj("Failed to update poll option. Please try again later."));
+    }
+});
+
+// Update dorm/apartment preference
+router.put('/toggle-dorm', async (req, res) => {
+    const { user_id } = req.body;
+
+    try {
+        await toggleDormAndApartment(user_id);
+        res.status(200).json({ message: "Apartment/Dorm Toggled!" });
+    } catch (error) {
+        console.error("Error toggling dorm and apartment.", error);
+        res.status(500).json(createErrorObj("Failed to toggle dorm/apartment. Please try again later."));
+    }
+});
+
+// Get dorm/apartment preference
+router.get('/get-housingpref', async (req, res) => {
+    const user_id = req.query.user_id;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const housingPref = await getHousingPreference(user_id);
+        res.status(200).json(housingPref);
+    } catch (error) {
+        console.error("Error finding housing preference.", error);
+        res.status(500).json(createErrorObj("Failed find housing preference. Please try again later."));
     }
 });
 

@@ -361,3 +361,40 @@ export async function getAllTags() {
       });
   });
 }
+
+// setting apartment/dorm preference
+export async function toggleDormAndApartment(user_id){
+    return new Promise((resolve, reject) => {
+        const query = `
+            UPDATE ${tableNames.u_generaldata}
+            SET 
+                show_dorm = NOT show_dorm,
+                show_apartment = NOT show_apartment
+            WHERE user_id = ?
+        `;
+        db.query(query, [user_id], (err, results) => {
+            if (err){
+                console.error("Trouble toggling dorm and apartment", err);
+                reject(err);
+                return;
+            }
+            
+            resolve(results);
+        });
+    });
+}
+
+// getting apartment/dorm preference
+export async function getHousingPreference(user_id) {
+    return new Promise((resolve, reject) => {
+        const queryString = `SELECT show_dorm FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
+        db.query(queryString, [user_id], (err, results) => {
+            if (err) {
+                console.error("Error fetching housing preference:", err);
+                reject(err);
+                return;
+            }
+            resolve(results[0]);
+        });
+    });
+  }
