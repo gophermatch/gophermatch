@@ -136,7 +136,7 @@ export default function Top5Dorms({user_id, broadcaster}) {
       };
     
       return (
-        <div className="flex flex-col border-[1.5px] border-solid border-maroon_new rounded-md w-full p-[5px] font-roboto_slab"
+        <div className="flex flex-col border-[1.5px] border-solid border-maroon_new rounded-md w-full h-full p-[5px] font-roboto_slab"
              style={{ height: 'calc(100% * 1'}}>
           <div className="basis-[30px] flex text-[10px] lg:text-[15px] md:text-[12px] sm:text-[8px]">
             <div className="flex flex-row">
