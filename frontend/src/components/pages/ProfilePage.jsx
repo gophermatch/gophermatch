@@ -29,7 +29,7 @@ export default function ProfilePage() {
   const broadcaster = useMemo(() => new SaveBroadcaster(), []);
   const [isSaving, setIsSaving] = useState(false); // waiting for backend response
   const [isEditing, setIsEditing] = useState(false); // editing profile data
-  const [isDorm, setIsDorm] = useState(false); // dorm or apartment mode
+  const [isDorm, setIsDorm] = useState(true); // dorm or apartment mode
 
   const [nextKey, setNextKey] = useState(0); // incrementing key will cause profile card to re-mount
 

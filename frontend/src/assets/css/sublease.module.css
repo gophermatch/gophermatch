@@ -1,0 +1,15 @@
+.LinkClass {
+    pointer-events: none;
+  }
+  
+  .LinkClass:hover .ButtonClass {
+    pointer-events: auto;
+  }
+
+  .Roboto-condensed {
+    font-family: 'Roboto Condensed', sans-serif;
+  }
+  
+  .lightBold {
+    font-weight: 450;
+  }

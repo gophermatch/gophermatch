@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom/client'
 import Layout from "./components/Layout.jsx"
 import Match from "./components/pages/Match.jsx"
 import Settings from "./components/pages/Settings.jsx"
-import Inbox from "./components/pages/Inbox.jsx";
+import People from "./components/pages/People.jsx";
 import Login from "./components/pages/Login.jsx"
 import ErrorPage from "./components/pages/ErrorPage.jsx"
 import AccountCreation from "./components/pages/AccountCreation.jsx";
@@ -176,8 +176,8 @@ const router = createBrowserRouter([
                 element: <Settings />,
                 loader: unauthPageRedirect
             },{
-                path: "inbox",
-                element: <Inbox />,
+                path: "people",
+                element: <People />,
                 loader: unauthPageRedirect
             },{
               path: "saved",

@@ -126,7 +126,6 @@ router.get('/get-topfive', async (req, res) => {
 // Get poll questions for a user
 router.get('/poll-questions', async (req, res) => {
     const user_id = req.query.user_id;
-    console.log(user_id)
 
     if (!user_id) {
         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
@@ -269,14 +268,13 @@ router.get('/get-gendata', async (req, res) => {
     const {user_id} = req.query;
     const filter = req.query['filter[]'];
 
-    console.log(filter)
-
     if (!user_id) {
         return res.status(400).json({ error: "Missing parameters for get-gendata" });
     }
 
     try {
         const results = await getGeneralData(user_id, filter);
+        console.log(results)
         return res.json(results);
     } catch (error) {
         return res.status(500).json({ error: "Failed to get general data." });
@@ -299,11 +297,11 @@ router.get('/get-gendata', async (req, res) => {
     }
 */
 router.post('/set-gendata', async (req, res) => {
-    console.log()
     const { user_id, data } = req.body;
     if (!user_id || !data) {
         return res.status(400).json(createErrorObj("Missing parameters for set-gendata"));
     }
+    console.log("setgen", data)
 
     try {
         const results = await setGeneralData(user_id, data);
@@ -330,6 +328,7 @@ router.post('/update-user-tags', async (req, res) => {
     if (!user_id || !Array.isArray(tag_ids)) {
         return res.status(400).json({ error: 'Missing or invalid parameters' });
     }
+    console.log("taggy", tag_ids)
 
     try {
         await updateUserTags(user_id, tag_ids);
