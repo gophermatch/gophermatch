@@ -20,13 +20,13 @@ export function ProfileCard({user_id, isDorm, broadcaster, save_func}) {
           <div className="w-[25%] h-full min-w-[25%]">
           <Carousel user_id={user_id} editable={broadcaster ? true : false}></Carousel>
           </div>
-          <div className="flex flex-col gap-[3.6%]">
+          <div className="flex flex-col w-[70.5%] gap-[3.6%]">
             <div>
               <NameAndBio user_id={user_id} />
             </div>
             <div className="flex h-[50%] gap-[3.6%]">
               <div className="flex w-[55%] flex-col overflow-x-hidden gap-[7.2%]">
-                <div className={"flex h-[65%] border-dashed border-2 border-maroon overflow-y-auto overflow-x-hidden"}>
+                <div className={"flex h-[65%] overflow-y-auto overflow-x-hidden"}>
                   {isDorm ?
                     <Top5Dorms user_id={user_id} broadcaster={broadcaster} />
                     :

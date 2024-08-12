@@ -136,19 +136,18 @@ export default function Top5Dorms({user_id, broadcaster}) {
       };
     
       return (
-        <div className="flex flex-col border-[1.5px] border-solid border-maroon_new rounded-md w-full h-full p-[5px] font-roboto_slab"
-             style={{ height: 'calc(100% * 1'}}>
-          <div className="basis-[30px] flex text-[10px] lg:text-[15px] md:text-[12px] sm:text-[8px]">
+        <div className="flex flex-col border-[1.5px] border-solid border-maroon_new rounded-md w-[100%] h-full p-[5px] font-roboto_slab">
+          <div className="basis-[30px] flex text-[7px] lg:text-[15px] md:text-[12px] sm:text-[8px]">
             <div className="flex flex-row">
-              <input type="text" value={minPeople} onChange={e => handleChangePeople(e.target.value, setMinPeople)} className="ml-[0px] w-[15px] h-[15px] sm:h-[12px] sm:w-[12px] md:h-[16px] md:w-[16px] lg:h-[19px] lg:w-[19px] text-center bg-offwhite inline-block" />
+              <input type="text" value={minPeople} onChange={e => handleChangePeople(e.target.value, setMinPeople)} className="ml-[0px] aspect-square h-[10%] text-center bg-offwhite inline-block" />
               <div className="inline-block ml-[2px] mr-[2px]">-</div>
-              <input type="text" value={maxPeople} onChange={e => handleChangePeople(e.target.value, setMaxPeople)} className="w-[15px] h-[15px] sm:h-[12px] sm:w-[12px] md:h-[16px] md:w-[16px] lg:h-[19px] lg:w-[19px] text-center bg-offwhite inline-block" />
+              <input type="text" value={maxPeople} onChange={e => handleChangePeople(e.target.value, setMaxPeople)} className="aspect-square h-[10%] text-center bg-offwhite inline-block" />
               <div className="inline-block ml-[3px] md:ml-[5px]">People</div>
             </div>
             <div className="ml-auto w-[200px] text-right">{semesters}</div>
             {broadcaster && <button className="ml-[10px] bg-maroon text-white px-1 h-[20px] rounded-xl" onClick={() => setSemesters(semesters === "Both Semesters" ? "1 Semester" : "Both Semesters")}>^</button>}
           </div>
-          <hr className="border-t-1 mt-[-10px] sm:mt-[-15px] md:mt-[-10px] lg:mt-[-7px] border-t-solid border-maroon_new"></hr>
+          <hr className="border-t-1 mt-[-70%] sm:mt-[-60%] md:mt-[-70%] lg:mt-[-68%] xl:mt-[-50%] border-t-solid border-black"></hr>
           <div className="flex-1 overflow-auto">
             <p className="text-[10px] sm:text-[10px] lg:text-[14px]">{top5Data.question}</p>
             <div className="relative">
