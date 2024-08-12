@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { DateTime } from "luxon";
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
 import styles from '../../assets/css/sublease.module.css';
 
-export default function SubleaseEntry({ sublease, refreshFunc }) {
+export default function SubleaseEntry({ sublease, refreshFunc, sublease_id }) {
   const containerRef1 = useRef(null);
   const containerRef2 = useRef(null);
   const containerRef3 = useRef(null);
