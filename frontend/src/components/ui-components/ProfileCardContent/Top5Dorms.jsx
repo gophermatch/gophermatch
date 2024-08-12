@@ -140,14 +140,14 @@ export default function Top5Dorms({user_id, broadcaster}) {
           <div className="h-[15%] flex justify-center text-center text-[7px] lg:text-[15px] md:text-[12px] sm:text-[8px]">
             <div className="flex flex-row justify-center h-full">
               <input type="text" value={minPeople} onChange={e => handleChangePeople(e.target.value, setMinPeople)} className="ml-[0px] aspect-square h-[80%] text-center bg-offwhite" />
-              <div className="ml-[2px] mr-[2px]">-</div>
+              <div className="ml-[2px] mr-[2px] mt-[-5%]">-</div>
               <input type="text" value={maxPeople} onChange={e => handleChangePeople(e.target.value, setMaxPeople)} className="aspect-square h-[80%] text-center bg-offwhite" />
               <div className="ml-[3px] md:ml-[5px] h-full leading-none">People</div>
             </div>
             <div className="w-full text-right leading-none">{semesters}</div>
             {broadcaster && <button className="ml-[10px] bg-maroon text-white px-1 h-[20px] rounded-xl" onClick={() => setSemesters(semesters === "Both Semesters" ? "1 Semester" : "Both Semesters")}>^</button>}
           </div>
-          <hr className="border-t-1 border-t-solid border-black"></hr>
+          <hr className="border-t-1 border-t-solid border-maroon_new mt-[1.5%]"></hr>
           <div className="flex-1 overflow-y-scroll custom-scrollbar">
             <p className="text-[10px] sm:text-[10px] lg:text-[14px]">Dorms</p>
             <div className="relative">
