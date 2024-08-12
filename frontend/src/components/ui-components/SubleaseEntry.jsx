@@ -45,6 +45,30 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
     };
   }, []);
 
+  const [subleaseData, setSubleaseData] = useState({});
+
+  useEffect(() => {
+
+    if(!sublease && sublease_id)
+    {
+      fetchSubleaseData();
+    } 
+    else if (sublease)
+    {
+      setSubleaseData(sublease);
+    }
+
+  }, [sublease_id, sublease]);
+
+  async function fetchSubleaseData () {
+        
+    const result = await backend.get('/sublease/get', {params: {
+        sublease_id: sublease_id,
+    }});
+
+    await setSubleaseData(result.data);
+  }
+
   async function save() {
     try {
       console.log(sublease);
@@ -63,18 +87,18 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
   return (
     <div className={"mt-[10%] ml-[0%] min-h-[80px] h-[11vw] w-[90%] aspect-[16/3.3] flex items-center"}>
       <div className={"font-profile font-bold p-0 text-maroon_new h-full w-full bg-cream rounded-[20px]"}>
-        <div className={`h-[1.5rem] lg:h-[2rem] xl:h-[2.5rem] relative top-[-1vh] w-full ${sublease.premium ? 'bg-gold': 'bg-maroon_new'} rounded-t-[20px]`}>
+        <div className={`h-[1.5rem] lg:h-[2rem] xl:h-[2.5rem] relative top-[-1vh] w-full ${subleaseData.premium ? 'bg-gold': 'bg-maroon_new'} rounded-t-[20px]`}>
           <p className={"flex justify-between text-white text-[1.5vw] w-full ml-[1vw] mt-[1vh] font-roboto_slab"}>
             <span className="mt-[0.3%] ml-[1.5%] flex flex-row justify-center items-center whitespace-nowrap">
               <p className={`${styles.lightBold} text-[100%] flex-shrink-0`}>
-                {sublease.building_name}
+                {subleaseData.building_name}
               </p>
               <p className="text-white xl:text-[15px] text-[9px] ml-[1vw] lg:text-[13px] sm:mt-[3.25px] xl:mt-[2px] flex-shrink-0">
-                {sublease.building_address}
+                {subleaseData.building_address}
               </p>
             </span>
             <span className={"mt-[1%] mr-[3%] inline-block text-right font-light text-[80%]"}>
-              Available {DateTime.fromISO(sublease.sublease_start_date).toFormat('MM/dd/yyyy')}-{DateTime.fromISO(sublease.sublease_end_date).toFormat('MM/dd/yyyy')}
+              Available {DateTime.fromISO(subleaseData.sublease_start_date).toFormat('MM/dd/yyyy')}-{DateTime.fromISO(subleaseData.sublease_end_date).toFormat('MM/dd/yyyy')}
             </span>
           </p>
         </div>
@@ -83,7 +107,7 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
             <div className={`flex flex-col font-roboto_condensed`}>
               <div className="flex flex-row justify-between items-center">
                 <span className="ml-[8%] mt-[3%]">Pets</span>
-                <span className="mr-[8%] mt-[3%] font-light text-black">{sublease.pets_allowed}</span>
+                <span className="mr-[8%] mt-[3%] font-light text-black">{subleaseData.pets_allowed}</span>
               </div>
               <div className="w-full flex justify-center mt-[4px]">
                 <div className="h-[0.5px] w-[95%] bg-black"></div>
@@ -104,46 +128,46 @@ export default function SubleaseEntry({ sublease, refreshFunc }) {
           <div className="flex flex-col ml-[10px] w-[33%] bg-light_gray rounded-[12px] font-roboto_condensed" ref={containerRef2}>
             <div className="flex flex-row justify-between items-center"> 
               <span className="ml-[8%] mt-[3%]">Kitchen</span>
-              <span className="mr-[8%] mt-[3%] font-light text-black justify-end">{sublease.has_kitchen}</span>
+              <span className="mr-[8%] mt-[3%] font-light text-black justify-end">{subleaseData.has_kitchen}</span>
             </div>
             <div className="w-full flex justify-center mt-[4px]">
               <div className="h-[0.5px] w-[95%] bg-black"></div>
             </div>
             <div className="flex flex-row justify-between items-center"> 
               <span className="ml-[8%] mt-[2%]">Laundry</span>
-              <span className="mr-[8%] mt-[2%] font-light text-black">{sublease.has_laundry}</span>
+              <span className="mr-[8%] mt-[2%] font-light text-black">{subleaseData.has_laundry}</span>
             </div>
             <div className="w-full flex justify-center mt-[4px]">
               <div className="h-[0.5px] w-[95%] bg-black"></div>
             </div>
             <div className="flex flex-row justify-between items-center"> 
               <span className="ml-[8%] mt-[2%]">Bathrooms</span>
-              <span className="mr-[8%] mt-[2%] font-light text-black">{sublease.num_bathrooms}</span>
+              <span className="mr-[8%] mt-[2%] font-light text-black">{subleaseData.num_bathrooms}</span>
             </div>
           </div>
           <div className="flex flex-col ml-[12px] w-[33%] bg-light_gray rounded-[12px] font-roboto_condensed" ref={containerRef3}>
             <div className="flex flex-row justify-between items-center"> 
               <span className="ml-[8%] mt-[3%]">Parking</span>
-              <span className="mr-[8%] mt-[3%] whitespace-nowrap font-light text-black">{sublease.has_parking}</span>
+              <span className="mr-[8%] mt-[3%] whitespace-nowrap font-light text-black">{subleaseData.has_parking}</span>
             </div>
             <div className="w-full flex justify-center mt-[4px]">
               <div className="h-[0.5px] w-[95%] bg-black"></div>
             </div>
             <div className="flex flex-row justify-between items-center"> 
               <span className="ml-[8%] mt-[2%]">Gym</span>
-              <span className="mr-[8%] mt-[2%] font-light text-black">{sublease.has_gym ? "Yes" : "No"}</span>
+              <span className="mr-[8%] mt-[2%] font-light text-black">{subleaseData.has_gym ? "Yes" : "No"}</span>
             </div>
             <div className="w-full flex justify-center mt-[4px]">
               <div className="h-[0.5px] w-[95%] bg-black"></div>
             </div>
             <div className="flex flex-row justify-between items-center">
               <span className="ml-[8%] mt-[2%]">Roommates</span>
-              <span className="mr-[8%] mt-[2%] font-light text-black">{sublease.num_roommates}</span>
+              <span className="mr-[8%] mt-[2%] font-light text-black">{subleaseData.num_roommates}</span>
             </div>
           </div>
           <div className={`flex flex-row items-center whitespace-nowrap mt-[-10%] font-roboto_slab`}>
             <span className="font-extrabold text-[1.25vw]" style={{ marginLeft: marginLeft }}>
-              ${sublease.rent_amount}
+              ${subleaseData.rent_amount}
             </span>
             <span className="font-light text-[1.25vw] ml-[6%] mt-[-1%]">per month</span>
           </div>

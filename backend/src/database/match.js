@@ -176,12 +176,11 @@ export async function getSavedMatches(userId) {
 }
 
 // Function to delete a match decision from the database.
-export async function deleteMatchDecision(userId, matchUserId, decision) {
+export async function deleteMatchDecision(userId, matchUserId) {
     try {
         const { queryString, values } = buildDeleteString(tableNames.u_matches, {
             user_id: userId,
-            match_user_id: matchUserId,
-            match_status: decision
+            match_user_id: matchUserId
         });
 
         // Execute the query to delete the specified decision.
@@ -207,7 +206,7 @@ export async function deleteInboxMatch(user1Id, user2Id) {
 
         // Execute the query to delete the specified decision.
         await db.query(queryString, values);
-        deleteMatchDecision(user1Id, user2Id, "match");
+        deleteMatchDecision(user1Id, user2Id);
         // Log the successful deletion.
         // console.log(`Deleted inbox match for user1_id=${user1Id} and user2_id=${user2Id}.`);
 
