@@ -129,10 +129,10 @@ export default function SubleaseCreation()
   
 
   return (
-    <div className="max-w-lg mx-auto">
+    <div className="max-w-lg mx-auto font-roboto_condensed text-black">
       <br></br>
-      <h2 className="text-xl font-semibold mb-4">Sublease Form</h2>
-      <form className="py-5 overflow-y-scroll max-h-[90vh]" onSubmit={handleSubmit} style={{
+      <h2 className="text-xl font-extrabold font-roboto_slab text-maroon_dark mb-4">Sublease Form</h2>
+      <form className="overflow-y-scroll max-h-[90vh]" onSubmit={handleSubmit} style={{
         WebkitOverflowScrolling: 'touch',
         '&::-webkit-scrollbar': {
           display: 'none'
@@ -144,13 +144,13 @@ export default function SubleaseCreation()
       }}>
         <div className="mb-4 flex">
           <div className="w-2/3 pr-2">
-            <label htmlFor="building_name" className="block mb-1">Building Name</label>
-            <input type="text" id="building_name" name="building_name" value={formData.building_name} onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full" placeholder="Enter building name" />
+            <label htmlFor="building_name" className="block mb-1 text-maroon">Building Name</label>
+            <input type="text" id="building_name" name="building_name" value={formData.building_name} onChange={handleChange} className="border border-maroon_dark rounded px-3 py-2 w-full" placeholder="Enter building name" />
           </div>
           <div className="w-1/3 pl-2">
-            <label htmlFor="housing_type" className="block mb-1">Building Type</label>
+            <label htmlFor="housing_type" className="block mb-1 text-maroon">Building Type</label>
             <select id="housing_type" name="housing_type" value={formData.housing_type} onChange={handleChange}
-                    className="border border-gray-300 rounded px-3 py-2 w-full">
+                    className="border border-maroon_dark rounded px-3 py-2 w-full">
               <option value="House">House</option>
               <option value="Apartment">Apartment</option>
             </select>
@@ -158,39 +158,39 @@ export default function SubleaseCreation()
         </div>
 
         <div className="mb-4">
-          <label htmlFor="building_address" className="block mb-1">Building Address (Optional)</label>
+          <label htmlFor="building_address" className="block mb-1 text-maroon">Building Address (Optional)</label>
           <input type="text" id="building_address" name="building_address" value={formData.building_address}
-                 onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full"
+                 onChange={handleChange} className="border border-maroon_dark rounded px-3 py-2 w-full"
                  placeholder="Street Address, City, State, Zip Code" />
         </div>
 
         <div className="mb-4 flex">
           <div className="w-1/3 pr-2">
-            <label htmlFor="num_bedrooms" className="block mb-1">Bedrooms</label>
+            <label htmlFor="num_bedrooms" className="block mb-1 text-maroon">Bedrooms</label>
             <input type="number" id="num_bedrooms" name="num_bedrooms" value={formData.num_bedrooms}
-                   onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full"
+                   onChange={handleChange} className="border border-maroon_dark rounded px-3 py-2 w-full"
                    placeholder="Enter number of bedrooms" min={0}/>
           </div>
           <div className="w-1/3 pl-2 pr-2">
-            <label htmlFor="num_bathrooms" className="block mb-1">Bathrooms</label>
+            <label htmlFor="num_bathrooms" className="block mb-1 text-maroon">Bathrooms</label>
             <input type="number" id="num_bathrooms" name="num_bathrooms" value={formData.num_bathrooms}
-                   onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full"
+                   onChange={handleChange} className="border border-maroon_dark rounded px-3 py-2 w-full"
                    placeholder="Enter number of bathrooms" min={0}/>
           </div>
           <div className="w-1/3 pl-2">
-            <label htmlFor="num_roommates" className="block mb-1">Roommates</label>
+            <label htmlFor="num_roommates" className="block mb-1 text-maroon">Roommates</label>
             <input type="number" id="num_roommates" name="num_roommates" value={formData.num_roommates}
-                   onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full"
+                   onChange={handleChange} className="border border-maroon_dark rounded px-3 py-2 w-full"
                    placeholder="Enter number of roommates" min={0}/>
           </div>
         </div>
 
         <div className="mb-4">
-          <label htmlFor="rent_amount" className="block mb-1">Monthly Rent</label>
+          <label htmlFor="rent_amount" className="block mb-1 text-maroon">Monthly Rent</label>
           <div className="flex items-center">
             <span className="mr-2">$</span>
             <input type="number" id="rent_amount" name="rent_amount" value={formData.rent_amount}
-                   onChange={handleChange} className="border border-gray-300 rounded px-3 py-2 w-full"
+                   onChange={handleChange} className="border border-maroon_dark rounded px-3 py-2 w-full"
                    placeholder="Enter rent amount" min={0} max={10000}/>
           </div>
         </div>
@@ -198,70 +198,70 @@ export default function SubleaseCreation()
         {/* Dropdowns for amenities */}
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <label htmlFor="pets_allowed" className="block mb-1">Pets Allowed</label>
+            <label htmlFor="pets_allowed" className="block mb-1 text-maroon">Pets Allowed</label>
             <select id="pets_allowed" name="pets_allowed" value={formData.pets_allowed} onChange={handleChange}
-                    className="border border-gray-300 rounded px-3 py-2 w-full">
+                    className="border border-maroon_dark rounded px-3 py-2 w-full">
               <option value="Any">Any</option>
               <option value="Limited">Limited</option>
               <option value="None">None</option>
             </select>
           </div>
           <div>
-            <label htmlFor="has_kitchen" className="block mb-1">Kitchen</label>
+            <label htmlFor="has_kitchen" className="block mb-1 text-maroon">Kitchen</label>
             <select id="has_kitchen" name="has_kitchen" value={formData.has_kitchen} onChange={handleChange}
-                    className="border border-gray-300 rounded px-3 py-2 w-full">
+                    className="border border-maroon_dark rounded px-3 py-2 w-full">
               <option value="Full">Full</option>
               <option value="Partial">Partial</option>
               <option value="None">None</option>
             </select>
           </div>
           <div>
-            <label htmlFor="has_laundry" className="block mb-1">Laundry</label>
+            <label htmlFor="has_laundry" className="block mb-1 text-maroon">Laundry</label>
             <select id="has_laundry" name="has_laundry" value={formData.has_laundry} onChange={handleChange}
-                    className="border border-gray-300 rounded px-3 py-2 w-full">
+                    className="border border-maroon_dark rounded px-3 py-2 w-full">
               <option value="Included">Included</option>
               <option value="Additional Cost">Additional Cost</option>
               <option value="None">None</option>
             </select>
           </div>
           <div>
-            <label htmlFor="has_pool" className="block mb-1">Pool</label>
+            <label htmlFor="has_pool" className="block mb-1 text-maroon">Pool</label>
             <select id="has_pool" name="has_pool" value={(formData.has_pool === true ? "Yes" : "No")} onChange={handleChange}
-                    className="border border-gray-300 rounded px-3 py-2 w-full">
+                    className="border border-maroon_dark rounded px-3 py-2 w-full">
               <option value="Yes">Yes</option>
               <option value="No">No</option>
             </select>
           </div>
           <div>
-            <label htmlFor="has_gym" className="block mb-1">Gym</label>
+            <label htmlFor="has_gym" className="block mb-1 text-maroon">Gym</label>
             <select id="has_gym" name="has_gym" value={(formData.has_gym === true ? "Yes" : "No")} onChange={handleChange}
-                    className="border border-gray-300 rounded px-3 py-2 w-full">
+                    className="border border-maroon_dark rounded px-3 py-2 w-full">
               <option value="Yes">Yes</option>
               <option value="No">No</option>
             </select>
           </div>
           <div>
-            <label htmlFor="is_furnished" className="block mb-1">Furnished</label>
+            <label htmlFor="is_furnished" className="block mb-1 text-maroon">Furnished</label>
             <select id="is_furnished" name="is_furnished" value={formData.is_furnished} onChange={handleChange}
-                    className="border border-gray-300 rounded px-3 py-2 w-full">
+                    className="border border-maroon_dark rounded px-3 py-2 w-full">
               <option value="Fully">Fully</option>
               <option value="Partially">Partially</option>
               <option value="No">No</option>
             </select>
           </div>
           <div>
-            <label htmlFor="has_parking" className="block mb-1">Parking</label>
+            <label htmlFor="has_parking" className="block mb-1 text-maroon">Parking</label>
             <select id="has_parking" name="has_parking" value={formData.has_parking} onChange={handleChange}
-                    className="border border-gray-300 rounded px-3 py-2 w-full">
+                    className="border border-maroon_dark rounded px-3 py-2 w-full">
               <option value="Included">Included</option>
               <option value="Additional Cost">Additional Cost</option>
               <option value="None">None</option>
             </select>
           </div>
           <div>
-            <label htmlFor="premium" className="block mb-1">Premium Sublease</label>
+            <label htmlFor="premium" className="block mb-1 text-maroon">Premium Sublease</label>
             <select id="premium" name="premium" value={(formData.premium === true ? "Yes" : "No")} onChange={handleChange}
-                    className="border border-gray-300 rounded px-3 py-2 w-full">
+                    className="border border-maroon_dark rounded px-3 py-2 w-full">
               <option value="Yes">Yes</option>
               <option value="No">No</option>
             </select>
@@ -269,30 +269,30 @@ export default function SubleaseCreation()
         </div>
 
         <div className="mb-4">
-          <label htmlFor="sublease_start_date" className="block mb-1">Sublease Start Date</label>
+          <label htmlFor="sublease_start_date" className="block mb-1 text-maroon">Sublease Start Date</label>
           <input
             type="date"
             id="sublease_start_date"
             name="sublease_start_date"
             value={formData.sublease_start_date}
             onChange={handleChange}
-            className="border border-gray-300 rounded px-3 py-2 w-full"
+            className="border border-maroon_dark rounded px-3 py-2 w-full"
           />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="sublease_end_date" className="block mb-1">Sublease End Date</label>
+          <label htmlFor="sublease_end_date" className="block mb-1 text-maroon">Sublease End Date</label>
           <input
             type="date"
             id="sublease_end_date"
             name="sublease_end_date"
             value={formData.sublease_end_date}
             onChange={handleChange}
-            className="border border-gray-300 rounded px-3 py-2 w-full"
+            className="border border-maroon_dark rounded px-3 py-2 w-full"
           />
         </div>
 
-        <div><button type="submit" className={`text-white mt-4 px-4 w-full py-2 rounded ${validateData() ? 'bg-maroon_new opacity-100' : 'bg-inactive_gray pointer-events-none opacity-80'}`}>Submit</button></div>
+        <div><button type="submit" className={`text-white mt-4 px-4 w-full py-2 rounded ${validateData() ? 'bg-maroon_new opacity-100' : 'bg-maroon_new pointer-events-none opacity-40'}`}>Submit</button></div>
 
 
       </form>
