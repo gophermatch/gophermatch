@@ -1,20 +1,24 @@
 import { useState, useEffect } from "react";
 import backend from "../../../backend";
 import currentUser from '../../../currentUser.js';
+import hamburger from "../../../assets/images/hamburger.svg";
 
-/*
-    Currently only the button to switch between both semesters and
-    one semester in conditional based on edit mode. The min and max
-    people also needs to be made conditional, and the UI should be
-    cleaned up a bit in edit mode. The component is in view mode
-    if broadcaster is null, otherwise its in edit mode.
+const DORM_OPTIONS = [
+    "Comstock",
+    "Middlebrook",
+    "17th",
+    "Pioneer",
+    "Bailey",
+    "Centennial",
+    "Frontier",
+]
 
-    Data should ONLY be saved inside the broadcaster useEffect. It
-    looks like the order is immediately being sent to the backend, this
-    needs to be switched to all be done while saving. Please delete
-    this comment once its fixed so some pour soul doesn't have to try
-    to figure out where the saving issue is.
-*/
+const peopleDict = {
+    "1": "Single",
+    "2": "Double",
+    "3": "Triple",
+    "4": "Quad",
+}
 
 export default function Top5Dorms({user_id, broadcaster}) {
 
@@ -27,30 +31,52 @@ export default function Top5Dorms({user_id, broadcaster}) {
     const [holdPos, setHoldPos] = useState(null);
     const [holdBase, setHoldBase] = useState(null);
     const [heldDorm, setHeldDorm] = useState('');
+    const [openedDropdown, setOpenedDropdown] = useState(undefined); // integer representing index
     const mousePos = useMousePosition();
 
     const [top5Dorms, setTop5Dorms] = useState(top5Data.inputs); //TODO: this seems like duplicate state
-    const [minPeople, setMinPeople] = useState(2);
-    const [maxPeople, setMaxPeople] = useState(4);
-    const [semesters, setSemesters] = useState("Both Semesters");
+    const [numPeople, setNumPeople] = useState(1);
+
+    const unusedOptions = DORM_OPTIONS.filter(option => !top5Dorms.includes(option));
+
+    function swapDormOption(i, value) {
+        const dorms = [...top5Dorms]
+        dorms[i] = value
+        setTop5Dorms(dorms)
+        setOpenedDropdown(undefined)
+    }
 
     useEffect(() => {
         if (broadcaster) {
             const cb = () => {
-                //TODO: should be able to swap this return out for just `return backend.put(...)` for data saving
-                return new Promise((resolve) => {
-                    console.log("Saving data")
-                    resolve()
-                })
+                return Promise.all([
+                    backend.put('/profile/insert-topfive', {
+                        user_id: user_id,
+                        question: top5Data.question,
+                        input1: top5Dorms[0],
+                        input2: top5Dorms[1],
+                        input3: top5Dorms[2],
+                        input4: top5Dorms[3],
+                        input5: top5Dorms[4]
+                    }),
+                    backend.post('profile/set-gendata', {
+                        user_id: user_id,
+                        data: {num_residents: numPeople}
+                    })
+                ])
             }
 
             broadcaster.connect(cb)
             return () => broadcaster.disconnect(cb)
         }
-      }, [broadcaster])
+      }, [broadcaster, top5Dorms, numPeople])
 
     useEffect(() => {
         async function fetchData() {
+          backend.get('/profile/get-gendata', {params: {
+            user_id: user_id,
+            filter: ['num_residents']
+          }}).then(res => setNumPeople(res.data[0].num_residents));
           try {
 
             const topfive = await backend.get('/profile/get-topfive', {
@@ -70,6 +96,13 @@ export default function Top5Dorms({user_id, broadcaster}) {
                     topfive.data.input5,
                 ]
               });
+              setTop5Dorms([
+                topfive.data.input1,
+                topfive.data.input2,
+                topfive.data.input3,
+                topfive.data.input4,
+                topfive.data.input5
+              ])
             }
           } catch (error) {
             console.error('Error fetching user profile:', error);
@@ -79,30 +112,7 @@ export default function Top5Dorms({user_id, broadcaster}) {
         fetchData();
       }, [user_id]);
 
-    function handleChangePeople(value, stateDispatch) {
-        const digit = value.slice(-1);
-        if (!isNaN(digit)) {
-            stateDispatch(digit);
-        }
-    }
-
     const offset = holdPos ? mousePos.y - holdPos.y : undefined;
-
-    const updateTop5Order = async (updatedDorms) => {
-        try {
-            await backend.put('/profile/insert-topfive', {
-                user_id: currentUser.user_id,
-                question: top5Data.question,
-                input1: updatedDorms[0],
-                input2: updatedDorms[1],
-                input3: updatedDorms[2],
-                input4: updatedDorms[3],
-                input5: updatedDorms[4]
-            });
-        } catch (error) {
-            console.error('Error updating top 5 order:', error);
-        }
-    };
 
     useEffect(() => {
         if (!holdPos) {
@@ -115,7 +125,6 @@ export default function Top5Dorms({user_id, broadcaster}) {
             setTop5Dorms([...top5Dorms]);
             setHoldBase(v => v + offset);
             setHoldPos(mousePos);
-            updateTop5Order(top5Dorms); // Update backend with new order
         }
 
         if (offset > 35 && dormIndex < top5Dorms.length - 1) { // lowered down a position
@@ -123,7 +132,6 @@ export default function Top5Dorms({user_id, broadcaster}) {
             setTop5Dorms([...top5Dorms]);
             setHoldBase(v => v + offset);
             setHoldPos(mousePos);
-            updateTop5Order(top5Dorms); // Update backend with new order
         }
     }, [mousePos]);
 

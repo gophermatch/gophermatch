@@ -6,31 +6,28 @@ import './apartmentStyles.css';
 import NumericTextbox from "./NumericTextbox.jsx";
 import MonthDropdown from "./MonthDropdown.jsx";
 
-export default function ApartmentInfo({user_id, broadcaster}) {
+export default function ApartmentInfo({ user_id, broadcaster }) {
 
   const [genData, setGenData] = useState({});
-  const livingRef = useRef(null);
 
   useEffect(() => {
-    async function fetchData () {
-      const response = await backend.get('/profile/get-gendata', {
+    backend.get('/profile/get-gendata', {
       params: {
         user_id: user_id,
-        filter: [
-        'num_beds', 'num_bathrooms', 'num_residents', 'move_in_month', 'move_out_month', 'rent', 'building'
-        ]
+        filter: ['num_beds', 'num_bathrooms', 'num_residents', 'move_in_month', 'move_out_month', 'rent', 'building']
       }
-      });
+    }).then(res => {
+      setGenData(res.data[0]);
+      setOriginalGenData(res.data[0]); // Store the original data
+    }).catch(console.error);
 
-      if(response.data) setGenData(response.data[0]);
-      else console.log("Something went wrong fetching genData!");
-    }
+    backend.get('profile/all-tag-ids')
+      .then(tagReq => setAllTagIds(tagReq.data.tag_ids))
+      .catch(console.error);
 
-    fetchData();
-
-    console.log(genData);
-
-    fetchAllTags().then(fetchUserTags);
+    backend.get('profile/user-selected-tags', { params: { user_id: currentUser.user_id } })
+      .then(tagReq => setActiveTags(tagReq.data.tag_ids))
+      .catch(console.error);
   }, [user_id]);
 
   // Fetch a map of tag IDs to their text values from the database
@@ -92,38 +89,17 @@ export default function ApartmentInfo({user_id, broadcaster}) {
 
   }
 
-  const resizeFont = () => {
-    if (livingRef.current) {
-        const parentHeight = livingRef.current.clientHeight;
-        const fontSize = parentHeight * 0.13; // Adjust this multiplier as needed
-        livingRef.current.style.fontSize = `${fontSize}px`;
-    }
-};
-
-  useEffect(() => {
-      const observer = new ResizeObserver(resizeFont);
-      if (livingRef.current) {
-          observer.observe(livingRef.current);
-      }
-
-      resizeFont(); // Ensure the font size is set correctly on mount or when the page is revisited
-
-      return () => {
-          observer.disconnect(); // Clean up the observer on unmount
-      };
-  }, []);
-
   return (
     <div className={"w-full h-[100%] rounded-lg border-solid border-2 border-maroon font-roboto_slab font-medium"} ref={livingRef}>
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
         {/*Top header panel with apt name*/}
-        <div className={"flex text-[100%] mt-[0%]"}>
+        <div className={"flex grow-[1]"}>
           {/* TODO: Should this just be replaced by tags?*/}
           Looking to live in {genData?.building}
         </div>
         {/*Middle info panel with apt info*/}
-        <div className={"flex w-full justify-center items-center mt-[1%] flex-col font-[350]"}>
-          <div className={"flex w-full justify-center gap-[3.6%]"}>
+        <div className={"flex grow-[1] w-full justify-center items-center flex-col font-[350]"}>
+          <div className={"flex w-full justify-center gap-[1vw]"}>
             <span>{broadcaster ? <NumericTextbox value={genData?.num_beds} min={1} max={6}/> : <b>{genData?.num_beds}</b>} bed</span>
             <span>{broadcaster ? <NumericTextbox value={genData?.num_bathrooms} min={1} max={6}/> : <b>{genData?.num_bathrooms}</b>} bath</span>
             <span>{broadcaster ? <>$<NumericTextbox wide={true} value={genData?.rent} min={0} max={9999}/></> : <b>${genData?.rent}</b>} budget</span>
@@ -133,19 +109,27 @@ export default function ApartmentInfo({user_id, broadcaster}) {
 
           <span className={"whitespace-nowrap"}>{broadcaster ? <>
           <NumericTextbox value={genData?.num_residents} min={1} max={6}/></>
-          : <b className="ml-[20%]">{genData?.num_residents}</b>}
+          : <b>{genData?.num_residents}</b>}
           &nbsp;residents</span>
-            <span className="mt-[-3px] ml-[5%]"><MonthDropdown initialValue={genData.move_in_month}/> to <MonthDropdown initialValue={genData.move_out_month}/></span>
+            <span><MonthDropdown initialValue={genData.move_in_month}/> to <MonthDropdown initialValue={genData.move_out_month}/></span>
           </div>
         </div>
 
         {/*Bottom panel with tags*/}
-        <div className={"flex  w-[98%] h-[40%] p-2 max-h-[80%] grow-[0] flex-wrap gap-1 overflow-y-scroll custom-scrollbar"}>
+        <div className={"flex w-[98%] p-2 max-h-[80%] grow-[0] flex-wrap gap-1 overflow-y-scroll custom-scrollbar"}>
           {allTagIds.map(tag => {
             const tagValue = activeTags.includes(tag.tag_id);
-            return(
-            <ApartmentTag value = {tagValue} id={tag.tag_id} text={tag.tag_text}
-             editing={true} toggleFunction={onToggleTag} />)})}
+            return (
+              <ApartmentTag 
+                key={tag.tag_id} 
+                value={tagValue} 
+                id={tag.tag_id} 
+                text={tag.tag_text} 
+                editing={!!broadcaster} 
+                toggleFunction={onToggleTag} 
+              />
+            );
+          })}
         </div>
       </div>
     </div>

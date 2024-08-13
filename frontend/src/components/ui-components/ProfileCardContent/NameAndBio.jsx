@@ -11,6 +11,49 @@ export default function NameAndBio({ user_id, broadcaster }) {
     const majorRef = useRef(null);
     const bioRef = useRef(null);
 
+    const majorList = [
+      'Accounting',
+      'Aerospace Engineering',
+      'Anthropology',
+      'Architecture',
+      'Biochemistry',
+      'Biology',
+      'Biomedical Engineering',
+      'Business Administration',
+      'Chemical Engineering',
+      'Chemistry',
+      'Civil Engineering',
+      'Communications',
+      'Computer Engineering',
+      'Computer Science',
+      'Economics',
+      'Education',
+      'Electrical Engineering',
+      'English',
+      'Environmental Science',
+      'Finance',
+      'Geography',
+      'Graphic Design',
+      'Health Sciences',
+      'History',
+      'Industrial Engineering',
+      'Information Technology',
+      'International Business',
+      'Journalism',
+      'Law',
+      'Marketing',
+      'Mathematics',
+      'Mechanical Engineering',
+      'Nursing',
+      'Philosophy',
+      'Physics',
+      'Political Science',
+      'Psychology',
+      'Public Health',
+      'Sociology',
+      'Statistics'
+  ];
+  
     useEffect(() => {
         async function fetchData() {
             try {
@@ -40,21 +83,23 @@ export default function NameAndBio({ user_id, broadcaster }) {
         }
 
         fetchData();
-    }, [user_id]);
-
+      }, [user_id]);
+    
     useEffect(() => {
         if (broadcaster) {
-            const cb = () => {
-                return new Promise((resolve) => {
-                    console.log("Saving data");
-                    resolve();
-                });
-            }
+            const cb = () =>
+              backend.post('/profile/set-gendata', {
+                user_id: user_id,
+                data: {
+                  bio: bio,
+                  major: major
+                }
+              });
 
             broadcaster.connect(cb);
             return () => broadcaster.disconnect(cb);
         }
-    }, [broadcaster]);
+    }, [broadcaster, bio, major]);
 
     const resizeFont = () => {
         if (nameRef.current) {
@@ -94,12 +139,42 @@ export default function NameAndBio({ user_id, broadcaster }) {
             <div className={`${styles.name}`} ref={nameRef}>
                 {name}
             </div>
-            <div className={`${styles.major} mt-[-1.3%]`} ref={majorRef}>
-                {major}
+            <div className="mt-[-1vh] text-[2vh] font-[450]">
+                {broadcaster ? 
+                    <select
+                        id="selectionBox"
+                        value={major}
+                        onChange={(e) => setMajor(e.target.value)}
+                        className="border-2 rounded-lg mt-[1vh]"
+                    >
+                        {majorList.map((option, index) => (
+                            <option key={index} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select> 
+                    : major
+                }
+                <div className={`${styles.major} mt-[-1.3%]`} ref={majorRef}>
+                    {major}
+                </div>
             </div>
-            <div className={`${styles.bio} p-0 z-0 w-auto`} style={{ aspectRatio: '1 / 0.25' }}>
-                <div className={styles.bioText} ref={bioRef}>
-                    {bio}
+            <div className="w-full h-[12vh] rounded-lg mt-1.5 border border-maroon flex">
+                <p className="flex-1 text-[1.8vh] text-left font-normal">
+                    {broadcaster ? 
+                        <textarea
+                            className="w-full h-full p-2 border-none rounded-lg resize-none"
+                            value={bio}
+                            maxLength="200"
+                            onChange={(e) => setBio(e.target.value)}
+                        /> 
+                        : bio
+                    }
+                </p>
+                <div className={`${styles.bio} p-0 z-0 w-auto`} style={{ aspectRatio: '1 / 0.25' }}>
+                    <div className={styles.bioText} ref={bioRef}>
+                        {bio}
+                    </div>
                 </div>
             </div>
         </div>

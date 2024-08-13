@@ -7,7 +7,7 @@ import {
     deleteInboxMatch,
     getFilterResults,
     getUserUnseenMatches,
-    markUserMatchesAsSeen, getInteractedProfiles, unrejectAll
+    markUserMatchesAsSeen, getInteractedProfiles, unrejectAll, getMatchingShowDormValues
 } from "../database/match.js";
 
 const router = Router()
@@ -56,7 +56,11 @@ router.post('/filter-results', async (req, res) => {
 
         const interactedProfiles = await getInteractedProfiles(user_id);
 
-        const commonUserIds = userdataResults.filter(id => !interactedProfiles.includes(id) && id !== user_id);
+        const matchingShowDormValues = await getMatchingShowDormValues(user_id);
+
+        const commonUserIds = userdataResults
+            .filter(id => !interactedProfiles.includes(id) && id !== user_id)
+            .filter(id => matchingShowDormValues.includes(id));
 
         res.json(commonUserIds);
     } catch (error) {

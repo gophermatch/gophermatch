@@ -1,18 +1,19 @@
 import { Router } from 'express';
 import { AuthStatusChecker, loginUser, logoutUser } from '../auth.js'
 import { createErrorObj } from './routeutil.js'
-import { createSublease, getSublease, deleteSublease, getSubleases, updateSublease, saveSublease, deleteSavedSublease, getSavedSubleases } from "../database/sublease.js";
+import { createSublease, getSublease, deleteSublease, getSubleases, updateSublease, saveSublease, deleteSavedSublease, getSavedSubleases, getSavedSubleaseNew } from "../database/sublease.js";
 
 const router = Router()
 
+// Accepts either user_id or sublease_id, will use whichever is defined
 router.get('/get', async (req, res) => {
-    const { user_id } = req.query;
-    if (!user_id) {
-      return res.status(400).json({ message: "user_id is required" });
+    const { user_id, sublease_id } = req.query;
+    if (!user_id && !sublease_id) {
+      return res.status(400).json({ message: "user_id or sublease_id is required" });
     }
   
     try {
-      const sublease = await getSublease(user_id);
+      const sublease = await getSublease(user_id, sublease_id);
       res.json(sublease);
     } catch (err) {
       res.status(404).json({ message: err.message });
@@ -85,12 +86,11 @@ router.put('/update', async (req, res) =>{
 router.post('/save', async (req, res) =>{
   try {
     const {user_id, sublease_id} = req.body;
-    console.log(user_id)
-    console.log(sublease_id)
     if(!user_id || !sublease_id){
       return res.status(400).json({ error: "Missing required fields: user_id, sublease_id." });
     }
     await saveSublease(user_id, sublease_id);
+    console.log("Saved sublease")
     res.json({ message: 'Sublease successfully saved' });
   } catch (error) {
     console.error("Error saving sublease: ", error);
@@ -115,15 +115,30 @@ router.delete('/delete-save', async (req, res) =>{
 router.get('/get-saves', async (req, res) =>{
   try {
     const {user_id} = req.query;
-    console.log(user_id)
     if(!user_id){
       return res.status(400).json({ error: "Missing required fields: user_id." });
     }
     const subleases = await getSavedSubleases(user_id);
+    console.log(subleases)
     res.json(subleases);
   } catch (error) {
     console.error("Error getting saved sublease: ", error);
     res.status(500).json(createErrorObj('Error geting saved sublease', error.message));
+  }
+});
+
+router.get('/saved-subleases', async (req, res) =>{
+  console.log("saved-subleases")
+  try {
+    const {user_id} = req.query;
+    if(!user_id){
+      return res.status(400).json({ error: "Missing required fields: user_id." });
+    }
+    const subleases = await getSavedSubleaseNew(user_id);
+    res.json(subleases);
+  } catch (error) {
+    console.error("Error getting saved sublease details: ", error);
+    res.status(500).json(createErrorObj('Error geting saved sublease details', error.message));
   }
 });
 

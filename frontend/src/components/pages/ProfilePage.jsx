@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ProfileCard} from '../ui-components/ProfileCard';
 import currentUser from '../../currentUser';
+import backend from '../../backend';
 import pencil from "../../assets/images/pencil.svg";
 import close from "../../assets/images/red_x.svg";
 
@@ -28,9 +29,37 @@ export default function ProfilePage() {
   const broadcaster = useMemo(() => new SaveBroadcaster(), []);
   const [isSaving, setIsSaving] = useState(false); // waiting for backend response
   const [isEditing, setIsEditing] = useState(false); // editing profile data
-  const [isDorm, setIsDorm] = useState(false); // dorm or apartment mode
+  const [isDorm, setIsDorm] = useState(true); // dorm or apartment mode
 
   const [nextKey, setNextKey] = useState(0); // incrementing key will cause profile card to re-mount
+
+  async function dormToggleBackend() {
+    await backend.put('profile/toggle-dorm', {
+      user_id: currentUser.user_id
+    });
+  };
+
+  const getHousingPreference = async () => {
+    try{
+      const preference = await backend.get('profile/get-housingpref', {
+        params: {
+          user_id: currentUser.user_id
+        }
+      });
+
+      if(preference.data){
+        return preference.data.show_dorm;
+      }
+      return 0;
+    }catch(error){
+      console.error('Error fetching housing preference:', error);
+    }
+  };
+
+  const dormToggle = () => {
+    setIsDorm(!isDorm);
+    dormToggleBackend();
+  }
 
   function onSaveClick() {
     if (isSaving) {
@@ -63,6 +92,15 @@ export default function ProfilePage() {
     </button>
   )
 
+  useEffect(() => {
+    const fetchPreference = async () => {
+      const preference = await getHousingPreference();
+      setIsDorm(Boolean(preference));
+    };
+
+    fetchPreference();
+  }, []);
+
   return (
     <>
     <ProfileCard
@@ -70,6 +108,8 @@ export default function ProfilePage() {
       user_id={currentUser.user_id}
       isDorm={isDorm}
       broadcaster={isEditing ? broadcaster : null}
+      dormToggle={dormToggle}
+      profileMode={true}
     />
     {save_or_cancel}
     </>

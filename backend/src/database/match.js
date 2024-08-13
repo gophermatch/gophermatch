@@ -151,6 +151,51 @@ export async function getInteractedProfiles(user_id){
   });
 }
 
+export async function getMatchingShowDormValues(userId) {
+    return new Promise((resolve, reject) => {
+        // get the show_dorm value
+        const getShowDormQuery = `
+            SELECT show_dorm
+            FROM ${tableNames.u_generaldata}
+            WHERE user_id = ?;
+        `;
+
+        db.query(getShowDormQuery, [userId], (error, result) => {
+            if (error) {
+                console.error('Error fetching show_dorm value:', error);
+                reject(error);
+                return;
+            }
+
+            if (result.length === 0) {
+                resolve([]);
+                return;
+            }
+
+            const userShowDorm = result[0].show_dorm;
+
+            // query to find all user ids with the same show_dorm value
+            const getMatchingUsersQuery = `
+                SELECT user_id
+                FROM ${tableNames.u_generaldata}
+                WHERE show_dorm = ? AND user_id != ?;
+            `;
+
+            db.query(getMatchingUsersQuery, [userShowDorm, userId], (err, rows) => {
+                if (err) {
+                    console.error('Error fetching matching show_dorm values:', err);
+                    reject(err);
+                    return;
+                }
+
+                // extract user ids from the result and return them
+                const matchingUserIds = rows.map(row => row.user_id);
+                resolve(matchingUserIds);
+            });
+        });
+    });
+}
+
 // Function to retrieve all user IDs that a specified user has marked as 'unsure'.
 export async function getSavedMatches(userId) {
     return new Promise((resolve, reject) => {
@@ -176,12 +221,11 @@ export async function getSavedMatches(userId) {
 }
 
 // Function to delete a match decision from the database.
-export async function deleteMatchDecision(userId, matchUserId, decision) {
+export async function deleteMatchDecision(userId, matchUserId) {
     try {
         const { queryString, values } = buildDeleteString(tableNames.u_matches, {
             user_id: userId,
-            match_user_id: matchUserId,
-            match_status: decision
+            match_user_id: matchUserId
         });
 
         // Execute the query to delete the specified decision.
@@ -207,7 +251,7 @@ export async function deleteInboxMatch(user1Id, user2Id) {
 
         // Execute the query to delete the specified decision.
         await db.query(queryString, values);
-        deleteMatchDecision(user1Id, user2Id, "match");
+        deleteMatchDecision(user1Id, user2Id);
         // Log the successful deletion.
         // console.log(`Deleted inbox match for user1_id=${user1Id} and user2_id=${user2Id}.`);
 

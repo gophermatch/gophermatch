@@ -1,29 +1,6 @@
-import { useEffect, useRef } from "react";
 
-export default function Qna({ qna, setQna }) {
-    const containerRef = useRef(null);
 
-    const resizeFont = () => {
-        if (containerRef.current) {
-            const parentHeight = containerRef.current.clientHeight;
-            const fontSize = parentHeight * 0.13; // Adjust this multiplier as needed
-            containerRef.current.style.fontSize = `${fontSize}px`;
-        }
-    };
-
-    useEffect(() => {
-        const observer = new ResizeObserver(resizeFont);
-        if (containerRef.current) {
-            observer.observe(containerRef.current);
-        }
-
-        resizeFont(); // Ensure the font size is set correctly on mount or when the page is revisited
-
-        return () => {
-            observer.disconnect(); // Clean up the observer on unmount
-        };
-    }, []);
-
+export default function Qna({qna, setQna}) {
     return (
         <div 
             ref={containerRef}
@@ -39,6 +16,26 @@ export default function Qna({ qna, setQna }) {
                         Empty
                     </div>
                 </div>
+    <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon xl:text-lg lg: text-md md:text-sm sm:text-xs font-roboto_slab font-medium"}>
+    <div className={"flex w-full h-full justify-center items-center flex-col px-[1%]"}>
+        <div className={"flex w-full whitespace-nowrap"}>
+            <div className={"flex-1"}>
+                Preferred Room Activity Level
+            </div>
+            <div className={"flex-1 text-right flex justify-end align-middle"}>
+                {broadcaster ?
+                    <OptionDropdown
+                        value={room_activity}
+                        name={"room_activity"}
+                        dropdown={currentDropdown}
+                        setDropdown={setCurrentDropdown}
+                        dispatch={setRoomActivity}
+                    />
+                    :
+                    room_activity
+                }
+            </div>
+        </div>
 
                 <div className={"flex w-[97%] h-[5%] border-b"}></div>
 
@@ -50,6 +47,24 @@ export default function Qna({ qna, setQna }) {
                         Man of god
                     </div>
                 </div>
+        <div className={"flex w-full whitespace-nowrap"}>
+            <div className={"flex-1"}>
+                Substance Preference
+            </div>
+            <div className={"flex-1 text-right flex justify-end align-middle"}>
+                {broadcaster ?
+                    <OptionDropdown
+                        value={substances}
+                        name={"substances"}
+                        dropdown={currentDropdown}
+                        setDropdown={setCurrentDropdown}
+                        dispatch={setSubstances}
+                    />
+                    :
+                    substances
+                }
+            </div>
+        </div>
 
                 <div className={"flex w-[97%] h-[5%] border-b"}></div>
 
@@ -61,6 +76,24 @@ export default function Qna({ qna, setQna }) {
                         Hand Sanitizer Only
                     </div>
                 </div>
+        <div className={"flex w-full whitespace-nowrap"}>
+            <div className={"flex-1"}>
+                Alcohol Preference
+            </div>
+            <div className={"flex-1 text-right flex justify-end align-middle"}>
+                {broadcaster ?
+                    <OptionDropdown
+                        value={alcohol}
+                        name={"alcohol"}
+                        dropdown={currentDropdown}
+                        setDropdown={setCurrentDropdown}
+                        dispatch={setAlcohol}
+                    />
+                    :
+                    alcohol
+                }
+            </div>
+        </div>
 
                 <div className={"flex w-[97%] h-[5%] border-b"}></div>
 
@@ -74,5 +107,25 @@ export default function Qna({ qna, setQna }) {
                 </div>
             </div>
         </div>
+        <div className={"flex w-full whitespace-nowrap"}>
+            <div className={"flex-1"}>
+                Preferred Tidiness
+            </div>
+            <div className={"flex-1 text-right flex justify-end align-middle"}>
+                {broadcaster ?
+                    <OptionDropdown
+                        value={tidiness}
+                        name={"tidiness"}
+                        dropdown={currentDropdown}
+                        setDropdown={setCurrentDropdown}
+                        dispatch={setTidiness}
+                    />
+                    :
+                    tidiness
+                }
+            </div>
+        </div>
+    </div>
+    </div>
     );
-}
+}}

@@ -12,7 +12,7 @@ import {
     createPollOption,
     deletePollOption,
     getGeneralData, setGeneralData,
-    updateUserTags, getUserSelectedTags, getAllTags
+    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -126,7 +126,6 @@ router.get('/get-topfive', async (req, res) => {
 // Get poll questions for a user
 router.get('/poll-questions', async (req, res) => {
     const user_id = req.query.user_id;
-    console.log(user_id)
 
     if (!user_id) {
         res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
@@ -197,6 +196,37 @@ router.put('/poll-option', async (req, res) => {
     }
 });
 
+// Update dorm/apartment preference
+router.put('/toggle-dorm', async (req, res) => {
+    const { user_id } = req.body;
+
+    try {
+        await toggleDormAndApartment(user_id);
+        res.status(200).json({ message: "Apartment/Dorm Toggled!" });
+    } catch (error) {
+        console.error("Error toggling dorm and apartment.", error);
+        res.status(500).json(createErrorObj("Failed to toggle dorm/apartment. Please try again later."));
+    }
+});
+
+// Get dorm/apartment preference
+router.get('/get-housingpref', async (req, res) => {
+    const user_id = req.query.user_id;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const housingPref = await getHousingPreference(user_id);
+        res.status(200).json(housingPref);
+    } catch (error) {
+        console.error("Error finding housing preference.", error);
+        res.status(500).json(createErrorObj("Failed find housing preference. Please try again later."));
+    }
+});
+
 // Create a new poll option for a user
 router.post('/poll-option', async (req, res) => {
     const { user_id, option_text } = req.body;
@@ -238,14 +268,13 @@ router.get('/get-gendata', async (req, res) => {
     const {user_id} = req.query;
     const filter = req.query['filter[]'];
 
-    console.log(filter)
-
     if (!user_id) {
         return res.status(400).json({ error: "Missing parameters for get-gendata" });
     }
 
     try {
         const results = await getGeneralData(user_id, filter);
+        console.log(results)
         return res.json(results);
     } catch (error) {
         return res.status(500).json({ error: "Failed to get general data." });
@@ -268,11 +297,11 @@ router.get('/get-gendata', async (req, res) => {
     }
 */
 router.post('/set-gendata', async (req, res) => {
-    console.log()
     const { user_id, data } = req.body;
     if (!user_id || !data) {
         return res.status(400).json(createErrorObj("Missing parameters for set-gendata"));
     }
+    console.log("setgen", data)
 
     try {
         const results = await setGeneralData(user_id, data);
@@ -299,6 +328,7 @@ router.post('/update-user-tags', async (req, res) => {
     if (!user_id || !Array.isArray(tag_ids)) {
         return res.status(400).json({ error: 'Missing or invalid parameters' });
     }
+    console.log("taggy", tag_ids)
 
     try {
         await updateUserTags(user_id, tag_ids);
