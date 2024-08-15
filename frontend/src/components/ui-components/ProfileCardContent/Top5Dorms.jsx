@@ -135,84 +135,60 @@ export default function Top5Dorms({user_id, broadcaster}) {
         }
     }, [mousePos]);
 
-    return (
-        <div className="flex flex-col border-2 border-solid border-maroon_new rounded-md w-full h-full p-[5px] font-roboto_slab custom-scrollbar">
-            <div className="basis-[30px] flex">
-                <div className="w-1/5">
-                    {peopleDict[String(numPeople)]}
-                </div>
-                {broadcaster ?
-                    <button onClick={() => setNumPeople(num => (num % 4) + 1)} className="bg-maroon text-white px-1 rounded-full">-&gt;</button>
-                    :
-                    <></>
-                }
+    const getTopValue = (isHeld, holdBase, offset, basePosition, index) => {
+        const topValue = isHeld ? holdBase + offset : basePosition;
+        if (window.innerWidth >= 1024) { // Adjust for large screens
+          return topValue + (index * 20);
+        }
+        return topValue;
+      };
+    
+      return (
+        <div className="flex flex-col border-[1.5px] border-solid border-maroon_new rounded-md w-[100%] h-full p-[5px] font-roboto_slab">
+          <div className="h-[15%] flex justify-center text-center text-[7px] lg:text-[15px] md:text-[12px] sm:text-[8px]">
+            <div className="flex flex-row justify-center h-full">
+              <input type="text" value={minPeople} onChange={e => handleChangePeople(e.target.value, setMinPeople)} className="ml-[0px] aspect-square h-[80%] text-center bg-offwhite" />
+              <div className="ml-[2px] mr-[2px] mt-[-5%]">-</div>
+              <input type="text" value={maxPeople} onChange={e => handleChangePeople(e.target.value, setMaxPeople)} className="aspect-square h-[80%] text-center bg-offwhite" />
+              <div className="ml-[3px] md:ml-[5px] h-full leading-none">People</div>
             </div>
-            <hr className="border-t-1 bordet-top-solid border-maroon_new"></hr>
-            <div className="flex-1 overflow-auto custom-scrollbar pr-[5px]">
-                <p className="text-sm">{top5Data.question}</p>
-                <div className="relative">
-                    {top5Dorms.map((dorm, i) => {
-                        const isHeld = heldDorm === dorm;
-                        const basePosition = 35 * i;
-                        return (
-                            <div
-                                key={dorm}
-                                className={`bg-maroon w-[calc(100%-30px)] leading-[30px] pl-[5px] rounded-md text-white select-none absolute flex align-middle ${!isHeld && 'transition-all'}`}
-                                style={{
-                                    top: isHeld ? holdBase + offset : basePosition,
-                                    left: "30px",
-                                    zIndex: heldDorm === dorm || openedDropdown === i ? 1 : 0,
-                                }}
-                                onMouseLeave={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
-                                onMouseUp={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
-                            >
-                                {broadcaster ?
-                                    <>
-                                    <div
-                                        className="h-[30px] w-[18px] flex align-middle cursor-grab"
-                                        onMouseDown={() => { setHoldPos(mousePos); setHoldBase(basePosition); setHeldDorm(dorm); }}
-                                        >
-                                        <img src={hamburger} draggable="false" />
-                                    </div>
-                                    <div
-                                        className="border-[1px] border-white border-solid pl-[4px] m-[4px] leading-[22px] h-[22px] w-[50%] cursor-pointer relative"
-                                        onClick={openedDropdown !== i ? () => setOpenedDropdown(i): () => {}}
-                                    >
-                                        {openedDropdown === i ?
-                                            <div className="absolute top-0 right-0 left-0 bg-white text-maroon border-[1px] border-solid border-inactive_gray">
-                                                <button className="block w-full text-left hover:bg-offwhite" onClick={() => setOpenedDropdown(undefined)}>{dorm}</button>
-                                                {unusedOptions.map(option => (
-                                                    <button
-                                                        key={option}
-                                                        className="block w-full text-left hover:bg-offwhite border-t-inactive_gray border-t-[1px] border-t-solid"
-                                                        onClick={() => swapDormOption(i, option)}
-                                                        >
-                                                        {option}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                            :
-                                            dorm
-                                        }
-
-                                    </div>
-                                    </>
-                                    :
-                                    dorm
-                                }
-                            </div>
-                        );
-                    })}
-                    {[0, 0, 0, 0, 0].map((_, i) => (
-                        <div key={i} className="absolute bg-maroon w-[25px] leading-[30px] text-white text-center rounded-md" style={{ top: 35 * i }}>
-                            {i + 1}
-                        </div>
-                    ))}
+            <div className="w-full text-right leading-none">{semesters}</div>
+            {broadcaster && <button className="ml-[10px] bg-maroon text-white px-1 h-[20px] rounded-xl" onClick={() => setSemesters(semesters === "Both Semesters" ? "1 Semester" : "Both Semesters")}>^</button>}
+          </div>
+          <hr className="border-t-1 border-t-solid border-maroon_new mt-[1.5%]"></hr>
+          <div className="flex-1 overflow-y-scroll custom-scrollbar">
+            <p className="text-[10px] sm:text-[10px] lg:text-[14px]">Dorms</p>
+            <div className="relative">
+              {top5Dorms.map((dorm, i) => {
+                const isHeld = heldDorm === dorm;
+                const basePosition = 20 * i;
+                return (
+                  <div
+                    key={dorm}
+                    className={`bg-maroon w-[calc(100%-30px)] h-[13px] text-[9px] lg:text-[13px] lg:h-[1.3rem] flex items-center ml-[-3px] pl-[5px] rounded-[3px] lg:rounded-[5px] text-white select-none absolute ${!isHeld && 'transition-all'}`}
+                    style={{
+                      top: window.innerWidth >= 1024 ? 25 * i : 18 * i ,
+                      left: "30px",
+                      zIndex: heldDorm === dorm ? 1 : 0,
+                    }}
+                    onMouseDown={() => { setHoldPos(mousePos); setHoldBase(basePosition); setHeldDorm(dorm); }}
+                    onMouseUp={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
+                    onMouseLeave={() => { setHoldPos(null); setHoldBase(null); setHeldDorm(''); }}
+                  >
+                    {dorm}
+                  </div>
+                );
+              })}
+              {[0, 0, 0, 0, 0].map((_, i) => (
+                <div key={i} className="absolute bg-maroon w-[13px] h-[13px] text-[9px] lg:text-[12px] lg:h-[1.3rem] lg:w-[1.3rem] flex items-center justify-center text-white text-center rounded-[3px] lg:rounded-[5px]" style={{ top: window.innerWidth >= 1024 ? 25 * i : 18 * i }}>
+                  {i + 1}
                 </div>
+              ))}
             </div>
+          </div>
         </div>
-    );
-}
+      );
+    }
 
 const useMousePosition = () => {
     const [mousePosition, setMousePosition] = useState({ x: null, y: null });
