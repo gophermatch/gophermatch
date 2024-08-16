@@ -15,6 +15,14 @@ const reviews = [
     name: "Goldy Gofer",
     text: "“Hey guys! Goldy here and I just want to let everyone know that this site rocks”",
   },
+  {
+    name: "Anonymous User",
+    text: "“I like this site. It is a very nice site. Use this site right now.”"
+  },
+  {
+    name: "Lebron James",
+    text: "“Hey guys Lebron James here! This website helped me win four league mvps!”"
+  }
 ];
 
 const LandingPage = () => {
@@ -31,6 +39,13 @@ const LandingPage = () => {
 
   const handleReviewChange = (index) => {
     setCurrentReview(index);
+  };
+
+  const getButtonSize = (index) => {
+    const diff = Math.abs(currentReview - index);
+    if (diff === 0) return 3; // middle button is largest
+    if (diff === 1) return 2.5; // buttons next to the middle are slightly smaller
+    return 2; // other buttons are smallest
   };
 
   return (
@@ -74,14 +89,20 @@ const LandingPage = () => {
                 </div>
               </div>
               <div className="h-[0.85px] w-[95%] ml-[2.5%] mt-[5%] bg-gold"></div>
-              <div className="flex justify-center ml-[43%] items-center mt-[10%]">
+              <div className="flex justify-center ml-[28%] items-center mt-[10%]">
               {reviews.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleReviewChange(index)}
-                    className={`h-[2vh] w-[2vh] rounded-full mx-[0.5vh] ${currentReview === index ? 'bg-maroon_new' : 'bg-gray'}`}
-                  />
-                ))}
+                <button
+                  key={index}
+                  onClick={() => handleReviewChange(index)}
+                  style={{
+                    height: `${getButtonSize(index)}vh`,
+                    width: `${getButtonSize(index)}vh`,
+                  }}
+                  className={`rounded-full mx-[1vh] ${
+                    currentReview === index ? 'bg-maroon_new' : 'bg-gray'
+                  }`}
+                />
+              ))}
               </div>
             </div>
           </header>
