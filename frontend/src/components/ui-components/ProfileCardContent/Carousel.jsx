@@ -72,7 +72,7 @@ export default function Carousel({ user_id, editable }) {
     )) : null;
 
     const dotSection = (
-        <div className={styles.dotSection + " mx-[2vw] mt-[2px]"}>
+        <div className={styles.dotSection + " mx-[2vw] mt-[0.5vh]"}>
             <button className={styles.progressButton} onClick={() => setPosition((position - 1 + carouselLen) % carouselLen)}>
                 &lt;
             </button>
@@ -84,20 +84,15 @@ export default function Carousel({ user_id, editable }) {
     );
 
     return (
-        <div className="relative h-full w-full">
-            <div className="relative w-full h-[95%] overflow-hidden">
-                <div className="relative w-full h-full mx-auto"> {/* Aspect ratio 9:16 */}
-                    <div className="absolute top-0 left-0 w-full h-full">
-                        <img
-                            src={(Array.isArray(pictureUrls) && pictureUrls.length > 0) ? pictureUrls[position] : null}
-                            className="w-full h-full object-cover border-[3px] border-maroon_new rounded-[1vw]"
-                            onClick={gotoUpload}
-                        />
-                    </div>
+        <div className={styles.container}>
+            <div className="flex justify-center items-center" onMouseEnter={showOverlay} onMouseLeave={showOverlay}>
+                {(Array.isArray(pictureUrls) && pictureUrls.length > 0) || isHovering || <div className="absolute">No pictures found</div>}
+                {isHovering && <img src="../../assets/images/imageicon.png" className="absolute scale-[0.1]" />}
+                <div id="imageWrapper" className="w-100% m-auto 2xl:h-[35rem] xl:h-[27rem] lg:h-[20rem] md:h-[13rem] sm:h-[8.4rem] h-[13rem] overflow-hidden rounded-[0vw] aspect-square">
+                    <img src={(Array.isArray(pictureUrls) && pictureUrls.length > 0) ? pictureUrls[position] : null} className={"w-full h-full object-cover border-[3px] border-maroon_new rounded-[1vw] "} onClick={gotoUpload} />
                 </div>
             </div>
             {carouselLen > 1 && dotSection}
         </div>
-    );    
-    
+    );
 }

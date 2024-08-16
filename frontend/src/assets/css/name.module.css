@@ -3,18 +3,88 @@
     font-family: 'Roboto Slab', serif;
   }
   
+  .name {
+    font-size: 3vh;
+    font-weight: bold;
+  }
   
   .major {
+    margin-top: -1vh;
+    font-size: 2vh;
     font-weight: 450;
   }
   
   .bio {
-    height: auto;
+    width: 100%;
+    height: 12vh;
     border-radius: 8px;
+    margin-top: 5px;
     border: 1.7px solid maroon;
   }
   
   .bioText {
     margin-left: 4px;
+    font-size: 1.8vh;
     font-weight: 400;
   }
+
+  @media (min-width: 640px) {
+    .bio {
+        height: 4rem;
+    }
+    .name {
+        font-size: 0.8rem;
+    }
+    .major {
+        font-size: 0.6rem;
+    }
+    .bioText {
+        height: 0.4rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .bio {
+        height: 5rem;
+    }
+    .name {
+        font-size: 1rem;
+    }
+    .major {
+        font-size: 0.8rem;
+    }
+    .bioText {
+        height: 0.6rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .bio {
+        height: 8rem;
+    }
+    .name {
+        font-size: 1.2rem;
+    }
+    .major {
+        font-size: 1rem;
+    }
+    .bioText {
+        height: 0.8rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .bio {
+        height: 11rem;
+    }
+    .name {
+        font-size: 1.75rem;
+    }
+    .major {
+        font-size: 1.1rem;
+    }
+    .bioText {
+        height: 0.9rem;
+    }
+}
+  
