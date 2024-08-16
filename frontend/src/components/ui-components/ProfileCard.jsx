@@ -8,7 +8,7 @@ import Qna from "./ProfileCardContent/Qna";
 
 
 // user_id: number, isDorm: boolean, showApt: boolean, broadcaster?: SignalBroadcaster
-export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMode, save_func, save_func}) {
+export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMode, save_func}) {
   return ( // TODO
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new`}>
       {profileMode &&
@@ -60,31 +60,31 @@ export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMo
           <div className="w-[30vh] h-full min-w-[25%]">
           <Carousel user_id={user_id} editable={broadcaster ? true : false}></Carousel>
           </div>
-          <div className="flex flex-col w-[70.5%] gap-[3.6%]">
+          <div className="flex flex-col gap-[3.6%] grow">
             <div>
               <NameAndBio user_id={user_id} broadcaster={broadcaster} />
             </div>
-            <div className="flex h-[50%] gap-[3.6%]">
-              <div className="flex w-[55%] flex-col overflow-x-hidden gap-[7.2%]">
-                <div className={"flex h-[65%] overflow-y-auto overflow-x-hidden"}>
+            <div className="flex grow-[3] gap-[3.6%]">
+              <div className="grow-[2] flex flex-col overflow-x-hidden max-w-[60%] gap-[3.6%]">
+                <div className={"flex grow-[5] border-none border-2 border-maroon overflow-y-auto overflow-x-hidden max-h-40"}>
+                  {/*How should we really pass this? Match and Profile page will end up passing it differently, but we could use the same prop*/}
                   {isDorm ?
                     <Top5Dorms user_id={user_id} broadcaster={broadcaster} />
                     :
                     <ApartmentInfo user_id={user_id} broadcaster={broadcaster} />
                   }
                 </div>
-                  <div className={"h-[40%]"}>
+                  <div className={"flex grow-[3]"}>
                     <Qna user_id={user_id} broadcaster={broadcaster} />
                   </div>
                 </div>
               <div className="grow-[2] flex flex-col gap-[3.6%]">
-                <div className={"flex grow-[3] border-dashed border-2 border-maroon overflow-hidden"}>
-                  {/* don't know if passing reveal answers is necessary */}
+                <div className={"flex grow-[3] border-none border-2 border-maroon"}>
                   <Poll revealAnswers={true} user_id={user_id} broadcaster={broadcaster} />
                 </div>
-                <div className={"flex grow-[1] border-dashed border-2 border-maroon overflow-hidden"}>
+                <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
                   {/* Sleep schedule */}
-                  <div>Sleep schedule here</div>
+                  Sleep sched here
                 </div>
               </div>
             </div>
