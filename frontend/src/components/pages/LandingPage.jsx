@@ -90,8 +90,10 @@ const LandingPage = () => {
               </Link>
             </div>
             <div className="flex flex-col items-start w-[40%] h-full ml-[5vw]">
-              <div
-                className={`${styles.reviewSlide} ${animationState === 'exit' ? styles.exit : styles.active}`}
+                <div
+                className={`${styles.reviewSlide} ${
+                  animationState === 'enter' ? styles.enter : animationState === 'exit' ? styles.exit : styles.active
+                }`}
                 key={currentReview}
               >
                 <p className="text-[2.5vh] text-black font-thin mt-[1vh]">

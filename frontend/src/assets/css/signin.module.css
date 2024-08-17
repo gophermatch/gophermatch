@@ -45,6 +45,11 @@
     transform: translateX(50%);
   }
   
+  .reviewSlide.enter {
+    opacity: 0;
+    transform: translateX(50%);
+  }
+
   .reviewSlide.active {
     opacity: 1;
     transform: translateX(0%);
