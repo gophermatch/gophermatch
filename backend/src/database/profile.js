@@ -134,25 +134,25 @@ export async function getPollQuestions(user_id) {
   });
 }
 
-// Update poll question for a user
-export async function updatePollQuestion(user_id, question_text) {
-    return new Promise((resolve, reject) => {
-        const queryString = `
-            INSERT INTO ${tableNames.u_pollquestions} (user_id, question_text)
-            VALUES (?, ?)
+export async function updatePollQuestion(user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4){
+    try {
+        // First, check if the record exists
+        const query = `
+            INSERT INTO ${tableNames.u_pollquestions} (user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4)
+            VALUES (?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
-            question_text = VALUES(question_text)
+            question_text = VALUES(question_text),
+            option_text_1 = VALUES(option_text_1),
+            option_text_2 = VALUES(option_text_2),
+            option_text_3 = VALUES(option_text_3),
+            option_text_4 = VALUES(option_text_4);
         `;
-        console.log(queryString);
-        db.query(queryString, [user_id, question_text], (err, result) => {
-            if (err) {
-                console.error("Error updating poll question:", err);
-                reject(err);
-                return;
-            }
-            resolve(result);
-        });
-    });
+        await db.query(query, [user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4]);
+    } catch (err) {
+        console.log("error happened");
+        console.error('Error in insertTopFive:', err);
+        throw err;
+    }
   }
   
 // Get poll options for a user

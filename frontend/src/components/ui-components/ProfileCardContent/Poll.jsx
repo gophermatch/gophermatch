@@ -20,35 +20,38 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const pollOps = await backend.get('/profile/poll-options', {
-          params: {
-            user_id: user_id
-          }
-        });
-
         const pollQs = await backend.get('/profile/poll-questions', {
           params: {
             user_id: user_id
           }
         });
 
-        if (pollOps.data.length >= 2 && pollQs.data) {
-          const options = pollOps.data.map(option => ({
-            answer: option.option_text,
-            votes: option.num_votes
-          }));
-
-          setPollData({
-            answers: options
-          });
-        }
-
-        if (pollQs.data){
-          setPollData(prevPollData => ({
-            ...prevPollData,
-            question: pollQs.data[0]?.question_text
-          }));
-        }
+        if (pollQs.data) {
+            const answers = [
+              {
+                answer: pollQs.data[0]?.option_text_1,
+                votes: pollQs.data[0]?.option_votes_1
+              },
+              {
+                answer: pollQs.data[0]?.option_text_2,
+                votes: pollQs.data[0]?.option_votes_2
+              },
+              {
+                answer: pollQs.data[0]?.option_text_3,
+                votes: pollQs.data[0]?.option_votes_3
+              },
+              {
+                answer: pollQs.data[0]?.option_text_4,
+                votes: pollQs.data[0]?.option_votes_4
+              }
+            ].filter(option => option.answer !== 'N/A');
+          
+            setPollData({
+              question: pollQs.data[0]?.question_text,
+              answers: answers
+            });
+          }
+          
       } catch (error) {
         console.error('Error fetching poll data:', error);
       }
@@ -107,7 +110,11 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
         const cb = () =>
           backend.put('/profile/poll-question', {
             user_id: user_id,
-            question_text: pollData.question
+            question_text: pollData.question,
+            option_text_1: pollData.answers[0]?.answer || "N/A",
+            option_text_2: pollData.answers[1]?.answer || "N/A",
+            option_text_3: pollData.answers[2]?.answer || "N/A",
+            option_text_4: pollData.answers[3]?.answer || "N/A"
           });
 
         broadcaster.connect(cb)

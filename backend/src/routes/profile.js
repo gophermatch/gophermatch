@@ -143,8 +143,7 @@ router.get('/poll-questions', async (req, res) => {
 
 // Update poll question for a user
 router.put('/poll-question', async (req, res) => {
-    const user_id = req.body.user_id;
-    const question_text = req.body.question_text;
+    const {user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4} = req.body;
 
     if (!user_id || !question_text) {
         res.status(400).json(createErrorObj("Must specify user_id and question_text to update poll question!"));
@@ -152,7 +151,7 @@ router.put('/poll-question', async (req, res) => {
     }
 
     try {
-        await updatePollQuestion(user_id, question_text);
+        await updatePollQuestion(user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4);
         res.status(200).json({ message: "Poll question updated!" });
     } catch (error) {
         console.error("Error updating poll question:", error);
