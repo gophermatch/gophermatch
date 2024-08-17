@@ -5,7 +5,7 @@ import styles from '../../assets/css/signin.module.css';
 const reviews = [
   {
     name: "Kanye West",
-    text: "“GopherMatch changed my life. Now I will never go back”",
+    text: "“GoferMatch changed my life. Now I will never go back”",
   },
   {
     name: "42 Doug",
@@ -35,8 +35,8 @@ const LandingPage = () => {
       setTimeout(() => {
         setCurrentReview(prevReview => (prevReview + 1) % reviews.length);
         setAnimationState('active');
-      }, 500); // Matches the CSS transition duration
-    }, 5000);
+      }, 500);
+    }, 6000);
 
     return () => clearInterval(reviewInterval);
   }, []);
