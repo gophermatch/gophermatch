@@ -165,7 +165,7 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
                     {broadcaster ? 
                       <>
                         {pollData.answers.length > 2 && <button onClick={() => removeAnswer(index)}>
-                          ➖
+                          X
                         </button> } 
                       </>
                       : 
