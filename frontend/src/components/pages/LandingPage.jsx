@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../../assets/css/signin.module.css';
 
@@ -26,19 +26,27 @@ const reviews = [
 ];
 
 const LandingPage = () => {
-
   const [currentReview, setCurrentReview] = useState(0);
+  const [animationState, setAnimationState] = useState('active'); // 'active' or 'exit'
 
   useEffect(() => {
     const reviewInterval = setInterval(() => {
-      setCurrentReview(prevReview => (prevReview + 1) % reviews.length);
+      setAnimationState('exit');
+      setTimeout(() => {
+        setCurrentReview(prevReview => (prevReview + 1) % reviews.length);
+        setAnimationState('active');
+      }, 500); // Matches the CSS transition duration
     }, 5000);
 
     return () => clearInterval(reviewInterval);
   }, []);
 
   const handleReviewChange = (index) => {
-    setCurrentReview(index);
+    setAnimationState('exit');
+    setTimeout(() => {
+      setCurrentReview(index);
+      setAnimationState('active');
+    }, 500); // Matches the CSS transition duration
   };
 
   const getButtonSize = (index) => {
@@ -82,34 +90,38 @@ const LandingPage = () => {
               </Link>
             </div>
             <div className="flex flex-col items-start w-[40%] h-full ml-[5vw]">
-              <div className="text-left w-full mt-[2.85%]">
-                <p className="text-[2.5vh] text-black font-thin mt-[1vh]">{reviews[currentReview].text}</p>
+              <div
+                className={`${styles.reviewSlide} ${animationState === 'exit' ? styles.exit : styles.active}`}
+                key={currentReview}
+              >
+                <p className="text-[2.5vh] text-black font-thin mt-[1vh]">
+                  {reviews[currentReview].text}
+                </p>
                 <div className="text-right mt-[5%]">
                   <h3 className="text-black font-thin text-[175%] mr-[10%]">- {reviews[currentReview].name}</h3>
                 </div>
               </div>
               <div className="h-[0.85px] w-[95%] ml-[2.5%] mt-[5%] bg-gold"></div>
-              <div className="flex justify-center ml-[28%] items-center mt-[10%]">
-              {reviews.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleReviewChange(index)}
-                  style={{
-                    height: `${getButtonSize(index)}vh`,
-                    width: `${getButtonSize(index)}vh`,
-                  }}
-                  className={`rounded-full mx-[1vh] ${
-                    currentReview === index ? 'bg-maroon_new' : 'bg-gray'
-                  }`}
-                />
-              ))}
+              <div className={`${styles['review-container']} flex justify-center ml-[28%] items-center mt-[10%]`}>
+                {reviews.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleReviewChange(index)}
+                    style={{
+                      height: `${getButtonSize(index)}vh`,
+                      width: `${getButtonSize(index)}vh`,
+                    }}
+                    className={`rounded-full mx-[1vh] ${
+                      currentReview === index ? 'bg-maroon_new' : 'bg-gray'
+                    }`}
+                  />
+                ))}
               </div>
             </div>
           </header>
           <div className="ml-[6vw] h-[20px] w-[86vw] mt-[35vh] bg-maroon_new"></div>
           <div className="bg-offwhite flex flex-col items-center justify-center h-screen">
             <div className="mt-[10vh] flex flex-wrap justify-center">
-              {/* Top four profiles */}
               <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
                 <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
                 <div className="text-center">

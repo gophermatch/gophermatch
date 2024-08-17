@@ -24,11 +24,29 @@
     transition: all 0.3s ease;
   }
   
-  .active {
-    background-color: maroon; /* Active button color */
-  }
-  
   .inactive {
     background-color: gray; /* Color for inactive buttons */
+  }
+
+  .review-container {
+    position: relative;
+    height: 100px;
+    overflow: hidden;
+  }
+  
+  .reviewSlide {
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 1;
+    transform: translateX(0%);
+  }
+  
+  .reviewSlide.exit {
+    opacity: 0;
+    transform: translateX(50%);
+  }
+  
+  .reviewSlide.active {
+    opacity: 1;
+    transform: translateX(0%);
   }
   
