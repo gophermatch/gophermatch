@@ -6,7 +6,7 @@ export default function Qna({ qna, setQna }) {
     const resizeFont = () => {
         if (containerRef.current) {
             const parentHeight = containerRef.current.clientHeight;
-            const fontSize = parentHeight * 0.13; // Adjust this multiplier as needed
+            const fontSize = parentHeight * 0.16; // Adjust this multiplier as needed
             containerRef.current.style.fontSize = `${fontSize}px`;
         }
     };
