@@ -3,6 +3,7 @@ import { ProfileCard } from '../ui-components/ProfileCard';
 import Filter from '../ui-components/Filter';
 import backend from '../../backend';
 import currentUser from '../../currentUser';
+import styles from "../../assets/css/match.module.css";
 
 export default function Match() {
 
@@ -95,7 +96,9 @@ export default function Match() {
 
     return (
       <div>
-          <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
+          <div className={styles.filterContainer}>
+            <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0} />
+          </div>          
           <ProfileCard user_id={filteredUserIds[currentIndex]} isDorm={isDorm} save_func={() => goToNext("unsure")} />
           <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3">
               <button onClick={() => goToNext("reject")}
