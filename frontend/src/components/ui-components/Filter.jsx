@@ -223,22 +223,23 @@ export default function Filter({ setFiltersExternal, setUserDataExternal, profil
     }
     setIsOpen(isOpen => !isOpen);
   }}
-  className={`absolute duration-[400ms] ${isOpen ? "top-[5.5vh]" : "top-0"} right-[10vh] ml-auto mr-auto cursor cursor-pointer`}
+  className={`absolute duration-[400ms] right-[12vh] ml-auto mr-auto cursor cursor-pointer`}
   viewBox="0 -4.5 20 20"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   style={{
-    transform: isOpen ? "rotateX(180deg)" : "rotateX(0deg)",
-    transition: "transform 0.45s ease", // Smooth rotation
-    width: "8%", // Ensures the SVG scales correctly within the container
-    height: "8%",
+    transform: isOpen ? "rotateX(180deg) translateY(-5.5vh)" : "rotateX(0deg) translateY(0)",
+    transition: "transform 0.45s ease", // Smooth rotation and translation
+    width: "6%", // Ensures the SVG scales correctly within the container
+    height: "6%",
     transformStyle: "preserve-3d", // Enable 3D transformation
+    top: isOpen ? "0" : "0", // Align the position as well
   }}
 >
   <g
     id="Page-1"
     stroke="none"
-    stroke-width="1"
+    stroke-width="0.5"
     fill="none"
     fill-rule="evenodd"
   >
@@ -256,7 +257,6 @@ export default function Filter({ setFiltersExternal, setUserDataExternal, profil
     </g>
   </g>
 </svg>
-
 
 
         </div>
