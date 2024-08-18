@@ -3,6 +3,7 @@ import { ProfileCard } from '../ui-components/ProfileCard';
 import Filter from '../ui-components/Filter';
 import backend from '../../backend';
 import currentUser from '../../currentUser';
+import styles from "../../assets/css/match.module.css";
 
 export default function Match() {
 

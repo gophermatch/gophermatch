@@ -257,9 +257,6 @@ export default function Filter({ setFiltersExternal, setUserDataExternal, profil
     </g>
   </g>
 </svg>
-
-
-
         </div>
     );
 }
