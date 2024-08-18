@@ -40,6 +40,10 @@ export default function AccountCreation() {
         setGender(event.target.value);
     };
 
+    const handleInternationalChange = (event) => {
+        setInternationalStudent(event.target.value);
+    }
+
     const handleReferralChange = (event) => {
         setReferral(event.target.value);
     };
@@ -160,9 +164,8 @@ export default function AccountCreation() {
                                         placeholder="Hometown"></AccountTextField>
                         <select 
                             className="text-maroon_new w-90 rounded-md mt-6 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black"
-                            // value={internationalStudent} 
-                            // onChange={(e) => setInternationalStudent(e.target.value)}
-                        >
+                            value={internationalStudent} onKeyUp={enterKeyPress} valueSetter={setInternationalStudent}
+                            onChange={handleInternationalChange}>     
                             <option value="">International Student?</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
