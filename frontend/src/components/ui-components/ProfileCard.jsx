@@ -13,7 +13,7 @@ export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMo
   return ( // TODO
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new`}>
       {profileMode &&
-      <div className={"flex mr-[40vw]"}>
+      <div className={"flex mr-[35vw]"}>
         <div className={`flex flex-row-reverse font-roboto_slab text-white w-[12vw] h-[4vh] justify-center items-center rounded-t-[1vw] ${
             isDorm ? 'bg-maroon' : 'bg-dark_maroon'
         }`}>

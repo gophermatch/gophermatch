@@ -58,6 +58,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
     }
 
     fetchData();
+    setAnswerRevealed(answersRevealed);
   }, [user_id]);
 
   async function vote(numb) {
