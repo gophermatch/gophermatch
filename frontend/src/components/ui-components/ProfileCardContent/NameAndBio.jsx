@@ -112,7 +112,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                   id="selectionBox"
                   value={major}
                   onChange={(e) => setMajor(e.target.value)}
-                  className="border-2 rounded-lg mt-[1vh]"
+                  className="border-2 rounded-lg mt-[1vh] hover:bg-maroon_transparent2 cursor cursor-pointer"
                 >
                   {majorList.map((option, index) => (
                     <option key={index} value={option}>

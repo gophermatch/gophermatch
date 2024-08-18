@@ -18,9 +18,9 @@ function OptionDropdown({value, name, dropdown, setDropdown, dispatch}) {
                 {value}
             </button>
             {dropdown === name &&
-                <div className="absolute min-w-full top-full border-2 border-solid border-maroon bg-white">
+                <div className="absolute min-w-full top-full border-2 border-solid border-maroon ">
                 {CHOICE_DICT[name].map((option) => (
-                    <button onClick={() => {dispatch(option); setDropdown(undefined)}} className="block w-full text-right px-[4px] border-t-[1px] border-solid border-t-gray hover:bg-offwhite">
+                    <button onClick={() => {dispatch(option); setDropdown(undefined)}} className="block w-full text-right px-[4px] border-t-[1px] border-solid hover:bg-maroon_transparent2 border-t-gray">
                         {option}
                     </button>
                 ))}
