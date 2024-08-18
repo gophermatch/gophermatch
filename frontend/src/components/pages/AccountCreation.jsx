@@ -151,11 +151,20 @@ export default function AccountCreation() {
                   </div>
 
                   <div
-                      className={`absolute left-0 right-0 mt-[5rem] flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 3 ? 'translate-x-0' : (pageNum < 3 ? 'translate-x-[160%] pointer-events-none' : '-translate-x-[160%] pointer-events-none')}`}>
-                      <AccountTextField maxLength={255} visPageNum={3} curPageNum={pageNum}
+                      className={`absolute left-0 right-0 mt-[3rem] flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 3 ? 'translate-x-0' : (pageNum < 3 ? 'translate-x-[160%] pointer-events-none' : '-translate-x-[160%] pointer-events-none')}`}>
+                        <AccountTextField maxLength={255} visPageNum={3} curPageNum={pageNum}
                                         enterKeyPress={enterKeyPress}
                                         fieldValue={hometown} valueSetter={setHometown}
                                         placeholder="Hometown"></AccountTextField>
+                        <select 
+                            className="text-maroon_new w-90 rounded-md mt-6 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black"
+                            // value={internationalStudent} 
+                            // onChange={(e) => setInternationalStudent(e.target.value)}
+                        >
+                            <option value="">International Student?</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
                   </div>
 
                   <div
