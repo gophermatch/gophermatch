@@ -183,6 +183,9 @@ export default function Settings() {
                             onChange={(e) => handleInputChange('hometown', e.target.value)}
                         />
                     </div>
+                    <div className="flex flex-col ml-[1.5vw] text-[2vh] mt-[1.5vh]">
+
+                    </div>
                     <div className="flex flex-col mt-[1.5vh]">
                         <div className="text-settings text-[2vh] ml-[1.5vw]">Gender</div>
                         <select
