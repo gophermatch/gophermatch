@@ -139,7 +139,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                             </option>
                         ))}
                     </select>
-                    : major} {year} 
+                    : major} '{year} 
             </div>
             <div className="w-full h-[12vh] rounded-lg mt-1.5 border border-maroon flex">
                 <p className="flex-1 text-[1.8vh] text-left font-normal">
