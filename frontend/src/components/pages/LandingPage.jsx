@@ -96,11 +96,11 @@ const LandingPage = () => {
                 }`}
                 key={currentReview}
               >
-                <p className="text-[2.5vh] text-black font-thin mt-[1vh]">
+                <p className="text-[2.5vh] text-blood font-thin mt-[1vh]">
                   {reviews[currentReview].text}
                 </p>
                 <div className="text-right mt-[5%]">
-                  <h3 className="text-black font-thin text-[175%] mr-[10%]">- {reviews[currentReview].name}</h3>
+                  <h3 className="text-blood font-thin text-[175%] mr-[10%]">- {reviews[currentReview].name}</h3>
                 </div>
               </div>
               <div className="h-[0.85px] w-[95%] ml-[2.5%] mt-[5%] bg-gold"></div>
