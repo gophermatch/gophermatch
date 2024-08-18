@@ -5,7 +5,7 @@ import backend from "./backend.js";
 
 class User {
     #user_id;  // private member
-    #account_created;
+    #profile_completion;
     #gen_data;
 
     constructor() {
@@ -30,9 +30,14 @@ class User {
         this.#user_id = user_id
 
         this.#gen_data = await this.getAccount()
-        this.#account_created = this.#gen_data.first_name != "";
+        
+        this.#profile_completion = await this.fetchProfileCompletion();
+    }
 
-        console.log("Account created: " + this.#account_created);
+    async fetchProfileCompletion()
+    {
+        return "incomplete_profile";
+        // Call the route here
     }
 
      async getAccount(){
@@ -56,16 +61,17 @@ class User {
         return this.#user_id
     }
 
-    get account_created(){
-        return this.#gen_data != null;
-    }
-
     get gen_data(){
         return this.#gen_data;
     }
 
-    set gen_data(data){
-        this.#account_created = true;
+    get profile_completion()
+    {
+        return this.#profile_completion;
+    }
+
+    set gen_data(data)
+    {
         this.#gen_data = data;
     }
 }

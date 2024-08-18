@@ -36,6 +36,17 @@ async function mainPageRedirect({request}) {
     return redirect("/match")
 }
 
+async function matchPageRedirect({request}) {
+
+  if (currentUser.profile_completion != "complete") {
+      return redirect("/profile")
+  }
+
+  await unauthPageRedirect(request);
+
+  return null
+}
+
 // Redirects the login page to match page if user is logged in
 async function loginPageRedirect() {
 
@@ -73,20 +84,28 @@ async function loginPageRedirect() {
     console.log("User attempting to visit login page, is logged in: " + loggedIn);
 
     if (loggedIn) {
-        if(currentUser.account_created) {
+        if(currentUser.profile_completion == "complete") {
             return redirect("/match")
         }
+
+        if(currentUser.profile_completion == "incomplete_profile") {
+          return redirect("/profile")
+        }
+
         return redirect("/account")
     }
     return null
 }
 
-// Redirects the account page to match page if user has created account
+// Redirects the account page to match/profile page if user has already created account
 async function accountCreationRedirect() {
-  console.log("User attempting to visit account creation page page, is logged in: " + currentUser.logged_in);
   if (currentUser.logged_in) {
-    if(currentUser.account_created) {
+    if(currentUser.profile_completion == "complete") {
       return redirect("/match")
+    }
+    if(currentUser.profile_completion == "incomplete_profile")
+    {
+      return redirrect("/profile")
     }
     return null
   }
@@ -95,7 +114,7 @@ async function accountCreationRedirect() {
 
 // Redirects a protected page to login page if user is not logged in
 async function unauthPageRedirect({request}) {
-    if(!currentUser.account_created){
+    if(currentUser.profile_completion == "incomplete_account"){
         return redirect("/account")
     }
     if (!currentUser.logged_in) {
@@ -162,7 +181,7 @@ const router = createBrowserRouter([
             children: [{
                 path: "match",
                 element: <Match />,
-                loader: unauthPageRedirect
+                loader: matchPageRedirect
             },{
                 path: "profile",
                 element: <ProfilePage />,
