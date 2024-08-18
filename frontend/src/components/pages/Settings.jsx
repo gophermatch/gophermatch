@@ -185,7 +185,7 @@ export default function Settings() {
                     </div>
                     <div className="flex flex-col ml-[1.5vw] text-[2vh] mt-[1.5vh]">
                         <div className="text-settings text-[2vh] ml-[0.5vw] ">International Student?</div>
-                        <select className="text-black mt-[0.25vh] h-[4.5vh] w-[18vw] border border-inactive_gray rounded-[0.5vh] cursor-pointer"
+                        <select className="text-black mt-[0.25vh] h-[4.5vh] w-[21.5vw] border border-inactive_gray rounded-[0.5vh] cursor-pointer"
                                 value={editValues.international || ''}
                                 onChange={(e) => handleInputChange('international', e.target.value)}>
                             <option value="">Select an option</option>
