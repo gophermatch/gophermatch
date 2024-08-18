@@ -20,6 +20,7 @@ export default function AccountCreation() {
     const [graduatingYear, setGraduatingYear] = React.useState('')
 
     const [hometown, setHometown] = React.useState('')
+    const [internationalStudent, setInternationalStudent] = React.useState('')
 
     const [referral, setReferral] = React.useState('')
     const [housingPreference, setHousingPreference] = React.useState('')
@@ -78,6 +79,7 @@ export default function AccountCreation() {
                     major: major,
                     graduating_year: graduatingYear,
                     hometown: hometown,
+                    internationalStudent: internationalStudent,
                     hear_about_us: referral,
                     housing_preference: housingPreference,
                     contact_email: contactEmail,
