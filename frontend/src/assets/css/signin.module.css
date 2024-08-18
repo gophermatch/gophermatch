@@ -35,23 +35,24 @@
   }
   
   .reviewSlide {
-    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-    opacity: 1;
-    transform: translateX(0%);
-  }
-  
-  .reviewSlide.exit {
     opacity: 0;
     transform: translateX(50%);
+    transition: transform 1s ease, opacity 0.3s ease;
   }
   
   .reviewSlide.enter {
-    opacity: 0;
-    transform: translateX(50%);
+    opacity: 0.3; /* Start from partial opacity */
+    transform: translateX(50%); /* Start 50% to the right */
   }
-
+  
   .reviewSlide.active {
-    opacity: 1;
-    transform: translateX(0%);
+    opacity: 1; /* Fade in to full opacity */
+    transform: translateX(0%); /* Slide to center */
   }
+  
+  .reviewSlide.exit {
+    opacity: 0; /* Fade out */
+    transform: translateX(50%); /* Move 50% to the right */
+  }
+  
   

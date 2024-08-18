@@ -89,7 +89,7 @@ const LandingPage = () => {
                 </span>
               </Link>
             </div>
-            <div className="flex flex-col items-start w-[40%] h-full ml-[5vw]">
+            <div className="flex flex-col items-start w-[40%] h-full mt-[1.5%] ml-[5vw]">
                 <div
                 className={`${styles.reviewSlide} ${
                   animationState === 'enter' ? styles.enter : animationState === 'exit' ? styles.exit : styles.active
