@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import backend from "../../../backend";
-import ApartmentTag from "./ApartmentTag.jsx";
+import whiteX from "../../../assets/images/whiteX.svg";
 
-export default function Poll({revealAnswers, user_id, broadcaster}) {
+export default function Poll({answersRevealed, user_id, broadcaster}) {
   const defaultPollData = {
     question: "Question Here",
     answers: [
@@ -14,7 +14,7 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
   };
 
   const [pollData, setPollData] = useState(defaultPollData);
-  const [answerRevealed, setAnswerRevealed] = useState(revealAnswers);
+  const [answerRevealed, setAnswerRevealed] = useState(answersRevealed);
   const [voteTotal, setVoteTotal] = useState(0);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
           }
         });
 
-        if (pollQs.data) {
+        if (pollQs.data && pollQs.data[0]?.question_text != null) {
             const answers = [
               {
                 answer: pollQs.data[0]?.option_text_1,
@@ -58,17 +58,35 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
     }
 
     fetchData();
-    
-    for (let i = 0; i < pollData.answers.length; i++){
-      setVoteTotal(voteTotal + pollData.answers[i].votes);
+  }, [user_id]);
+
+  async function vote(numb) {
+    console.log(user_id);
+    try {
+      await backend.put('/profile/poll-question-vote', {
+        user_id: user_id,
+        voteSlot: numb
+      });
+        
+    } catch (error) {
+      console.error('Error voting:', error);
     }
-
-  }, [user_id], pollData);
-
+  }
+  
   function displayResults(index){
-      /*backend should be linked here to add a vote */
-      setVoteTotal(voteTotal+1);
-      setAnswerRevealed(prev => !prev);
+    const updatedAnswers = pollData.answers.map((option, i) => 
+        i === index ? { ...option, votes: option.votes + 1 } : option
+    );
+
+    setPollData(prevData => ({
+        ...prevData,
+        answers: updatedAnswers
+    }));
+
+    vote(index+1)
+    setVoteTotal(prevTotal => prevTotal+1);
+    console.log(voteTotal);
+    setAnswerRevealed(prev => !prev);
   }
 
   const changeAnswer = (answerIndex, newAnswerText) => {
@@ -105,7 +123,6 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
   };
 
   useEffect(() => {
-    // add backend post request for poll here
     if (broadcaster) {
         const cb = () =>
           backend.put('/profile/poll-question', {
@@ -120,6 +137,13 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
         broadcaster.connect(cb)
         return () => broadcaster.disconnect(cb)
     }
+
+    let totalVotes = 0;
+    for (let i = 0; i < pollData.answers.length; i++) {
+      totalVotes += pollData.answers[i].votes;
+    }
+    setVoteTotal(totalVotes);
+
 }, [broadcaster, pollData])
 
   return (
@@ -131,7 +155,7 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
             {broadcaster ? 
               <input
                 id="Question"
-                className="text-center border-2 rounded-lg text-black"
+                className="text-center rounded-lg text-base mb-[1vh] mt-[1vh] bg-gray text-maroon"
                 value={pollData.question}
                 onChange={(e) => changeQuestion(e.target.value)}
               /> 
@@ -162,7 +186,7 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
                     {broadcaster ? 
                       <input
                         id={"Answer" + index}
-                        className="text-center border-2 rounded-lg text-black"
+                        className="text-center rounded-lg bg-dark_maroon text-white"
                         value={newAnswer.answer}
                         onChange={(e) => changeAnswer(index, e.target.value)}
                       /> 
@@ -172,7 +196,7 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
                     {broadcaster ? 
                       <>
                         {pollData.answers.length > 2 && <button onClick={() => removeAnswer(index)}>
-                          X
+                          <img src={whiteX} className={"mt-[1vh] w-3 h-3"}/>
                         </button> } 
                       </>
                       : 

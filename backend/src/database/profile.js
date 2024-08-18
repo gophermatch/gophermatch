@@ -154,6 +154,27 @@ export async function updatePollQuestion(user_id, question_text, option_text_1, 
         throw err;
     }
   }
+
+  export async function updatePollVotes(user_id, optionNumber) {
+    try {
+        // Dynamically determine the field to update based on the optionNumber
+        const optionField = `option_votes_${optionNumber}`;
+        
+        const query = `
+            INSERT INTO ${tableNames.u_pollquestions} (user_id, ${optionField})
+            VALUES (?, 1)
+            ON DUPLICATE KEY UPDATE
+            ${optionField} = ${optionField} + 1;
+        `;
+        
+        await db.query(query, [user_id]);
+    } catch (err) {
+        console.log("An error occurred while updating the poll votes.");
+        console.error('Error in updatePollVotes:', err);
+        throw err;
+    }
+}
+
   
 // Get poll options for a user
 export async function getPollOptions(user_id) {

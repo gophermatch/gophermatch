@@ -46,6 +46,7 @@ export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMo
         </div>
       </div>
       }
+      {/*profileMode ? <p className="absolute ml-[40vw] mb-[93vh] z-50 font-roboto_slab">Profile Page</p> : <p className="absolute ml-[40vw] mb-[80vh] z-50 font-roboto_slab">Match Page</p>*/}
       <div className={"relative w-full aspect-[1.8475] h-auto flex flex-col mb-[4vh] bg-white rounded-lg overflow-hidden"}>
       {/*Bookmark button to save the profile to inbox, calls routes from Match.jsx*/}
       {!profileMode && <button onClick={save_func}
@@ -76,7 +77,7 @@ export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMo
                 </div>
               <div className="grow-[2] flex flex-col gap-[3.6%]">
                 <div className={"flex grow-[3] border-none border-2 border-maroon"}>
-                  <Poll revealAnswers={true} user_id={user_id} broadcaster={broadcaster} />
+                  <Poll answersRevealed={profileMode} user_id={user_id} broadcaster={broadcaster} />
                 </div>
                 <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
                   {/* Sleep schedule */}
