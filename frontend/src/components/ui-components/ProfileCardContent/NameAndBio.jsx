@@ -66,7 +66,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                     params: {
                         user_id: user_id,
                         filter: [
-                            'first_name', 'last_name', 'major', 'bio', 'graduating_year', 'gender', 'hometown', 'international'
+                            'first_name', 'last_name', 'major', 'bio', 'graduating_year', 'gender', 'hometown', 'international', 'date_of_birth'
                         ]
                     }
                 });
