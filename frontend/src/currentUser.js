@@ -2,6 +2,7 @@
 // Singleton
 
 import backend from "./backend.js";
+import UserStateBroadcaster from "./UserStateBroadcaster.js";
 
 class User {
     #user_id;  // private member
@@ -37,6 +38,7 @@ class User {
     async updateProfileCompletion()
     {
         this.#profile_completion = await this.fetchProfileCompletion();
+        UserStateBroadcaster.emit('profileStateChange', this.#profile_completion);
     }
 
     async fetchProfileCompletion()

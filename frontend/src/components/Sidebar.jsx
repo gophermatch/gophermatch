@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Logout from './Logout';
 import InboxNotification from './ui-components/InboxNotification';
+import UserStateBroadcaster from '../UserStateBroadcaster';
 import currentUser from '../currentUser';
 
 export default function Sidebar() {
@@ -31,6 +32,18 @@ export default function Sidebar() {
         setLogoClicked(true);
         setInboxClicked(false);
     };
+
+    useEffect(() => {
+        const handleProfileStateChange = (newState) => {
+            setProfileCompletion(newState);
+        };
+
+        UserStateBroadcaster.on('profileStateChange', handleProfileStateChange);
+
+        return () => {
+            UserStateBroadcaster.off('profileStateChange', handleProfileStateChange);
+        };
+    }, []);
 
     // Update notification position when inboxRef changes
     useEffect(() => {
