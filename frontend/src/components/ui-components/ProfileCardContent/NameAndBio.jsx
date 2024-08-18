@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import backend from "../../../backend";
 import styles from '../../../assets/css/name.module.css';
 import male from '../../../assets/images/male-svgrepo-com.svg';
-import woman from '../../../assets/images/woman2-svgrepo-com.svg';
+import woman from '../../../assets/images/woman-svgrepo-com.svg';
 import nonbinary from '../../../assets/images/gender-nonbinary-fill-svgrepo-com.svg';
 
 // TODO: add edit state, is in edit if broadcaster is not null
@@ -13,6 +13,8 @@ export default function NameAndBio({ user_id, broadcaster }) {
     const [name, setFullName] = useState('');
     const [year, setYear] = useState('');
     const [gender, setGender] = useState('');
+    const [internationalStudent, setInternationalStudent] = useState('yes');
+    const [hometown, setHometown] = useState('');
 
     const majorList = [
         'Accounting',
@@ -64,7 +66,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                     params: {
                         user_id: user_id,
                         filter: [
-                            'first_name', 'last_name', 'major', 'bio', 'graduating_year', 'gender'
+                            'first_name', 'last_name', 'major', 'bio', 'graduating_year', 'gender', 'hometown'
                         ]
                     }
                 });
@@ -78,6 +80,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                         setFullName(`${user.first_name} ${user.last_name}`);
                         setMajor(user.major);
                         setBio(user.bio);
+                        setHometown(user.hometown)
 
                         // Extract the last two digits of the graduating year
                         const yearString = user.graduating_year.toString();
@@ -105,6 +108,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                         major: major,
                         graduating_year: `20${year}`, // Format the year as needed
                         gender: gender, // Use the correct field name
+                        hometown: hometown,
                     }
                 });
 
@@ -118,11 +122,11 @@ export default function NameAndBio({ user_id, broadcaster }) {
             <div className="text-[3vh] font-bold flex items-center">
                 {name} 
                 {gender === 'male' ? (
-                  <img src={male} alt="Male" className="ml-2" />
+                  <img src={male} alt="Male" className="ml-[1px]" />
               ) : gender === 'female' ? (
-                  <img src={woman} alt="Female" className="ml-2" />
+                  <img src={woman} alt="Female" className="ml-[1px]" />
               ) : gender === 'nonbinary' ? (
-                  <img src={nonbinary} alt="Non-Binary" className="ml-2" />
+                  <img src={nonbinary} alt="Non-Binary" className="ml-[1px]" />
               ) : null}
             </div>
             <div className="mt-[-1vh] text-[2vh] font-[450]">
@@ -139,9 +143,15 @@ export default function NameAndBio({ user_id, broadcaster }) {
                             </option>
                         ))}
                     </select>
-                    : major} '{year} 
+                    : major} '{year}
             </div>
-            <div className="w-full h-[12vh] rounded-lg mt-1.5 border border-maroon flex">
+            <div className="mt-[-0.9vh] text-[2vh] font-[450]">
+                  {hometown}
+                  {internationalStudent === 'yes' && (
+                  <span className="ml-2 text-[2vh] font-normal">(International Student)</span>
+              )}
+            </div>
+            <div className="w-full h-[12vh] rounded-lg mt-1 border border-maroon flex">
                 <p className="flex-1 text-[1.8vh] text-left font-normal">
                     {broadcaster ?
                         <textarea
