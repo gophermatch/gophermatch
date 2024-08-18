@@ -14,7 +14,7 @@ export default function Settings() {
 
     const fetchUserInfo = async () => {
         try {
-            const columnsToFetch = ['first_name', 'last_name', 'hometown', 'gender', 'housing_preference', 'graduating_year', 'college', 'contact_phone', 'contact_email', 'contact_snapchat', 'contact_instagram'];
+            const columnsToFetch = ['first_name', 'last_name', 'hometown', 'gender', 'housing_preference', 'graduating_year', 'college', 'contact_phone', 'contact_email', 'contact_snapchat', 'contact_instagram', 'international'];
             
             const response = await backend.get('/profile/get-gendata', {
                 params: { 
@@ -184,7 +184,13 @@ export default function Settings() {
                         />
                     </div>
                     <div className="flex flex-col ml-[1.5vw] text-[2vh] mt-[1.5vh]">
-
+                        <div className="text-settings text-[2vh] ml-[0.5vw] ">International Student?</div>
+                        <select className="text-black mt-[0.25vh] h-[4.5vh] w-[18vw] border border-inactive_gray rounded-[0.5vh] cursor-pointer"
+                                value={editValues.international || ''}
+                                onChange={(e) => handleInputChange('international', e.target.value)}>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
                     </div>
                     <div className="flex flex-col mt-[1.5vh]">
                         <div className="text-settings text-[2vh] ml-[1.5vw]">Gender</div>
