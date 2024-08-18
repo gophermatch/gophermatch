@@ -188,8 +188,9 @@ export default function Settings() {
                         <select className="text-black mt-[0.25vh] h-[4.5vh] w-[18vw] border border-inactive_gray rounded-[0.5vh] cursor-pointer"
                                 value={editValues.international || ''}
                                 onChange={(e) => handleInputChange('international', e.target.value)}>
-                            <option>Yes</option>
-                            <option>No</option>
+                            <option value="">Select an option</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
                         </select>
                     </div>
                     <div className="flex flex-col mt-[1.5vh]">

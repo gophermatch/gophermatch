@@ -13,7 +13,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
     const [name, setFullName] = useState('');
     const [year, setYear] = useState('');
     const [gender, setGender] = useState('');
-    const [internationalStudent, setInternationalStudent] = useState('yes');
+    const [internationalStudent, setInternationalStudent] = useState('');
     const [hometown, setHometown] = useState('');
 
     const majorList = [
@@ -66,7 +66,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                     params: {
                         user_id: user_id,
                         filter: [
-                            'first_name', 'last_name', 'major', 'bio', 'graduating_year', 'gender', 'hometown'
+                            'first_name', 'last_name', 'major', 'bio', 'graduating_year', 'gender', 'hometown', 'international'
                         ]
                     }
                 });
@@ -80,7 +80,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                         setFullName(`${user.first_name} ${user.last_name}`);
                         setMajor(user.major);
                         setBio(user.bio);
-                        setHometown(user.hometown)
+                        setHometown(user.hometown);
 
                         // Extract the last two digits of the graduating year
                         const yearString = user.graduating_year.toString();
@@ -88,6 +88,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
 
                         setYear(lastTwoDigits); // Set the formatted year
                         setGender(user.gender); // Set the gender
+                        setInternationalStudent(user.international); // Set international student status
                     }
                 }
             } catch (error) {
@@ -147,7 +148,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
             </div>
             <div className="mt-[-0.9vh] text-[2vh] font-[450]">
                   {hometown}
-                  {internationalStudent === 'yes' && (
+                  {internationalStudent === '1' && (
                   <span className="ml-2 text-[2vh] font-normal">(International Student)</span>
               )}
             </div>
