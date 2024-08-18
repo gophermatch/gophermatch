@@ -66,13 +66,34 @@ export default function AccountCreation() {
     }
 
     async function submit(){
+        // Validate first name and last name are not empty
+        if (!notEmpty(firstName) || !notEmpty(lastName)) {
+            alert("First Name and Last Name cannot be empty.");
+            return;
+        }
+    
+        // Validate graduating year is within 6 years ahead or behind the current year
+        const currentYear = DateTime.now().year;
+        const gradYear = parseInt(graduatingYear, 10);
+        if (isNaN(gradYear) || gradYear < currentYear - 6 || gradYear > currentYear + 6) {
+            alert("Graduating Year must be within 6 years ahead or behind the current year.");
+            return;
+        }
+    
+        // Validate date of birth is correctly formatted and does not contain weird numbers
+        const dobDate = DateTime.fromFormat(dob, "M/dd/yy");
+        if (!dobDate.isValid || dobDate.year < 1900 || dobDate > DateTime.now()) {
+            alert("Date of Birth is invalid or incorrectly formatted. Please use MM/DD/YY format.");
+            return;
+        }
+    
         try {
             const payload = {
                 user_id: currentUser.user_id,
                 data: {
                     first_name: firstName,
                     last_name: lastName,
-                    date_of_birth: DateTime.fromFormat(dob, "M/dd/yy").toSQLDate(),
+                    date_of_birth: dobDate.toSQLDate(),
                     gender: gender,
                     college: college,
                     major: major,
@@ -86,21 +107,22 @@ export default function AccountCreation() {
                     contact_instagram: contactInstagram
                 }
             };
-    
+        
             const res = await backend.post("/profile/set-gendata", payload);
-    
+        
             console.log(res.data.message);
-    
+        
             currentUser.user_data = await currentUser.getAccount();
-    
+        
             console.log("redirecting to match");
-    
+        
             navigate("/login");
-    
+        
         } catch(err) {
             console.error(err);
         }
-    }    
+    }
+    
 
     const notEmpty = (obj) => {
         return obj !== null && obj !== '';
