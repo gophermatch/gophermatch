@@ -81,14 +81,17 @@ export default function NameAndBio({ user_id, broadcaster }) {
                         setMajor(user.major);
                         setBio(user.bio);
                         setHometown(user.hometown);
+                        setGender(user.gender); // Set the gender
 
                         // Extract the last two digits of the graduating year
                         const yearString = user.graduating_year.toString();
                         const lastTwoDigits = yearString.slice(-2);
-
                         setYear(lastTwoDigits); // Set the formatted year
-                        setGender(user.gender); // Set the gender
-                        setInternationalStudent(user.international); // Set international student status
+
+                        // Set international student status and log it for debugging
+                        const intlStudent = user.international.toString(); // Ensure it's a string
+                        setInternationalStudent(intlStudent);
+                        console.log("International Student Status:", intlStudent);
                     }
                 }
             } catch (error) {
