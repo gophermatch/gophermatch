@@ -1,7 +1,7 @@
-create table users (
-    user_id int auto_increment,
-    email varchar(50) not null unique,
-    hashpass varchar(100) not null,
-    primary key (user_id)
-    is_verified boolean
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    hashpass VARCHAR(100) NOT NULL,
+    state ENUM('No base data', 'No profile data', 'Complete') NOT NULL DEFAULT 'No base data',
+    PRIMARY KEY (user_id)
 );
