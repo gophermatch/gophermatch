@@ -11,9 +11,10 @@ export default function Match() {
 
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState({});
-    
+
     const [isDorm, setIsDorm] = useState(false);
-    
+    const [cardTranslate, setCardTranslate] = useState("translate(0px, 0px)");
+
     useEffect(() => {
       setCurrentIndex(0);
       setFilterResults([]);
@@ -23,7 +24,7 @@ export default function Match() {
         const preference = await getHousingPreference();
         setIsDorm(Boolean(preference));
       };
-      
+
       fetchPreference();
 
     }, [filters, userData]);
@@ -35,7 +36,7 @@ export default function Match() {
             user_id: currentUser.user_id
           }
         });
-  
+
         if(preference.data){
           return preference.data.show_dorm;
         }
@@ -46,21 +47,31 @@ export default function Match() {
     };
 
     async function goToNext(decision) {
-        await backend.post('/match/matcher', {
-            user1Id: currentUser.user_id,
-            user2Id: filteredUserIds[currentIndex],
-            decision: decision
-        });
+      if (decision === "match" || decision === "unsure") {
+        // go right
+        setCardTranslate("translate(100vw, 0px)")
+      } else {
+        // go left
+        setCardTranslate("translate(-100vw, 0px)")
+      }
+      await backend.post('/match/matcher', {
+        user1Id: currentUser.user_id,
+        user2Id: filteredUserIds[currentIndex],
+        decision: decision
+      });
 
-        if(currentIndex+1 >= filteredUserIds.length){
-          console.log("ran out of results, appending more");
-          await appendFilterResults()
-          setCurrentIndex(0);
-          return;
-        }
-
+      if(currentIndex+1 >= filteredUserIds.length){
+        console.log("ran out of results, appending more");
+        await appendFilterResults()
+        setCurrentIndex(0);
+      } else {
         setCurrentIndex(currentIndex+1);
-    } 
+      }
+
+      setTimeout(async () => {
+        setCardTranslate("translate(0px, 0px)")
+      }, 500)
+    }
 
     async function showRejectedMatches()
     {
@@ -95,7 +106,8 @@ export default function Match() {
 
     return (
       <div>
-          <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
+        <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
+        <div className="transition-transform" style={{transform: cardTranslate}}>
           <ProfileCard user_id={filteredUserIds[currentIndex]} isDorm={isDorm} save_func={() => goToNext("unsure")} />
           <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3">
               <button onClick={() => goToNext("reject")}
@@ -107,6 +119,7 @@ export default function Match() {
                   <img src="assets/images/match-accept.svg" alt="Match" className="w-[55%] h-[55%] object-contain" />
               </button>
           </div>
+        </div>
       </div>
     );
 }
