@@ -71,6 +71,11 @@ export default function AccountCreation() {
     }
 
     async function submit(){
+        if(internationalStudent === "yes"){
+            setInternationalStudent(true);
+        } else {
+            setInternationalStudent(false);
+        }
         try {
             const payload = {
                 user_id: currentUser.user_id,
@@ -83,7 +88,7 @@ export default function AccountCreation() {
                     major: major,
                     graduating_year: graduatingYear,
                     hometown: hometown,
-                    internationalStudent: internationalStudent,
+                    international: internationalStudent,
                     hear_about_us: referral,
                     housing_preference: housingPreference,
                     contact_email: contactEmail,
