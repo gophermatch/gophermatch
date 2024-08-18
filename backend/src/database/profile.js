@@ -398,3 +398,39 @@ export async function getHousingPreference(user_id) {
         });
     });
   }
+
+  export async function setState(user_id, status) {
+    return new Promise((resolve, reject) => {
+        const query = `
+            UPDATE ${tableNames.users}
+            SET state = ?
+            WHERE user_id = ?
+        `;
+        db.query(query, [status, user_id], (err, results) => {
+            if (err) {
+                console.error(`Error setting state for user_id ${user_id}:`, err);
+                reject(err);
+                return;
+            }
+            resolve(results);
+        });
+    });
+}
+
+export async function getState(user_id) {
+    return new Promise((resolve, reject) => {
+        const queryString = `SELECT state FROM ${tableNames.users} WHERE user_id = ?`;
+        db.query(queryString, [user_id], (err, results) => {
+            if (err) {
+                console.error(`Error fetching state for user_id ${user_id}:`, err);
+                reject(err);
+                return;
+            }
+            if (results.length > 0) {
+                resolve(results[0].state); // return the status
+            } else {
+                resolve(null); // return null if no status is found
+            }
+        });
+    });
+}

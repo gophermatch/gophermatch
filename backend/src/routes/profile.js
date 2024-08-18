@@ -12,7 +12,7 @@ import {
     createPollOption,
     deletePollOption,
     getGeneralData, setGeneralData,
-    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference
+    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, setState, getState
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -378,6 +378,44 @@ router.get('/all-tag-ids', async (req, res) => {
     } catch (error) {
         console.error('Error getting all tag ids:', error);
         res.status(500).json({ error: 'Failed to get all tag ids' });
+    }
+});
+
+// Route to set the status for a user
+router.put('/set-state', async (req, res) => {
+    const { user_id, state } = req.body;
+
+    if (!user_id || !state) {
+        return res.status(400).json({ error: 'Missing user_id or state parameter' });
+    }
+
+    try {
+        await setState(user_id, state);
+        res.status(200).json({ message: 'State updated successfully' });
+    } catch (error) {
+        console.error('Error setting state:', error);
+        res.status(500).json({ error: 'Failed to set state' });
+    }
+});
+
+// Route to get the status for a user
+router.get('/profile-state', async (req, res) => {
+    const { user_id } = req.query;
+
+    if (!user_id) {
+        return res.status(400).json({ error: 'Missing user_id parameter' });
+    }
+
+    try {
+        const state = await getState(user_id);
+        if (state !== null) {
+            res.status(200).json({ profile_completion: state });
+        } else {
+            res.status(404).json({ error: 'User state not found' });
+        }
+    } catch (error) {
+        console.error('Error getting state:', error);
+        res.status(500).json({ error: 'Failed to get state' });
     }
 });
 
