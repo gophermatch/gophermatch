@@ -93,9 +93,9 @@ export default function Filter({ setFiltersExternal, setUserDataExternal, profil
     }
 
     return (
-        <div>
+        <div className="">
             <div
-                className={`flex absolute bg-dark_maroon h-[6vh] w-[80vw] left-[3%] rounded-b-xl items-center justify-center transition-transform duration-500 ${isOpen ? "translate-y-[0vh]" : "translate-y-[-6vh]"}`}>
+                className={`flex absolute bg-dark_maroon h-[6vh] w-[80vw] left-[3%] rounded-b-xl items-center justify-center transition-transform duration-500 ${isOpen ? "translate-y-[0vh]" : "translate-y-[-6vh]"} z-50`}>
                 <div
                     className="flex space-x-[0.5vw] text-black font-normal text-[1.1vw] font-inconsolata border-5 items-center">
                     <div className="relative">
@@ -257,6 +257,7 @@ export default function Filter({ setFiltersExternal, setUserDataExternal, profil
     </g>
   </g>
 </svg>
+
 
 
         </div>

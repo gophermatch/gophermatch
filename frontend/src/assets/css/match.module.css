@@ -3,6 +3,13 @@ body{
     background-color: rgb(251, 242, 242);
 }
 
+.relative {
+    position: relative;
+  }
+  
+  .absolute {
+    position: absolute;
+  }  
 
 #MatchPage {
     display: flex;

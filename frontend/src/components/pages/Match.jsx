@@ -94,19 +94,20 @@ export default function Match() {
     }
 
     return (
-      <div>
-          <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
-          <ProfileCard user_id={filteredUserIds[currentIndex]} isDorm={isDorm} save_func={() => goToNext("unsure")} />
-          <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3">
-              <button onClick={() => goToNext("reject")}
-                      className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
-                  <img src="assets/images/match-reject.svg" alt="Reject" className="w-[50%] h-[50%] object-contain" />
-              </button>
-              <button onClick={() => goToNext("match")}
-                      className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
-                  <img src="assets/images/match-accept.svg" alt="Match" className="w-[55%] h-[55%] object-contain" />
-              </button>
-          </div>
+      <div className="relative">
+      <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0} className="absolute z-50"/>
+      <ProfileCard className="relative z-10" user_id={filteredUserIds[currentIndex]} isDorm={isDorm} save_func={() => goToNext("unsure")} />
+      <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3">
+          <button onClick={() => goToNext("reject")}
+                  className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
+              <img src="assets/images/match-reject.svg" alt="Reject" className="w-[50%] h-[50%] object-contain" />
+          </button>
+          <button onClick={() => goToNext("match")}
+                  className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
+              <img src="assets/images/match-accept.svg" alt="Match" className="w-[55%] h-[55%] object-contain" />
+          </button>
       </div>
+  </div>
+  
     );
 }
