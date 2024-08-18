@@ -112,6 +112,7 @@ const LandingPage = () => {
                     style={{
                       height: `${getButtonSize(index)}vh`,
                       width: `${getButtonSize(index)}vh`,
+                      transition: 'all 0.3s ease-in-out', // Transition for smooth resizing
                     }}
                     className={`rounded-full mx-[1vh] ${
                       currentReview === index ? 'bg-maroon_new' : 'bg-gray'
