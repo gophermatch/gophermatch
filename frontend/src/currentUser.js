@@ -31,12 +31,19 @@ class User {
 
         this.#gen_data = await this.getAccount()
         
+        await this.updateProfileCompletion();
+    }
+
+    async updateProfileCompletion()
+    {
         this.#profile_completion = await this.fetchProfileCompletion();
     }
 
     async fetchProfileCompletion()
     {
-        return "incomplete_profile";
+        var res = await backend.get('/profile/profile-state', { params: { user_id: this.#user_id } })
+
+        return res.data.profile_completion;
         // Call the route here
     }
 
