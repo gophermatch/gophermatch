@@ -14,6 +14,7 @@ export default function Match() {
 
     const [isDorm, setIsDorm] = useState(false);
     const [cardTranslate, setCardTranslate] = useState("translate(0px, 0px)");
+    const [transition, setTransition] = useState("transition-transform");
 
     useEffect(() => {
       setCurrentIndex(0);
@@ -69,8 +70,13 @@ export default function Match() {
       }
 
       setTimeout(async () => {
-        setCardTranslate("translate(0px, 0px)")
+        setTransition("transition-none")
+        setCardTranslate(prev => prev === "translate(100vw, 0px)" ? "translate(-100vw, 0px)" : "translate(100vw, 0px)")
       }, 500)
+      setTimeout(async () => {
+        setTransition("transition-transform")
+        setCardTranslate("translate(0px, 0px)")
+      }, 600)
     }
 
     async function showRejectedMatches()
@@ -107,7 +113,7 @@ export default function Match() {
     return (
       <div>
         <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
-        <div className="transition-transform" style={{transform: cardTranslate}}>
+        <div className={`${transition} duration-[500ms]`} style={{transform: cardTranslate}}>
           <ProfileCard user_id={filteredUserIds[currentIndex]} isDorm={isDorm} save_func={() => goToNext("unsure")} />
           <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3">
               <button onClick={() => goToNext("reject")}
