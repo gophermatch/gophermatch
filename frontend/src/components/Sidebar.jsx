@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Logout from './Logout';
 import InboxNotification from './ui-components/InboxNotification';
+import UserStateBroadcaster from '../UserStateBroadcaster';
 import currentUser from '../currentUser';
 
 export default function Sidebar() {
@@ -11,11 +12,38 @@ export default function Sidebar() {
     const inboxRef = useRef(null); // Ref for the Inbox NavLink
     const [notificationPosition, setNotificationPosition] = useState({ top: 0, left: 0 });
 
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    // This will be called every time the location changes
+    // Makes the most sense to have this be the only place setActivePage is called
+    useEffect(() => {
+        setActivePage(location.pathname);
+    }, [location]);
+
+    const [profileCompletion, setProfileCompletion] = useState(currentUser.profile_completion);
+
+    useEffect(() => {
+        setProfileCompletion(currentUser.profile_completion);
+        console.log("Updating: ", currentUser.profile_completion)
+    }, [currentUser.profile_completion]);
+
     const handleLogoClick = () => {
         setLogoClicked(true);
-        setActivePage('/match');
         setInboxClicked(false);
     };
+
+    useEffect(() => {
+        const handleProfileStateChange = (newState) => {
+            setProfileCompletion(newState);
+        };
+
+        UserStateBroadcaster.on('profileStateChange', handleProfileStateChange);
+
+        return () => {
+            UserStateBroadcaster.off('profileStateChange', handleProfileStateChange);
+        };
+    }, []);
 
     // Update notification position when inboxRef changes
     useEffect(() => {
@@ -43,13 +71,27 @@ export default function Sidebar() {
                         ['People', '/people'],
                         ['Subleases', '/sublease']
                     ].map(([label, destination]) => (
-                        <NavLink
+                        <>
+                        {destination == "/match" && profileCompletion != "complete" ? 
+
+                        (
+                            <span
+                            onClick={() => {
+                                alert("Fill out your profile to access the match page!");
+                                navigate("/profile");
+                            }}
+                            className={`cursor-pointer tooltip select-none max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 text-dark_inactive_gray`}>
+                                Match
+                            </span>
+                        )
+                        :
+                        (<NavLink
                             key={label}
-                            to={destination}
+                            // Use # as destination for the match page when the match page is locked out
+                            to={destination == "/match" && profileCompletion != "complete" ? "#" : destination}
                             id={label === 'Inbox' ? 'inbox-navlink' : null} // Assign ID to Inbox NavLink
                             className={`max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 ${activePage === destination ? 'text-maroon_new bg-white' : 'hover:bg-maroon_dark text-white'}`}
                             onClick={() => {
-                                setActivePage(destination);
                                 if (label === 'Inbox') {
                                     setInboxClicked(true);
                                 } else {
@@ -63,7 +105,8 @@ export default function Sidebar() {
                             {
                                 label === 'People' && <InboxNotification inboxClicked={inboxClicked} />
                             }
-                        </NavLink>
+                        </NavLink>)}
+                        </>
                     ))}
 
                     <div className="text-white text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] font-bold w-[14vw] duration-200 rounded-2xl hover:bg-maroon_dark cursor-pointer inline-flex items-center">

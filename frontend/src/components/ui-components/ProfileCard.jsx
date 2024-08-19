@@ -6,12 +6,13 @@ import ApartmentInfo from "./ProfileCardContent/ApartmentInfo";
 import Poll from "./ProfileCardContent/Poll";
 import Qna from "./ProfileCardContent/Qna";
 import preferenceIcon from "../../assets/images/housingPreferenceIcon.svg";
+import SleepSchedule from './ProfileCardContent/SleepSchedule';
 
 
 // user_id: number, isDorm: boolean, showApt: boolean, broadcaster?: SignalBroadcaster
 export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, dormToggle, profileMode, save_func, isDormBackend}) {
   return ( // TODO
-    <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new`}>
+    <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new relative z-10`}>
       {profileMode &&
       <div className={"flex mr-[35vw]"}>
         <div className={`flex flex-row-reverse font-roboto_slab text-white w-[12vw] h-[4vh] justify-center items-center rounded-t-[1vw] ${
@@ -79,8 +80,7 @@ export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, do
                   <Poll answersRevealed={profileMode} user_id={user_id} broadcaster={broadcaster} />
                 </div>
                 <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
-                  {/* Sleep schedule */}
-                  Sleep sched here
+                  <SleepSchedule user_id={user_id} broadcaster={broadcaster} />
                 </div>
               </div>
             </div>

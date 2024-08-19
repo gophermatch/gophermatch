@@ -440,3 +440,71 @@ export async function getHousingPreference(user_id) {
         });
     });
   }
+
+export async function getState(user_id) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // Check if user_id exists in u_generaldata or u_pictures
+            const accountCheckQuery = `
+                SELECT 
+                    (SELECT COUNT(*) FROM ${tableNames.u_generaldata} WHERE user_id = ?) AS hasGeneralData,
+                    (SELECT COUNT(*) FROM ${tableNames.u_pictures} WHERE user_id = ?) AS hasPictures;
+            `;
+            const [accountCheckResult] = await new Promise((resolve, reject) => {
+                db.query(accountCheckQuery, [user_id, user_id], (err, results) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(results);
+                });
+            });
+
+            const hasGeneralData = accountCheckResult.hasGeneralData > 0;
+            const hasPicturesTableEntry = accountCheckResult.hasPictures > 0;
+
+            // If the user doesn't exist in both tables, return "incomplete_account"
+            if (!hasGeneralData && !hasPicturesTableEntry) {
+                return resolve({ profile_completion: "incomplete_account" });
+            }
+
+            // Check if bio exists and is not empty
+            const bioQuery = `SELECT bio FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
+            const [bioResult] = await new Promise((resolve, reject) => {
+                db.query(bioQuery, [user_id], (err, results) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(results);
+                });
+            });
+
+            const hasBio = bioResult && bioResult.bio && bioResult.bio.trim() !== "";
+
+            // Check if the user has at least one picture
+            const pictureQuery = `SELECT COUNT(*) AS pictureCount FROM ${tableNames.u_pictures} WHERE user_id = ?`;
+            const [pictureResult] = await new Promise((resolve, reject) => {
+                db.query(pictureQuery, [user_id], (err, results) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(results);
+                });
+            });
+
+            const hasPicture = pictureResult.pictureCount > 0;
+
+            // Determine the state based on the checks
+            let state = "incomplete_profile"; // Default state if either bio or pictures are missing
+            if (hasBio && hasPicture) {
+                state = "complete";
+            }
+
+            // Return the determined state
+            resolve({ profile_completion: state });
+        } catch (error) {
+            console.error('Error getting status:', error);
+            reject(new Error('Failed to get status'));
+        }
+    });
+}
+

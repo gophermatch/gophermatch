@@ -12,7 +12,7 @@ import {
     createPollOption,
     deletePollOption,
     getGeneralData, setGeneralData,
-    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, updatePollVotes, wipePollVotes
+    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, getState, updatePollVotes, wipePollVotes
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -413,5 +413,23 @@ router.get('/all-tag-ids', async (req, res) => {
         res.status(500).json({ error: 'Failed to get all tag ids' });
     }
 });
+
+// Route to get the profile completion status for a user
+router.get('/profile-state', async (req, res) => {
+    const { user_id } = req.query;
+
+    if (!user_id) {
+        return res.status(400).json({ error: 'Missing user_id parameter' });
+    }
+
+    try {
+        const status = await getState(user_id);
+        res.status(200).json(status);
+    } catch (error) {
+        console.error('Error getting profile completion status:', error);
+        res.status(500).json({ error: 'Failed to get profile completion status' });
+    }
+});
+
 
 export default router

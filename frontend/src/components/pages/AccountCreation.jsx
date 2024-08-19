@@ -20,6 +20,7 @@ export default function AccountCreation() {
     const [graduatingYear, setGraduatingYear] = React.useState('')
 
     const [hometown, setHometown] = React.useState('')
+    const [internationalStudent, setInternationalStudent] = React.useState('')
 
     const [referral, setReferral] = React.useState('')
     const [housingPreference, setHousingPreference] = React.useState('')
@@ -38,6 +39,10 @@ export default function AccountCreation() {
     const handleGenderChange = (event) => {
         setGender(event.target.value);
     };
+
+    const handleInternationalChange = (event) => {
+        setInternationalStudent(event.target.value);
+    }
 
     const handleReferralChange = (event) => {
         setReferral(event.target.value);
@@ -66,6 +71,11 @@ export default function AccountCreation() {
     }
 
     async function submit(){
+        if(internationalStudent === "yes"){
+            setInternationalStudent(true);
+        } else {
+            setInternationalStudent(false);
+        }
         try {
             const payload = {
                 user_id: currentUser.user_id,
@@ -78,6 +88,7 @@ export default function AccountCreation() {
                     major: major,
                     graduating_year: graduatingYear,
                     hometown: hometown,
+                    international: internationalStudent,
                     hear_about_us: referral,
                     housing_preference: housingPreference,
                     contact_email: contactEmail,
@@ -151,11 +162,19 @@ export default function AccountCreation() {
                   </div>
 
                   <div
-                      className={`absolute left-0 right-0 mt-[5rem] flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 3 ? 'translate-x-0' : (pageNum < 3 ? 'translate-x-[160%] pointer-events-none' : '-translate-x-[160%] pointer-events-none')}`}>
-                      <AccountTextField maxLength={255} visPageNum={3} curPageNum={pageNum}
+                      className={`absolute left-0 right-0 mt-[3rem] flex flex-col w-1/2 m-auto transition-transform duration-1000 ${pageNum === 3 ? 'translate-x-0' : (pageNum < 3 ? 'translate-x-[160%] pointer-events-none' : '-translate-x-[160%] pointer-events-none')}`}>
+                        <AccountTextField maxLength={255} visPageNum={3} curPageNum={pageNum}
                                         enterKeyPress={enterKeyPress}
                                         fieldValue={hometown} valueSetter={setHometown}
                                         placeholder="Hometown"></AccountTextField>
+                        <select 
+                            className="text-maroon_new w-90 rounded-md mt-6 p-3 shadow-text-field border-2 border-maroon_new transition duration-100 font-inter hover:shadow-text-field-selected focus: text-black"
+                            value={internationalStudent} onKeyUp={enterKeyPress} valueSetter={setInternationalStudent}
+                            onChange={handleInternationalChange}>     
+                            <option value="">International Student?</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
                   </div>
 
                   <div

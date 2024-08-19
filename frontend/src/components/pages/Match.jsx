@@ -3,6 +3,7 @@ import { ProfileCard } from '../ui-components/ProfileCard';
 import Filter from '../ui-components/Filter';
 import backend from '../../backend';
 import currentUser from '../../currentUser';
+import styles from "../../assets/css/match.module.css";
 
 export default function Match() {
 
@@ -11,9 +12,11 @@ export default function Match() {
 
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState({});
-    
+
     const [isDorm, setIsDorm] = useState(false);
-    
+    const [cardTranslate, setCardTranslate] = useState("translate(0px, 0px)");
+    const [transition, setTransition] = useState("transition-transform");
+
     useEffect(() => {
       setCurrentIndex(0);
       setFilterResults([]);
@@ -23,7 +26,7 @@ export default function Match() {
         const preference = await getHousingPreference();
         setIsDorm(Boolean(preference));
       };
-      
+
       fetchPreference();
 
     }, [filters, userData]);
@@ -35,7 +38,7 @@ export default function Match() {
             user_id: currentUser.user_id
           }
         });
-  
+
         if(preference.data){
           return preference.data.show_dorm;
         }
@@ -46,21 +49,36 @@ export default function Match() {
     };
 
     async function goToNext(decision) {
-        await backend.post('/match/matcher', {
-            user1Id: currentUser.user_id,
-            user2Id: filteredUserIds[currentIndex],
-            decision: decision
-        });
+      if (decision === "match" || decision === "unsure") {
+        // go right
+        setCardTranslate("translate(100vw, 0px)")
+      } else {
+        // go left
+        setCardTranslate("translate(-100vw, 0px)")
+      }
+      await backend.post('/match/matcher', {
+        user1Id: currentUser.user_id,
+        user2Id: filteredUserIds[currentIndex],
+        decision: decision
+      });
 
-        if(currentIndex+1 >= filteredUserIds.length){
-          console.log("ran out of results, appending more");
-          await appendFilterResults()
-          setCurrentIndex(0);
-          return;
-        }
-
+      if(currentIndex+1 >= filteredUserIds.length){
+        console.log("ran out of results, appending more");
+        await appendFilterResults()
+        setCurrentIndex(0);
+      } else {
         setCurrentIndex(currentIndex+1);
-    } 
+      }
+
+      setTimeout(async () => {
+        setTransition("transition-none")
+        setCardTranslate(prev => prev === "translate(100vw, 0px)" ? "translate(-100vw, 0px)" : "translate(100vw, 0px)")
+      }, 500)
+      setTimeout(async () => {
+        setTransition("transition-transform")
+        setCardTranslate("translate(0px, 0px)")
+      }, 600)
+    }
 
     async function showRejectedMatches()
     {
@@ -94,19 +112,20 @@ export default function Match() {
     }
 
     return (
-      <div>
-          <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
-          <ProfileCard user_id={filteredUserIds[currentIndex]} isDorm={isDorm} profileMode={false} save_func={() => goToNext("unsure")} />
-          <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3">
-              <button onClick={() => goToNext("reject")}
-                      className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
-                  <img src="assets/images/match-reject.svg" alt="Reject" className="w-[50%] h-[50%] object-contain" />
-              </button>
-              <button onClick={() => goToNext("match")}
-                      className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
-                  <img src="assets/images/match-accept.svg" alt="Match" className="w-[55%] h-[55%] object-contain" />
-              </button>
-          </div>
+      <div className="relative">
+      <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0} className="absolute z-50"/>
+      <ProfileCard className="relative z-10" user_id={filteredUserIds[currentIndex]} isDorm={isDorm} save_func={() => goToNext("unsure")} />
+      <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3">
+          <button onClick={() => goToNext("reject")}
+                  className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
+              <img src="assets/images/match-reject.svg" alt="Reject" className="w-[50%] h-[50%] object-contain" />
+          </button>
+          <button onClick={() => goToNext("match")}
+                  className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
+              <img src="assets/images/match-accept.svg" alt="Match" className="w-[55%] h-[55%] object-contain" />
+          </button>
       </div>
+  </div>
+  
     );
 }
