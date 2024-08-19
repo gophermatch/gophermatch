@@ -134,20 +134,20 @@ export default function NameAndBio({ user_id, broadcaster }) {
               ) : null}
             </div>
             <div className="mt-[-1vh] text-[2vh] font-[450]">
-                {broadcaster ?
-                    <select
-                        id="selectionBox"
-                        value={major}
-                        onChange={(e) => setMajor(e.target.value)}
-                        className="border-2 rounded-lg mt-[1vh]"
-                    >
-                        {majorList.map((option, index) => (
-                            <option key={index} value={option}>
-                                {option}
-                            </option>
-                        ))}
-                    </select>
-                    : major} '{year}
+              {broadcaster ? 
+                <select
+                  id="selectionBox"
+                  value={major}
+                  onChange={(e) => setMajor(e.target.value)}
+                  className="border-2 rounded-lg mt-[1vh] hover:bg-maroon_transparent2 cursor cursor-pointer"
+                >
+                  {majorList.map((option, index) => (
+                    <option key={index} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select> 
+              : major}
             </div>
             <div className="mt-[-0.9vh] text-[2vh] font-[450]">
                   {hometown}

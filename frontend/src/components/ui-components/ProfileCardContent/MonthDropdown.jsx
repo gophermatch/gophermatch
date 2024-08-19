@@ -20,7 +20,7 @@ const MonthDropdown = ({ initialValue, onChange }) => {
 
   return (
     <span>
-      <select id="month" value={selectedMonth} onChange={handleChange} className={"border-[1px] mt-[5px]"}>
+      <select id="month" value={selectedMonth} onChange={handleChange} className={"border-[1px] mt-[5px] hover:bg-maroon_transparent2 cursor-pointer"}>
         <option value="">Select a month</option>
         {months.map((month, index) => (
           <option key={index} value={month}>

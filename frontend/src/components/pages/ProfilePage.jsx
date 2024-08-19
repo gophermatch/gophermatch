@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { ProfileCard} from '../ui-components/ProfileCard';
+import { ProfileCard } from '../ui-components/ProfileCard';
 import currentUser from '../../currentUser';
 import backend from '../../backend';
 import pencil from "../../assets/images/pencil.svg";
 import close from "../../assets/images/red_x.svg";
-
+import hoverClose from '../../assets/images/gold_x.svg';
 
 class SaveBroadcaster {
   callbacks = [];
@@ -30,8 +30,8 @@ export default function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false); // waiting for backend response
   const [isEditing, setIsEditing] = useState(false); // editing profile data
   const [isDorm, setIsDorm] = useState(true); // dorm or apartment mode
-
   const [nextKey, setNextKey] = useState(0); // incrementing key will cause profile card to re-mount
+  const [isHovered, setIsHovered] = useState(false); // state for hover effect
 
   async function dormToggleBackend() {
     await backend.put('profile/toggle-dorm', {
@@ -40,18 +40,18 @@ export default function ProfilePage() {
   };
 
   const getHousingPreference = async () => {
-    try{
+    try {
       const preference = await backend.get('profile/get-housingpref', {
         params: {
           user_id: currentUser.user_id
         }
       });
 
-      if(preference.data){
+      if (preference.data) {
         return preference.data.show_dorm;
       }
       return 0;
-    }catch(error){
+    } catch (error) {
       console.error('Error fetching housing preference:', error);
     }
   };
@@ -79,18 +79,34 @@ export default function ProfilePage() {
     setNextKey(key => key + 1)
   }
 
-  //TODO: set the positioning here for the edit/save/cancel buttons once scaling is redone
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
+
   const save_or_cancel = (isEditing ?
     <div className="absolute flex align-middle justify-between top-[40px] right-[40px] h-[4vh]">
-      <button onClick={onSaveClick} className={`rounded-lg px-[35px] font-roboto_slab text-white ${isSaving ? "bg-newwhite" : "bg-maroon"}`}>Save Changes</button>
-      <button onClick={discardChanges} className="w-[20px] ml-[15px]">
-        <img src={close} />
+      <button onClick={onSaveClick} className={`rounded-lg px-[35px] font-roboto_slab text-white hover:bg-login ${isSaving ? "bg-newwhite" : "bg-maroon"}`}>Save Changes</button>
+      <button 
+        onClick={discardChanges} 
+        className="w-[20px] ml-[15px]" 
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <img src={isHovered ? hoverClose : close} alt="Close" />
       </button>
     </div>
     :
-    <button onClick={() => setIsEditing(true)} className="absolute top-[40px] right-[40px] w-[5vh] h-[5vh]">
-      <img src={pencil} />
-    </button>
+    <button
+    onClick={() => setIsEditing(true)}
+    className="absolute top-[40px] right-[40px] w-[5vh] h-[5vh]"
+    onMouseEnter={() => setIsHovered(true)}
+    onMouseLeave={() => setIsHovered(false)}
+    style={{
+      transition: 'transform 0.3s ease',
+      transform: isHovered ? 'scale(1.2)' : 'scale(1)'
+    }}
+  >
+    <img src={pencil} alt="Edit" />
+  </button>
   )
 
   useEffect(() => {
@@ -104,15 +120,15 @@ export default function ProfilePage() {
 
   return (
     <>
-    <ProfileCard
-      key={nextKey}
-      user_id={currentUser.user_id}
-      isDorm={isDorm}
-      broadcaster={isEditing ? broadcaster : null}
-      dormToggle={dormToggle}
-      profileMode={true}
-    />
-    {save_or_cancel}
+      <ProfileCard
+        key={nextKey}
+        user_id={currentUser.user_id}
+        isDorm={isDorm}
+        broadcaster={isEditing ? broadcaster : null}
+        dormToggle={dormToggle}
+        profileMode={true}
+      />
+      {save_or_cancel}
     </>
   )
 }
