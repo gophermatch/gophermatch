@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import backend from "../../../backend";
+import whiteX from "../../../assets/images/whiteX.svg";
 import ApartmentTag from "./ApartmentTag.jsx";
 import closeImg from "../../../assets/images/close.svg"
 
-export default function Poll({revealAnswers, user_id, broadcaster}) {
+export default function Poll({answersRevealed, user_id, broadcaster}) {
   const defaultPollData = {
     question: "Question Here",
     answers: [
@@ -15,65 +16,80 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
   };
 
   const [pollData, setPollData] = useState(defaultPollData);
-  const [answerRevealed, setAnswerRevealed] = useState(revealAnswers);
+  const [answerRevealed, setAnswerRevealed] = useState(answersRevealed);
+  const [resetVotes, setResetVotes] = useState(false);
   const [voteTotal, setVoteTotal] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const pollOps = await backend.get('/profile/poll-options', {
-          params: {
-            user_id: user_id
-          }
-        });
-
         const pollQs = await backend.get('/profile/poll-questions', {
           params: {
             user_id: user_id
           }
         });
 
-        if (pollOps.data.length >= 2 && pollQs.data) {
-          const options = pollOps.data.map(option => ({
-            answer: option.option_text,
-            votes: option.num_votes
-          }));
-
-          setPollData({
-            answers: options
-          });
-        }
-
-        if (pollQs.data){
-          setPollData(prevPollData => ({
-            ...prevPollData,
-            question: pollQs.data[0]?.question_text
-          }));
-        }
+        if (pollQs.data && pollQs.data[0]?.question_text != null) {
+            const answers = [
+              {
+                answer: pollQs.data[0]?.option_text_1,
+                votes: pollQs.data[0]?.option_votes_1
+              },
+              {
+                answer: pollQs.data[0]?.option_text_2,
+                votes: pollQs.data[0]?.option_votes_2
+              },
+              {
+                answer: pollQs.data[0]?.option_text_3,
+                votes: pollQs.data[0]?.option_votes_3
+              },
+              {
+                answer: pollQs.data[0]?.option_text_4,
+                votes: pollQs.data[0]?.option_votes_4
+              }
+            ].filter(option => option.answer !== 'N/A');
+          
+            setPollData({
+              question: pollQs.data[0]?.question_text,
+              answers: answers
+            });
+          }
+          
       } catch (error) {
         console.error('Error fetching poll data:', error);
       }
     }
 
     fetchData();
+    setAnswerRevealed(answersRevealed);
+  }, [user_id]);
 
-    for (let i = 0; i < pollData.answers.length; i++){
-      setVoteTotal(voteTotal + pollData.answers[i].votes);
+  async function vote(numb) {
+    console.log(user_id);
+    try {
+      await backend.put('/profile/poll-question-vote', {
+        user_id: user_id,
+        voteSlot: numb
+      });
+        
+    } catch (error) {
+      console.error('Error voting:', error);
     }
-
-  }, [user_id], pollData);
-
-  function votePercent(votes) {
-    if (voteTotal === 0) {
-      return 0;
-    }
-    return Math.round((votes / voteTotal) * 100);
   }
+  
+  function displayResults(index){
+    const updatedAnswers = pollData.answers.map((option, i) => 
+        i === index ? { ...option, votes: option.votes + 1 } : option
+    );
 
-  function displayResults(){
-      /*backend should be linked here to add a vote */
-      setVoteTotal(voteTotal+1);
-      setAnswerRevealed(true);
+    setPollData(prevData => ({
+        ...prevData,
+        answers: updatedAnswers
+    }));
+
+    vote(index+1)
+    setVoteTotal(prevTotal => prevTotal+1);
+    setAnswerRevealed(prev => !prev);
   }
 
   const changeAnswer = (answerIndex, newAnswerText) => {
@@ -110,18 +126,37 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
   };
 
   useEffect(() => {
-    // add backend post request for poll here
     if (broadcaster) {
-        const cb = () =>
-          backend.put('/profile/poll-question', {
-            user_id: user_id,
-            question_text: pollData.question
-          });
+      const cb = () => {
+        backend.put('/profile/poll-question', {
+          user_id: user_id,
+          question_text: pollData.question,
+          option_text_1: pollData.answers[0]?.answer || "N/A",
+          option_text_2: pollData.answers[1]?.answer || "N/A",
+          option_text_3: pollData.answers[2]?.answer || "N/A",
+          option_text_4: pollData.answers[3]?.answer || "N/A"
+        }).then(() => {
+          if (resetVotes) {
+            return backend.put('/profile/poll-vote-wipe', {
+              user_id: user_id
+            });
+          }
+        }).catch(error => {
+          console.error("Error updating poll question or wiping votes:", error);
+        });
+      };
 
-        broadcaster.connect(cb)
-        return () => broadcaster.disconnect(cb)
+      broadcaster.connect(cb)
+      return () => broadcaster.disconnect(cb)
     }
-}, [broadcaster, pollData])
+
+    let totalVotes = 0;
+    for (let i = 0; i < pollData.answers.length; i++) {
+      totalVotes += pollData.answers[i].votes;
+    }
+    setVoteTotal(totalVotes);
+
+}, [broadcaster, pollData, resetVotes])
 
   return (
     <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-lg font-roboto_slab font-medium"}>
@@ -132,7 +167,7 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
             {broadcaster ?
               <input
                 id="Question"
-                className="text-center rounded-lg bg-offwhite"
+                className="text-center rounded-lg text-base mb-[1vh] mt-[1vh] bg-gray text-maroon"
                 value={pollData.question}
                 onChange={(e) => changeQuestion(e.target.value)}
               />
@@ -153,18 +188,61 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
             width: '0'
           }
         }}>
-          {pollData.answers.map((answer, index) => (
-            <div key={index} className="relative w-full h-[38px] rounded-lg flex flex-col justify-center align-middle bg-maroon">
-              {broadcaster ?
-                <>
-                <input
-                  id={"Answer" + index}
-                  className="text-center rounded-lg mx-auto h-full my-2 bg-dark_maroon"
-                  value={answer.answer}
-                  onChange={(e) => changeAnswer(index, e.target.value)}
-                />
-                <button onClick={() => removeAnswer(index)} className="absolute right-3">
-                  <img src={closeImg} />
+          {answerRevealed ? 
+            <>
+            {pollData.answers.map((newAnswer, index) => (
+              <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
+                <div className={"rounded-lg w-[97%] h-[33px] relative border-maroon text-xs text-white bg-maroon"}>
+                  {!broadcaster && <div style={{ width: `${voteTotal > 0 ? (pollData.answers[index].votes / voteTotal * 100) : 0}%` }} className={`bg-dark_maroon rounded-lg flex h-[100%]`}/>}
+                  <div className={"absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
+                    {broadcaster ? 
+                      <input
+                        id={"Answer" + index}
+                        className="text-center rounded-lg bg-dark_maroon text-white"
+                        value={newAnswer.answer}
+                        onChange={(e) => changeAnswer(index, e.target.value)}
+                      /> 
+                      : newAnswer.answer}
+                  </div>
+                  <div className={"absolute left-[92.5%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
+                    {broadcaster ? 
+                      <>
+                        {pollData.answers.length > 2 && <button onClick={() => removeAnswer(index)}>
+                          <img src={whiteX} className={"mt-[1vh] w-3 h-3"}/>
+                        </button> } 
+                      </>
+                      : 
+                      <>
+                      {voteTotal > 0 ? `${(newAnswer.votes / voteTotal * 100).toFixed(1)}%` : "0%"}
+                      </>
+                    }
+                  </div>
+                </div>
+              </p>
+            ))}
+              {(broadcaster && pollData.answers.length < 4) && (
+                <div className="flex justify-center w-full mt-[1vh]">
+                  <button onClick={addAnswer}>
+                    ➕
+                  </button>
+                </div>
+              )}
+              {broadcaster && 
+                <div className="flex justify-center w-full mt-[1vh]">
+                  <button className={"rounded-lg w-[97%] h-[33px] relative text-xs text-black bg-gold"} onClick={() => setResetVotes(prevState => !prevState)}>
+                    Reset Votes
+                    {resetVotes && <div className={"absolute left-[92.5%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
+                    ✅
+                    </div>}
+                  </button>
+                </div>
+              }
+          </>
+          :
+            pollData.answers.map((newAnswer, index) => (
+              <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
+                <button className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"} onClick={() => displayResults(index)}>
+                  {newAnswer.answer}
                 </button>
                 </>
                 :

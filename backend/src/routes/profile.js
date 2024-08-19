@@ -12,7 +12,7 @@ import {
     createPollOption,
     deletePollOption,
     getGeneralData, setGeneralData,
-    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, getState
+    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, getState, updatePollVotes, wipePollVotes
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -141,10 +141,43 @@ router.get('/poll-questions', async (req, res) => {
     }
 });
 
+router.put('/poll-vote-wipe', async (req, res) => {
+    const {user_id} = req.body;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const questions = await wipePollVotes(user_id);
+        res.status(200).json(questions);
+    } catch (error) {
+        console.error("Error wiping poll votes:", error);
+        res.status(500).json(createErrorObj("Failed to wipe poll votes. Please try again later."));
+    }
+});
+
+router.put('/poll-question-vote', async (req, res) => {
+    const {user_id, voteSlot} = req.body;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const questions = await updatePollVotes(user_id, voteSlot);
+        res.status(200).json(questions);
+    } catch (error) {
+        console.error("Error adding a new vote:", error);
+        res.status(500).json(createErrorObj("Failed to add a new vote. Please try again later."));
+    }
+});
+
 // Update poll question for a user
 router.put('/poll-question', async (req, res) => {
-    const user_id = req.body.user_id;
-    const question_text = req.body.question_text;
+    const {user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4} = req.body;
 
     if (!user_id || !question_text) {
         res.status(400).json(createErrorObj("Must specify user_id and question_text to update poll question!"));
@@ -152,7 +185,7 @@ router.put('/poll-question', async (req, res) => {
     }
 
     try {
-        await updatePollQuestion(user_id, question_text);
+        await updatePollQuestion(user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4);
         res.status(200).json({ message: "Poll question updated!" });
     } catch (error) {
         console.error("Error updating poll question:", error);

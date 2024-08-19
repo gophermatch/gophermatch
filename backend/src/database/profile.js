@@ -134,19 +134,40 @@ export async function getPollQuestions(user_id) {
   });
 }
 
-// Update poll question for a user
-export async function updatePollQuestion(user_id, question_text) {
-    return new Promise((resolve, reject) => {
-        const queryString = `
-            INSERT INTO ${tableNames.u_pollquestions} (user_id, question_text)
-            VALUES (?, ?)
+export async function updatePollQuestion(user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4){
+    try {
+        const query = `
+            INSERT INTO ${tableNames.u_pollquestions} (user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4)
+            VALUES (?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
-            question_text = VALUES(question_text)
+            question_text = VALUES(question_text),
+            option_text_1 = VALUES(option_text_1),
+            option_text_2 = VALUES(option_text_2),
+            option_text_3 = VALUES(option_text_3),
+            option_text_4 = VALUES(option_text_4);
         `;
-        console.log(queryString);
-        db.query(queryString, [user_id, question_text], (err, result) => {
+        await db.query(query, [user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4]);
+    } catch (err) {
+        console.log("error happened");
+        console.error('Error in updatePollQuestion:', err);
+        throw err;
+    }
+  }
+
+  // wipes poll votes
+  export async function wipePollVotes(user_id){
+    return new Promise((resolve, reject) => {
+        const query = `
+            UPDATE u_pollquestions
+            SET option_votes_1 = 0,
+                option_votes_2 = 0,
+                option_votes_3 = 0,
+                option_votes_4 = 0
+            WHERE user_id = ?;        
+        `;
+        db.query(query, [user_id], (err, result) => {
             if (err) {
-                console.error("Error updating poll question:", err);
+                console.error("Error updating poll option:", err);
                 reject(err);
                 return;
             }
@@ -154,6 +175,27 @@ export async function updatePollQuestion(user_id, question_text) {
         });
     });
   }
+
+  export async function updatePollVotes(user_id, optionNumber) {
+    try {
+        // Dynamically determine the field to update based on the optionNumber
+        const optionField = `option_votes_${optionNumber}`;
+        
+        const query = `
+            INSERT INTO ${tableNames.u_pollquestions} (user_id, ${optionField})
+            VALUES (?, 1)
+            ON DUPLICATE KEY UPDATE
+            ${optionField} = ${optionField} + 1;
+        `;
+        
+        await db.query(query, [user_id]);
+    } catch (err) {
+        console.log("An error occurred while updating the poll votes.");
+        console.error('Error in updatePollVotes:', err);
+        throw err;
+    }
+}
+
   
 // Get poll options for a user
 export async function getPollOptions(user_id) {
