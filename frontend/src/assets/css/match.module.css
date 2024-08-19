@@ -1,9 +1,29 @@
+.filterContainer {
+    position: absolute;
+    z-index: 1000;
+}
+
+.profileCard {
+    position: relative;
+    z-index: 1;
+}
+
 body{
     overflow: hidden;
     background-color: rgb(251, 242, 242);
 }
 
+<<<<<<< HEAD
+.relative {
+    position: relative;
+  }
+  
+  .absolute {
+    position: absolute;
+  }  
 
+=======
+>>>>>>> 3e9bd21773bc42555a55e38f4b645b61f06ec7ef
 #MatchPage {
     display: flex;
     flex-direction: column;
