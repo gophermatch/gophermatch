@@ -5,6 +5,7 @@ import Top5Dorms from "./ProfileCardContent/Top5Dorms";
 import ApartmentInfo from "./ProfileCardContent/ApartmentInfo";
 import Poll from "./ProfileCardContent/Poll";
 import Qna from "./ProfileCardContent/Qna";
+import SleepSchedule from './ProfileCardContent/SleepSchedule';
 
 
 // user_id: number, isDorm: boolean, showApt: boolean, broadcaster?: SignalBroadcaster
@@ -44,7 +45,7 @@ export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMo
               className={`bg-dark_maroon w-[1.33vw] h-[1.33vw] rounded-full shadow-md transform duration-300 ease-in-out ${
                 isDorm ? 'translate-x-[1.13vw] bg-maroon' : 'translate-x-0 bg-dark_maroon'
               }`}
-            > 
+            >
             </div>
           </div>
         </div>
@@ -83,8 +84,7 @@ export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMo
                   <Poll revealAnswers={true} user_id={user_id} broadcaster={broadcaster} />
                 </div>
                 <div className={"flex grow-[1] border-dashed border-2 border-maroon"}>
-                  {/* Sleep schedule */}
-                  Sleep sched here
+                  <SleepSchedule user_id={user_id} broadcaster={broadcaster} />
                 </div>
               </div>
             </div>

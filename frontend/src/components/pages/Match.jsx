@@ -12,9 +12,11 @@ export default function Match() {
 
     const [filters, setFilters] = useState([]);
     const [userData, setUserData] = useState({});
-    
+
     const [isDorm, setIsDorm] = useState(false);
-    
+    const [cardTranslate, setCardTranslate] = useState("translate(0px, 0px)");
+    const [transition, setTransition] = useState("transition-transform");
+
     useEffect(() => {
       setCurrentIndex(0);
       setFilterResults([]);
@@ -24,7 +26,7 @@ export default function Match() {
         const preference = await getHousingPreference();
         setIsDorm(Boolean(preference));
       };
-      
+
       fetchPreference();
 
     }, [filters, userData]);
@@ -36,7 +38,7 @@ export default function Match() {
             user_id: currentUser.user_id
           }
         });
-  
+
         if(preference.data){
           return preference.data.show_dorm;
         }
@@ -47,21 +49,36 @@ export default function Match() {
     };
 
     async function goToNext(decision) {
-        await backend.post('/match/matcher', {
-            user1Id: currentUser.user_id,
-            user2Id: filteredUserIds[currentIndex],
-            decision: decision
-        });
+      if (decision === "match" || decision === "unsure") {
+        // go right
+        setCardTranslate("translate(100vw, 0px)")
+      } else {
+        // go left
+        setCardTranslate("translate(-100vw, 0px)")
+      }
+      await backend.post('/match/matcher', {
+        user1Id: currentUser.user_id,
+        user2Id: filteredUserIds[currentIndex],
+        decision: decision
+      });
 
-        if(currentIndex+1 >= filteredUserIds.length){
-          console.log("ran out of results, appending more");
-          await appendFilterResults()
-          setCurrentIndex(0);
-          return;
-        }
-
+      if(currentIndex+1 >= filteredUserIds.length){
+        console.log("ran out of results, appending more");
+        await appendFilterResults()
+        setCurrentIndex(0);
+      } else {
         setCurrentIndex(currentIndex+1);
-    } 
+      }
+
+      setTimeout(async () => {
+        setTransition("transition-none")
+        setCardTranslate(prev => prev === "translate(100vw, 0px)" ? "translate(-100vw, 0px)" : "translate(100vw, 0px)")
+      }, 500)
+      setTimeout(async () => {
+        setTransition("transition-transform")
+        setCardTranslate("translate(0px, 0px)")
+      }, 600)
+    }
 
     async function showRejectedMatches()
     {

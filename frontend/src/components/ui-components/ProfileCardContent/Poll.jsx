@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import backend from "../../../backend";
 import ApartmentTag from "./ApartmentTag.jsx";
+import closeImg from "../../../assets/images/close.svg"
 
 export default function Poll({revealAnswers, user_id, broadcaster}) {
   const defaultPollData = {
@@ -55,24 +56,31 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
     }
 
     fetchData();
-    
+
     for (let i = 0; i < pollData.answers.length; i++){
       setVoteTotal(voteTotal + pollData.answers[i].votes);
     }
 
   }, [user_id], pollData);
 
-  function displayResults(index){
+  function votePercent(votes) {
+    if (voteTotal === 0) {
+      return 0;
+    }
+    return Math.round((votes / voteTotal) * 100);
+  }
+
+  function displayResults(){
       /*backend should be linked here to add a vote */
       setVoteTotal(voteTotal+1);
-      setAnswerRevealed(prev => !prev);
+      setAnswerRevealed(true);
   }
 
   const changeAnswer = (answerIndex, newAnswerText) => {
     setPollData(prevPollData => ({
       ...prevPollData,
-      answers: prevPollData.answers.map((answer, index) => 
-        index === answerIndex 
+      answers: prevPollData.answers.map((answer, index) =>
+        index === answerIndex
           ? { ...answer, answer: newAnswerText }
           : answer
       )
@@ -82,7 +90,7 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
   const changeQuestion = (newQuestion) => {
     setPollData(prevPollData => ({
       ...prevPollData,
-      question: newQuestion 
+      question: newQuestion
     }));
   };
 
@@ -120,21 +128,21 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
       <div className={"flex w-full h-full flex-col"}>
         {/*Top headers*/}
         <p className={"flex justify-center w-full"}>
-          <span className={"text-center"}>
-            {broadcaster ? 
+          <span className={"text-center p-2"}>
+            {broadcaster ?
               <input
                 id="Question"
-                className="text-center border-2 rounded-lg text-black"
+                className="text-center rounded-lg bg-offwhite"
                 value={pollData.question}
                 onChange={(e) => changeQuestion(e.target.value)}
-              /> 
+              />
             : pollData.question}
           </span>
         </p>
-        <div className={"flex h-0 w-[100%] border-solid border-b-[1px] border-maroon"}></div>
+        <div className={"flex h-0 border-solid border-b-[1px] mx-2 border-maroon"}></div>
 
         {/*Bottom panel with tags*/}
-        <div className={"flex w-full p-2 max-h-[80%] grow-[0] flex-col gap-1 overflow-y-scroll"} style={{
+        <div className={"flex w-full p-2 max-h-[80%] grow-[0] flex-col gap-2 overflow-y-scroll text-white text-xs"} style={{
           WebkitOverflowScrolling: 'touch',
           '&::-webkit-scrollbar': {
             display: 'none'
@@ -145,57 +153,44 @@ export default function Poll({revealAnswers, user_id, broadcaster}) {
             width: '0'
           }
         }}>
-          {answerRevealed ? 
-            <>
-            {pollData.answers.map((newAnswer, index) => (
-              <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
-                <div className={"rounded-lg w-[97%] h-[33px] relative border-maroon text-xs text-white bg-maroon"}>
-                  {!broadcaster && <div style={{ width: `${(pollData.answers[index].votes / voteTotal * 100)}%` }} className={`bg-dark_maroon rounded-lg flex h-[100%]`}/>}
-                  <div className={"absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
-                    {broadcaster ? 
-                      <input
-                        id={"Answer" + index}
-                        className="text-center border-2 rounded-lg text-black"
-                        value={newAnswer.answer}
-                        onChange={(e) => changeAnswer(index, e.target.value)}
-                      /> 
-                      : newAnswer.answer}
-                  </div>
-                  <div className={"absolute left-[92.5%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
-                    {broadcaster ? 
-                      <>
-                        {pollData.answers.length > 2 && <button onClick={() => removeAnswer(index)}>
-                          ➖
-                        </button> } 
-                      </>
-                      : 
-                      <>
-                      {voteTotal > 0 ? `${(newAnswer.votes / voteTotal * 100).toFixed(1)}%` : "0%"}
-                      </>
-                    }
-                  </div>
-                </div>
-              </p>
-            ))}
-              {(broadcaster && pollData.answers.length < 4) && (
-                <div className="flex justify-center w-full mt-[1vh]">
-                  <button onClick={addAnswer}>
-                    ➕
-                  </button>
-                </div>
-              )}
-          </>
-          :
-            pollData.answers.map((newAnswer, index) => (
-              <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
-                <button className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"} onClick={() => displayResults(index)}>
-                  {newAnswer.answer}
+          {pollData.answers.map((answer, index) => (
+            <div key={index} className="relative w-full h-[38px] rounded-lg flex flex-col justify-center align-middle bg-maroon">
+              {broadcaster ?
+                <>
+                <input
+                  id={"Answer" + index}
+                  className="text-center rounded-lg mx-auto h-full my-2 bg-dark_maroon"
+                  value={answer.answer}
+                  onChange={(e) => changeAnswer(index, e.target.value)}
+                />
+                <button onClick={() => removeAnswer(index)} className="absolute right-3">
+                  <img src={closeImg} />
                 </button>
-              </p>
-            ))
-          }
+                </>
+                :
+                <>
+                <p className="text-center z-10">{answer.answer}</p>
+                {answerRevealed ?
+                  <>
+                  <div className={`absolute rounded-lg ${`w-[${votePercent(answer.votes)}%]`} h-full left-0 bg-dark_maroon`} />
+                  <p className="absolute right-2">{votePercent(answer.votes)}%</p>
+                  </>
+                  :
+                  <button className="absolute w-full h-full z-20" onClick={displayResults} />
+                }
+                </>
+              }
+            </div>
+          ))}
+          {broadcaster && pollData.answers.length < 4 && (
+            <div className="flex justify-center">
+              <button onClick={addAnswer} className="px-4 py-1 rounded-lg text-sm bg-maroon">
+                Add option
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
-}   
+}

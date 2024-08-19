@@ -70,6 +70,7 @@ export default function ProfilePage() {
       .catch((e) => console.error("SAVE NOT SUCCESSFUL: ", e))
       .then(() => setNextKey(key => key + 1))
       .then(() => setIsSaving(false))
+      .then(async () => {await currentUser.updateProfileCompletion()})
       .finally(() => setIsEditing(false)) //TODO: increment profile card key should cause elements to refresh
   }
 
