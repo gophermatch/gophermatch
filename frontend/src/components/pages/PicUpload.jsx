@@ -68,6 +68,7 @@ const PicUpload = () => {
         await new Promise(resolve => setTimeout(resolve, 50));
 
         await fetchPictureUrls();
+        await currentUser.updateProfileCompletion();
     }
 
     const uploadFile = async (file, i) => {
@@ -95,6 +96,8 @@ const PicUpload = () => {
             console.error('Error uploading file:', error);
             setStatus('Failed to upload picture. Please try again later.');
         }
+
+        await currentUser.updateProfileCompletion();
     };
     
     
