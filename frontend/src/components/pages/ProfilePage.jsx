@@ -30,6 +30,7 @@ export default function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false); // waiting for backend response
   const [isEditing, setIsEditing] = useState(false); // editing profile data
   const [isDorm, setIsDorm] = useState(true); // dorm or apartment mode
+  const [isDormBackend, setIsDormBackend] = useState(true); // housing preference that will be shown on profile
 
   const [nextKey, setNextKey] = useState(0); // incrementing key will cause profile card to re-mount
 
@@ -57,8 +58,12 @@ export default function ProfilePage() {
   };
 
   const dormToggle = () => {
-    setIsDorm(!isDorm);
+    setIsDormBackend(prevState => !prevState)
     dormToggleBackend();
+  }
+
+  const switchProfileMode = () => {
+    setIsDorm(prevState => !prevState)
   }
 
   function onSaveClick() {
@@ -96,6 +101,7 @@ export default function ProfilePage() {
     const fetchPreference = async () => {
       const preference = await getHousingPreference();
       setIsDorm(Boolean(preference));
+      setIsDormBackend(Boolean(preference));
     };
 
     fetchPreference();
@@ -107,9 +113,11 @@ export default function ProfilePage() {
       key={nextKey}
       user_id={currentUser.user_id}
       isDorm={isDorm}
+      switchProfileMode={switchProfileMode}
       broadcaster={isEditing ? broadcaster : null}
       dormToggle={dormToggle}
       profileMode={true}
+      isDormBackend={isDormBackend}
     />
     {save_or_cancel}
     </>

@@ -9,7 +9,7 @@ import preferenceIcon from "../../assets/images/housingPreferenceIcon.svg";
 
 
 // user_id: number, isDorm: boolean, showApt: boolean, broadcaster?: SignalBroadcaster
-export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMode, save_func}) {
+export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, dormToggle, profileMode, save_func, isDormBackend}) {
   return ( // TODO
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new`}>
       {profileMode &&
@@ -17,7 +17,7 @@ export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMo
         <div className={`flex flex-row-reverse font-roboto_slab text-white w-[12vw] h-[4vh] justify-center items-center rounded-t-[1vw] ${
             isDorm ? 'bg-maroon' : 'bg-dark_maroon'
         }`}>
-          <button className={"ml-[0.5vw]"} onClick={dormToggle}>Dorm</button>
+          <button className={"ml-[0.5vw]"} onClick={switchProfileMode}>Dorm</button>
           {isDorm && <img src = {preferenceIcon} width="20px" height="20px"/>}
         </div>
         <div 
@@ -25,24 +25,24 @@ export function ProfileCard({user_id, isDorm, broadcaster, dormToggle, profileMo
           isDorm ? 'bg-dark_maroon' : 'bg-maroon'
           }`}
         >
-          <button className={"ml-[0.5vw]"} onClick={dormToggle}>Apartment</button>
+          <button className={"ml-[0.5vw]"} onClick={switchProfileMode}>Apartment</button>
           {!isDorm && <img src = {preferenceIcon} width="20px" height="20px"/>}
         </div>
         <div className={`flex flex-column`}>
           <div
             className={`w-[2.66vw] h-[1.33vw] flex items-center bg-gray-300 rounded-full ml-[0.5vw] mt-[0.5vh] cursor-pointer ${
-            isDorm ? 'bg-gray p-0' : 'bg-black p-[0.2vw]'
+            isDormBackend ? 'bg-gray p-0' : 'bg-black p-[0.2vw]'
             }`}
             onClick={dormToggle}
           >
             <div
               className={`w-[1.33vw] h-[1.33vw] rounded-full shadow-md transform duration-300 ease-in-out ${
-                isDorm ? 'translate-x-0 bg-dark_maroon' : 'translate-x-[1.13vw] bg-maroon'
+                isDormBackend ? 'translate-x-0 bg-dark_maroon' : 'translate-x-[1.13vw] bg-maroon'
               }`}
             >
             </div>
           </div>
-          {isDorm ? <p className={`ml-[0.5vw] w-[2.66vw] h-[1.33vw] whitespace-nowrap font-roboto_slab text-sm`}>Dorm profile is public</p> : <p className={`ml-[0.5vw] w-[2.66vw] h-[1.33vw] whitespace-nowrap font-roboto_slab text-sm`}>Apartment profile is public</p> }
+          {isDormBackend ? <p className={`ml-[0.5vw] w-[2.66vw] h-[1.33vw] whitespace-nowrap font-roboto_slab text-sm`}>Dorm profile is public</p> : <p className={`ml-[0.5vw] w-[2.66vw] h-[1.33vw] whitespace-nowrap font-roboto_slab text-sm`}>Apartment profile is public</p> }
         </div>
       </div>
       }

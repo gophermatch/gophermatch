@@ -12,7 +12,7 @@ import {
     createPollOption,
     deletePollOption,
     getGeneralData, setGeneralData,
-    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, updatePollVotes
+    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, updatePollVotes, wipePollVotes
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -138,6 +138,23 @@ router.get('/poll-questions', async (req, res) => {
     } catch (error) {
         console.error("Error fetching poll questions:", error);
         res.status(500).json(createErrorObj("Failed to fetch poll questions. Please try again later."));
+    }
+});
+
+router.put('/poll-vote-wipe', async (req, res) => {
+    const {user_id} = req.body;
+
+    if (!user_id) {
+        res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
+        return;
+    }
+
+    try {
+        const questions = await wipePollVotes(user_id);
+        res.status(200).json(questions);
+    } catch (error) {
+        console.error("Error wiping poll votes:", error);
+        res.status(500).json(createErrorObj("Failed to wipe poll votes. Please try again later."));
     }
 });
 

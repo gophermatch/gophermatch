@@ -15,6 +15,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
 
   const [pollData, setPollData] = useState(defaultPollData);
   const [answerRevealed, setAnswerRevealed] = useState(answersRevealed);
+  const [resetVotes, setResetVotes] = useState(false);
   const [voteTotal, setVoteTotal] = useState(0);
 
   useEffect(() => {
@@ -125,18 +126,27 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
 
   useEffect(() => {
     if (broadcaster) {
-        const cb = () =>
-          backend.put('/profile/poll-question', {
-            user_id: user_id,
-            question_text: pollData.question,
-            option_text_1: pollData.answers[0]?.answer || "N/A",
-            option_text_2: pollData.answers[1]?.answer || "N/A",
-            option_text_3: pollData.answers[2]?.answer || "N/A",
-            option_text_4: pollData.answers[3]?.answer || "N/A"
-          });
+      const cb = () => {
+        backend.put('/profile/poll-question', {
+          user_id: user_id,
+          question_text: pollData.question,
+          option_text_1: pollData.answers[0]?.answer || "N/A",
+          option_text_2: pollData.answers[1]?.answer || "N/A",
+          option_text_3: pollData.answers[2]?.answer || "N/A",
+          option_text_4: pollData.answers[3]?.answer || "N/A"
+        }).then(() => {
+          if (resetVotes) {
+            return backend.put('/profile/poll-vote-wipe', {
+              user_id: user_id
+            });
+          }
+        }).catch(error => {
+          console.error("Error updating poll question or wiping votes:", error);
+        });
+      };
 
-        broadcaster.connect(cb)
-        return () => broadcaster.disconnect(cb)
+      broadcaster.connect(cb)
+      return () => broadcaster.disconnect(cb)
     }
 
     let totalVotes = 0;
@@ -145,7 +155,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
     }
     setVoteTotal(totalVotes);
 
-}, [broadcaster, pollData])
+}, [broadcaster, pollData, resetVotes])
 
   return (
     <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-lg font-roboto_slab font-medium"}>
@@ -216,6 +226,16 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
                   </button>
                 </div>
               )}
+              {broadcaster && 
+                <div className="flex justify-center w-full mt-[1vh]">
+                  <button className={"rounded-lg w-[97%] h-[33px] relative text-xs text-black bg-gold"} onClick={() => setResetVotes(prevState => !prevState)}>
+                    Reset Votes
+                    {resetVotes && <div className={"absolute left-[92.5%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
+                    ✅
+                    </div>}
+                  </button>
+                </div>
+              }
           </>
           :
             pollData.answers.map((newAnswer, index) => (

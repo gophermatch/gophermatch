@@ -136,7 +136,6 @@ export async function getPollQuestions(user_id) {
 
 export async function updatePollQuestion(user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4){
     try {
-        // First, check if the record exists
         const query = `
             INSERT INTO ${tableNames.u_pollquestions} (user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -150,9 +149,31 @@ export async function updatePollQuestion(user_id, question_text, option_text_1, 
         await db.query(query, [user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4]);
     } catch (err) {
         console.log("error happened");
-        console.error('Error in insertTopFive:', err);
+        console.error('Error in updatePollQuestion:', err);
         throw err;
     }
+  }
+
+  // wipes poll votes
+  export async function wipePollVotes(user_id){
+    return new Promise((resolve, reject) => {
+        const query = `
+            UPDATE u_pollquestions
+            SET option_votes_1 = 0,
+                option_votes_2 = 0,
+                option_votes_3 = 0,
+                option_votes_4 = 0
+            WHERE user_id = ?;        
+        `;
+        db.query(query, [user_id], (err, result) => {
+            if (err) {
+                console.error("Error updating poll option:", err);
+                reject(err);
+                return;
+            }
+            resolve(result);
+        });
+    });
   }
 
   export async function updatePollVotes(user_id, optionNumber) {
