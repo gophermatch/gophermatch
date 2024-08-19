@@ -1,7 +1,58 @@
-.arrow {
-    transition: fill 0.3s;
-}
+.button-carousel {
+    display: flex;
+    justify-content: center;
+    overflow: hidden; /* Hide overflow to create carousel effect */
+    position: relative;
+    width: 100%; /* Adjust as needed */
+    height: 50px; /* Adjust as needed */
+  }
+  
+  .carousel-inner {
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease; /* Smooth transition */
+    white-space: nowrap; /* Ensure buttons are on a single line */
+  }
+  
+  .dot {
+    width: 40px; /* Size of the button */
+    height: 40px; /* Size of the button */
+    border-radius: 50%;
+    background-color: gray; /* Default color */
+    margin: 0 5px; /* Spacing between buttons */
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .inactive {
+    background-color: gray; /* Color for inactive buttons */
+  }
 
-.arrow:hover {
-    fill: gold;
-}
+  .review-container {
+    position: relative;
+    height: 100px;
+    overflow: hidden;
+  }
+  
+  .reviewSlide {
+    opacity: 0;
+    transform: translateX(50%);
+    transition: transform 1s ease, opacity 0.3s ease;
+  }
+  
+  .reviewSlide.enter {
+    opacity: 0.3; /* Start from partial opacity */
+    transform: translateX(50%); /* Start 50% to the right */
+  }
+  
+  .reviewSlide.active {
+    opacity: 1; /* Fade in to full opacity */
+    transform: translateX(0%); /* Slide to center */
+  }
+  
+  .reviewSlide.exit {
+    opacity: 0; /* Fade out */
+    transform: translateX(50%); /* Move 50% to the right */
+  }
+  
+  
