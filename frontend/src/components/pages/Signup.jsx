@@ -64,6 +64,12 @@ export default function Signup() {
 
     async function onVerifyOtp() {
         try {
+            // Temporary bypass for development
+            if (process.env.NODE_ENV === 'development') {
+                currentUser.login(1, email); // Use a dummy user_id (e.g., 1)
+                navigate("/account");
+                return;
+            }
             const otpValue = otp.join('');
             const res = await backend.post("/email-auth/verify-otp", {
                 email,
@@ -78,6 +84,24 @@ export default function Signup() {
             setSignupErr("Invalid OTP or failed verification. Please try again.");
         }
     }
+
+    // async function onVerifyOtp() {
+    //     try {
+    //         const otpValue = otp.join('');
+    //         const res = await backend.post("/email-auth/verify-otp", {
+    //             email,
+    //             password,
+    //             otp: otpValue
+    //         });
+    //         const user_id = res.data.user_id;
+    //         currentUser.login(user_id, email);
+    //         navigate("/account");  // Navigate to account creation page after verifying OTP
+    //     } catch (err) {
+    //         console.error(err);
+    //         setSignupErr("Invalid OTP or failed verification. Please try again.");
+    //     }
+    // }
+    
 
     const handleOtpChange = (index, value) => {
         const newOtp = otp.map((digit, i) => (i === index ? value : digit));
