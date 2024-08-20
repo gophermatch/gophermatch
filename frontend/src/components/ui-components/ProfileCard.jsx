@@ -18,7 +18,7 @@ export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, do
         <div className={`flex flex-row-reverse font-roboto_slab text-white w-[12vw] h-[4vh] justify-center items-center rounded-t-[1vw] ${
             isDorm ? 'bg-maroon' : 'bg-dark_maroon'
         }`}>
-          <button className={"ml-[0.5vw]"} onClick={switchProfileMode}>Dorm</button>
+          <p className={"ml-[0.5vw]"}>Dorm</p>
           {isDorm && <img src = {preferenceIcon} width="20px" height="20px"/>}
         </div>
         <div 
@@ -26,7 +26,7 @@ export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, do
           isDorm ? 'bg-dark_maroon' : 'bg-maroon'
           }`}
         >
-          <button className={"ml-[0.5vw]"} onClick={switchProfileMode}>Apartment</button>
+          <p className={"ml-[0.5vw]"}>Apartment</p>
           {!isDorm && <img src = {preferenceIcon} width="20px" height="20px"/>}
         </div>
         <div className={`flex flex-column`}>
@@ -34,7 +34,7 @@ export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, do
             className={`w-[2.66vw] h-[1.33vw] flex items-center bg-gray-300 rounded-full ml-[0.5vw] mt-[0.5vh] cursor-pointer ${
             isDormBackend ? 'bg-gray p-0' : 'bg-black p-[0.2vw]'
             }`}
-            onClick={dormToggle}
+            onClick={() => {dormToggle(); switchProfileMode();}}
           >
             <div
               className={`w-[1.33vw] h-[1.33vw] rounded-full shadow-md transform duration-300 ease-in-out ${
