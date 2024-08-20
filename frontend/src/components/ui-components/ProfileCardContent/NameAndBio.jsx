@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import backend from "../../../backend";
 import styles from '../../../assets/css/name.module.css';
 import male from '../../../assets/images/male-svgrepo-com.svg';
@@ -15,6 +15,10 @@ export default function NameAndBio({ user_id, broadcaster }) {
     const [gender, setGender] = useState('');
     const [internationalStudent, setInternationalStudent] = useState('');
     const [hometown, setHometown] = useState('');
+    const nameRef = useRef(null);
+    const majorRef = useRef(null);
+    const bioRef = useRef(null);
+    const homeRef = useRef(null);
 
     const majorList = [
         'Accounting',
@@ -121,9 +125,46 @@ export default function NameAndBio({ user_id, broadcaster }) {
         }
     }, [broadcaster, bio, major, year, gender]); // Include `gender` in dependency array
 
+    const resizeFont = () => {
+        if (nameRef.current) {
+            const parentHeight = nameRef.current.parentElement.clientHeight;
+            const fontSize = parentHeight * 0.115;
+            nameRef.current.style.fontSize = `${fontSize}px`;
+        }
+        if (majorRef.current) {
+            const parentHeight = majorRef.current.parentElement.clientHeight;
+            const fontSize = parentHeight * 0.08;
+            majorRef.current.style.fontSize = `${fontSize}px`;
+        }
+        if (bioRef.current) {
+            const parentHeight = bioRef.current.parentElement.clientHeight;
+            const fontSize = parentHeight * 0.1;
+            bioRef.current.style.fontSize = `${fontSize}px`;
+        }
+        if (homeRef.current) {
+            const parentHeight = homeRef.current.parentElement.clientHeight;
+            const fontSize = parentHeight * 0.07;
+            homeRef.current.style.fontSize = `${fontSize}px`
+        }
+    }
+
+    useEffect(() => {
+        const observer = new ResizeObserver(resizeFont);
+        if (nameRef.current && majorRef.current && bioRef.current) {
+            observer.observe(nameRef.current.parentElement);
+            observer.observe(majorRef.current.parentElement);
+            observer.observe(bioRef.current.parentElement);
+            observer.observe(homeRef.current.parentElement);
+        }
+        resizeFont();
+        return () => {
+            observer.disconnect();
+        }
+    })
+
     return (
         <div className={styles.container}>
-            <div className="text-[3vh] font-bold flex items-center">
+            <div className={`${styles.name} flex flex-row`} ref={nameRef}>
                 {name} 
                 {gender === 'male' ? (
                   <img src={male} alt="Male" className="ml-[1px]" />
@@ -133,7 +174,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                   <img src={nonbinary} alt="Non-Binary" className="ml-[1px]" />
               ) : null}
             </div>
-            <div className="mt-[-1vh] text-[2vh] font-[450]">
+            <div className={`${styles.major} mt-[-3%] sm:mt-[-1.3%]`} ref={majorRef}>
               {broadcaster ? 
                 <select
                   id="selectionBox"
@@ -149,14 +190,14 @@ export default function NameAndBio({ user_id, broadcaster }) {
                 </select> 
               : major}
             </div>
-            <div className="mt-[-0.9vh] text-[2vh] font-[450]">
+            <div className="mt-[-0.9vh] text-[2vh] font-[450]" ref={homeRef}>
                   {hometown}
                   {internationalStudent === '1' && (
-                  <span className="ml-2 text-[2vh] font-normal">(International Student)</span>
+                  <span className="ml-2 font-normal">(International Student)</span>
               )}
             </div>
-            <div className="w-full h-[12vh] rounded-lg mt-1 border border-maroon flex">
-                <p className="flex-1 text-[1.8vh] text-left font-normal">
+            <div className={`${styles.bio} p-0 z-0 w-auto`} style={{ aspectRatio: '1/0.225'}}>
+                <p className={`${styles.bioText}`} ref={bioRef}>
                     {broadcaster ?
                         <textarea
                             className="w-full h-full p-2 border-none rounded-lg resize-none"
