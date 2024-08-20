@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import backend from "../../../backend";
 import currentUser from '../../../currentUser.js';
 import hamburger from "../../../assets/images/hamburger.svg";
@@ -38,6 +38,8 @@ export default function Top5Dorms({user_id, broadcaster}) {
     const [numPeople, setNumPeople] = useState(1);
 
     const unusedOptions = DORM_OPTIONS.filter(option => !top5Dorms.includes(option));
+    const peopleRef = useRef(null);
+    const top5Ref = useRef(null);
 
     function swapDormOption(i, value) {
         const dorms = [...top5Dorms]
@@ -135,10 +137,34 @@ export default function Top5Dorms({user_id, broadcaster}) {
         }
     }, [mousePos]);
 
+    const resizeFont = () => {
+      if (peopleRef.current) {
+        const parentHeight = peopleRef.current.parentElement.clientHeight;
+        const fontSize = parentHeight * 1.3;
+        peopleRef.current.style.fontSize = `${fontSize}px`;
+      }
+      if (top5Ref.current) {
+        const parentHeight = top5Ref.current.parentElement.clientHeight;
+        const fontSize = parentHeight * 0.18;
+        top5Ref.current.style.fontSize = `${fontSize}px`;
+      }
+    }
+
+    useEffect(() => {
+      const observer = new ResizeObserver(resizeFont);
+      if (peopleRef.current) {
+          observer.observe(peopleRef.current.parentElement);
+      }
+      resizeFont();
+      return () => {
+          observer.disconnect();
+      }
+  })
+
     return (
-        <div className="flex flex-col border-2 border-solid border-maroon_new rounded-md w-full h-full p-[5px] font-roboto_slab custom-scrollbar">
-            <div className="basis-[30px] flex">
-                <div className="w-1/5">
+        <div className="flex flex-col border-[1.5px] border-solid border-maroon_new rounded-md w-full h-full p-[5px] font-roboto_slab custom-scrollbar">
+            <div className="h-[15%] mb-[5%] mt-[-1.5%] flex">
+                <div className="w-1/5" ref={peopleRef}>
                     {peopleDict[String(numPeople)]}
                 </div>
                 {broadcaster ?
@@ -149,17 +175,17 @@ export default function Top5Dorms({user_id, broadcaster}) {
             </div>
             <hr className="border-t-1 bordet-top-solid border-maroon_new"></hr>
             <div className="flex-1 overflow-auto custom-scrollbar pr-[5px]">
-                <p className="text-sm">{top5Data.question}</p>
+                <p className="" ref={top5Ref}>{top5Data.question}</p>
                 <div className="relative">
                     {top5Dorms.map((dorm, i) => {
                         const isHeld = heldDorm === dorm;
-                        const basePosition = 35 * i;
+                        const basePosition = 20 * i;
                         return (
                             <div
                                 key={dorm}
-                                className={`bg-maroon w-[calc(100%-30px)] leading-[30px] pl-[5px] rounded-md text-white select-none absolute flex align-middle ${!isHeld && 'transition-all'}`}
+                                className={`bg-maroon w-[calc(100%-30px)] h-[13px] text-[9px] lg:text-[13px] lg:h-[1.3rem] ml-[-3px] pl-[5px] rounded-[3px] lg:rounded-[5px] text-white select-none absolute flex align-middle ${!isHeld && 'transition-all'}`}
                                 style={{
-                                    top: isHeld ? holdBase + offset : basePosition,
+                                    top: window.innerWidht >= 1024 ? 25 * i : 18 * i,
                                     left: "30px",
                                     zIndex: heldDorm === dorm || openedDropdown === i ? 1 : 0,
                                 }}
