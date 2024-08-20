@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import backend from "../../../backend";
 import whiteX from "../../../assets/images/whiteX.svg";
-import ApartmentTag from "./ApartmentTag.jsx";
-import closeImg from "../../../assets/images/close.svg"
 
 export default function Poll({answersRevealed, user_id, broadcaster}) {
   const defaultPollData = {
@@ -89,14 +87,15 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
 
     vote(index+1)
     setVoteTotal(prevTotal => prevTotal+1);
+    console.log(voteTotal);
     setAnswerRevealed(prev => !prev);
   }
 
   const changeAnswer = (answerIndex, newAnswerText) => {
     setPollData(prevPollData => ({
       ...prevPollData,
-      answers: prevPollData.answers.map((answer, index) =>
-        index === answerIndex
+      answers: prevPollData.answers.map((answer, index) => 
+        index === answerIndex 
           ? { ...answer, answer: newAnswerText }
           : answer
       )
@@ -106,7 +105,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
   const changeQuestion = (newQuestion) => {
     setPollData(prevPollData => ({
       ...prevPollData,
-      question: newQuestion
+      question: newQuestion 
     }));
   };
 
@@ -163,21 +162,21 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
       <div className={"flex w-full h-full flex-col"}>
         {/*Top headers*/}
         <p className={"flex justify-center w-full"}>
-          <span className={"text-center p-2"}>
-            {broadcaster ?
+          <span className={"text-center"}>
+            {broadcaster ? 
               <input
                 id="Question"
                 className="text-center rounded-lg text-base mb-[1vh] mt-[1vh] bg-gray text-maroon"
                 value={pollData.question}
                 onChange={(e) => changeQuestion(e.target.value)}
-              />
+              /> 
             : pollData.question}
           </span>
         </p>
-        <div className={"flex h-0 border-solid border-b-[1px] mx-2 border-maroon"}></div>
+        <div className={"flex h-0 w-[100%] border-solid border-b-[1px] border-maroon"}></div>
 
         {/*Bottom panel with tags*/}
-        <div className={"flex w-full p-2 max-h-[80%] grow-[0] flex-col gap-2 overflow-y-scroll text-white text-xs"} style={{
+        <div className={"flex w-full p-2 max-h-[80%] grow-[0] flex-col gap-1 overflow-y-scroll"} style={{
           WebkitOverflowScrolling: 'touch',
           '&::-webkit-scrollbar': {
             display: 'none'
@@ -244,31 +243,11 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
                 <button className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"} onClick={() => displayResults(index)}>
                   {newAnswer.answer}
                 </button>
-                </>
-                :
-                <>
-                <p className="text-center z-10">{answer.answer}</p>
-                {answerRevealed ?
-                  <>
-                  <div className={`absolute rounded-lg ${`w-[${votePercent(answer.votes)}%]`} h-full left-0 bg-dark_maroon`} />
-                  <p className="absolute right-2">{votePercent(answer.votes)}%</p>
-                  </>
-                  :
-                  <button className="absolute w-full h-full z-20" onClick={displayResults} />
-                }
-                </>
-              }
-            </div>
-          ))}
-          {broadcaster && pollData.answers.length < 4 && (
-            <div className="flex justify-center">
-              <button onClick={addAnswer} className="px-4 py-1 rounded-lg text-sm bg-maroon">
-                Add option
-              </button>
-            </div>
-          )}
+              </p>
+            ))
+          }
         </div>
       </div>
     </div>
   );
-}
+}   
