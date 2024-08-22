@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import backend from "../../../backend";
 import dropdownImg from "../../../assets/images/dropdown.png";
 import dropupImg from "../../../assets/images/dropup.png";
@@ -62,8 +62,31 @@ export default function Qna({user_id, broadcaster}) {
         }
     }, [broadcaster, room_activity, substances, alcohol])
 
+    const containerRef = useRef(null);
+
+    const resizeFont = () => {
+        if (containerRef.current) {
+            const parentHeight = containerRef.current.clientHeight;
+            const fontSize = parentHeight * 0.16; // Adjust this multiplier as needed
+            containerRef.current.style.fontSize = `${fontSize}px`;
+        }
+    };
+
+    useEffect(() => {
+        const observer = new ResizeObserver(resizeFont);
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+
+        resizeFont(); // Ensure the font size is set correctly on mount or when the page is revisited
+
+        return () => {
+            observer.disconnect(); // Clean up the observer on unmount
+        };
+    }, []);
+
     return (
-    <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon xl:text-lg lg: text-md md:text-sm sm:text-xs font-roboto_slab font-medium"}>
+    <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon xl:text-lg lg: text-md md:text-sm sm:text-xs font-roboto_slab font-medium"} ref={containerRef}>
     <div className={"flex w-full h-full justify-center items-center flex-col px-[1%]"}>
         <div className={"flex w-full whitespace-nowrap"}>
             <div className={"flex-1"}>
@@ -84,9 +107,9 @@ export default function Qna({user_id, broadcaster}) {
             </div>
         </div>
 
-        <div className={"flex w-[97%] h-[5%] border-b"}></div>
+        <div className={"flex w-[97%] h-[5%] sm:mt-[-2%] lg:mt-[-1%] border-b"}></div>
 
-        <div className={"flex w-full whitespace-nowrap"}>
+        <div className={"flex w-full whitespace-nowrap sm:mt-[-2%] lg:mt-[-1%]"}>
             <div className={"flex-1"}>
                 Substance Preference
             </div>
@@ -105,9 +128,9 @@ export default function Qna({user_id, broadcaster}) {
             </div>
         </div>
 
-        <div className={"flex w-[97%] h-[5%] border-b"}></div>
+        <div className={"flex w-[97%] h-[5%] sm:mt-[-2%] lg:mt-[-1%] border-b"}></div>
 
-        <div className={"flex w-full whitespace-nowrap"}>
+        <div className={"flex w-full whitespace-nowrap sm:mt-[-2%] lg:mt-[-1%]"}>
             <div className={"flex-1"}>
                 Alcohol Preference
             </div>
@@ -126,9 +149,9 @@ export default function Qna({user_id, broadcaster}) {
             </div>
         </div>
 
-        <div className={"flex w-[97%] h-[5%] border-b"}></div>
+        <div className={"flex w-[97%] h-[5%] sm:mt-[-2%] lg:mt-[-1%] border-b"}></div>
 
-        <div className={"flex w-full whitespace-nowrap"}>
+        <div className={"flex w-full whitespace-nowrap sm:mt-[-2%] lg:mt-[-2%]"}>
             <div className={"flex-1"}>
                 Preferred Tidiness
             </div>

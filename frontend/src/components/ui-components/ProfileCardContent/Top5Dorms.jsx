@@ -140,12 +140,12 @@ export default function Top5Dorms({user_id, broadcaster}) {
     const resizeFont = () => {
       if (peopleRef.current) {
         const parentHeight = peopleRef.current.parentElement.clientHeight;
-        const fontSize = parentHeight * 1.3;
+        const fontSize = parentHeight * 1.4;
         peopleRef.current.style.fontSize = `${fontSize}px`;
       }
       if (top5Ref.current) {
         const parentHeight = top5Ref.current.parentElement.clientHeight;
-        const fontSize = parentHeight * 0.18;
+        const fontSize = parentHeight * 0.20;
         top5Ref.current.style.fontSize = `${fontSize}px`;
       }
     }
@@ -230,9 +230,14 @@ export default function Top5Dorms({user_id, broadcaster}) {
                         );
                     })}
                     {[0, 0, 0, 0, 0].map((_, i) => (
-                        <div key={i} className="absolute bg-maroon w-[13px] h-[13px] text-[9px] lg:text-[12px] lg:h-[1.3rem] lg:w-[1.3rem] xl:h-[1.6rem] xl:w-[1.6rem] text-white flex align-middle justify-center text-center rounded-md" style={{ top: window.innerWidth >= 1024 ? 23 * i : window.innerWidth <= 768 ? 18 * i : 13 * i }}>
-                            {i + 1}
-                        </div>
+                        <div key={i} 
+                        className="absolute bg-maroon w-[13px] h-[13px] text-[9px] lg:text-[12px] lg:h-[1.3rem] lg:w-[1.3rem] xl:h-[1.6rem] xl:w-[1.6rem] text-white flex items-center justify-center text-center rounded-[3px] lg:rounded-[5px]" 
+                        style={{ 
+                            top: window.innerWidth >= 1024 ? 35 * i : window.innerWidth <= 768 ? 18 * i : 18 * i 
+                        }}>
+                        {i + 1}
+                    </div>
+                    
                     ))}
                 </div>
             </div>
