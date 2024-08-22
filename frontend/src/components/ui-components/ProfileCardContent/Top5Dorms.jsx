@@ -183,9 +183,9 @@ export default function Top5Dorms({user_id, broadcaster}) {
                         return (
                             <div
                                 key={dorm}
-                                className={`bg-maroon w-[calc(100%-30px)] h-[13px] text-[9px] lg:text-[13px] lg:h-[1.3rem] ml-[-3px] pl-[5px] rounded-[3px] lg:rounded-[5px] text-white select-none absolute flex align-middle ${!isHeld && 'transition-all'}`}
+                                className={`bg-maroon w-[calc(100%-30px)] h-[13px] text-[9px] lg:text-[13px] lg:h-[1.3rem] xl:h-[1.6rem] xl:text-[15px] ml-[-3px] pl-[5px] rounded-[3px] lg:rounded-[5px] text-white select-none absolute flex align-middle ${!isHeld && 'transition-all'}`}
                                 style={{
-                                    top: window.innerWidht >= 1024 ? 25 * i : 18 * i,
+                                    top: window.innerWidth >= 1024 ? 35 * i : window.innerWidth <= 768 ? 18 * i : 18 * i,
                                     left: "30px",
                                     zIndex: heldDorm === dorm || openedDropdown === i ? 1 : 0,
                                 }}
@@ -230,7 +230,7 @@ export default function Top5Dorms({user_id, broadcaster}) {
                         );
                     })}
                     {[0, 0, 0, 0, 0].map((_, i) => (
-                        <div key={i} className="absolute bg-maroon w-[25px] leading-[30px] text-white text-center rounded-md" style={{ top: 35 * i }}>
+                        <div key={i} className="absolute bg-maroon w-[13px] h-[13px] text-[9px] lg:text-[12px] lg:h-[1.3rem] lg:w-[1.3rem] xl:h-[1.6rem] xl:w-[1.6rem] text-white flex align-middle justify-center text-center rounded-md" style={{ top: window.innerWidth >= 1024 ? 23 * i : window.innerWidth <= 768 ? 18 * i : 13 * i }}>
                             {i + 1}
                         </div>
                     ))}
