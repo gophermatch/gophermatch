@@ -87,8 +87,6 @@ export async function getSubleases(params) {
 
   let user_id = params.user_id;
 
-  console.log(rentFilters);
-
   return new Promise((resolve, reject) => {
     const query = `SELECT *
 FROM ${tableNames.u_subleases} AS sub
@@ -107,8 +105,6 @@ AND NOT EXISTS (
   )
 ORDER BY premium DESC
 LIMIT ${params.count} OFFSET ${params.page*params.count};`;
-
-    console.log(query);
 
     db.query(query, (err, results) => {
       if (err) {
@@ -163,7 +159,6 @@ export async function deleteSavedSublease(user_id, sublease_id) {
     // Execute the delete query with the provided parameters
     const result = await db.query(query, [user_id, sublease_id]);
     if (result.affectedRows === 0) {
-      console.log("No sublease found to delete.");
       throw new Error('No sublease found with the provided IDs');
     }
   } catch (error) {

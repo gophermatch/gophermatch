@@ -82,7 +82,6 @@ export default function SubleaseCreation()
   };
 
   const handleSubmit = async (e) => {
-    console.log("submitting")
     e.preventDefault(); // Prevent the default form submission behavior
     await submit(); // Call the submit function that sends data to the backend
   };
@@ -122,7 +121,6 @@ export default function SubleaseCreation()
         setFormData(formData);
       }
     } catch (err) {
-      console.log(err);
       setUserSublease(null);
     }
   }

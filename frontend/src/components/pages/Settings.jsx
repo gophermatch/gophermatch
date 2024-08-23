@@ -42,10 +42,8 @@ export default function Settings() {
                 
                 return data;
             } else {
-                console.log('Error fetching user data');
             }
         } catch (error) {
-            console.log('Error fetching user data:', error);
         }
     }
 
@@ -67,17 +65,12 @@ export default function Settings() {
                 }
             });
 
-            const response = await backend.post('/profile/set-gendata', {
+            await backend.post('/profile/set-gendata', {
                 user_id: userID,
                 data: dataToSend,
             });
-            if (response.status === 200) {
-                console.log('Account information successfully updated');
-            } else {
-                console.log('Error saving user data');
-            }
         } catch (error) {
-            console.log('Error saving user data:', error);
+            console.error('Error saving user data:', error);
         }
     }
 

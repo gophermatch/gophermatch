@@ -25,7 +25,6 @@ export default function Sidebar() {
 
     useEffect(() => {
         setProfileCompletion(currentUser.profile_completion);
-        console.log("Updating: ", currentUser.profile_completion)
     }, [currentUser.profile_completion]);
 
     const handleLogoClick = () => {

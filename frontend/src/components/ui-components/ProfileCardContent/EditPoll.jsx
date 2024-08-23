@@ -8,7 +8,6 @@ export default function EditPoll({ pollData }) {
   function changeQuestion(newQuestion) {
     setQuestion(newQuestion);
     pollData.question = newQuestion;
-    console.log(pollData);
   }
 
   function changeAnswer(index, newAnswer) {
@@ -17,7 +16,6 @@ export default function EditPoll({ pollData }) {
     );
     setAnswersState(updatedAnswers);
     pollData.answers = updatedAnswers;
-    console.log(pollData);
   }
 
   function removeAnswer(index) {
@@ -27,14 +25,12 @@ export default function EditPoll({ pollData }) {
     ];
     setAnswersState(updatedAnswers);
     pollData.answers = updatedAnswers;
-    console.log(pollData);
   }
 
   function addAnswer() {
     const newAnswer = { answer: "New answer", votes: 0 };
     setAnswersState([...answersState, newAnswer]);
     pollData.answers = [...answersState, newAnswer];
-    console.log(pollData);
   }
 
   return (

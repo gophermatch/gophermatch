@@ -64,7 +64,6 @@ export default function SleepSchedule({user_id, broadcaster}) {
                     minValue={80}
                     value={sliderValue}
                     onChange={value => setSliderValue(value)}
-                    onChangeComplete={() => console.log("Changed slider")}
                     // formatLabel={() => null}
                     // classNames={{
                     //     slider: 'maroon',

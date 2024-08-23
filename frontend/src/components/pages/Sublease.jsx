@@ -50,7 +50,6 @@ export default function Sublease()
     if(loadingFinished) return;
     const { scrollTop, scrollHeight, clientHeight } = divRef.current;
     if (scrollTop + clientHeight + 20 >= scrollHeight) {
-      console.log("Scrolled to the bottom");
       setNumPages(numPages+1);
     }
   };
@@ -72,7 +71,7 @@ export default function Sublease()
 
       if(singleRes != null) setUserSublease(singleRes.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       setUserSublease(null);
     }
 

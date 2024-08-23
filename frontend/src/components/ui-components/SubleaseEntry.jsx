@@ -71,8 +71,6 @@ export default function SubleaseEntry({ sublease, refreshFunc, sublease_id }) {
 
   async function save() {
     try {
-      console.log(sublease);
-
       const res = await backend.post("/sublease/save", {
         user_id: currentUser.user_id, sublease_id: sublease.sublease_id,
       });

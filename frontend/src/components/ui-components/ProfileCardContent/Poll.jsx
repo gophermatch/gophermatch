@@ -63,7 +63,6 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
   }, [user_id]);
 
   async function vote(numb) {
-    console.log(user_id);
     try {
       await backend.put('/profile/poll-question-vote', {
         user_id: user_id,
@@ -87,7 +86,6 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
 
     vote(index+1)
     setVoteTotal(prevTotal => prevTotal+1);
-    console.log(voteTotal);
     setAnswerRevealed(prev => !prev);
   }
 

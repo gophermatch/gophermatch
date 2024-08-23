@@ -24,7 +24,6 @@ router.post('/', async (req, res) => {
     try {
         // hash the password
         const hashpass = await bcrypt.hash(password, saltRounds)
-        console.log(hashpass)
         // create the user
         const user = await createUser(email, hashpass)
 
@@ -58,14 +57,11 @@ router.get('/fetch', async (req, res) => {
 router.put('/creation/new', async (req, res) => {
     let userdata = req.body.userdata;
 
-    console.log(`put new account creation for user id ${userdata.user_id}`);
-
     // Fetch account data to see if it exists in the DB or not
     try{
         let data = null;
 
         if(data == null){
-            console.log("inserting");
             await insertAccountInfo(userdata)
             res.status(200).json({message: "User account data inserted!"})
             return;
@@ -76,7 +72,6 @@ router.put('/creation/new', async (req, res) => {
     }
 
     try {
-        console.log("updating");
         // update the user's account info
         await updateAccountInfo(userdata)
         res.status(200).json({message: "User account data updated!"})
@@ -90,7 +85,6 @@ router.put('/creation/new', async (req, res) => {
 router.delete('/', AuthStatusChecker, async (req, res) => {
     const user_id = req.body.user_id    // returns string, so don't use strict equal below
     if (req.session.user.user_id != user_id) {
-        console.log(user_id)
         res.status(403)
             .json(createErrorObj("Cannot delete another use's account"))
         return
