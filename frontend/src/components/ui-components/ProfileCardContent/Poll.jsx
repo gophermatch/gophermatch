@@ -180,10 +180,6 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
             display: 'none'
           },
           scrollbarWidth: 'none',
-
-          '&::WebkitScrollbar': {
-            width: '0'
-          }
         }}>
           {answerRevealed ? 
             <>

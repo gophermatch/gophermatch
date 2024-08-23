@@ -136,9 +136,6 @@ export default function SubleaseCreation()
           display: 'none'
         },
         scrollbarWidth: 'none',
-        '&::WebkitScrollbar': {
-          width: '0'
-        }
       }}>
         <div className="mb-4 flex">
           <div className="w-2/3 pr-2">

@@ -114,9 +114,6 @@ export default function Sublease()
           display: 'none'
         },
         scrollbarWidth: 'none',
-        '&::WebkitScrollbar': {
-          width: '0'
-        }
       }}>
 
         <Link to={"/createsublease"} color="primary" className={`${styles.linkClass} rounded-full flex flex-1 w-[70vw] mt-[4vh] h-[10%] m-auto text-lg text-black pionter-events-auto`}>
