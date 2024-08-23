@@ -322,7 +322,7 @@ export default function Settings() {
                     className={`text-white rounded-[1vh] ml-[2.55vw] w-[12vw] h-[5vh] text-[1.25vw] ${isEdited ? 'bg-settings hover:bg-dark_maroon' : 'bg-inactive_gray'}`}
                     onClick={handleSaveChangesClick}
                     disabled={!isEdited}
-                    linkTo="/match"
+                    linkto="/match"
                 >
                     Apply
                 </button>

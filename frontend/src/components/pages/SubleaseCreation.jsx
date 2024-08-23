@@ -134,11 +134,11 @@ export default function SubleaseCreation()
       <h2 className="text-xl font-extrabold font-roboto_slab text-maroon_dark mb-4">Sublease Form</h2>
       <form className="overflow-y-scroll max-h-[90vh]" onSubmit={handleSubmit} style={{
         WebkitOverflowScrolling: 'touch',
-        '&::-webkit-scrollbar': {
+        '&::WebkitScrollbar': {
           display: 'none'
         },
         scrollbarWidth: 'none',
-        '&::-webkit-scrollbar': {
+        '&::WebkitScrollbar': {
           width: '0'
         }
       }}>

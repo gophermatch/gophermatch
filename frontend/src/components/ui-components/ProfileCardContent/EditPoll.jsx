@@ -56,12 +56,12 @@ export default function EditPoll({ pollData }) {
         {/*Bottom panel with tags*/}
         <div className="flex w-full p-2 max-h-[80%] grow-[0] flex-col gap-1 overflow-y-scroll" style={{
           WebkitOverflowScrolling: 'touch',
-          '&::-webkit-scrollbar': {
+          '&::WebkitScrollbar': {
             display: 'none'
           },
           scrollbarWidth: 'none',
 
-          '&::-webkit-scrollbar': {
+          '&::WebkitScrollbar': {
             width: '0'
           }
         }}>

@@ -111,11 +111,11 @@ export default function Sublease()
       <SubleaseFilter filterSetter={setFilter}></SubleaseFilter>
       <div ref={divRef} className={"overflow-y-auto overflow-x-visible flex-grow"} onScroll={handleScroll} style={{
         WebkitOverflowScrolling: 'touch',
-        '&::-webkit-scrollbar': {
+        '&::WebkitScrollbar': {
           display: 'none'
         },
         scrollbarWidth: 'none',
-        '&::-webkit-scrollbar': {
+        '&::WebkitScrollbar': {
           width: '0'
         }
       }}>
