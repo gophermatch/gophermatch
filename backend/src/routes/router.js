@@ -11,7 +11,27 @@ import { userIDParser } from './requestParser.js'
 
 const router = Router()
 
+let counts = {};
+
+export async function consoleLogMiddleware(req, res, next) {
+
+    let path = req.url.split('?')[0];
+
+    if(!(path in counts))
+    {
+        counts[path] = 1;
+    }
+    else
+    {
+        counts[path] += 1;
+    }
+
+    console.log("Counts: ", counts);
+    next()
+}
+
 router.use(userIDParser)
+router.use(consoleLogMiddleware);
 
 router.use('/login', LoginRouter)
 router.use('/match', MatchRouter)
