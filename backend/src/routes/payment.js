@@ -6,6 +6,8 @@ const router = Router()
 
 const stripe = Stripe(stripeSecretKey); // Use the imported secret key
 
+// TODO: Unused, delete or no?
+
 // Assuming you're using Express
 router.post('/create-payment-intent', async (req, res) => {
     try {

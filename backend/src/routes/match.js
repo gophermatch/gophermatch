@@ -85,24 +85,6 @@ router.get('/saved-matches', async (req, res) => {
     }
 });
 
-// Delete a decision from the match table (remove a save for a user with decision unsure)
-// Takes a json with the parameters user1Id, user2Id, decision
-router.delete('/remove', async (req, res) => {
-    // Basic validation
-    const { user1Id, user2Id, decision } = req.query;
-    if (!user1Id || !user2Id || !decision) {
-        return res.status(400).json({ error: "Missing required fields: user1Id, user2Id, or decision." });
-    }
-
-    try {
-        await deleteMatchDecision(user1Id, user2Id, decision);
-        res.status(200).send({ message: "Match decision deleted successfully." });
-    } catch (error) {
-        console.error('Error processing match:', error);
-        res.status(500).json({ error: "Failed to process match decision." });
-    }
-});
-
 router.delete('/inbox-delete', async (req, res) => {
     // Basic validation
     const { user1_id, user2_id } = req.query;

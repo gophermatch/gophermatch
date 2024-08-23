@@ -14,8 +14,7 @@ import {
     getGeneralData, setGeneralData,
     updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, getState, updatePollVotes, wipePollVotes
 } from "../database/profile.js";
-import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
-import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
+import{uploadFileToBlobStorage} from '../blobService.js'
 import { azureStorageConfig } from "../env.js";
 
 const upload = multer({ dest: 'uploads/' }); // Temporarily stores files in 'uploads/' directory

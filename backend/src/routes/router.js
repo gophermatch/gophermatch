@@ -42,7 +42,7 @@ router.use('/profile', ProfileRouter)
 router.use('/email-auth', EmailAuthRouter)
 router.use('/match', MatchRouter)
 router.use('/sublease', SubleaseRouter)
-router.use('/payment', PaymentRouter)
+// router.use('/payment', PaymentRouter)
 
 
 export default router
