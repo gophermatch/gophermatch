@@ -1,4 +1,6 @@
 import React from 'react';
+import backend from "../../backend";
+import { useEffect, useState } from "react";
 import Carousel from "./ProfileCardContent/Carousel";
 import NameAndBio from "./ProfileCardContent/NameAndBio";
 import Top5Dorms from "./ProfileCardContent/Top5Dorms";
@@ -11,6 +13,13 @@ import SleepSchedule from './ProfileCardContent/SleepSchedule';
 
 // user_id: number, isDorm: boolean, showApt: boolean, broadcaster?: SignalBroadcaster
 export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, dormToggle, profileMode, save_func, isDormBackend}) {
+  async function resetProfile() {
+    await backend.post('profile/reset-profile', {
+      user_id: user_id
+    });
+    window.location.reload();
+  };
+  const [reset, setReset] = useState(false);
   return ( // TODO
     <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new relative z-10`}>
       {profileMode &&
@@ -44,6 +53,8 @@ export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, do
             </div>
           </div>
           {isDormBackend ? <p className={`ml-[0.5vw] mt-[0.66vh] w-[2.66vw] h-[1.33vw] whitespace-nowrap font-roboto_slab text-sm`}>Dorm profile is public</p> : <p className={`ml-[0.5vw] w-[2.66vw] h-[1.33vw] mt-[0.66vh] whitespace-nowrap font-roboto_slab text-sm`}>Apartment profile is public</p> }
+          {!broadcaster && <div className="absolute flex items-center right-0 mr-[2vw] whitespace-nowrap font-roboto_slab text-sm"> <button className={`mr-[0.25vw]`} onClick={() => {setReset(true);}}>Reset Profile</button>
+          {reset && <div> <button onClick={() => {resetProfile();}}>✅</button> <button onClick={() => {setReset(false);}}>❎</button> </div>} </div>}
         </div>
       </div>
       }
