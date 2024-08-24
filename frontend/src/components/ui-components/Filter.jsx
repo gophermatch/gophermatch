@@ -62,6 +62,7 @@ const UserDataItem = function ({ k, value, userData, setUserData }) {
             type="checkbox"
             checked={value in userData[k]}
             name={value}
+            className="mr-[0.25vw]"
             onChange={(e) => setUserData((prevData) => {
                 prevData = deepCloneObj(prevData);
                 if (e.target.checked) {
@@ -97,7 +98,7 @@ export default function Filter({ setFiltersExternal, setUserDataExternal, profil
             <div
                 className={`flex absolute bg-dark_maroon h-[6vh] w-[80vw] left-[3%] rounded-b-xl items-center justify-center transition-transform duration-500 ${isOpen ? "translate-y-[0vh]" : "translate-y-[-6vh]"} z-50`}>
                 <div
-                    className="flex space-x-[0.5vw] text-black font-normal text-[1.1vw] font-inconsolata border-5 items-center">
+                    className="flex space-x-[0.5vw] text-black font-normal text-[1.2vh] sm:text-[1.1vw] lg:text-[0.8vw] font-roboto_slab font-medium border-5 items-center">
                     <div className="relative">
                         <button onClick={() => setOpenedDropdowns(s => toggleObjectItem(s, "Gender"))}
                             className="bg-white w-[9.4vw] h-[4.5vh] rounded-xl px-[1.5vw] py-[1vh] hover:bg-gold hover:text-white">Gender

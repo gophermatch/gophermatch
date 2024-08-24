@@ -133,7 +133,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                   <img src={nonbinary} alt="Non-Binary" className="ml-[1px]" />
               ) : null}
             </div>
-            <div className="mt-[-1vh] text-[2vh] font-[450]">
+            <div className="mt-[-1vh] mb-[1.5vh] text-[2vh] font-[450]">
               {broadcaster ? 
                 <select
                   id="selectionBox"

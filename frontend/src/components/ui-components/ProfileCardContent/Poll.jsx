@@ -17,6 +17,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
   const [answerRevealed, setAnswerRevealed] = useState(answersRevealed);
   const [resetVotes, setResetVotes] = useState(false);
   const [voteTotal, setVoteTotal] = useState(0);
+  const [widths, setWidths] = useState(pollData.answers.map(() => '0%'));
 
   useEffect(() => {
     async function fetchData() {
@@ -60,6 +61,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
 
     fetchData();
     setAnswerRevealed(answersRevealed);
+    setWidths(pollData.answers.map(() => '0%'));
   }, [user_id]);
 
   async function vote(numb) {
@@ -155,6 +157,11 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
     }
     setVoteTotal(totalVotes);
 
+    const newWidths = pollData.answers.map(answer => 
+      voteTotal > 0 ? `${(answer.votes / voteTotal) * 100}%` : '0%'
+    );
+    setWidths(newWidths);
+
 }, [broadcaster, pollData, resetVotes])
 
   return (
@@ -192,7 +199,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
             {pollData.answers.map((newAnswer, index) => (
               <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
                 <div className={"rounded-lg w-[97%] h-[33px] relative border-maroon text-xs text-white bg-maroon"}>
-                  {!broadcaster && <div style={{ width: `${voteTotal > 0 ? (pollData.answers[index].votes / voteTotal * 100) : 0}%` }} className={`bg-dark_maroon rounded-lg flex h-[100%]`}/>}
+                  {!broadcaster && <div style={{ width: widths[index], transition: 'width 0.5s ease-in-out' }} className={`bg-dark_maroon rounded-lg flex h-[100%]`}/>}
                   <div className={"absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
                     {broadcaster ? 
                       <input
@@ -240,7 +247,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
           :
             pollData.answers.map((newAnswer, index) => (
               <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
-                <button className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"} onClick={() => displayResults(index)}>
+                <button className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon transition-transform duration-200 ease-in-out transform hover:scale-105"} onClick={() => displayResults(index)}>
                   {newAnswer.answer}
                 </button>
               </p>
