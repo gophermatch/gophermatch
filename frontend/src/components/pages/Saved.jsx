@@ -23,8 +23,6 @@ export default function Saved() {
         (async () => {
             const matchesRes = await backend.get('/match/saved-matches', { params: { userId: currentUser.user_id } });
 
-            console.log("Saved matches user_ids:", matchesRes.data);
-
             const columnsToFetch = ['first_name', 'last_name', 'major', 'graduating_year', 'user_id'];
 
             const profilePromises = matchesRes.data.map((matchId) =>
@@ -44,7 +42,6 @@ export default function Saved() {
                     ...profileResponse.data[0],
                     pictureUrl: pictureResponse.data.pictureUrls.length > 0 ? pictureResponse.data.pictureUrls[0] : kanye // Check if pictureUrls array is empty
                 }));
-                console.log("Processed profile data:", translatedData);
                 updateMatchedProfiles(translatedData);
 
                 // Create an object with user_id as key and picture URL as value
@@ -86,7 +83,6 @@ export default function Saved() {
                 decision: "match"
             });
             stepUpdateDep(s => s + 2);
-            console.log("Match successful");
         } catch (error) {
             console.error("Error matching profiles:", error);
         }

@@ -50,7 +50,6 @@ export default function Sublease()
     if(loadingFinished) return;
     const { scrollTop, scrollHeight, clientHeight } = divRef.current;
     if (scrollTop + clientHeight + 20 >= scrollHeight) {
-      console.log("Scrolled to the bottom");
       setNumPages(numPages+1);
     }
   };
@@ -72,7 +71,7 @@ export default function Sublease()
 
       if(singleRes != null) setUserSublease(singleRes.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       setUserSublease(null);
     }
 
@@ -111,13 +110,10 @@ export default function Sublease()
       <SubleaseFilter filterSetter={setFilter}></SubleaseFilter>
       <div ref={divRef} className={"overflow-y-auto overflow-x-visible flex-grow"} onScroll={handleScroll} style={{
         WebkitOverflowScrolling: 'touch',
-        '&::-webkit-scrollbar': {
+        '&::WebkitScrollbar': {
           display: 'none'
         },
         scrollbarWidth: 'none',
-        '&::-webkit-scrollbar': {
-          width: '0'
-        }
       }}>
 
         <Link to={"/createsublease"} color="primary" className={`${styles.linkClass} rounded-full flex flex-1 w-[70vw] mt-[4vh] h-[10%] m-auto text-lg text-black pionter-events-auto`}>

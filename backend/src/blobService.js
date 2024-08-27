@@ -43,7 +43,6 @@ export async function deleteBlobFromStorage(blobName) {
     const blobClient = containerClient.getBlobClient(blobName);
     
     await blobClient.delete();
-    console.log(`Blob ${blobName} deleted successfully`);
 }
 
 export async function updateBlobInStorage(blobName, stream, streamLength) {

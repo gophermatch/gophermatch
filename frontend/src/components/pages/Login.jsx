@@ -28,12 +28,7 @@ export default function Login() {
     async function checkAlreadyLoggedIn()
     {
         try {
-
-            console.log("checking session");
-
             const response = await backend.get('/login/check-session')
-
-            console.log(response.data);
 
             if (response.data.loggedIn) {
                 tryLogin(response.data.user.email, "already-logged-in")

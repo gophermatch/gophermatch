@@ -27,7 +27,6 @@ class User {
         if (typeof user_id !== "number") 
             throw "user_id must be a number"
 
-        console.log(`user logged in as ${user_id}`)
         this.#user_id = user_id
 
         this.#gen_data = await this.getAccount()
@@ -55,8 +54,6 @@ class User {
             params: { user_id: this.#user_id },
             withCredentials: true,
         });
-
-        console.log("Logged in user data: ", response.data[0]);
 
         return response.data[0];
     }

@@ -70,20 +70,17 @@ export async function deleteUser(user_id) {
 
 // TODO: Will need to be redone
 export async function updateAccountInfo(userdata, userId){
-    console.log(userdata);
         const filteredNewVals = Object.entries(userdata).reduce((acc, [key, value]) => {
         if(value !== '') acc[key] = value;
         return acc;
     }, {});
 
     if (Object.keys(filteredNewVals).length === 0) {
-        console.log("No valid data provided for update.");
         return Promise.resolve("No update performed due to lack of valid data.");
     }
 
     const primary_key = { user_id: userId };
     const updateQuery = buildUpdateString(tableNames.u_userdata, primary_key, filteredNewVals);
-    console.log("query: " + updateQuery.queryString);
 
     return new Promise((resolve, reject) => {
         db.query(updateQuery.queryString, updateQuery.values,
@@ -99,19 +96,16 @@ export async function updateAccountInfo(userdata, userId){
 
 // TODO: Will need to be redone
 export async function insertAccountInfo(userdata, userId){
-    console.log(userdata);
     const filteredNewVals = Object.entries(userdata).reduce((acc, [key, value]) => {
         if(value !== '') acc[key] = value;
         return acc;
     }, {});
 
     if (Object.keys(filteredNewVals).length === 0) {
-        console.log("No valid data provided for insert.");
         return Promise.resolve("No update performed due to lack of valid data.");
     }
 
     const updateQuery = buildInsertString(tableNames.u_userdata, filteredNewVals);
-    console.log("query: " + updateQuery.queryString);
 
     return new Promise((resolve, reject) => {
         db.query(updateQuery.queryString, updateQuery.values,

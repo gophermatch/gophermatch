@@ -62,13 +62,8 @@ export async function retrievePictureUrls(user_id) {
         await db.query('UPDATE u_pictures SET pic_number = pic_number - 1 WHERE user_id = ? AND pic_number > ?', [user_id, pic_number], (error, results) => {
           if (error) {
             console.error('Error reordering pictures:', error);
-          } else {
-            console.log("Successfully reordered pictures");
           }
         });
-
-        // Log the successful deletion.
-        console.log(`Deleted picture ${pic_number} for user_id=${user_id}.`);
 
       } catch (error) {
         // Log and throw an error if the deletion fails.
@@ -93,7 +88,6 @@ export async function retrievePictureUrls(user_id) {
         `;
         await db.query(query, [user_id, question, input1, input2, input3, input4, input5]);
     } catch (err) {
-        console.log("error happened");
         console.error('Error in insertTopFive:', err);
         throw err;
     }
@@ -148,7 +142,6 @@ export async function updatePollQuestion(user_id, question_text, option_text_1, 
         `;
         await db.query(query, [user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4]);
     } catch (err) {
-        console.log("error happened");
         console.error('Error in updatePollQuestion:', err);
         throw err;
     }
@@ -190,7 +183,6 @@ export async function updatePollQuestion(user_id, question_text, option_text_1, 
         
         await db.query(query, [user_id]);
     } catch (err) {
-        console.log("An error occurred while updating the poll votes.");
         console.error('Error in updatePollVotes:', err);
         throw err;
     }

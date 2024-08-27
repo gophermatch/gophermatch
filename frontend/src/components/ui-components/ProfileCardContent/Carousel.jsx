@@ -41,7 +41,6 @@ export default function Carousel({ user_id, editable }) {
                 withCredentials: true,
             });
             if (response && response.data) {
-                console.log("Picture URLs:", response.data.pictureUrls);
                 setPictureUrls(response.data.pictureUrls);
             } else {
                 console.error("Failed to fetch picture URLs");

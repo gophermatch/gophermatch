@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Fragment } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Logout from './Logout';
 import InboxNotification from './ui-components/InboxNotification';
@@ -25,7 +25,6 @@ export default function Sidebar() {
 
     useEffect(() => {
         setProfileCompletion(currentUser.profile_completion);
-        console.log("Updating: ", currentUser.profile_completion)
     }, [currentUser.profile_completion]);
 
     const handleLogoClick = () => {
@@ -57,7 +56,7 @@ export default function Sidebar() {
         <>
             <nav className="flex flex-col items-left items-center text-left p-5 w-full text-[24px] font-roboto h-screen bg-maroon_new rounded-none shadow-md" id="nav">
                 <div className={"flex pl-[0.5vw] space-x-[1vw] w-[13vw] items-center whitespace-no-wrap"}>
-                <NavLink exact to="/" className={"w-1/4"} onClick={handleLogoClick}>
+                <NavLink exact="true" to="/" className={"w-1/4"} onClick={handleLogoClick}>
                     <img src="../assets/images/logo.png" className="" alt="Logo" />
                 </NavLink>
                     <p className={"w-3/4 text-[10px] sm:text-[12px] md:text-[14px] xl:text-[16px] 2xl:text-[18px] font-bold text-white"}>Welcome, {currentUser.gen_data.first_name}!</p>
@@ -71,42 +70,42 @@ export default function Sidebar() {
                         ['People', '/people'],
                         ['Subleases', '/sublease']
                     ].map(([label, destination]) => (
-                        <>
-                        {destination == "/match" && profileCompletion != "complete" ? 
+                        <Fragment key={label}>
+                            {destination == "/match" && profileCompletion != "complete" ? 
 
-                        (
-                            <span
-                            onClick={() => {
-                                alert("Fill out your profile to access the match page!");
-                                navigate("/profile");
-                            }}
-                            className={`cursor-pointer tooltip select-none max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 text-dark_inactive_gray`}>
-                                Match
-                            </span>
-                        )
-                        :
-                        (<NavLink
-                            key={label}
-                            // Use # as destination for the match page when the match page is locked out
-                            to={destination == "/match" && profileCompletion != "complete" ? "#" : destination}
-                            id={label === 'Inbox' ? 'inbox-navlink' : null} // Assign ID to Inbox NavLink
-                            className={`max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 ${activePage === destination ? 'text-maroon_new bg-white' : 'hover:bg-maroon_dark text-white'}`}
-                            onClick={() => {
-                                if (label === 'Inbox') {
-                                    setInboxClicked(true);
-                                } else {
-                                    setInboxClicked(false);
+                            (
+                                <span
+                                onClick={() => {
+                                    alert("Fill out your profile to access the match page!");
+                                    navigate("/profile");
+                                }}
+                                className={`cursor-pointer tooltip select-none max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 text-dark_inactive_gray`}>
+                                    Match
+                                </span>
+                            )
+                            :
+                            (<NavLink
+                                key={label}
+                                // Use # as destination for the match page when the match page is locked out
+                                to={destination == "/match" && profileCompletion != "complete" ? "#" : destination}
+                                id={label === 'Inbox' ? 'inbox-navlink' : null} // Assign ID to Inbox NavLink
+                                className={`max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 ${activePage === destination ? 'text-maroon_new bg-white' : 'hover:bg-maroon_dark text-white'}`}
+                                onClick={() => {
+                                    if (label === 'Inbox') {
+                                        setInboxClicked(true);
+                                    } else {
+                                        setInboxClicked(false);
+                                    }
+                                }}
+                                ref={label === 'People' ? inboxRef : null} // Assign ref only to the People NavLink
+                            >
+                                {label}
+                                {/*{activePage === destination && <div className="absolute bottom-0 left-0 w-full h-1 bg-gold"></div>}*/}
+                                {
+                                    label === 'People' && <InboxNotification inboxClicked={inboxClicked} />
                                 }
-                            }}
-                            ref={label === 'People' ? inboxRef : null} // Assign ref only to the People NavLink
-                        >
-                            {label}
-                            {/*{activePage === destination && <div className="absolute bottom-0 left-0 w-full h-1 bg-gold"></div>}*/}
-                            {
-                                label === 'People' && <InboxNotification inboxClicked={inboxClicked} />
-                            }
-                        </NavLink>)}
-                        </>
+                            </NavLink>)}
+                        </Fragment>
                     ))}
 
                     <div className="text-white text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] font-bold w-[14vw] duration-200 rounded-2xl hover:bg-maroon_dark cursor-pointer inline-flex items-center">
