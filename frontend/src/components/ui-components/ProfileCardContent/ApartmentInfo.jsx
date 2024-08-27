@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ApartmentTag from "./ApartmentTag.jsx";
 import backend from "../../../backend.js";
 import currentUser from "../../../currentUser.js";
@@ -8,6 +8,7 @@ import MonthDropdown from "./MonthDropdown.jsx";
 
 export default function ApartmentInfo({ user_id, broadcaster }) {
 
+  const livingRef = useRef(null);
   const [genData, setGenData] = useState({
     num_beds: 1,
     num_bathrooms: 1,
@@ -86,10 +87,31 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
     ));
   };
 
+  const resizeFont = () => {
+    if (livingRef.current) {
+        const parentHeight = livingRef.current.clientHeight;
+        const fontSize = parentHeight * 0.13; // Adjust this multiplier as needed
+        livingRef.current.style.fontSize = `${fontSize}px`;
+    }
+};
+
+  useEffect(() => {
+      const observer = new ResizeObserver(resizeFont);
+      if (livingRef.current) {
+          observer.observe(livingRef.current);
+      }
+
+      resizeFont(); // Ensure the font size is set correctly on mount or when the page is revisited
+
+      return () => {
+          observer.disconnect(); // Clean up the observer on unmount
+      };
+  }, []);
+
   return (
-    <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-xl font-roboto_slab font-medium"}>
+    <div className={"w-full h-[100%] rounded-lg border-solid border-2 border-maroon text-xl font-roboto_slab font-medium"} ref={livingRef}>
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
-        <div className={"flex grow-[1] justify-center items-center"}>
+        <div className={"flex text-[100%] mt-[-8%] sm:mt-[-6%] md:mt-[-3%] lg:mt-[-1.75%] xl:mt-[0%]"}>
           <span>Looking to live in&nbsp;</span>
           {broadcaster ? (
             <input
@@ -103,8 +125,8 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
             <span>{genData.building || "Any"}</span>
           )}
         </div>
-        <div className={"flex grow-[1] w-full justify-center items-center flex-col font-[350]"}>
-          <div className={"flex w-full justify-center gap-[1vw]"}>
+        <div className={"flex w-full justify-center items-center flex-col mt-[-17%] sm:mt-[-13%] md:mt-[-7%] lg:mt-[-3.5%] xl:mt-[0%] font-[350]"}>
+          <div className={"flex w-full justify-center gap-[3.6%]"}>
             <span>{broadcaster ? 
               <NumericTextbox 
                 value={genData.num_beds} 
@@ -136,8 +158,8 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
               <b>${genData.rent}</b>} budget
             </span>
           </div>
-          <div className={"flex h-0 w-[95%] border-solid border-b-[1px] border-maroon"}></div>
-          <div className={"flex w-full justify-center gap-[1vw]"}>
+          <div className={"flex h-0 w-[95%] border-solid border-b-[1px] mt-[-7%] sm:mt-[-6%] md:mt-[-3%] lg:mt-[-1%] xl:mt-[0%] border-maroon"}></div>
+          <div className={"flex w-full justify-center mt-[-7%] md:mt-[-3%] lg:mt-[-1%] xl:mt-[0%] gap-[3.6%]"}>
             <span className={"whitespace-nowrap"}>
               {broadcaster ? 
                 <NumericTextbox 
@@ -165,7 +187,7 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
             </span>
           </div>
         </div>
-        <div className={"flex w-[98%] p-2 max-h-[80%] grow-[0] flex-wrap gap-1 overflow-y-scroll custom-scrollbar"}>
+        <div className={"flex w-[98%] h-[40%] p-2 max-h-[80%] grow-[0] flex-wrap gap-1 mt-[-10%] md:mt-[-2%] lg:mt-[-4%] xl:mt-[0%] overflow-y-scroll custom-scrollbar"}>
           {allTagIds.map(tag => {
             const tagValue = activeTags.includes(tag.tag_id);
             return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import backend from "../../../backend";
 import whiteX from "../../../assets/images/whiteX.svg";
 
@@ -157,12 +157,35 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
 
 }, [broadcaster, pollData, resetVotes])
 
+const livingRef = useRef(null);
+
+const resizeFont = () => {
+  if (livingRef.current) {
+      const parentHeight = livingRef.current.clientHeight;
+      const fontSize = parentHeight * 0.63; // Adjust this multiplier as needed
+      livingRef.current.style.fontSize = `${fontSize}px`;
+  }
+};
+
+useEffect(() => {
+    const observer = new ResizeObserver(resizeFont);
+    if (livingRef.current) {
+        observer.observe(livingRef.current);
+    }
+
+    resizeFont(); // Ensure the font size is set correctly on mount or when the page is revisited
+
+    return () => {
+        observer.disconnect(); // Clean up the observer on unmount
+    };
+}, []);
+
   return (
     <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-lg font-roboto_slab font-medium"}>
       <div className={"flex w-full h-full flex-col"}>
         {/*Top headers*/}
         <p className={"flex justify-center w-full"}>
-          <span className={"text-center"}>
+          <span className={"text-center"} ref={livingRef}>
             {broadcaster ? 
               <input
                 id="Question"
