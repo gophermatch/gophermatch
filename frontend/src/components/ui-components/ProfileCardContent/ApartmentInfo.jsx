@@ -87,21 +87,31 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
     ));
   };
 
-  const resizeFont = () => {
+  const resizeElements = () => {
     if (livingRef.current) {
         const parentHeight = livingRef.current.clientHeight;
-        const fontSize = parentHeight * 0.13; // Adjust this multiplier as needed
-        livingRef.current.style.fontSize = `${fontSize}px`;
+        const scaleFactor = parentHeight * 0.13; // Adjust this multiplier for overall scaling
+        livingRef.current.style.fontSize = `${scaleFactor}px`;
+
+        // Example: Scaling padding and margins
+        const padding = parentHeight * 0.01; // 2% of parent height
+        const margin = parentHeight * 0.003; // 1.5% of parent height
+
+        const elementsToScale = livingRef.current.querySelectorAll('.scalable');
+        elementsToScale.forEach(el => {
+            el.style.padding = `${padding}px`;
+            el.style.margin = `${margin}px`;
+        });
     }
 };
 
   useEffect(() => {
-      const observer = new ResizeObserver(resizeFont);
+      const observer = new ResizeObserver(resizeElements);
       if (livingRef.current) {
           observer.observe(livingRef.current);
       }
 
-      resizeFont(); // Ensure the font size is set correctly on mount or when the page is revisited
+      resizeElements(); // Ensure the sizes are set correctly on mount
 
       return () => {
           observer.disconnect(); // Clean up the observer on unmount
@@ -109,9 +119,9 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
   }, []);
 
   return (
-    <div className={"w-full h-[100%] rounded-lg border-solid border-2 border-maroon text-xl font-roboto_slab font-medium"} ref={livingRef}>
+    <div className={"w-full h-[100%] rounded-lg border-solid border-2 border-maroon font-roboto_slab font-medium"} ref={livingRef}>
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
-        <div className={"flex text-[100%] mt-[-8%] sm:mt-[-6%] md:mt-[-3%] lg:mt-[-1.75%] xl:mt-[0%]"}>
+        <div className={"flex"}>
           <span>Looking to live in&nbsp;</span>
           {broadcaster ? (
             <input
@@ -119,20 +129,21 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
               value={genData.building}
               onChange={(e) => updateGenData('building', e.target.value)}
               placeholder="Enter building name"
-              className="text-center border rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-maroon"
+              className="text-center border rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-maroon scalable"
             />
           ) : (
             <span>{genData.building || "Any"}</span>
           )}
         </div>
-        <div className={"flex w-full justify-center items-center flex-col mt-[-17%] sm:mt-[-13%] md:mt-[-7%] lg:mt-[-3.5%] xl:mt-[0%] font-[350]"}>
-          <div className={"flex w-full justify-center gap-[3.6%]"}>
+        <div className={"flex w-full justify-center items-center flex-col scalable"}>
+          <div className={"flex w-full justify-center gap-[3.6%] scalable"}>
             <span>{broadcaster ? 
               <NumericTextbox 
                 value={genData.num_beds} 
                 min={1} 
                 max={6} 
                 onChange={value => updateGenData('num_beds', value)} 
+                className="scalable"
               /> : 
               <b>{genData.num_beds}</b>} bed
             </span>
@@ -142,6 +153,7 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
                 min={1} 
                 max={6} 
                 onChange={value => updateGenData('num_bathrooms', value)} 
+                className="scalable"
               /> : 
               <b>{genData.num_bathrooms}</b>} bath
             </span>
@@ -153,13 +165,14 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
                   min={0} 
                   max={9999} 
                   onChange={value => updateGenData('rent', value)} 
+                  className="scalable"
                 />
               </> : 
               <b>${genData.rent}</b>} budget
             </span>
           </div>
-          <div className={"flex h-0 w-[95%] border-solid border-b-[1px] mt-[-7%] sm:mt-[-6%] md:mt-[-3%] lg:mt-[-1%] xl:mt-[0%] border-maroon"}></div>
-          <div className={"flex w-full justify-center mt-[-7%] md:mt-[-3%] lg:mt-[-1%] xl:mt-[0%] gap-[3.6%]"}>
+          <div className={"flex h-0 w-[95%] border-solid border-b-[1px] border-maroon scalable"}></div>
+          <div className={"flex w-full justify-center gap-[3.6%] scalable"}>
             <span className={"whitespace-nowrap"}>
               {broadcaster ? 
                 <NumericTextbox 
@@ -167,6 +180,7 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
                   min={1} 
                   max={6} 
                   onChange={value => updateGenData('num_residents', value)} 
+                  className="scalable"
                 /> : 
                 <b>{genData.num_residents}</b>}
               &nbsp;residents
@@ -176,18 +190,20 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
                 <MonthDropdown 
                   initialValue={genData.move_in_month} 
                   onChange={value => updateGenData('move_in_month', value)} 
+                  className="scalable"
                 /> 
                 to 
                 <MonthDropdown 
                   initialValue={genData.move_out_month} 
                   onChange={value => updateGenData('move_out_month', value)} 
+                  className="scalable"
                 />
               </> : 
               <b>{genData.move_in_month} to {genData.move_out_month}</b>}
             </span>
           </div>
         </div>
-        <div className={"flex w-[98%] h-[40%] p-2 max-h-[80%] grow-[0] flex-wrap gap-1 mt-[-10%] md:mt-[-2%] lg:mt-[-4%] xl:mt-[0%] overflow-y-scroll custom-scrollbar"}>
+        <div className={"flex w-[98%] h-[40%] p-2 max-h-[80%] flex-wrap gap-1 overflow-y-scroll custom-scrollbar scalable"}>
           {allTagIds.map(tag => {
             const tagValue = activeTags.includes(tag.tag_id);
             return (
@@ -198,6 +214,7 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
                 text={tag.tag_text} 
                 editing={!!broadcaster} 
                 toggleFunction={onToggleTag} 
+                className="scalable"
               />
             );
           })}

@@ -12,7 +12,7 @@ import SleepSchedule from './ProfileCardContent/SleepSchedule';
 // user_id: number, isDorm: boolean, showApt: boolean, broadcaster?: SignalBroadcaster
 export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, dormToggle, profileMode, save_func, isDormBackend}) {
   return ( // TODO
-    <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[35rem] sm:w-[30rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new relative z-10`}>
+    <div className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[35rem] sm:w-[30rem] w-[25rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new relative z-10`}>
       {profileMode &&
       <div className={"flex mr-[35vw]"}>
         <div className={`flex flex-row-reverse font-roboto_slab text-white w-[12vw] h-[4vh] justify-center items-center rounded-t-[1vw] ${
@@ -62,7 +62,7 @@ export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, do
               <NameAndBio user_id={user_id} broadcaster={broadcaster} />
             </div>
             <div className="flex h-[50%] gap-[3.6%]">
-              <div className="flex w-[55%] flex-col overflow-x-hidden gap-[7.2%]">
+              <div className="flex w-[58%] flex-col overflow-x-hidden gap-[7.2%]">
                 <div className={"flex h-[65%] border-none overflow-y-auto overflow-x-hidden"}>
                   {/*How should we really pass this? Match and Profile page will end up passing it differently, but we could use the same prop*/}
                   {isDorm ?
