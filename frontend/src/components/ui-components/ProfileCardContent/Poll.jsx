@@ -65,7 +65,6 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
   }, [user_id]);
 
   async function vote(numb) {
-    console.log(user_id);
     try {
       await backend.put('/profile/poll-question-vote', {
         user_id: user_id,
@@ -89,7 +88,6 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
 
     vote(index+1)
     setVoteTotal(prevTotal => prevTotal+1);
-    console.log(voteTotal);
     setAnswerRevealed(prev => !prev);
   }
 
@@ -185,19 +183,15 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
         {/*Bottom panel with tags*/}
         <div className={"flex w-full p-2 max-h-[80%] grow-[0] flex-col gap-1 overflow-y-scroll"} style={{
           WebkitOverflowScrolling: 'touch',
-          '&::-webkit-scrollbar': {
+          '&::WebkitScrollbar': {
             display: 'none'
           },
           scrollbarWidth: 'none',
-
-          '&::-webkit-scrollbar': {
-            width: '0'
-          }
         }}>
           {answerRevealed ? 
             <>
             {pollData.answers.map((newAnswer, index) => (
-              <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
+              <div key={index} className={"flex justify-center w-full mt-[1vh]"}>
                 <div className={"rounded-lg w-[97%] h-[33px] relative border-maroon text-xs text-white bg-maroon"}>
                   {!broadcaster && <div style={{ width: widths[index], transition: 'width 0.5s ease-in-out' }} className={`bg-dark_maroon rounded-lg flex h-[100%]`}/>}
                   <div className={"absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
@@ -224,7 +218,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
                     }
                   </div>
                 </div>
-              </p>
+              </div>
             ))}
               {(broadcaster && pollData.answers.length < 4) && (
                 <div className="flex justify-center w-full mt-[1vh]">
@@ -233,7 +227,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
                   </button>
                 </div>
               )}
-              {broadcaster && 
+              {broadcaster &&
                 <div className="flex justify-center w-full mt-[1vh]">
                   <button className={"rounded-lg w-[97%] h-[33px] relative text-xs text-black bg-gold"} onClick={() => setResetVotes(prevState => !prevState)}>
                     Reset Votes
@@ -250,11 +244,11 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
                 <button className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon transition-transform duration-200 ease-in-out transform hover:scale-105"} onClick={() => displayResults(index)}>
                   {newAnswer.answer}
                 </button>
-              </p>
+              </div>
             ))
           }
         </div>
       </div>
     </div>
   );
-}   
+}

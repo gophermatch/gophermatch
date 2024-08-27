@@ -52,11 +52,7 @@ async function loginPageRedirect() {
 
     const checkLoggedIn = async () => { try {
 
-      console.log("checking session");
-
       const response = await backend.get('/login/check-session')
-
-      console.log(response.data);
 
       if (response.data.loggedIn) {
           const res = await backend.put("/login", {
@@ -80,8 +76,6 @@ async function loginPageRedirect() {
   }
 
     const loggedIn = await checkLoggedIn();
-
-    console.log("User attempting to visit login page, is logged in: " + loggedIn);
 
     if (loggedIn) {
         if(currentUser.profile_completion == "complete") {

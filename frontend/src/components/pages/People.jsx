@@ -29,8 +29,6 @@ export default function People() {
             try {
                 const subleaseRes = await backend.get('/sublease/get-saves', { params: { user_id: currentUser.user_id } });
 
-                console.log("sub data", subleaseRes.data);
-
                 updateMatchedSubleases(subleaseRes.data);
             } catch (error) {
                 console.error("Failed fetching subleases: ", error)
@@ -50,9 +48,6 @@ export default function People() {
     }, []);
 
     function unmatch(profileId) {
-
-        console.log("removing match: ", profileId);
-
         backend.delete('/match/inbox-delete', { params: { user1_id: currentUser.user_id, user2_id: profileId } })
             .then(() => {
                 updateMatchedProfiles(prevProfiles => prevProfiles.filter(uid => uid !== profileId));

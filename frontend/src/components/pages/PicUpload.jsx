@@ -26,8 +26,6 @@ const PicUpload = () => {
             });
             if (response) {
 
-                console.log(response);
-
                 const data = response.data;
 
                 const newArray = [];
@@ -56,9 +54,7 @@ const PicUpload = () => {
             });
 
             setStatus('Profile pictured successfully removed!');
-            console.log(response);
 
-            console.log("Changing picture urls");
         } catch (error) {
             console.error('Error removing file:', error);
             setStatus('Failed to remove profile picture. Please try again later.');
@@ -72,9 +68,6 @@ const PicUpload = () => {
     }
 
     const uploadFile = async (file, i) => {
-
-        console.log(file);
-
         const formData = new FormData();
         formData.append('file', file);
         formData.append('user_id', currentUser.user_id);
@@ -87,9 +80,6 @@ const PicUpload = () => {
                 },
             });
             setStatus('Profile picture uploaded successfully!');
-            console.log(response.data);
-
-            console.log("Changing picture urls");
 
             await fetchPictureUrls();
         } catch (error) {
@@ -107,12 +97,10 @@ const PicUpload = () => {
         const files = event.target.files;
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            console.log(file);
             const firstEmptyIndex = pictureUrls.findIndex(url => url==="");
             if (firstEmptyIndex !== -1) {
                 uploadFile(file, firstEmptyIndex);
             } else {
-                console.log(pictureUrls)
                 console.error("No empty photo slots available");
                 setStatus("No empty photo slots available! Please remove one before uploading.");
                 break;

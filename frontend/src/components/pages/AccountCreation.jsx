@@ -100,11 +100,7 @@ export default function AccountCreation() {
     
             const res = await backend.post("/profile/set-gendata", payload);
     
-            console.log(res.data.message);
-    
             currentUser.user_data = await currentUser.getAccount();
-    
-            console.log("redirecting to match");
     
             navigate("/login");
     
