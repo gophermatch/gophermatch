@@ -12,7 +12,7 @@ import {
     createPollOption,
     deletePollOption,
     getGeneralData, setGeneralData,
-    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, getState, updatePollVotes, wipePollVotes
+    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, getState, updatePollVotes, wipePollVotes, resetProfile
 } from "../database/profile.js";
 import{uploadFileToBlobStorage, generateBlobSasUrl} from '../blobService.js'
 import { SearchLocation, parseValue, parseToPosInt } from './requestParser.js'
@@ -336,6 +336,20 @@ router.post('/set-gendata', async (req, res) => {
         return res.json({ message: "Data updated successfully"});
     } catch (error) {
         return res.status(500).json(createErrorObj("Failed to set general data."));
+    }
+});
+
+router.post('/reset-profile', async (req, res) => {
+    const { user_id } = req.body;
+    if (!user_id) {
+        return res.status(400).json(createErrorObj("Missing parameters for reset-profile"));
+    }
+
+    try {
+        const results = await resetProfile(user_id);
+        return res.json(results);
+    } catch (error) {
+        return res.status(500).json(createErrorObj({error: "Failed to reset profile."}));
     }
 });
 

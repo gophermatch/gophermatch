@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, Fragment } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Logout from './Logout';
 import InboxNotification from './ui-components/InboxNotification';
+import FadeAlert from './ui-components/FadeAlert';
 import UserStateBroadcaster from '../UserStateBroadcaster';
 import currentUser from '../currentUser';
 
@@ -11,6 +12,17 @@ export default function Sidebar() {
     const [inboxClicked, setInboxClicked] = useState(false);
     const inboxRef = useRef(null); // Ref for the Inbox NavLink
     const [notificationPosition, setNotificationPosition] = useState({ top: 0, left: 0 });
+    const [showAlert, setShowAlert] = useState(false);
+
+    const handleMatchClick = () => {
+        navigate("/profile");
+        setShowAlert(true);
+        console.log("testest")
+    };
+
+    const handleAlertHide = () => {
+        setShowAlert(false);
+    };
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -73,17 +85,15 @@ export default function Sidebar() {
                         <Fragment key={label}>
                             {destination == "/match" && profileCompletion != "complete" ? 
 
-                            (
-                                <span
-                                onClick={() => {
-                                    alert("Fill out your profile to access the match page!");
-                                    navigate("/profile");
-                                }}
-                                className={`cursor-pointer tooltip select-none max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 text-dark_inactive_gray`}>
-                                    Match
-                                </span>
-                            )
-                            :
+                        (
+                            <span
+                            onClick={handleMatchClick}
+                            className={`cursor-pointer tooltip select-none max-h-full text-[10px] sm:text-[12px] md:text-[18px] xl:text-[20px] 2xl:text-[24px] pl-[1vw] py-[0.7vw] flex flex-col relative mb-[2vh] font-roboto w-[14vw] font-bold rounded-2xl duration-200 text-dark_inactive_gray`}>
+                                Match
+                                <FadeAlert text="Your profile is incomplete! Ensure you have a photo and a bio!" trigger={showAlert} onHide={handleAlertHide} />
+                            </span>
+                        )
+                        :
                             (<NavLink
                                 key={label}
                                 // Use # as destination for the match page when the match page is locked out
