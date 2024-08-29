@@ -244,7 +244,7 @@ export default function Poll({answersRevealed, user_id, broadcaster}) {
                 <button className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon transition-transform duration-200 ease-in-out transform hover:scale-105"} onClick={() => displayResults(index)}>
                   {newAnswer.answer}
                 </button>
-              </div>
+              </p>
             ))
           }
         </div>
