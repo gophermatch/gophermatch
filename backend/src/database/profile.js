@@ -527,6 +527,7 @@ export async function getHousingPreference(user_id) {
     });
   }
 
+// get profile state
 export async function getState(user_id) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -553,10 +554,18 @@ export async function getState(user_id) {
                 return resolve({ profile_completion: "incomplete_account" });
             }
 
-            // Check if bio exists and is not empty
-            const bioQuery = `SELECT bio FROM ${tableNames.u_generaldata} WHERE user_id = ?`;
-            const [bioResult] = await new Promise((resolve, reject) => {
-                db.query(bioQuery, [user_id], (err, results) => {
+            // Check if bio, ENUMs, and other fields exist and are not default or empty
+            const generalDataQuery = `
+                SELECT bio, substances, alcohol, room_activity, tidiness,
+                       num_residents, num_beds, num_bathrooms, 
+                       move_in_month, move_out_month,
+                       first_name, last_name,
+                       housing_preference, college, major, graduating_year
+                FROM ${tableNames.u_generaldata}
+                WHERE user_id = ?;
+            `;
+            const [generalDataResult] = await new Promise((resolve, reject) => {
+                db.query(generalDataQuery, [user_id], (err, results) => {
                     if (err) {
                         return reject(err);
                     }
@@ -564,7 +573,25 @@ export async function getState(user_id) {
                 });
             });
 
-            const hasBio = bioResult && bioResult.bio && bioResult.bio.trim() !== "";
+            const hasBio = generalDataResult && generalDataResult.bio && generalDataResult.bio.trim() !== "";
+            const hasCompleteEnums = generalDataResult &&
+                generalDataResult.substances !== null &&
+                generalDataResult.alcohol !== null &&
+                generalDataResult.room_activity !== null &&
+                generalDataResult.tidiness !== null;
+
+            const hasValidGeneralData = generalDataResult &&
+                generalDataResult.num_residents !== -1 &&
+                generalDataResult.num_beds !== -1 &&
+                generalDataResult.num_bathrooms !== -1 &&
+                generalDataResult.move_in_month !== null &&
+                generalDataResult.move_out_month !== null &&
+                generalDataResult.first_name.trim() !== "" &&
+                generalDataResult.last_name.trim() !== "" &&
+                generalDataResult.housing_preference !== null &&
+                generalDataResult.college.trim() !== "" &&
+                generalDataResult.major.trim() !== "" &&
+                generalDataResult.graduating_year.trim() !== "";
 
             // Check if the user has at least one picture
             const pictureQuery = `SELECT COUNT(*) AS pictureCount FROM ${tableNames.u_pictures} WHERE user_id = ?`;
@@ -579,9 +606,29 @@ export async function getState(user_id) {
 
             const hasPicture = pictureResult.pictureCount > 0;
 
+            // Check inputs in u_topfive table
+            const topFiveQuery = `
+                SELECT input1, input2, input3
+                FROM ${tableNames.u_topfive}
+                WHERE user_id = ?;
+            `;
+            const [topFiveResult] = await new Promise((resolve, reject) => {
+                db.query(topFiveQuery, [user_id], (err, results) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(results);
+                });
+            });
+
+            const inputsComplete = topFiveResult &&
+                topFiveResult.input1 && topFiveResult.input1.trim() !== "" &&
+                topFiveResult.input2 && topFiveResult.input2.trim() !== "" &&
+                topFiveResult.input3 && topFiveResult.input3.trim() !== "";
+
             // Determine the state based on the checks
-            let state = "incomplete_profile"; // Default state if either bio or pictures are missing
-            if (hasBio && hasPicture) {
+            let state = "incomplete_profile"; // Default state if any condition is not met
+            if (hasBio && hasCompleteEnums && hasValidGeneralData && hasPicture && inputsComplete) {
                 state = "complete";
             }
 
@@ -593,4 +640,6 @@ export async function getState(user_id) {
         }
     });
 }
+
+
 
