@@ -31,11 +31,9 @@ const CheckoutForm = () => {
       });
 
       if (result.error) {
-        console.log(result.error.message);
         // Handle errors in payment submission here
       } else {
         if (result.paymentIntent.status === 'succeeded') {
-          console.log('Payment succeeded!');
           // Handle successful payment here
         }
       }

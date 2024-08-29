@@ -11,6 +11,7 @@ const DORM_OPTIONS = [
     "Bailey",
     "Centennial",
     "Frontier",
+    "Sanford",
 ]
 
 const peopleDict = {
@@ -24,8 +25,8 @@ export default function Top5Dorms({user_id, broadcaster}) {
 
     //TODO: add better defaults or some other loading state
     const [top5Data, setTop5Data] = useState({
-        inputs: ["comstock", "middlebrook", "something", "idk", "idk2"],
-        question: "Top 5??" //TODO: question should not exist in backend, should be hardcoded into html
+        inputs: ["Pioneer", "17th", "Frontier", "Comstock", "Middlebrook"],
+        question: "Top 5 Dorms?" //TODO: question should not exist in backend, should be hardcoded into html
     });
 
     const [holdPos, setHoldPos] = useState(null);

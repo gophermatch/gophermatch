@@ -71,8 +71,6 @@ export default function SubleaseEntry({ sublease, refreshFunc, sublease_id }) {
 
   async function save() {
     try {
-      console.log(sublease);
-
       const res = await backend.post("/sublease/save", {
         user_id: currentUser.user_id, sublease_id: sublease.sublease_id,
       });
@@ -88,7 +86,7 @@ export default function SubleaseEntry({ sublease, refreshFunc, sublease_id }) {
     <div className={"mt-[10%] ml-[0%] min-h-[80px] h-[11vw] w-[90%] aspect-[16/3.3] flex items-center"}>
       <div className={"font-profile font-bold p-0 text-maroon_new h-full w-full bg-cream rounded-[20px]"}>
         <div className={`h-[1.5rem] lg:h-[2rem] xl:h-[2.5rem] relative top-[-1vh] w-full ${subleaseData.premium ? 'bg-gold': 'bg-maroon_new'} rounded-t-[20px]`}>
-          <p className={"flex justify-between text-white text-[1.5vw] w-full ml-[1vw] mt-[1vh] font-roboto_slab"}>
+          <div className={"flex justify-between text-white text-[1.5vw] w-full ml-[1vw] mt-[1vh] font-roboto_slab"}>
             <span className="mt-[0.3%] ml-[1.5%] flex flex-row justify-center items-center whitespace-nowrap">
               <p className={`${styles.lightBold} text-[100%] flex-shrink-0`}>
                 {subleaseData.building_name}
@@ -100,7 +98,7 @@ export default function SubleaseEntry({ sublease, refreshFunc, sublease_id }) {
             <span className={"mt-[1%] mr-[3%] inline-block text-right font-light text-[80%]"}>
               Available {DateTime.fromISO(subleaseData.sublease_start_date).toFormat('MM/dd/yyyy')}-{DateTime.fromISO(subleaseData.sublease_end_date).toFormat('MM/dd/yyyy')}
             </span>
-          </p>
+          </div>
         </div>
         <div className={"relative flex flex-row ml-[4%] mr-[4%] mt-[0.5%] h-[60%] w-[90%] text-[100%]"}>
           <div className="flex flex-col w-[33%] bg-light_gray ml-[-1.75vw] rounded-[12px] font-roboto_condensed" ref={containerRef1}>

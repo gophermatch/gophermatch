@@ -90,7 +90,6 @@ router.post('/save', async (req, res) =>{
       return res.status(400).json({ error: "Missing required fields: user_id, sublease_id." });
     }
     await saveSublease(user_id, sublease_id);
-    console.log("Saved sublease")
     res.json({ message: 'Sublease successfully saved' });
   } catch (error) {
     console.error("Error saving sublease: ", error);
@@ -119,7 +118,6 @@ router.get('/get-saves', async (req, res) =>{
       return res.status(400).json({ error: "Missing required fields: user_id." });
     }
     const subleases = await getSavedSubleases(user_id);
-    console.log(subleases)
     res.json(subleases);
   } catch (error) {
     console.error("Error getting saved sublease: ", error);
@@ -128,7 +126,6 @@ router.get('/get-saves', async (req, res) =>{
 });
 
 router.get('/saved-subleases', async (req, res) =>{
-  console.log("saved-subleases")
   try {
     const {user_id} = req.query;
     if(!user_id){

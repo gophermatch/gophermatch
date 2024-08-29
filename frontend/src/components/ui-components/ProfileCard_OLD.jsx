@@ -85,7 +85,6 @@ export function ProfileCard_OLD({ user_id }) {
 
         if (response.data && response.data.length > 0) {
           const user = response.data[0];
-          console.log("User data:", user);
           if (user) {
             setName(`${user.first_name} ${user.last_name}`);
             setMajor(user.major);
@@ -103,7 +102,6 @@ export function ProfileCard_OLD({ user_id }) {
                 apartment_data: JSON.stringify([user.rent, user.building])
               }
             };
-            console.log("Apartment data:", apartmentData);
             setApartmentData(apartmentData);
           }
         }

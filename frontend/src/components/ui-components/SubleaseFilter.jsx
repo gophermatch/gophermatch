@@ -32,7 +32,6 @@ export default function SubleaseFilter({ filterSetter }) {
   };
 
   const handleApplyFilters = async () => {
-    console.log("Applying filters");
     filterSetter(filter);
   };
 

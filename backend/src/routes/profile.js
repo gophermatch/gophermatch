@@ -12,7 +12,7 @@ import {
     createPollOption,
     deletePollOption,
     getGeneralData, setGeneralData,
-    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, getState, updatePollVotes, wipePollVotes
+    updateUserTags, getUserSelectedTags, getAllTags, toggleDormAndApartment, getHousingPreference, getState, updatePollVotes, wipePollVotes, resetProfile
 } from "../database/profile.js";
 import{uploadFileToBlobStorage} from '../blobService.js'
 import { azureStorageConfig } from "../env.js";
@@ -74,8 +74,6 @@ router.delete('/remove-picture', async (req, res) => {
 
     const { user_id, pic_number } = req.query;
 
-    console.log("removing picture" + user_id + ", " + pic_number);
-
     if (!user_id) {
         return res.status(400).json(createErrorObj("Must include a user_id in the query parameter!"));
     }
@@ -95,7 +93,6 @@ router.delete('/remove-picture', async (req, res) => {
 
 router.put('/insert-topfive', async (req, res) => {
     const {user_id, question, input1, input2, input3, input4, input5} = req.body;
-    console.log("id: ", user_id, " question: ", question, " input1: ", input1)
     if (!user_id || !question || !input1){
         return res.status(400).json(createErrorObj("Missing parameters for insert-topfive"));
     }
@@ -306,7 +303,6 @@ router.get('/get-gendata', async (req, res) => {
 
     try {
         const results = await getGeneralData(user_id, filter);
-        console.log(results)
         return res.json(results);
     } catch (error) {
         return res.status(500).json({ error: "Failed to get general data." });
@@ -333,13 +329,26 @@ router.post('/set-gendata', async (req, res) => {
     if (!user_id || !data) {
         return res.status(400).json(createErrorObj("Missing parameters for set-gendata"));
     }
-    console.log("setgen", data)
 
     try {
         const results = await setGeneralData(user_id, data);
         return res.json({ message: "Data updated successfully"});
     } catch (error) {
         return res.status(500).json(createErrorObj("Failed to set general data."));
+    }
+});
+
+router.post('/reset-profile', async (req, res) => {
+    const { user_id } = req.body;
+    if (!user_id) {
+        return res.status(400).json(createErrorObj("Missing parameters for reset-profile"));
+    }
+
+    try {
+        const results = await resetProfile(user_id);
+        return res.json(results);
+    } catch (error) {
+        return res.status(500).json(createErrorObj({error: "Failed to reset profile."}));
     }
 });
 
@@ -360,7 +369,6 @@ router.post('/update-user-tags', async (req, res) => {
     if (!user_id || !Array.isArray(tag_ids)) {
         return res.status(400).json({ error: 'Missing or invalid parameters' });
     }
-    console.log("taggy", tag_ids)
 
     try {
         await updateUserTags(user_id, tag_ids);

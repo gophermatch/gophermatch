@@ -71,11 +71,8 @@ export default function NameAndBio({ user_id, broadcaster }) {
                     }
                 });
 
-                console.log("NAME BIO REQUESTED");
-
                 if (response.data && response.data.length > 0) {
                     const user = response.data[0];
-                    console.log("User data:", user);
                     if (user) {
                         setFullName(`${user.first_name} ${user.last_name}`);
                         setMajor(user.major);
@@ -91,7 +88,6 @@ export default function NameAndBio({ user_id, broadcaster }) {
                         // Set international student status and log it for debugging
                         const intlStudent = user.international.toString(); // Ensure it's a string
                         setInternationalStudent(intlStudent);
-                        console.log("International Student Status:", intlStudent);
                     }
                 }
             } catch (error) {
@@ -133,7 +129,7 @@ export default function NameAndBio({ user_id, broadcaster }) {
                   <img src={nonbinary} alt="Non-Binary" className="ml-[1px]" />
               ) : null}
             </div>
-            <div className="mt-[-1vh] text-[2vh] font-[450]">
+            <div className="mt-[-1vh] mb-[1.5vh] text-[2vh] font-[450]">
               {broadcaster ? 
                 <select
                   id="selectionBox"

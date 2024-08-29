@@ -24,8 +24,6 @@ export default function SubleaseInboxEntry ({sublease_id, deleteSub, setDisplay}
             sublease_id: sublease_id,
         }});
 
-        console.log(result);
-
         await setSubleaseData(result.data);
 
         await fetchUserData(result.data.user_id);
