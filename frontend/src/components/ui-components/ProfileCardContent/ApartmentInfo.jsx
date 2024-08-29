@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import ApartmentTag from "./ApartmentTag.jsx";
 import backend from "../../../backend.js";
 import currentUser from "../../../currentUser.js";
-import './apartmentStyles.css';
 import NumericTextbox from "./NumericTextbox.jsx";
 import MonthDropdown from "./MonthDropdown.jsx";
 
@@ -121,40 +120,48 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
   return (
     <div className={"w-full h-[100%] rounded-lg border-solid border-2 border-maroon font-roboto_slab font-medium"} ref={livingRef}>
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
-        <div className={"flex"}>
-          <span>Looking to live in&nbsp;</span>
+        <div className="flex justify-center items-center">
+          <span className="text-center mt-[2%]">Looking to live in&nbsp;</span>
           {broadcaster ? (
             <input
               type="text"
               value={genData.building}
               onChange={(e) => updateGenData('building', e.target.value)}
               placeholder="Enter building name"
-              className="text-center border rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-maroon scalable"
+              className="text-center border rounded-sm shadow-sm mt-[3%] focus:outline-none focus:ring-1 focus:ring-maroon h-[60%] w-[50%]"
             />
           ) : (
-            <span>{genData.building || "Any"}</span>
+            <span className="text-center">{genData.building || "Any"}</span>
           )}
         </div>
-        <div className={"flex w-full justify-center items-center flex-col scalable"}>
-          <div className={"flex w-full justify-center gap-[3.6%] scalable"}>
+        <div className={"flex w-full justify-center items-center flex-col"}>
+          <div className={"flex w-full justify-center items-center flex-row gap-[3.6%]"}>
+            <div className="flex flex-row">
+              <span>{broadcaster ? 
+                <div style={{ width: '400%', height: '60%' }}>
+                <NumericTextbox 
+                  value={genData.num_beds} 
+                  min={1} 
+                  max={6} 
+                  onChange={value => updateGenData('num_beds', value)} 
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </div>
+              : 
+                <b>{genData.num_beds}</b>} bed
+              </span>
+            </div>
             <span>{broadcaster ? 
-              <NumericTextbox 
-                value={genData.num_beds} 
-                min={1} 
-                max={6} 
-                onChange={value => updateGenData('num_beds', value)} 
-                className="scalable"
-              /> : 
-              <b>{genData.num_beds}</b>} bed
-            </span>
-            <span>{broadcaster ? 
+             <div className="flex flex-row" style={{ width: '400%', height: '60%' }}>
               <NumericTextbox 
                 value={genData.num_bathrooms} 
                 min={1} 
                 max={6} 
                 onChange={value => updateGenData('num_bathrooms', value)} 
                 className="scalable"
-              /> : 
+              />
+              </div>
+               : 
               <b>{genData.num_bathrooms}</b>} bath
             </span>
             <span>{broadcaster ? 
