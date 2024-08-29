@@ -87,32 +87,32 @@ export default function ProfilePage() {
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
 
-  const save_or_cancel = (isEditing ?
-    <div className="absolute flex align-middle justify-between top-[40px] right-[40px] h-[4vh]">
-      <button onClick={onSaveClick} className={`rounded-lg px-[35px] font-roboto_slab text-white hover:bg-login ${isSaving ? "bg-newwhite" : "bg-maroon"}`}>Save Changes</button>
-      <button 
-        onClick={discardChanges} 
-        className="w-[20px] ml-[15px]" 
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        <img src={isHovered ? hoverClose : close} alt="Close" />
-      </button>
-    </div>
-    :
-    <button
-    onClick={() => setIsEditing(true)}
-    className="absolute top-[40px] right-[40px] w-[5vh] h-[5vh]"
-    onMouseEnter={() => setIsHovered(true)}
-    onMouseLeave={() => setIsHovered(false)}
-    style={{
-      transition: 'transform 0.3s ease',
-      transform: isHovered ? 'scale(1.2)' : 'scale(1)'
-    }}
-  >
-    <img src={pencil} alt="Edit" />
-  </button>
-  )
+  // const save_or_cancel = (isEditing ?
+  //   <div className="absolute flex align-middle justify-between top-[40px] right-[40px] h-[4vh]">
+  //     <button onClick={onSaveClick} className={`rounded-lg px-[35px] font-roboto_slab text-white hover:bg-login ${isSaving ? "bg-newwhite" : "bg-maroon"}`}>Save Changes</button>
+  //     <button 
+  //       onClick={discardChanges} 
+  //       className="w-[20px] ml-[15px]" 
+  //       onMouseEnter={handleMouseEnter}
+  //       onMouseLeave={handleMouseLeave}
+  //     >
+  //       <img src={isHovered ? hoverClose : close} alt="Close" />
+  //     </button>
+  //   </div>
+  //   :
+  //   <button
+  //   onClick={() => setIsEditing(true)}
+  //   className="absolute z-50 w-[5vh] h-[5vh]"
+  //   onMouseEnter={() => setIsHovered(true)}
+  //   onMouseLeave={() => setIsHovered(false)}
+  //   style={{
+  //     transition: 'transform 0.3s ease',
+  //     transform: isHovered ? 'scale(1.2)' : 'scale(1)'
+  //   }}
+  // >
+  //   <img src={pencil} alt="Edit" />
+  // </button>
+  // )
 
   useEffect(() => {
     const fetchPreference = async () => {
@@ -136,7 +136,7 @@ export default function ProfilePage() {
       profileMode={true}
       isDormBackend={isDormBackend}
     />
-    {save_or_cancel}
+    {/* {save_or_cancel} */}
     </>
   )
 }
