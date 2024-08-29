@@ -66,7 +66,6 @@ router.put('/', async (req, res) => {
 // Responds with status 400 or 200
 // On successful logout, destroys the session associated with the user and clears the user's cookie
 router.delete('/', async (req, res) => {
-    console.log(req.session)
     if (!req.session.user) {
         res.status(400).json(createErrorObj("No user logged in"))
         return

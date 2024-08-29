@@ -63,7 +63,6 @@ export default function Match() {
       });
 
       if(currentIndex+1 >= filteredUserIds.length){
-        console.log("ran out of results, appending more");
         await appendFilterResults()
         setCurrentIndex(0);
       } else {
@@ -92,7 +91,6 @@ export default function Match() {
   async function appendFilterResults() {
     await backend.post('/match/filter-results', {user_id: currentUser.user_id, userData, filters, amount:3}, {withCredentials: true}).then((res) => {
       setFilterResults(res.data);
-      console.log("Filtered profiles: ", res.data);
     });
   }
 

@@ -31,7 +31,6 @@ export default function SubleaseFilter({ filterSetter }) {
   };
 
   const handleApplyFilters = async () => {
-    console.log("Applying filters");
     filterSetter(filter);
   };
 
@@ -117,7 +116,7 @@ export default function SubleaseFilter({ filterSetter }) {
           className={`absolute duration-[400ms] right-[70vh] ml-auto mr-auto cursor-pointer`}
           viewBox="0 -4.5 20 20"
           xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
           style={{
             transform: isOpen ? "rotateX(180deg) translateY(-5.5vh)" : "rotateX(0deg) translateY(0)",
             transition: "transform 0.45s ease", // Smooth rotation and translation
@@ -130,9 +129,9 @@ export default function SubleaseFilter({ filterSetter }) {
           <g
             id="Page-1"
             stroke="none"
-            stroke-width="0.5"
+            strokeWidth="0.5"
             fill="none"
-            fill-rule="evenodd"
+            fillRule="evenodd"
           >
             <g
               id="Dribbble-Light-Preview"

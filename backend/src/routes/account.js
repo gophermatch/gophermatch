@@ -26,7 +26,6 @@ router.post('/', async (req, res) => {
     try {
         // hash the password
         const hashpass = await bcrypt.hash(password, saltRounds)
-        console.log(hashpass)
         // create the user
         const user = await createUser(email, hashpass)
 

@@ -62,13 +62,8 @@ export async function retrievePictureUrls(user_id) {
         await db.query('UPDATE u_pictures SET pic_number = pic_number - 1 WHERE user_id = ? AND pic_number > ?', [user_id, pic_number], (error, results) => {
           if (error) {
             console.error('Error reordering pictures:', error);
-          } else {
-            console.log("Successfully reordered pictures");
           }
         });
-
-        // Log the successful deletion.
-        console.log(`Deleted picture ${pic_number} for user_id=${user_id}.`);
 
       } catch (error) {
         // Log and throw an error if the deletion fails.
@@ -93,7 +88,6 @@ export async function retrievePictureUrls(user_id) {
         `;
         await db.query(query, [user_id, question, input1, input2, input3, input4, input5]);
     } catch (err) {
-        console.log("error happened");
         console.error('Error in insertTopFive:', err);
         throw err;
     }
@@ -148,7 +142,6 @@ export async function updatePollQuestion(user_id, question_text, option_text_1, 
         `;
         await db.query(query, [user_id, question_text, option_text_1, option_text_2, option_text_3, option_text_4]);
     } catch (err) {
-        console.log("error happened");
         console.error('Error in updatePollQuestion:', err);
         throw err;
     }
@@ -190,7 +183,6 @@ export async function updatePollQuestion(user_id, question_text, option_text_1, 
         
         await db.query(query, [user_id]);
     } catch (err) {
-        console.log("An error occurred while updating the poll votes.");
         console.error('Error in updatePollVotes:', err);
         throw err;
     }
@@ -318,6 +310,100 @@ export async function setGeneralData(user_id, data) {
       });
   });
 }
+
+export async function resetProfile(user_id) {
+    return new Promise((resolve, reject) => {
+        const resetGeneralDataQuery = `
+            INSERT INTO ${tableNames.u_generaldata} (
+                user_id, wakeup_time, sleep_time, substances, alcohol,
+                room_activity, num_residents, num_beds, num_bathrooms,
+                move_in_month, move_out_month, bio
+            )
+            VALUES (
+                ?, 80, 144, 'No', 'No', 'Friends', 1, 1, 1, 'January', 'January', ''
+            )
+            ON DUPLICATE KEY UPDATE
+                wakeup_time = VALUES(wakeup_time),
+                sleep_time = VALUES(sleep_time),
+                substances = VALUES(substances),
+                alcohol = VALUES(alcohol),
+                room_activity = VALUES(room_activity),
+                num_residents = VALUES(num_residents),
+                num_beds = VALUES(num_beds),
+                num_bathrooms = VALUES(num_bathrooms),
+                move_in_month = VALUES(move_in_month),
+                move_out_month = VALUES(move_out_month),
+                bio = VALUES(bio);
+        `;
+
+        const resetPollQuestionsQuery = `
+            INSERT INTO ${tableNames.u_pollquestions} (
+                user_id, question_text,
+                option_text_1, option_text_2, option_text_3, option_text_4,
+                option_votes_1, option_votes_2, option_votes_3, option_votes_4
+            )
+            VALUES (
+                ?, 'Poll question',
+                'Option A', 'Option B', 'Option C', 'Option D',
+                0, 0, 0, 0
+            )
+            ON DUPLICATE KEY UPDATE
+                question_text = VALUES(question_text),
+                option_text_1 = VALUES(option_text_1),
+                option_text_2 = VALUES(option_text_2),
+                option_text_3 = VALUES(option_text_3),
+                option_text_4 = VALUES(option_text_4),
+                option_votes_1 = VALUES(option_votes_1),
+                option_votes_2 = VALUES(option_votes_2),
+                option_votes_3 = VALUES(option_votes_3),
+                option_votes_4 = VALUES(option_votes_4);
+        `;
+
+        const resetTopFiveQuery = `
+            INSERT INTO ${tableNames.u_topfive} (
+                user_id, question, input1, input2, input3, input4, input5
+            )
+            VALUES (
+                ?, 'Top 5 Dorms?', 'Pioneer', '17th', 'Frontier', 'Comstock', 'Middlebrook'
+            )
+            ON DUPLICATE KEY UPDATE
+                question = VALUES(question),
+                input1 = VALUES(input1),
+                input2 = VALUES(input2),
+                input3 = VALUES(input3),
+                input4 = VALUES(input4),
+                input5 = VALUES(input5);
+        `;
+
+        const values = [user_id];
+
+        // Run all three queries sequentially
+        db.query(resetGeneralDataQuery, values, (err, results) => {
+            if (err) {
+                console.error(`Error resetting general data for user_id ${user_id}:`, err);
+                return reject(err);
+            }
+
+            db.query(resetPollQuestionsQuery, values, (err, results) => {
+                if (err) {
+                    console.error(`Error resetting poll questions for user_id ${user_id}:`, err);
+                    return reject(err);
+                }
+
+                db.query(resetTopFiveQuery, values, (err, results) => {
+                    if (err) {
+                        console.error(`Error resetting top five data for user_id ${user_id}:`, err);
+                        return reject(err);
+                    }
+
+                    resolve(results);
+                });
+            });
+        });
+    });
+}
+
+
 
 // helper function for set general data
 function performUpdate(user_id, data, resolve, reject) {
