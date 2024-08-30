@@ -17,25 +17,36 @@ export function ProfileCard({ user_id, isDorm, switchProfileMode, broadcaster, d
   const [isHovered, setIsHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isCardHovered, setIsCardHovered] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleMouseEnter = () => setIsHovered(true);
-  const handleMouseLeave = () => setIsHovered(false);
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    setIsCardHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setIsCardHovered(false);
+  };
 
   async function resetProfile() {
     await backend.post('profile/reset-profile', {
       user_id: user_id
     });
     window.location.reload();
-  };
+  }
 
   function onSaveClick() {
     if (isSaving) return;
     setIsSaving(true);
+    setIsAnimating(true);
     broadcaster.fire()
       .catch((e) => console.error("SAVE NOT SUCCESSFUL: ", e))
       .finally(() => {
         setIsSaving(false);
         setIsEditing(false);
+        setTimeout(() => setIsAnimating(false), 300); // Match the duration of the animation
       });
   }
 
@@ -77,7 +88,16 @@ export function ProfileCard({ user_id, isDorm, switchProfileMode, broadcaster, d
   );
 
   return (
-    <div className="m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new relative z-10">
+    <div
+      className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new relative z-10 card-container ${isCardHovered ? 'scale-up' : ''}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transition: 'transform 0.3s ease',
+        transform: isAnimating ? 'scale(0.95)' : 'scale(1)',
+        overflow: 'hidden'
+      }}
+    >
       {/* Profile Mode Header */}
       {profileMode && (
         <div className="flex mr-[35vw]">
@@ -144,13 +164,11 @@ export function ProfileCard({ user_id, isDorm, switchProfileMode, broadcaster, d
                 <div className="flex grow-[1] border-dashed border-2 border-maroon">
                   <SleepSchedule user_id={user_id} broadcaster={isEditing ? broadcaster : null} editable={isEditing} />
                 </div>
-                <div>
-                  {pageType !== 'match' && save_or_cancel} {/* Conditionally render the save_or_cancel buttons */}
-                </div>
               </div>
             </div>
           </div>
         </div>
+        {save_or_cancel}
       </div>
     </div>
   );
