@@ -73,20 +73,22 @@ export function ProfileCard({ user_id, isDorm, switchProfileMode, broadcaster, d
       </button>
     </div>
   ) : (
-    <button
-      onClick={() => setIsEditing(true)}
-      className="absolute top-[40px] right-[40px] w-[5vh] h-[5vh]"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{
-        transition: 'transform 0.3s ease',
-        transform: isHovered ? 'scale(1.2)' : 'scale(1)'
-      }}
-    >
-      <img src={pencil} alt="Edit" />
-    </button>
+    pageType === 'profile' && (
+      <button
+        onClick={() => setIsEditing(true)}
+        className="absolute top-[40px] right-[40px] w-[5vh] h-[5vh]"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{
+          transition: 'transform 0.3s ease',
+          transform: isHovered ? 'scale(1.2)' : 'scale(1)'
+        }}
+      >
+        <img src={pencil} alt="Edit" />
+      </button>
+    )
   );
-
+  
   return (
     <div
       className={`m-auto 2xl:w-[80rem] xl:w-[60rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] h-screen flex items-center justify-center flex-col font-profile font-bold text-maroon_new relative z-10 card-container ${isCardHovered ? 'scale-up' : ''}`}

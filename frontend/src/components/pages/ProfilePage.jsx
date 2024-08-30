@@ -108,7 +108,7 @@ export default function ProfilePage() {
       dormToggle={dormToggle}
       profileMode={true}
       isDormBackend={isDormBackend}
-      pageType={'profile'}
+      pageType='profile'
     />
     {/* {save_or_cancel} */}
     </>
