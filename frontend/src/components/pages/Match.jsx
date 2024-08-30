@@ -117,7 +117,7 @@ export default function Match() {
           </div>
         </div>
         
-        <ProfileCard className="relative z-10" user_id={filteredUserIds[currentIndex]} isDorm={isDorm} save_func={() => goToNext("unsure")} />
+        <ProfileCard pageType={'match'} className="relative z-10" user_id={filteredUserIds[currentIndex]} isDorm={isDorm} save_func={() => goToNext("unsure")} />
         
         <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3 z-50">
           <button onClick={() => goToNext("reject")}

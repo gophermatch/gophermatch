@@ -12,10 +12,10 @@ import pencil from "../../assets/images/pencil.svg";
 import close from "../../assets/images/red_x.svg";
 import hoverClose from '../../assets/images/gold_x.svg';
 
-export function ProfileCard({ user_id, isDorm, switchProfileMode, broadcaster, dormToggle, profileMode, save_func, isDormBackend }) {
+export function ProfileCard({ user_id, isDorm, switchProfileMode, broadcaster, dormToggle, profileMode, save_func, isDormBackend, pageType }) {
   const [reset, setReset] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleMouseEnter = () => setIsHovered(true);
@@ -145,7 +145,7 @@ export function ProfileCard({ user_id, isDorm, switchProfileMode, broadcaster, d
                   <SleepSchedule user_id={user_id} broadcaster={isEditing ? broadcaster : null} editable={isEditing} />
                 </div>
                 <div>
-                  {save_or_cancel}
+                  {pageType !== 'match' && save_or_cancel} {/* Conditionally render the save_or_cancel buttons */}
                 </div>
               </div>
             </div>
