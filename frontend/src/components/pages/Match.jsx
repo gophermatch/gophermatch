@@ -21,7 +21,7 @@ export default function Match() {
       setCurrentIndex(0);
       setFilterResults([]);
       appendFilterResults();
-      // fetch housing preference for current user
+      
       const fetchPreference = async () => {
         const preference = await getHousingPreference();
         setIsDorm(Boolean(preference));
@@ -50,10 +50,8 @@ export default function Match() {
 
     async function goToNext(decision) {
       if (decision === "match" || decision === "unsure") {
-        // go right
         setCardTranslate("translate(100vw, 0px)")
       } else {
-        // go left
         setCardTranslate("translate(-100vw, 0px)")
       }
       await backend.post('/match/matcher', {
@@ -96,14 +94,13 @@ export default function Match() {
 
     if (currentIndex >= filteredUserIds.length) {
         return (
-          <div className={"h-full" +
-            ""}>
+          <div className={"h-full"}>
               <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0}/>
-            <div className={"flex h-full justify-center items-center"}>
-              <div className={"flex flex-col"}>
-                <p className={"text-center"}>Out of results, please change your filters or</p>
-                <button className={"mt-[5px] text-center bg-maroon_dark rounded-2xl px-[10px] py-[5px] text-white duration-500 hover:bg-maroon_new"} onClick={showRejectedMatches}>Start from the beginning</button>
-              </div>
+              <div className={"flex h-full justify-center items-center"}>
+                <div className={"flex flex-col"}>
+                  <p className={"text-center"}>Out of results, please change your filters or</p>
+                  <button className={"mt-[5px] text-center bg-maroon_dark rounded-2xl px-[10px] py-[5px] text-white duration-500 hover:bg-maroon_new"} onClick={showRejectedMatches}>Start from the beginning</button>
+                </div>
               </div>
           </div>
         )
@@ -111,9 +108,18 @@ export default function Match() {
 
     return (
       <div className="relative">
-      <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0} className="absolute z-50"/>
-      <ProfileCard className="relative z-10" user_id={filteredUserIds[currentIndex]} isDorm={isDorm} save_func={() => goToNext("unsure")} />
-      <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3 z-50">
+        <Filter setFiltersExternal={setFilters} setUserDataExternal={setUserData} profileMode={0} className="absolute z-50"/>
+        
+        {/* Conditionally render "Dorm" or "Apartment" */}
+        <div className="flex text-center justify-center text-xl font-semibold">
+          <div className="absolute top-[10%] bg-maroon text-white rounded-md p-[5px]">
+          {isDorm ? "Dorm" : "Apartment"}
+          </div>
+        </div>
+        
+        <ProfileCard pageType={'match'} className="relative z-10" user_id={filteredUserIds[currentIndex]} isDorm={isDorm} save_func={() => goToNext("unsure")} />
+        
+        <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3 z-50">
           <button onClick={() => goToNext("reject")}
                   className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
               <img src="assets/images/match-reject.svg" alt="Reject" className="w-[50%] h-[50%] object-contain" />
@@ -122,8 +128,7 @@ export default function Match() {
                   className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
               <img src="assets/images/match-accept.svg" alt="Match" className="w-[55%] h-[55%] object-contain" />
           </button>
+        </div>
       </div>
-  </div>
-  
     );
 }
