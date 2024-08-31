@@ -16,7 +16,6 @@ import currentUser from "./currentUser.js"
 import Signup from './components/pages/Signup.jsx'
 import './index.css';
 import Landing from './components/pages/LandingPage.jsx'
-import Saved from './components/pages/Saved.jsx'
 import PicUpload from './components/pages/PicUpload.jsx'
 import Sublease from './components/pages/Sublease.jsx'
 import Payment from './components/pages/Payment.jsx'
@@ -192,10 +191,6 @@ const router = createBrowserRouter([
                 path: "people",
                 element: <People />,
                 loader: unauthPageRedirect
-            },{
-              path: "saved",
-              element: <Saved />,
-              loader: unauthPageRedirect
             },{
               path: "PicUpload",
               element: <PicUpload />,

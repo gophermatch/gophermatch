@@ -1,6 +1,5 @@
 import { db, tableNames } from './db.js'
-import { queryRowsToArray, buildSelectString, buildInsertString, buildUpdateString } from './dbutils.js'
-import account from "../routes/account.js";
+import { queryRowsToArray, buildSelectString, buildInsertString } from './dbutils.js'
 
 // Returns a promise that is a user object from the users database, or {} if no user is found
 export async function getUser(email) {
@@ -51,6 +50,7 @@ export async function createUser(email, hashpass) {
     })
 }
 
+// TODO: Currently unused, delete?
 export async function deleteUser(user_id) {
     return new Promise((resolve, reject) => {
         db.query(`DELETE FROM ${tableNames.users} WHERE user_id = ?;`, user_id,
@@ -66,55 +66,4 @@ export async function deleteUser(user_id) {
             } else reject({})
         })
     })
-}
-
-// TODO: Will need to be redone
-export async function updateAccountInfo(userdata, userId){
-        const filteredNewVals = Object.entries(userdata).reduce((acc, [key, value]) => {
-        if(value !== '') acc[key] = value;
-        return acc;
-    }, {});
-
-    if (Object.keys(filteredNewVals).length === 0) {
-        return Promise.resolve("No update performed due to lack of valid data.");
-    }
-
-    const primary_key = { user_id: userId };
-    const updateQuery = buildUpdateString(tableNames.u_userdata, primary_key, filteredNewVals);
-
-    return new Promise((resolve, reject) => {
-        db.query(updateQuery.queryString, updateQuery.values,
-          (err, res) => {
-              if (err) {
-                  reject(err);
-                  return;
-              }
-              resolve(res);
-          })
-    });
-}
-
-// TODO: Will need to be redone
-export async function insertAccountInfo(userdata, userId){
-    const filteredNewVals = Object.entries(userdata).reduce((acc, [key, value]) => {
-        if(value !== '') acc[key] = value;
-        return acc;
-    }, {});
-
-    if (Object.keys(filteredNewVals).length === 0) {
-        return Promise.resolve("No update performed due to lack of valid data.");
-    }
-
-    const updateQuery = buildInsertString(tableNames.u_userdata, filteredNewVals);
-
-    return new Promise((resolve, reject) => {
-        db.query(updateQuery.queryString, updateQuery.values,
-          (err, res) => {
-              if (err) {
-                  reject(err);
-                  return;
-              }
-              resolve(res);
-          })
-    });
 }
