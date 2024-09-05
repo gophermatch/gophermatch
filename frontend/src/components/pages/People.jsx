@@ -110,7 +110,7 @@ export default function People() {
         if(fullDisplay.display_type == "sublease")
         {
             return(
-                <div className="flex items-center h-full w-full bg-dark_cream">
+                <div className="flex items-center h-full w-full p-[5%] bg-dark_cream">
                     
                     <button onClick={() => setDisplay({})}>
                             <img
@@ -121,7 +121,7 @@ export default function People() {
                         </button>
 
                     <div className="flex-grow flex items-center mt-[-8%] justify-center w-full text-center">
-                        <SubleaseEntry sublease_id={fullDisplay.id} hideContact={true} className="bg-maroon"/>
+                        <SubleaseEntry sublease_id={fullDisplay.id} hideContact={true} className="w-[70%] bg-maroon"/>
                     </div>
                 </div>
             );

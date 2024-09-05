@@ -113,7 +113,7 @@ export default function SubleaseFilter({ filterSetter }) {
 
       <div className="flex justify-center z-0 mt-[15px]">
             <button onClick={expandFilterUI}>
-                <img className={`absolute duration-[400ms] right-[12vh] ml-auto mr-auto cursor cursor-pointer transform transition-transform ${isOpen ? `scale-y-[-1] translate-y-[50px]` : `scale-y-[1] translate-y-[0px]`}`} src={dropdownArrow}></img>
+                <img className={`absolute duration-[400ms] right-[2%] ml-auto mr-auto cursor cursor-pointer transform transition-transform ${isOpen ? `scale-y-[-1] translate-y-[50px]` : `scale-y-[1] translate-y-[0px]`}`} src={dropdownArrow}></img>
             </button>
       </div>
     </div>

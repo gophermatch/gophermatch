@@ -112,6 +112,8 @@ export default function SubleaseCreation()
       if(singleRes != null) {
         setEditingMode(true);
 
+        setUserSublease(singleRes.data)
+
         const formData = { ...singleRes.data };
         delete formData.user_id;
 
@@ -287,7 +289,7 @@ export default function SubleaseCreation()
           />
         </div>
 
-        <div><button type="submit" className={`text-white mt-4 px-4 w-full py-2 rounded ${validateData() ? 'bg-maroon_new opacity-100' : 'bg-maroon_new pointer-events-none opacity-40'}`}>Submit</button></div>
+        <div><button type="submit" className={`text-white mt-4 px-4 w-full py-2 rounded ${validateData() ? 'bg-maroon_new opacity-100' : 'bg-maroon_new pointer-events-none opacity-40'}`}>{userSublease ? "Apply Changes" : "Post Sublease"}</button></div>
 
 
       </form>
