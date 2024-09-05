@@ -49,6 +49,8 @@ export default {
       light_gray: '#EDEDED',
       gray: 'rgb(212 212 216)',
       gray_text: 'rgb(31 41 55)',
+      inset_gray: '#F0F0F0',
+      sublease_border: '#9F9F9F'
     },
     fontFamily: {
       lora: ['Lora', 'serif'],
