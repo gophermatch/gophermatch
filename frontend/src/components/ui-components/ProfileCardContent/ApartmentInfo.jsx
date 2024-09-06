@@ -62,6 +62,10 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
     }
   }, [broadcaster, genData, activeTags]);
 
+  useEffect(() => {
+    console.log(broadcaster)
+  })
+
   const validateGenData = (data) => {
     // If any field is empty, revert it to the original value
     const validatedData = { ...data };
@@ -89,7 +93,7 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
   return (
     <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-xl font-roboto_slab font-medium"}>
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
-        <div className={"flex grow-[1] justify-center items-center"}>
+        <div className={"flex mt-[12%] justify-center items-center"}>
           <span>Looking to live in&nbsp;</span>
           {broadcaster ? (
             <input
@@ -97,7 +101,7 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
               value={genData.building}
               onChange={(e) => updateGenData('building', e.target.value)}
               placeholder="Enter building name"
-              className="text-center border rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-maroon"
+              className="text-center w-[40%] mt-[2%] border rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-maroon"
             />
           ) : (
             <span>{genData.building || "Any"}</span>
@@ -110,7 +114,8 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
                 value={genData.num_beds} 
                 min={1} 
                 max={6} 
-                onChange={value => updateGenData('num_beds', value)} 
+                onChange={value => updateGenData('num_beds', value)}
+                className="h-[50px] w-[50px]" 
               /> : 
               <b>{genData.num_beds}</b>} bed
             </span>
