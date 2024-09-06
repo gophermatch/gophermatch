@@ -1,0 +1,22 @@
+.input-range {
+    position: relative;
+    width: 100%;
+}
+
+.input-range .input-range__track {
+    background: maroon;
+}
+
+.input-range .input-range__slider {
+    background: maroon;
+    border: 2px solid maroon;
+}
+
+.input-range .input-range__label {
+    color: maroon;
+}
+
+.input-range .input-range__min-label,
+.input-range .input-range__max-label {
+    color: maroon;
+}
