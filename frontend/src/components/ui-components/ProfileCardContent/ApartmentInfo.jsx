@@ -93,7 +93,7 @@ export default function ApartmentInfo({ user_id, broadcaster }) {
   return (
     <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-xl font-roboto_slab font-medium"}>
       <div className={"flex w-full h-full justify-center items-center flex-col"}>
-        <div className={"flex mt-[12%] justify-center items-center"}>
+        <div className={"flex mt-[0%] justify-center items-center"}>
           <span>Looking to live in&nbsp;</span>
           {broadcaster ? (
             <input
