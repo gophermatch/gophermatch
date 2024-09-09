@@ -12,7 +12,7 @@ import pencil from "../../assets/images/pencil.svg";
 import close from "../../assets/images/red_x.svg";
 import hoverClose from '../../assets/images/gold_x.svg';
 
-export function ProfileCard({ user_id, isDorm, switchProfileMode, broadcaster, dormToggle, profileMode, save_func, isDormBackend, pageType }) {
+export function ProfileCard({ user_id, isDorm, broadcaster, dormToggle, profileMode, save_func, isDormBackend, pageType }) {
   const [reset, setReset] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -105,11 +105,11 @@ export function ProfileCard({ user_id, isDorm, switchProfileMode, broadcaster, d
         <div className="flex mr-[35vw]">
           {/* Dorm / Apartment Toggle */}
           <div className={`flex flex-row-reverse font-roboto_slab text-white w-[12vw] h-[4vh] justify-center items-center rounded-t-[1vw] ${isDorm ? 'bg-maroon' : 'bg-dark_maroon'}`}>
-            <button className="ml-[0.5vw]" onClick={switchProfileMode}>Dorm</button>
+            <p className="ml-[0.5vw]">Dorm</p>
             {isDorm && <img src={preferenceIcon} width="20px" height="20px" alt="Dorm Icon" />}
           </div>
           <div className={`flex flex-row-reverse font-roboto_slab text-white w-[12vw] h-[4vh] justify-center items-center rounded-t-[1vw] ${isDorm ? 'bg-dark_maroon' : 'bg-maroon'}`}>
-            <button className="ml-[0.5vw]" onClick={switchProfileMode}>Apartment</button>
+            <p className="ml-[0.5vw]">Apartment</p>
             {!isDorm && <img src={preferenceIcon} width="20px" height="20px" alt="Apartment Icon" />}
           </div>
           {/* Dorm/Apartment Profile Toggle */}
