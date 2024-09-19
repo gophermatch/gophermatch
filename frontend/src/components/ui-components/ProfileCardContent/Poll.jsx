@@ -214,7 +214,7 @@ useEffect(() => {
             <>
             {pollData.answers.map((newAnswer, index) => (
               <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
-                <div className={"rounded-lg w-[97%] h-[33px] relative border-maroon text-xs text-white bg-maroon"}>
+                <div className={"rounded-lg w-[97%] h-[30px] mt-[-3%] relative border-maroon text-xs text-white bg-maroon"}>
                   {!broadcaster && <div style={{ width: `${voteTotal > 0 ? (pollData.answers[index].votes / voteTotal * 100) : 0}%` }} className={`bg-dark_maroon rounded-lg flex h-[100%]`}/>}
                   <div className={"absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
                     {broadcaster ? 
@@ -263,7 +263,7 @@ useEffect(() => {
           :
             pollData.answers.map((newAnswer, index) => (
               <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
-                <button className={"rounded-lg px-3 w-[97%] h-[33px] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"} onClick={() => displayResults(index)}>
+                <button className={"rounded-lg px-3 w-[97%] h-[15%] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"} onClick={() => displayResults(index)}>
                   {newAnswer.answer}
                 </button>
               </p>

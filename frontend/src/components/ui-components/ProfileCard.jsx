@@ -76,7 +76,7 @@ export function ProfileCard({user_id, isDorm, switchProfileMode, broadcaster, do
                   </div>
                 </div>
               <div className="grow-[2] flex flex-col gap-[3.6%]">
-                <div className={"flex h-[75%] border-none border-2 border-maroon"}>
+                <div className={"flex h-[80%] border-none border-2 border-maroon"}>
                   <Poll answersRevealed={profileMode} user_id={user_id} broadcaster={broadcaster} />
                 </div>
                 <div className={"flex h-[25%] border-dashed border-2 border-maroon"}>
