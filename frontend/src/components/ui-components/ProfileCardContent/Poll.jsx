@@ -168,20 +168,20 @@ const resizeFont = () => {
 };
 
 useEffect(() => {
-    const observer = new ResizeObserver(resizeFont);
+    /* const observer = new ResizeObserver(resizeFont);
     if (livingRef.current) {
         observer.observe(livingRef.current);
-    }
+    } 
 
     resizeFont(); // Ensure the font size is set correctly on mount or when the page is revisited
 
     return () => {
         observer.disconnect(); // Clean up the observer on unmount
-    };
+    }; */
 }, []);
 
   return (
-    <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon text-lg font-roboto_slab font-medium"}>
+    <div className={"w-full h-full rounded-lg border-solid border-2 border-maroon xl:text-lg lg: text-md md:text-sm sm:text-xs font-roboto_slab font-medium"}>
       <div className={"flex w-full h-full flex-col"}>
         {/*Top headers*/}
         <p className={"flex justify-center w-full"}>
@@ -189,7 +189,7 @@ useEffect(() => {
             {broadcaster ? 
               <input
                 id="Question"
-                className="text-center rounded-lg text-base mb-[1vh] mt-[1vh] bg-gray text-maroon"
+                className="text-center rounded-lg xl:text-md lg: text-sm md:text-xs sm:text-[0.4rem] mb-[1vh] mt-[1vh] bg-gray text-maroon"
                 value={pollData.question}
                 onChange={(e) => changeQuestion(e.target.value)}
               /> 
@@ -214,7 +214,7 @@ useEffect(() => {
             <>
             {pollData.answers.map((newAnswer, index) => (
               <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
-                <div className={"rounded-lg w-[97%] h-[30px] mt-[-3%] relative border-maroon text-xs text-white bg-maroon"}>
+                <div className={"rounded-lg w-[97%] h-[3vh] relative border-maroon xl:text-md lg: text-sm md:text-xs sm:text-[0.4rem] text-white bg-maroon"}>
                   {!broadcaster && <div style={{ width: `${voteTotal > 0 ? (pollData.answers[index].votes / voteTotal * 100) : 0}%` }} className={`bg-dark_maroon rounded-lg flex h-[100%]`}/>}
                   <div className={"absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
                     {broadcaster ? 
@@ -251,7 +251,7 @@ useEffect(() => {
               )}
               {broadcaster && 
                 <div className="flex justify-center w-full mt-[1vh]">
-                  <button className={"rounded-lg w-[97%] h-[33px] relative text-xs text-black bg-gold"} onClick={() => setResetVotes(prevState => !prevState)}>
+                  <button className={"rounded-lg w-[97%] h-[3vh] relative xl:text-md lg: text-sm md:text-xs sm:text-[0.4rem] text-black bg-gold"} onClick={() => setResetVotes(prevState => !prevState)}>
                     Reset Votes
                     {resetVotes && <div className={"absolute left-[92.5%] top-[50%] translate-x-[-50%] translate-y-[-50%]"}>
                     ✅
@@ -263,7 +263,7 @@ useEffect(() => {
           :
             pollData.answers.map((newAnswer, index) => (
               <p key={index} className={"flex justify-center w-full mt-[1vh]"}>
-                <button className={"rounded-lg px-3 w-[97%] h-[15%] flex items-center justify-center border-solid border-2 border-maroon text-xs text-white bg-maroon"} onClick={() => displayResults(index)}>
+                <button className={"rounded-lg w-[97%] h-[3vh] flex items-center justify-center border-solid border-2 border-maroon xl:text-md lg: text-sm md:text-xs sm:text-[0.4rem] text-white bg-maroon"} onClick={() => displayResults(index)}>
                   {newAnswer.answer}
                 </button>
               </p>
