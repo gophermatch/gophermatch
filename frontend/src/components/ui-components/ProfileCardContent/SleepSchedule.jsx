@@ -14,17 +14,23 @@ export default function SleepSchedule({ user_id, broadcaster }) {
                     setSliderValue({ min: res.data[0].wakeup_time, max: res.data[0].sleep_time });
                 }
             });
-    }, [user_id]);    
-
-    useEffect(() => {
-        backend.get('/profile/get-gendata', { params: { user_id, filter: ['wakeup_time', 'sleep_time'] } })
-            .then(res => {
-                if (res.data && res.data[0]) {
-                    setSliderValue({ min: res.data[0].wakeup_time, max: res.data[0].sleep_time });
-                }
-            });
     }, [user_id]);
     
+    useEffect(() => {
+        if (broadcaster) {
+            const cb = () =>
+                backend.post('/profile/set-gendata', {
+                    user_id: user_id,
+                    data: {
+                        wakeup_time:sliderValue.min,
+                        sleep_time:sliderValue.max
+                    }
+                });
+
+            broadcaster.connect(cb);
+            return () => broadcaster.disconnect(cb);
+        }
+    }, [broadcaster, sliderValue.min, sliderValue.max]);
 
     const formatTime = (value) => {
         const hours = Math.floor(value / 4);
@@ -47,7 +53,7 @@ export default function SleepSchedule({ user_id, broadcaster }) {
     };
 
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-full px-[8%] py-[4%]">
             <div className="flex justify-center mb-4">
                 <p>Sleep Schedule</p>
             </div>
@@ -63,11 +69,13 @@ export default function SleepSchedule({ user_id, broadcaster }) {
                     setSliderValue(value);
                 }}
                 className="bg-maroon "
+                formatLabel={(value, type) => {
+                    if (type === 'min' || type === 'max') {
+                      return null; // Hide labels for min and max
+                    }
+                    return `${formatTime(value)}`; // Show value for other labels (like tooltip)
+                  }}
              />
-            </div>
-            <div className="flex justify-between mt-4">
-                <span>{formatTime(sliderValue.min)}</span>
-                <span>{formatTime(sliderValue.max)}</span>
             </div>
         </div>
     );
