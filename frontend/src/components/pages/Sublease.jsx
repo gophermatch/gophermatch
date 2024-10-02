@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
 import SubleaseFilter from "../ui-components/SubleaseFilter.jsx";
-import styles from '../../assets/css/sublease.module.css';
-
 
 export default function Sublease()
 {
@@ -39,8 +37,8 @@ export default function Sublease()
     setNumPages(1);
   };
 
-  const refresh = () => {
-    if(subleases.length > 0) { setSubleases([]) }
+  const remove = (sublease_id) => {
+    if(subleases.length > 0) { setSubleases(subleases.filter(sub => sub.sublease_id != sublease_id)) }
     else { fetchSubleases(filter); }
     setFinished(false);
     setNumPages(1);
@@ -108,7 +106,7 @@ export default function Sublease()
   return(
     <div className="h-screen flex flex-col bg-offwhite items-center justify-center font-profile font-semibold">
       <SubleaseFilter filterSetter={setFilter}></SubleaseFilter>
-      <div ref={divRef} className={"overflow-y-auto overflow-x-visible flex-grow"} onScroll={handleScroll} style={{
+      <div ref={divRef} className={"mt-[2.5%] overflow-y-auto overflow-x-visible flex-grow"} onScroll={handleScroll} style={{
         WebkitOverflowScrolling: 'touch',
         '&::WebkitScrollbar': {
           display: 'none'
@@ -116,14 +114,16 @@ export default function Sublease()
         scrollbarWidth: 'none',
       }}>
 
-        <Link to={"/createsublease"} color="primary" className={`${styles.linkClass} rounded-full flex flex-1 w-[70vw] mt-[4vh] h-[10%] m-auto text-lg text-black pionter-events-auto`}>
-          <button className={`${styles.buttonClass} rounded-full min-h-[50px] h-[100%] w-auto aspect-square text-[4vw] ml-[83%] mt-[2%] bg-maroon text-white transition-transform duration-500 scale-[96%] hover:scale-[105%] cursor-pointer`}>
-            <span className="text-[100%]">+</span>
-          </button>
+        
+        <Link to="/createsublease" className="fixed right-4 bottom-4 rounded-full w-[7%] aspect-square bg-maroon text-white flex items-center justify-center transition-transform duration-500 scale-[85%] hover:scale-[90%] cursor-pointer">
+          <img src={userSublease ? "../../assets/images/edit_sublease.svg" : "../../assets/images/create_sublease.svg"} alt="Match" className="w-[45%] h-[45%] object-contain text-maroon fill-current" />
         </Link>
+
+        <div className="w-[70vw]"></div>
+
         {subleases.length > 0 ? subleases.map(item => (
           // Return a React element for each item in the array
-          item.user_id !== currentUser.user_id && <SubleaseEntry key={item.user_id} sublease={item} refreshFunc={refresh}/>
+          item.user_id !== currentUser.user_id && <SubleaseEntry key={item.user_id} sublease={item} removeFunc={remove}/>
         )) : <br></br>}
         <br></br>
       </div>
