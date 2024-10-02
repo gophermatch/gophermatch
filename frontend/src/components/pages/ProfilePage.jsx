@@ -59,11 +59,8 @@ export default function ProfilePage() {
 
   const dormToggle = () => {
     setIsDormBackend(prevState => !prevState)
-    dormToggleBackend();
-  }
-
-  const switchProfileMode = () => {
     setIsDorm(prevState => !prevState)
+    dormToggleBackend();
   }
 
   function onSaveClick() {
@@ -103,7 +100,6 @@ export default function ProfilePage() {
       key={nextKey}
       user_id={currentUser.user_id}
       isDorm={isDorm}
-      switchProfileMode={switchProfileMode}
       broadcaster={broadcaster}
       dormToggle={dormToggle}
       profileMode={true}

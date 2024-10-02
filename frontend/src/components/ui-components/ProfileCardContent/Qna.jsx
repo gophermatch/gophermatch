@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import backend from "../../../backend";
+import styles from '../../../assets/css/name.module.css';
 import dropdownImg from "../../../assets/images/dropdown.png";
 import dropupImg from "../../../assets/images/dropup.png";
 
@@ -13,19 +14,18 @@ const CHOICE_DICT = {
 function OptionDropdown({value, name, dropdown, setDropdown, dispatch}) {
     return(
         <div className={`relative w-[60%] ${dropdown === name ? "z-20" : "z-10"} flex justify-end`}>
-            <button onClick={() => setDropdown(current => current === name ? undefined : name)}>
-                <img src={dropdown === name ? dropupImg : dropdownImg} className="w-[20px] inline-block" />
-                {value}
-            </button>
-            {dropdown === name &&
-                <div className="absolute min-w-full top-full border-2 border-solid border-maroon ">
-                {CHOICE_DICT[name].map((option) => (
-                    <button key={name} onClick={() => {dispatch(option); setDropdown(undefined)}} className="block w-full text-right px-[4px] border-t-[1px] border-solid hover:bg-maroon_transparent2 border-t-gray">
+            <select
+                id="selectionBox"
+                value={value}
+                onChange={(e) => {dispatch(e.target.value)}}
+                className="flex w-[5vw] mt-[0.5vh] text-center justify-center hover:bg-maroon_transparent2 cursor cursor-pointer"
+            >
+                {CHOICE_DICT[name].map((option, index) => (
+                    <option key={index} value={option}>
                         {option}
-                    </button>
+                    </option>
                 ))}
-                </div>
-            }
+            </select> 
         </div>
     )
 }
