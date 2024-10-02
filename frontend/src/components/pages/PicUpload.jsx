@@ -109,7 +109,7 @@ const PicUpload = () => {
     };
 
     const handleDoneClick = async (e) => {
-        e.stopPropogation();
+        e.stopPropagation();
     };
     
     const onDragEnd = (result) => {
