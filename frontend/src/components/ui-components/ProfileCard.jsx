@@ -160,7 +160,7 @@ export function ProfileCard({ user_id, isDorm, switchProfileMode, broadcaster, d
                 </div>
               </div>
               <div className="grow-[2] flex flex-col gap-[3.6%]">
-                <div className="flex h-[10%] border-none border-2 border-maroon">
+                <div className="flex h-[65%] border-none border-2 border-maroon">
                   <Poll answersRevealed={profileMode} user_id={user_id} broadcaster={isEditing ? broadcaster : null} editable={isEditing} />
                 </div>
                 <div className="flex">
