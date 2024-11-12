@@ -6,5 +6,6 @@
 **.env
 **env
 **/frontend/src/output.css
+**/frontend/src/dist
 **/.idea
 **/backend/uploads/*

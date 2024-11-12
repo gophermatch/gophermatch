@@ -2,6 +2,7 @@ import {React, useEffect, useState} from "react";
 
 import kanye from '../../assets/images/kanye.png';
 import backend from '../../backend.js';
+import removeImg from "../../assets/images/people_remove.svg";
 
 export default function MatchEntry ({user_id, deleteMatch, setDisplay}) {
 
@@ -77,7 +78,7 @@ export default function MatchEntry ({user_id, deleteMatch, setDisplay}) {
                 </div>
                 <div className="flex flex-col gap-[10%] w-[20%] items-center justify-center overflow-hidden">
                     <button className="" onClick={handleRemoveClick}>
-                        <img src="../../assets/images/people_remove.svg" alt="Remove" className="w-[100%] h-[100%] object-contain text-maroon fill-current duration-200 hover:brightness-0" />
+                        <img src={removeImg} alt="Remove" className="w-[100%] h-[100%] object-contain text-maroon fill-current duration-200 hover:brightness-0" />
                     </button>
                 </div>
             </div>

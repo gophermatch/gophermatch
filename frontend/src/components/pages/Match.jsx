@@ -3,7 +3,8 @@ import { ProfileCard } from '../ui-components/ProfileCard';
 import Filter from '../ui-components/Filter';
 import backend from '../../backend';
 import currentUser from '../../currentUser';
-import styles from "../../assets/css/match.module.css";
+import rejectImg from "../../assets/images/match-reject.svg";
+import acceptImg from "../../assets/images/match-accept.svg";
 
 export default function Match() {
 
@@ -122,11 +123,11 @@ export default function Match() {
         <div className="absolute flex bottom-[5%] justify-around left-1/2 transform -translate-x-1/2 space-x-3 z-50">
           <button onClick={() => goToNext("reject")}
                   className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
-              <img src="assets/images/match-reject.svg" alt="Reject" className="w-[50%] h-[50%] object-contain" />
+              <img src={rejectImg} alt="Reject" className="w-[50%] h-[50%] object-contain" />
           </button>
           <button onClick={() => goToNext("match")}
                   className="w-[8vh] h-[8vh] bg-maroon_new rounded-[20%] flex items-center justify-center hover:bg-maroon_dark shadow-md">
-              <img src="assets/images/match-accept.svg" alt="Match" className="w-[55%] h-[55%] object-contain" />
+              <img src={acceptImg} alt="Match" className="w-[55%] h-[55%] object-contain" />
           </button>
         </div>
       </div>

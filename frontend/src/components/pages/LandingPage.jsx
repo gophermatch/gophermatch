@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../../assets/css/signin.module.css';
+import logo from '../../assets/images/logo.png';
+import profileImg from '../../assets/images/profile.png';
+import linkedinImg from '../../assets/images/linkedin.png';
+import githubImg from '../../assets/images/github.png';
+import AJ2Img from '../../assets/images/AJ2.jpg';
+import Quang2Img from '../../assets/images/Quang2.jpg';
 
 const reviews = [
   {
@@ -62,7 +68,7 @@ const LandingPage = () => {
         <div className="flex items-center">
           <div className="flex items-start h-[7vh]">
             <p className="text-offwhite font-lora mt-[.4vh] text-[3.5vh] ml-[0.52vw]">GoferMatch</p>
-            <img src="/assets/images/logo.png" alt="Description of the image" className="w-[2.75vw] mt-[0.5vh] ml-[0.5vw] items-start" />
+            <img src={logo} alt="Description of the image" className="w-[2.75vw] mt-[0.5vh] ml-[0.5vw] items-start" />
           </div>
         </div>
         <div className="flex justify-end items-center">
@@ -126,61 +132,61 @@ const LandingPage = () => {
           <div className="bg-offwhite flex flex-col items-center justify-center h-screen">
             <div className="mt-[10vh] flex flex-wrap justify-center">
               <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-                <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+                <img src={profileImg} alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
                 <div className="text-center">
                   <h3 className="font-bold text-maroon_new text-[2.5vh] mt-[0.75vh]">Adam</h3>
                   <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                   <div className="flex justify-center">
                     <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
+                      <img src={linkedinImg} alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
                     </a>
                     <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/github.png" alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
+                      <img src={githubImg} alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
                     </a>
                   </div>
                 </div>
               </div>
               <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-                <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+                <img src={profileImg} alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
                 <div className="text-center">
                   <h3 className="font-bold text-maroon_new text-[2.5vh] mt-[0.75vh]">Adhi</h3>
                   <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                   <div className="flex justify-center">
                     <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
+                      <img src={linkedinImg} alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
                     </a>
                     <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/github.png" alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
+                      <img src={githubImg} alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
                     </a>
                   </div>
                 </div>
               </div>
               <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-                <img src="assets/images/AJ2.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+                <img src={AJ2Img} alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
                 <div className="text-center">
                   <h3 className="font-bold text-maroon_new text-[2.5vh] mt-[0.75vh]">AJ</h3>
                   <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Project Lead</p>
                   <div className="flex justify-center">
                     <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
+                      <img src={linkedinImg} alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
                     </a>
                     <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/github.png" alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
+                      <img src={githubImg} alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
                     </a>
                   </div>
                 </div>
               </div>
               <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1.5vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-                <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+                <img src={profileImg} alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
                 <div className="text-center">
                   <h3 className="font-bold text-maroon_new text-[2.5vh] mt-[0.75vh]">Allen</h3>
                   <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                   <div className="flex justify-center">
                     <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
+                      <img src={linkedinImg} alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
                     </a>
                     <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/github.png" alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
+                      <img src={githubImg} alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
                     </a>
                   </div>
                 </div>
@@ -189,46 +195,46 @@ const LandingPage = () => {
             <div className="flex flex-col items-center">
               <div className='flex flex-wrap justify-center'>
               <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-                <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+                <img src={profileImg} alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
                 <div className="text-center">
                   <h3 className="font-bold text-maroon_new text-[2.5vh] mt-[0.75vh]">Alex</h3>
                   <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                   <div className="flex justify-center">
                     <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
+                      <img src={linkedinImg} alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
                     </a>
                     <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/github.png" alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
+                      <img src={githubImg} alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
                     </a>
                   </div>
                 </div>
               </div>
               <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-                <img src="assets/images/profile.png" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+                <img src={profileImg} alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
                 <div className="text-center">
                   <h3 className="font-bold text-maroon_new text-[2.5vh] mt-[0.75vh]">Tony</h3>
                   <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                   <div className="flex justify-center">
                     <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
+                      <img src={linkedinImg} alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
                     </a>
                     <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/github.png" alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
+                      <img src={githubImg} alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
                     </a>
                   </div>
                 </div>
               </div>
               <div className="p-[1vh] rounded-lg mb-[3vh] mx-[1vh] h-[27vh] w-[16vw] flex flex-col items-center border border-gray">
-                <img src="assets/images/Quang2.jpg" alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
+                <img src={Quang2Img} alt="Profile" className="w-[7vw] h-[12vh] rounded-full" />
                 <div className="text-center">
                   <h3 className="font-bold text-maroon_new text-[2.5vh] mt-[0.75vh]">Quang</h3>
                   <p className="text-[1.75vh] text-black font-thin mt-[0.2vh]">Job description</p>
                   <div className="flex justify-center">
                     <a href="www.linkedin.com/in/andrew-lange-461678288" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/linkedin.png" alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
+                      <img src={linkedinImg} alt="LinkedIn" className="w-[3.5vh] h-[3.5vh] mt-[1vh]" />
                     </a>
                     <a href="https://github.com/AndrewLange1" target="_blank" rel="noopener noreferrer">
-                      <img src="assets/images/github.png" alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
+                      <img src={githubImg} alt="GitHub" className="w-[3.5vh] h-[3.5vh] ml-[1vh] mt-[1vh]" />
                     </a>
                   </div>
                 </div>

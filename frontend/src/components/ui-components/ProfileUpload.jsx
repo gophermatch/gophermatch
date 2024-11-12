@@ -1,4 +1,5 @@
 import React from 'react';
+import filterImg from "../assets/images/filter.png";
 
 export default function Upload() {
     const [shouldShowIcon, setShowIcon] = React.useState(true);
@@ -12,7 +13,7 @@ export default function Upload() {
     return(
         <>
         {shouldShowIcon && <div class = "flex absolute right-0">
-            <img class="object-scale-down h-[12vh] w-[18vh]" src="../assets/images/filter.png" onClick={expandUploadUI}></img>
+            <img class="object-scale-down h-[12vh] w-[18vh]" src={filterImg} onClick={expandUploadUI}></img>
         </div>}
 
         {shouldShowUI && <div id="info-popup" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">

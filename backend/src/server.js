@@ -1,8 +1,13 @@
 import express, { json, urlencoded } from "express";
 import session from "express-session";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 import { port, session as envSession } from './env.js';
 import { db } from './database/db.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const server = express();
 
@@ -25,10 +30,16 @@ server.use(session({
 }));
 
 server.use(cors({
-    origin: "http://localhost:8080",    // do not end the url with a slash / !!
+    origin: "http://localhost:3000",    // do not end the url with a slash / !!
     credentials: true
 }));  // allow cross origin requests. 
 // TODO: add whitelisted origins checker (different origins for DEV and PROD)
+
+server.use(express.static(path.join(__dirname, '../../frontend/src/dist/')));
+
+server.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/src/dist/', 'index.html'));
+  });
 
 import router from "./routes/router.js";
 server.use('/api', router);

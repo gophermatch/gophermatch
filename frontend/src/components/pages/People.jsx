@@ -7,6 +7,7 @@ import currentUser from '../../currentUser.js';
 import "../ui-components/ProfileCardContent/apartmentStyles.css";
 import { ProfileCard } from '../ui-components/ProfileCard.jsx';
 import SubleaseEntry from '../ui-components/SubleaseEntry.jsx';
+import backImg from "../../assets/images/people_back.svg";
 
 export default function People() {
 
@@ -92,7 +93,7 @@ export default function People() {
                     
                     <button onClick={() => setDisplay({})}>
                             <img
-                            src="../../assets/images/people_back.svg"
+                            src={backImg}
                             alt="Remove"
                             className="w-[50px] h-[50px] object-contain absolute top-0 text-maroon fill-current duration-200 transform brightness-200 hover:brightness-0"
                             />
@@ -114,7 +115,7 @@ export default function People() {
                     
                     <button onClick={() => setDisplay({})}>
                             <img
-                            src="../../assets/images/people_back.svg"
+                            src={backImg}
                             alt="Remove"
                             className="w-[50px] h-[50px] object-contain absolute top-0 text-maroon fill-current duration-200 transform brightness-200 hover:brightness-0"
                             />

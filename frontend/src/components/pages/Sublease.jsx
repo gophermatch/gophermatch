@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import backend from "../../backend.js";
 import currentUser from "../../currentUser.js";
 import SubleaseFilter from "../ui-components/SubleaseFilter.jsx";
+import editImg from "../../assets/images/edit_sublease.svg";
+import createImg from "../../assets/images/create_sublease.svg";
 
 export default function Sublease()
 {
@@ -116,7 +118,7 @@ export default function Sublease()
 
         
         <Link to="/createsublease" className="fixed right-4 bottom-4 rounded-full w-[7%] aspect-square bg-maroon text-white flex items-center justify-center transition-transform duration-500 scale-[85%] hover:scale-[90%] cursor-pointer">
-          <img src={userSublease ? "../../assets/images/edit_sublease.svg" : "../../assets/images/create_sublease.svg"} alt="Match" className="w-[45%] h-[45%] object-contain text-maroon fill-current" />
+          <img src={userSublease ? editImg : createImg} alt="Match" className="w-[45%] h-[45%] object-contain text-maroon fill-current" />
         </Link>
 
         <div className="w-[70vw]"></div>

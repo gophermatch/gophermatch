@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import qnaOptions from './qnaOptions.json';
 import dropdownArrow from '../../assets/images/filterArrow.svg';
+import resetImage from "../../assets/images/Reset.png";
+import checkmarkImage from "../../assets/images/checkmark.png";
 
 const defaultUserdata = {
     gender: {},
@@ -206,7 +208,7 @@ export default function Filter({ setFiltersExternal, setUserDataExternal, profil
                     }}
                         className="flex-1 p-[5px] bg-maroon_new hover:bg-gold rounded-md text-sm"><img
                             className="w-full h-full object-contain" alt="checkmark"
-                            src={"../assets/images/checkmark.png"}></img></button>
+                            src={checkmarkImage}></img></button>
                     <button onClick={() => {
                         setFilters([]);
                         setUserData(defaultUserdata);
@@ -214,7 +216,7 @@ export default function Filter({ setFiltersExternal, setUserDataExternal, profil
                     }} className="flex-1 p-[5px] bg-maroon_new hover:bg-gold rounded-md text-sm"><img
                         className="w-full h-full object-contain"
                         alt="checkmark"
-                        src={"../assets/images/Reset.png"}></img>
+                        src={resetImage}></img>
                     </button>
                 </div>
             </div>

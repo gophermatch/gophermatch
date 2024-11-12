@@ -5,6 +5,7 @@ import InboxNotification from './ui-components/InboxNotification';
 import FadeAlert from './ui-components/FadeAlert';
 import UserStateBroadcaster from '../UserStateBroadcaster';
 import currentUser from '../currentUser';
+import logo from "..//assets/images/logo.png";
 
 export default function Sidebar() {
     const [activePage, setActivePage] = useState('/match');
@@ -69,7 +70,7 @@ export default function Sidebar() {
             <nav className="flex flex-col items-left items-center text-left p-5 w-full text-[24px] font-roboto h-screen bg-maroon_new rounded-none shadow-md" id="nav">
                 <div className={"flex pl-[0.5vw] space-x-[1vw] w-[13vw] items-center whitespace-no-wrap"}>
                 <NavLink exact="true" to="/" className={"w-1/4"} onClick={handleLogoClick}>
-                    <img src="../assets/images/logo.png" className="" alt="Logo" />
+                    <img src={logo} className="" alt="Logo" />
                 </NavLink>
                     <p className={"w-3/4 text-[10px] sm:text-[12px] md:text-[14px] xl:text-[16px] 2xl:text-[18px] font-bold text-white"}>Welcome, {currentUser.gen_data.first_name}!</p>
                 </div>
