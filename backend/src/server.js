@@ -30,7 +30,7 @@ server.use(session({
 }));
 
 server.use(cors({
-    origin: "http://localhost:3000",    // do not end the url with a slash / !!
+    origin: ["http://localhost:8080", "http://localhost:3000", "https://gophermatch-umn.firebaseapp.com"],    // do not end the url with a slash / !!
     credentials: true
 }));  // allow cross origin requests. 
 // TODO: add whitelisted origins checker (different origins for DEV and PROD)
